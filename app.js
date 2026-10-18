@@ -1,4 +1,4 @@
-import { FILES, flattenCards, schedule, answer, buildSession, streak, calendar, wordDiff } from './core.js';
+import { FILES, flattenCards, schedule, answer, buildSession, streak, calendar, wordDiff, englishVoices } from './core.js';
 
 const KEY = 'eng:v1';
 const $ = (id) => document.getElementById(id);
@@ -7,7 +7,7 @@ const files = await Promise.all(FILES.map((f) => fetch(f).then((r) => r.json()))
 const cards = flattenCards(files);
 
 // ---- state: one JSON blob in localStorage, replaced wholesale on every change
-const DEFAULT = { cards: {}, log: {}, settings: { theme: 'system', goal: 20, newPerDay: 10, decks: files[0].decks.map((d) => d.id) } };
+const DEFAULT = { cards: {}, log: {}, settings: { theme: 'system', goal: 20, newPerDay: 10, voice: '', decks: files[0].decks.map((d) => d.id) } };
 const withDefaults = (s) => ({ ...DEFAULT, ...s, settings: { ...DEFAULT.settings, ...s?.settings } });
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } };
 let state = withDefaults(load());
@@ -164,13 +164,27 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 's') speak(cur.en);
 });
 
-// ---- speech: read model answer aloud, optional voice input
+// ---- speech: read model answer aloud with a natural English voice, optional voice input
+let voices = [];
 function speak(text) {
+  const v = voices.find((x) => x.name === state.settings.voice) || voices[0];
   speechSynthesis.cancel();
-  speechSynthesis.speak(Object.assign(new SpeechSynthesisUtterance(text), { lang: 'en-US', rate: 0.95 }));
+  speechSynthesis.speak(Object.assign(new SpeechSynthesisUtterance(text), { voice: v ?? null, lang: v?.lang ?? 'en-US', rate: 0.95 }));
 }
-if ('speechSynthesis' in window) $('speak').onclick = () => speak(cur.en);
-else $('speak').hidden = true;
+function renderVoices() {
+  voices = englishVoices(speechSynthesis.getVoices());
+  $('voice').replaceChildren(
+    el('option', { value: '', textContent: `自動（${voices[0]?.name ?? '既定'}）` }),
+    ...voices.map((v) => el('option', { value: v.name, textContent: `${v.name} · ${v.lang}` })),
+  );
+  $('voice').value = voices.some((v) => v.name === state.settings.voice) ? state.settings.voice : '';
+}
+if ('speechSynthesis' in window) {
+  $('speak').onclick = () => speak(cur.en);
+  $('voice').onchange = () => { setSettings({ voice: $('voice').value }); speak('Thank you for your question. That is a great point.'); };
+  speechSynthesis.onvoiceschanged = renderVoices;
+  renderVoices();
+} else $('speak').hidden = $('voice-row').hidden = true;
 
 const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (Recognition) {

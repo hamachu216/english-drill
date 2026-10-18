@@ -70,6 +70,7 @@ details.level label { display: flex; gap: 10px; align-items: center; padding: 8p
 details.level label .n { margin-left: auto; color: var(--muted); font-size: .8rem; }
 input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); flex: none; }
 .row { display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 0; }
+#voice { width: auto; max-width: 60%; }
 .row select, .row input[type="number"] { min-height: 40px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); padding: 0 10px; width: 7rem; }
 #refs a, .refs a { color: var(--accent); }
 .refs { margin: 8px 0 0; }
@@ -127,6 +128,7 @@ kbd { font: .72rem ui-monospace, monospace; color: var(--muted); }
     <div class="card">
       <div class="row"><span>1日の目標回答数</span><input id="goal" type="number" min="5" max="200" step="5"></div>
       <div class="row"><span>1回の新規カード数</span><input id="newPerDay" type="number" min="0" max="50" step="5"></div>
+      <div class="row" id="voice-row"><span>読み上げの声</span><select id="voice"></select></div>
       <div class="row"><span>進捗の移行</span><span><button id="export">書き出し</button> <button id="import">読み込み</button></span></div>
       <input id="import-file" type="file" accept="application/json" hidden>
     </div>
