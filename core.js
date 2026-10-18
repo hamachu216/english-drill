@@ -57,6 +57,23 @@ export function calendar(today, weeks) {
   return Array.from({ length: 7 * weeks }, (_, i) => addDays(start, i)).filter((d) => d <= today);
 }
 
+// English voices, best first. Browsers default to the first en-US voice, which on macOS is the
+// croaky novelty voice "Albert" (and novelty names are localized, e.g. ささやき声), so keep only
+// known-good voices; fall back to any English voice on platforms we don't recognize.
+const VOICE_RANK = [
+  /natural|neural|premium|enhanced|siri/i,
+  /^(Google US English|Samantha|Ava|Allison|Susan|Zoe|Evan|Nathan|Tom|Microsoft (Aria|Jenny|Guy))\b/i,
+  /^(Google|Microsoft)/i,
+  /^(Daniel|Karen|Moira|Serena|Tessa|Alex)\b/,
+];
+export function englishVoices(voices) {
+  const en = voices.filter((v) => /^en/i.test(v.lang));
+  const rank = (v) => VOICE_RANK.findIndex((r) => r.test(v.name));
+  const known = en.filter((v) => rank(v) >= 0);
+  const score = (v) => rank(v) * 2 + !/^en[-_]US/i.test(v.lang);
+  return (known.length ? known : en).sort((a, b) => score(a) - score(b));
+}
+
 // Mark which words of the model answer appear (in order) in the user's answer, via word-level LCS.
 const norm = (w) => w.toLowerCase().replace(/[^a-z0-9']/g, '');
 export function wordDiff(input, model) {

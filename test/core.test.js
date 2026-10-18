@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, schedule, answer, buildSession, streak, calendar, wordDiff, flattenCards } from '../core.js';
+import { addDays, schedule, answer, buildSession, streak, calendar, wordDiff, flattenCards, englishVoices } from '../core.js';
 
 const T = '2026-10-19';
 
@@ -65,4 +65,11 @@ test('wordDiff marks model words found in order, ignoring case/punctuation', () 
   assert.deepEqual(r.map((x) => x.ok), [true, true, false, true, true]);
   assert.equal(r.at(-1).w, 'student.');
   assert.ok(wordDiff('', 'Hello').every((x) => !x.ok));
+});
+
+test('englishVoices keeps known-good voices, natural US first; falls back to any English', () => {
+  const v = (name, lang = 'en-US') => ({ name, lang });
+  const names = (vs) => englishVoices(vs).map((x) => x.name);
+  assert.deepEqual(names([v('Albert'), v('ささやき声'), v('Daniel', 'en-GB'), v('Kyoko', 'ja-JP'), v('Samantha'), v('Ava (Premium)'), v('Eddy (英語（アメリカ）)')]), ['Ava (Premium)', 'Samantha', 'Daniel']);
+  assert.deepEqual(names([v('English India', 'en-IN'), v('English United States'), v('Kyoko', 'ja-JP')]), ['English United States', 'English India']);
 });
