@@ -1,0 +1,225 @@
+{
+  "level": 5,
+  "title": "博士公聴会",
+  "decks": [
+    {
+      "id": "def-background",
+      "title": "研究の背景と問いを述べる",
+      "refs": [
+        { "name": "Academic Phrasebank: Introducing Work", "url": "https://www.phrasebank.manchester.ac.uk/introducing-work/" },
+        { "name": "EAP Foundation: Presentation Language", "url": "https://www.eapfoundation.com/speaking/presentations/language/" }
+      ],
+      "cards": [
+        { "id": "def-background-001", "ja": "【冒頭】本日は私の博士論文の研究についてお話しする機会をいただき、ありがとうございます。", "en": "Thank you for the opportunity to present my doctoral research today.", "note": "the opportunity to ～ で丁寧な導入" },
+        { "id": "def-background-002", "ja": "【冒頭】まず研究の背景を簡単に説明し、その後、主要な結果に移ります。", "en": "I'll begin with a brief overview of the background, and then move on to the main results.", "note": "move on to で話題の移行を予告" },
+        { "id": "def-background-003", "ja": "【背景】この問題は、過去十年で実務上ますます重要になってきました。", "en": "This problem has become increasingly important in practice over the past decade." },
+        { "id": "def-background-004", "ja": "【背景】既存の手法は、データが大規模になると性能が大きく低下します。", "en": "Existing methods degrade significantly as the data grows in scale.", "note": "degrade = 性能が落ちる" },
+        { "id": "def-background-005", "ja": "【ギャップ】しかし、この現象がなぜ起きるのかは、まだ十分に理解されていません。", "en": "However, it is still not well understood why this phenomenon occurs.", "note": "not well understood でギャップを示す定番" },
+        { "id": "def-background-006", "ja": "【研究課題】本論文の中心的な問いは、精度を落とさずに計算コストを削減できるか、というものです。", "en": "The central question of this thesis is whether we can reduce computational cost without sacrificing accuracy.", "note": "without sacrificing ～ = ～を犠牲にせずに" },
+        { "id": "def-background-007", "ja": "【研究課題】具体的には、次の三つの研究課題に取り組みました。", "en": "More specifically, I addressed the following three research questions.", "note": "address = (課題に)取り組む" },
+        { "id": "def-background-008", "ja": "【動機】この研究の出発点は、実験中に観察した予想外の現象でした。", "en": "The starting point of this research was an unexpected phenomenon I observed during experiments." },
+        { "id": "def-background-009", "ja": "【範囲】本研究では、対象を屋内環境に限定しています。", "en": "In this work, I restrict the scope to indoor environments.", "note": "restrict the scope to ～ で範囲を明示" },
+        { "id": "def-background-010", "ja": "【定義】ここでいう「頑健性」とは、入力のわずかな変化に対して出力が安定していることを指します。", "en": "By \"robustness,\" I mean that the output remains stable under small changes to the input.", "note": "By X, I mean ～ で用語を定義" },
+        { "id": "def-background-011", "ja": "【構成】論文は六章から構成されており、第三章から第五章が中心的な貢献にあたります。", "en": "The thesis consists of six chapters, and Chapters 3 to 5 contain the core contributions." },
+        { "id": "def-background-012", "ja": "【重要性】この問いに答えることは、理論と実践の両方にとって意味があります。", "en": "Answering this question matters for both theory and practice.", "note": "matters for ～ で重要性を簡潔に" }
+      ]
+    },
+    {
+      "id": "def-contrib",
+      "title": "貢献を明確に主張する",
+      "refs": [
+        { "name": "Academic Phrasebank: Writing Conclusions", "url": "https://www.phrasebank.manchester.ac.uk/writing-conclusions/" },
+        { "name": "MockBase: Mock Defense Questions", "url": "https://mockbase.app/guides/phd/mock-defense-questions.html" }
+      ],
+      "cards": [
+        { "id": "def-contrib-001", "ja": "【貢献】本論文の主な貢献は三つあります。", "en": "This thesis makes three main contributions." },
+        { "id": "def-contrib-002", "ja": "【貢献】第一に、この問題の新しい定式化を提案しました。", "en": "First, I proposed a new formulation of this problem.", "note": "formulation = 定式化" },
+        { "id": "def-contrib-003", "ja": "【貢献】第二に、提案手法が収束することを理論的に証明しました。", "en": "Second, I proved theoretically that the proposed method converges." },
+        { "id": "def-contrib-004", "ja": "【貢献】第三に、手法を公開ソフトウェアとして実装し、誰でも再現できるようにしました。", "en": "Third, I released the implementation as open-source software so that anyone can reproduce the results." },
+        { "id": "def-contrib-005", "ja": "【審査員の質問への応答】一言で言えば、本研究の貢献は、これまで別々に扱われてきた二つの問題を統一的に扱えるようにした点です。", "en": "In a nutshell, my contribution is a unified treatment of two problems that had previously been handled separately.", "note": "In a nutshell = 要するに" },
+        { "id": "def-contrib-006", "ja": "【新規性】私の知る限り、この手法をこの領域に適用したのは本研究が初めてです。", "en": "To the best of my knowledge, this is the first work to apply this approach to this domain.", "note": "To the best of my knowledge で「初」の主張を慎重に" },
+        { "id": "def-contrib-007", "ja": "【貢献】最も重要な貢献は、手法そのものよりも、問題を見る新しい視点だと考えています。", "en": "I believe the most important contribution is not the method itself, but a new way of looking at the problem.", "note": "not A but B で強調点を明確に" },
+        { "id": "def-contrib-008", "ja": "【貢献の大きさ】提案手法は、従来手法と比べて推論時間を約半分にしました。", "en": "The proposed method cuts inference time roughly in half compared with the previous approach.", "note": "cut ～ in half = 半減させる" },
+        { "id": "def-contrib-009", "ja": "【審査員の質問への応答】これは既存手法の単なる改良ではなく、根本的に異なる仮定に基づいています。", "en": "This is not merely an incremental improvement; it rests on a fundamentally different assumption.", "note": "incremental = 小幅な改良。審査員の「単なる改良では？」への定番の返し" },
+        { "id": "def-contrib-010", "ja": "【貢献】この成果は、すでに国際会議で二本の論文として発表しています。", "en": "These results have already been published as two papers at international conferences." },
+        { "id": "def-contrib-011", "ja": "【波及】この枠組みは、他の分野の研究者にも利用され始めています。", "en": "This framework has started to be adopted by researchers in other fields." },
+        { "id": "def-contrib-012", "ja": "【審査員の質問への応答】誰がこの研究から恩恵を受けるか、という点では、まず現場のエンジニアが挙げられます。", "en": "As for who benefits from this work, practitioners in the field would be the first to gain from it." }
+      ]
+    },
+    {
+      "id": "def-related",
+      "title": "先行研究との位置づけ・差分",
+      "refs": [
+        { "name": "Academic Phrasebank: Referring to Sources", "url": "https://www.phrasebank.manchester.ac.uk/referring-to-sources/" },
+        { "name": "Academic Phrasebank: Being Critical", "url": "https://www.phrasebank.manchester.ac.uk/being-critical/" }
+      ],
+      "cards": [
+        { "id": "def-related-001", "ja": "【位置づけ】本研究は、スミスらの研究を出発点としています。", "en": "This work builds on the research of Smith and colleagues.", "note": "build on ～ = ～を土台にする" },
+        { "id": "def-related-002", "ja": "【差分】彼らのアプローチとの主な違いは、事前知識を必要としない点です。", "en": "The main difference from their approach is that mine does not require any prior knowledge." },
+        { "id": "def-related-003", "ja": "【先行研究の限界】先行研究の多くは、ノイズのない理想的な条件を前提としています。", "en": "Most prior work assumes ideal, noise-free conditions." },
+        { "id": "def-related-004", "ja": "【審査員の質問への応答】ご指摘の論文は存じていますが、問題設定が少し異なります。", "en": "I'm aware of the paper you mentioned, but its problem setting is slightly different from mine.", "note": "I'm aware of ～ で「知っている」を示してから差分へ" },
+        { "id": "def-related-005", "ja": "【審査員の質問への応答】その論文は残念ながら確認できていませんでした。ぜひ後で読ませていただきます。", "en": "Unfortunately, I haven't come across that paper. I will certainly look into it after the defense.", "note": "知らない論文は正直に認めるのが最善" },
+        { "id": "def-related-006", "ja": "【位置づけ】本研究は、理論的アプローチと経験的アプローチの中間に位置します。", "en": "This work sits between purely theoretical and purely empirical approaches." },
+        { "id": "def-related-007", "ja": "【差分】両者の手法は一見似ていますが、目的関数が根本的に異なります。", "en": "The two methods may look similar at first glance, but their objective functions are fundamentally different.", "note": "at first glance = 一見" },
+        { "id": "def-related-008", "ja": "【先行研究の評価】この研究は重要な一歩でしたが、大規模データへの拡張性は検証されていませんでした。", "en": "That study was an important step, but its scalability to large datasets was never tested.", "note": "まず評価してから限界を指摘する" },
+        { "id": "def-related-009", "ja": "【比較】公平を期すために、すべての手法を同じ条件で再実装して比較しました。", "en": "To ensure a fair comparison, I re-implemented all the baselines under the same conditions." },
+        { "id": "def-related-010", "ja": "【審査員の質問への応答】その手法を比較対象にしなかったのは、前提とする入力形式が異なるためです。", "en": "I didn't include that method as a baseline because it assumes a different input format." },
+        { "id": "def-related-011", "ja": "【補完関係】私の手法はその研究と競合するものではなく、むしろ補完的なものです。", "en": "My method doesn't compete with that work; rather, it is complementary to it.", "note": "complementary = 補完的な" },
+        { "id": "def-related-012", "ja": "【位置づけ】私の論文提出後に、関連する研究がいくつか発表されています。", "en": "Several related studies have appeared since I submitted my thesis.", "note": "提出後の新研究への言及も公聴会では頻出" }
+      ]
+    },
+    {
+      "id": "def-method",
+      "title": "手法の妥当性を説明する(なぜこの設計か)",
+      "refs": [
+        { "name": "Academic Phrasebank: Describing Methods", "url": "https://www.phrasebank.manchester.ac.uk/describing-methods/" },
+        { "name": "MockBase: Mock Defense Questions", "url": "https://mockbase.app/guides/phd/mock-defense-questions.html" }
+      ],
+      "cards": [
+        { "id": "def-method-001", "ja": "【設計の理由】この手法を選んだ主な理由は、解釈性が高いからです。", "en": "The main reason I chose this method is its high interpretability." },
+        { "id": "def-method-002", "ja": "【設計の理由】他の選択肢も検討しましたが、計算コストが現実的ではありませんでした。", "en": "I did consider other options, but their computational cost was not realistic.", "note": "did consider と強調し、検討済みであることを示す" },
+        { "id": "def-method-003", "ja": "【仮定】この手法は、データが独立に生成されるという仮定に基づいています。", "en": "This method relies on the assumption that the data are generated independently.", "note": "data は複数扱いが学術的には無難" },
+        { "id": "def-method-004", "ja": "【仮定の妥当性】この仮定は、私たちの対象とする状況では概ね成り立つと考えられます。", "en": "This assumption holds reasonably well in the settings we target.", "note": "hold = (仮定が)成り立つ" },
+        { "id": "def-method-005", "ja": "【データセット】このデータセットを選んだのは、この分野で最も広く使われている標準ベンチマークだからです。", "en": "I chose this dataset because it is the most widely used standard benchmark in this field." },
+        { "id": "def-method-006", "ja": "【評価指標】精度だけでなく、再現率も評価しました。誤検出よりも見逃しの方が深刻だからです。", "en": "I evaluated recall as well as accuracy, because missed detections are more costly than false alarms." },
+        { "id": "def-method-007", "ja": "【パラメータ】ハイパーパラメータは、検証用データを用いた交差検証で決定しました。", "en": "The hyperparameters were selected by cross-validation on a held-out validation set.", "note": "held-out = 学習に使わず取っておいた" },
+        { "id": "def-method-008", "ja": "【審査員の質問への応答】サンプル数が少ないというご懸念はもっともです。そのため、統計的検定で有意性を確認しました。", "en": "Your concern about the small sample size is reasonable. That is why I confirmed significance with statistical tests.", "note": "That is why ～ で懸念への対処を示す" },
+        { "id": "def-method-009", "ja": "【アブレーション】各構成要素の効果を確認するため、アブレーション実験を行いました。", "en": "To isolate the effect of each component, I conducted an ablation study.", "note": "isolate the effect = 効果を切り分ける" },
+        { "id": "def-method-010", "ja": "【設計の理由】より単純なモデルでも試しましたが、重要なパターンを捉えられませんでした。", "en": "I also tried a simpler model, but it failed to capture the key patterns." },
+        { "id": "def-method-011", "ja": "【再現性】すべての実験は異なる乱数シードで五回繰り返し、平均と標準偏差を報告しています。", "en": "Every experiment was repeated five times with different random seeds, and I report the mean and standard deviation." },
+        { "id": "def-method-012", "ja": "【トレードオフ】この設計は、精度と速度のトレードオフを考慮した上での妥協点です。", "en": "This design is a deliberate compromise between accuracy and speed.", "note": "deliberate で「意図的な選択」を強調" }
+      ]
+    },
+    {
+      "id": "def-results",
+      "title": "結果の解釈と一般化",
+      "refs": [
+        { "name": "Academic Phrasebank: Reporting Results", "url": "https://www.phrasebank.manchester.ac.uk/reporting-results/" },
+        { "name": "Academic Phrasebank: Discussing Findings", "url": "https://www.phrasebank.manchester.ac.uk/discussing-findings/" }
+      ],
+      "cards": [
+        { "id": "def-results-001", "ja": "【結果】このグラフが示すように、提案手法はすべての条件で既存手法を上回りました。", "en": "As this graph shows, the proposed method outperformed the baselines under all conditions.", "note": "outperform = 上回る" },
+        { "id": "def-results-002", "ja": "【解釈】この結果は、構造情報が性能向上の鍵であることを示唆しています。", "en": "This result suggests that structural information is the key to the performance gain.", "note": "suggest で断定を避ける" },
+        { "id": "def-results-003", "ja": "【解釈】改善は、特にデータが少ない場合に顕著でした。", "en": "The improvement was particularly pronounced when training data was scarce.", "note": "pronounced = 顕著な" },
+        { "id": "def-results-004", "ja": "【予想外の結果】興味深いことに、層を増やしても性能はほとんど変わりませんでした。", "en": "Interestingly, adding more layers made little difference to performance." },
+        { "id": "def-results-005", "ja": "【解釈】考えられる説明の一つは、モデルがすでに飽和状態にあったということです。", "en": "One possible explanation is that the model had already reached saturation." },
+        { "id": "def-results-006", "ja": "【慎重な主張】ただし、この相関が因果関係を意味するとまでは主張していません。", "en": "However, I am not claiming that this correlation implies causation.", "note": "主張の範囲を自分で線引きする" },
+        { "id": "def-results-007", "ja": "【一般化】この知見は、同様の構造を持つ他の問題にも当てはまると期待しています。", "en": "I expect these findings to carry over to other problems with a similar structure.", "note": "carry over to = ～にも当てはまる" },
+        { "id": "def-results-008", "ja": "【審査員の質問への応答】他の言語のデータでも同じ結果が得られるかは、まだ検証できていません。", "en": "I have not yet verified whether the same results hold for data in other languages." },
+        { "id": "def-results-009", "ja": "【先行研究との整合】この結果は、田中らの先行研究の報告と一致しています。", "en": "This result is consistent with what Tanaka and colleagues reported earlier.", "note": "be consistent with = ～と一致する" },
+        { "id": "def-results-010", "ja": "【先行研究との不一致】一方で、この結果は先行研究の結論とは食い違っています。おそらく評価条件の違いによるものです。", "en": "On the other hand, this contradicts the conclusion of earlier work, most likely because of differences in evaluation conditions." },
+        { "id": "def-results-011", "ja": "【統計】この差は統計的に有意でしたが、効果量は中程度でした。", "en": "The difference was statistically significant, although the effect size was moderate." },
+        { "id": "def-results-012", "ja": "【意味づけ】実務的には、この改善によって一日あたり数時間の作業時間が節約できます。", "en": "In practical terms, this improvement saves several hours of work per day.", "note": "In practical terms で数字を実感に翻訳" }
+      ]
+    },
+    {
+      "id": "def-limits",
+      "title": "限界を認める・誠実に答える",
+      "refs": [
+        { "name": "Academic Phrasebank: Discussing Findings", "url": "https://www.phrasebank.manchester.ac.uk/discussing-findings/" },
+        { "name": "MockBase: What Is a PhD Viva?", "url": "https://mockbase.app/guides/phd/what-is-a-phd-viva.html" }
+      ],
+      "cards": [
+        { "id": "def-limits-001", "ja": "【限界】本研究にはいくつかの限界があることを認めなければなりません。", "en": "I should acknowledge that this study has several limitations.", "note": "acknowledge = 認める。自分から先に言うのが好印象" },
+        { "id": "def-limits-002", "ja": "【限界】最大の限界は、実験がシミュレーション環境に限られている点です。", "en": "The biggest limitation is that the experiments were limited to a simulated environment." },
+        { "id": "def-limits-003", "ja": "【審査員の質問への応答】おっしゃる通りです。その点は本研究の弱点です。", "en": "You're right. That is a weakness of this work.", "note": "認めるべきは短く、はっきり認める" },
+        { "id": "def-limits-004", "ja": "【審査員の質問への応答】正直に申し上げると、その条件では手法はうまく機能しません。", "en": "To be honest, the method does not work well under that condition.", "note": "To be honest で誠実さを示す" },
+        { "id": "def-limits-005", "ja": "【限界の影響】ただし、この限界が主要な結論に影響を与えるとは考えていません。", "en": "That said, I don't believe this limitation affects the main conclusions.", "note": "That said = とはいえ。認めた後に結論を守る" },
+        { "id": "def-limits-006", "ja": "【審査員の質問への応答】その点については、確信を持ってお答えできるだけのデータがありません。", "en": "I'm afraid I don't have enough data to answer that with confidence." },
+        { "id": "def-limits-007", "ja": "【審査員の質問への応答】それは非常に良いご指摘で、正直なところ十分に検討していませんでした。", "en": "That's a very good point, and honestly, I hadn't considered it carefully enough." },
+        { "id": "def-limits-008", "ja": "【限界】サンプルが一つの病院から集められたため、結果の一般化には注意が必要です。", "en": "Since the samples were collected from a single hospital, the results should be generalized with caution.", "note": "with caution = 慎重に" },
+        { "id": "def-limits-009", "ja": "【振り返り】今やり直せるなら、データ収集の段階からもっと多様な条件を含めると思います。", "en": "If I were to do it again, I would include more diverse conditions from the data collection stage.", "note": "If I were to do it again は viva の定番質問への答え方" },
+        { "id": "def-limits-010", "ja": "【限界の明示】この手法は、入力が非常に高次元の場合には適用できません。", "en": "This method is not applicable when the input is extremely high-dimensional." },
+        { "id": "def-limits-011", "ja": "【審査員の質問への応答】その推測は妥当だと思いますが、現時点では検証されていない仮説にすぎません。", "en": "I think that's a plausible guess, but at this point it remains an untested hypothesis." },
+        { "id": "def-limits-012", "ja": "【修正の申し出】ご指摘を踏まえ、最終版ではこの限界を明記いたします。", "en": "Following your comment, I will state this limitation explicitly in the final version.", "note": "修正約束は公聴会の着地点として有効" }
+      ]
+    },
+    {
+      "id": "def-critique",
+      "title": "厳しい質問・批判への応答(反論/部分的同意)",
+      "refs": [
+        { "name": "Academic Phrasebank: Being Critical", "url": "https://www.phrasebank.manchester.ac.uk/being-critical/" },
+        { "name": "Queen Mary Academic English Online: Contributing in Seminars", "url": "https://aeo.sllf.qmul.ac.uk/speaking/contributing-in-seminars/" }
+      ],
+      "cards": [
+        { "id": "def-critique-001", "ja": "【部分的同意】ある程度は同意しますが、すべての場合に当てはまるわけではないと思います。", "en": "I agree to some extent, but I don't think it applies in every case.", "note": "to some extent = ある程度は" },
+        { "id": "def-critique-002", "ja": "【部分的同意】おっしゃることはよく分かりますが、少し違う見方をしています。", "en": "I see your point, but I see it slightly differently.", "note": "I see your point で受け止めてから反論" },
+        { "id": "def-critique-003", "ja": "【反論】恐れ入りますが、その点については同意しかねます。", "en": "With respect, I'm not sure I agree with that point.", "note": "With respect は丁寧な反論の前置き" },
+        { "id": "def-critique-004", "ja": "【反論の根拠】と言いますのも、第四章の追加実験で、その影響は小さいことを確認しているからです。", "en": "The reason is that the additional experiments in Chapter 4 showed that this effect is small." },
+        { "id": "def-critique-005", "ja": "【誤解の訂正】もしかすると説明が不十分だったかもしれません。提案手法はラベルを使っていません。", "en": "Perhaps I didn't explain this clearly enough. The proposed method doesn't use any labels.", "note": "相手の誤解を自分の説明不足として扱う" },
+        { "id": "def-critique-006", "ja": "【批判の受け止め】それは公正なご批判だと思います。", "en": "I think that's a fair criticism." },
+        { "id": "def-critique-007", "ja": "【反論】その代替案も検討しましたが、二つの理由から採用しませんでした。", "en": "I did consider that alternative, but I decided against it for two reasons.", "note": "decide against ～ = ～しないことにする" },
+        { "id": "def-critique-008", "ja": "【条件付き同意】その条件下では、確かにおっしゃる通りです。しかし、本研究の想定はそれとは異なります。", "en": "Under those conditions, you are certainly right. However, this work assumes a different setting." },
+        { "id": "def-critique-009", "ja": "【証拠で答える】その疑問に答えるため、スライド十二をご覧いただけますか。", "en": "To address that question, may I refer you to slide twelve?", "note": "refer you to ～ = ～をご覧いただく" },
+        { "id": "def-critique-010", "ja": "【主張を守る】ご懸念は理解しますが、データはこの解釈を強く支持していると考えています。", "en": "I understand your concern, but I believe the data strongly support this interpretation." },
+        { "id": "def-critique-011", "ja": "【見解の相違】この点については、見解が分かれるところかもしれません。", "en": "This may be a point on which we have to agree to disagree.", "note": "agree to disagree は角を立てずに議論を収める表現" },
+        { "id": "def-critique-012", "ja": "【別の視点】別の見方をすれば、この結果はむしろ手法の強みを示しているとも言えます。", "en": "Looked at another way, this result could actually be seen as a strength of the method." }
+      ]
+    },
+    {
+      "id": "def-clarify",
+      "title": "質問の意図を確認する・時間を稼ぐ",
+      "refs": [
+        { "name": "Queen Mary Academic English Online: Contributing in Seminars", "url": "https://aeo.sllf.qmul.ac.uk/speaking/contributing-in-seminars/" },
+        { "name": "EAP Foundation: Presentation Structure", "url": "https://www.eapfoundation.com/speaking/presentations/structure/" }
+      ],
+      "cards": [
+        { "id": "def-clarify-001", "ja": "【聞き返し】申し訳ありません、質問をもう一度言っていただけますか。", "en": "I'm sorry, could you repeat the question, please?" },
+        { "id": "def-clarify-002", "ja": "【意図の確認】つまり、この手法が他の領域にも適用できるか、というご質問でしょうか。", "en": "So, are you asking whether this method can be applied to other domains?", "note": "Are you asking whether ～? で言い換え確認" },
+        { "id": "def-clarify-003", "ja": "【意図の確認】ご質問の意図を正しく理解しているか確認させてください。", "en": "Let me make sure I understand your question correctly." },
+        { "id": "def-clarify-004", "ja": "【用語の確認】ここでおっしゃる「効率」とは、計算時間のことでしょうか、それともメモリ使用量のことでしょうか。", "en": "By \"efficiency,\" do you mean computation time or memory usage?" },
+        { "id": "def-clarify-005", "ja": "【時間を稼ぐ】良いご質問ですね。少し考えさせてください。", "en": "That's a good question. Let me think about it for a moment.", "note": "沈黙するより宣言して考える方が良い" },
+        { "id": "def-clarify-006", "ja": "【時間を稼ぐ】それは簡単には答えられない質問です。順を追ってお答えします。", "en": "That's not an easy question to answer. Let me go through it step by step." },
+        { "id": "def-clarify-007", "ja": "【複数の質問】ご質問は二つあったと思いますので、まず一つ目からお答えします。", "en": "I believe there were two questions, so let me start with the first one." },
+        { "id": "def-clarify-008", "ja": "【回答の確認】これでご質問への答えになっていますでしょうか。", "en": "Does that answer your question?", "note": "回答の最後に必ず確認すると対話が締まる" },
+        { "id": "def-clarify-009", "ja": "【範囲外の質問】それは本論文の範囲をやや超えていますが、私の考えをお話しします。", "en": "That goes slightly beyond the scope of this thesis, but I'm happy to share my thoughts.", "note": "beyond the scope で範囲外と断りつつ逃げない" },
+        { "id": "def-clarify-010", "ja": "【スライドに戻る】それについては、該当するスライドに戻ってご説明させてください。", "en": "Let me go back to the relevant slide to explain that." },
+        { "id": "def-clarify-011", "ja": "【言い直し】すみません、言い直させてください。", "en": "Sorry, let me rephrase that.", "note": "言い間違えた時にすぐ使える" },
+        { "id": "def-clarify-012", "ja": "【補足を求める】具体的にどの部分についてのご質問か、もう少し詳しく教えていただけますか。", "en": "Could you tell me a bit more about which part specifically you're asking about?" }
+      ]
+    },
+    {
+      "id": "def-future",
+      "title": "将来の課題・展望",
+      "refs": [
+        { "name": "Academic Phrasebank: Writing Conclusions", "url": "https://www.phrasebank.manchester.ac.uk/writing-conclusions/" }
+      ],
+      "cards": [
+        { "id": "def-future-001", "ja": "【今後の課題】今後の課題として、実環境での検証が挙げられます。", "en": "One direction for future work is validation in real-world environments.", "note": "One direction for future work is ～ が汎用的" },
+        { "id": "def-future-002", "ja": "【今後の課題】特に、この手法をオンライン学習に拡張することに関心があります。", "en": "In particular, I'm interested in extending this method to online learning." },
+        { "id": "def-future-003", "ja": "【未解決の問い】なぜこの手法がうまく機能するのかは、理論的にはまだ説明できていません。", "en": "Why this method works so well has not yet been explained theoretically." },
+        { "id": "def-future-004", "ja": "【展望】長期的には、この技術が医療現場で使われることを目指しています。", "en": "In the long term, I hope this technology will be used in clinical settings." },
+        { "id": "def-future-005", "ja": "【審査員の質問への応答】次の一歩としては、より大規模なデータで検証することを計画しています。", "en": "As a next step, I'm planning to test it on a much larger dataset." },
+        { "id": "def-future-006", "ja": "【今後の課題】限界として挙げた点のいくつかは、今後の研究で取り組む予定です。", "en": "I plan to address some of the limitations I mentioned in my future research.", "note": "限界と将来課題をつなげると一貫性が出る" },
+        { "id": "def-future-007", "ja": "【展望】この研究は、新しい研究の方向性を開くものだと考えています。", "en": "I believe this work opens up a new line of research.", "note": "a new line of research = 新しい研究の流れ" },
+        { "id": "def-future-008", "ja": "【審査員の質問への応答】無制限のリソースがあれば、まず多施設共同でデータを集めたいと思います。", "en": "With unlimited resources, the first thing I would do is collect data across multiple institutions." },
+        { "id": "def-future-009", "ja": "【共同研究】この方向性については、すでに海外の研究グループと共同研究を始めています。", "en": "I have already started a collaboration with a research group abroad on this direction." },
+        { "id": "def-future-010", "ja": "【今後の課題】ご提案いただいたアイデアは、今後の研究にぜひ取り入れたいと思います。", "en": "I would very much like to incorporate the idea you suggested into my future work." },
+        { "id": "def-future-011", "ja": "【展望】最終的には、この枠組みをより一般的な理論へと発展させたいと考えています。", "en": "Ultimately, I would like to develop this framework into a more general theory." },
+        { "id": "def-future-012", "ja": "【キャリア】博士号取得後は、ポスドクとしてこの研究を続ける予定です。", "en": "After completing my PhD, I plan to continue this research as a postdoctoral researcher." }
+      ]
+    },
+    {
+      "id": "def-closing",
+      "title": "締めくくり・謝辞",
+      "refs": [
+        { "name": "EAP Foundation: Presentation Language", "url": "https://www.eapfoundation.com/speaking/presentations/language/" },
+        { "name": "MockBase: What Is a PhD Viva?", "url": "https://mockbase.app/guides/phd/what-is-a-phd-viva.html" }
+      ],
+      "cards": [
+        { "id": "def-closing-001", "ja": "【まとめ】最後に、本日の要点を簡単にまとめます。", "en": "To conclude, let me briefly summarize the key points of today's talk." },
+        { "id": "def-closing-002", "ja": "【まとめ】要するに、本論文は、少ないデータでも高精度な推定が可能であることを示しました。", "en": "In short, this thesis has shown that accurate estimation is possible even with limited data." },
+        { "id": "def-closing-003", "ja": "【締め】以上で発表を終わります。ご清聴ありがとうございました。", "en": "That concludes my presentation. Thank you for your attention." },
+        { "id": "def-closing-004", "ja": "【質疑への移行】喜んでご質問にお答えします。", "en": "I'd be happy to take any questions.", "note": "take questions = 質問を受ける" },
+        { "id": "def-closing-005", "ja": "【謝辞】まず、指導教員の佐藤先生に、長年にわたるご指導に心より感謝申し上げます。", "en": "First, I would like to express my sincere gratitude to my supervisor, Professor Sato, for his guidance over the years." },
+        { "id": "def-closing-006", "ja": "【謝辞】審査委員の先生方には、論文を丁寧に読み、貴重なご意見をいただき感謝いたします。", "en": "I am grateful to the committee members for reading my thesis so carefully and for their valuable feedback." },
+        { "id": "def-closing-007", "ja": "【謝辞】特に、遠方からお越しいただいた外部審査委員の先生に感謝申し上げます。", "en": "I would especially like to thank the external examiner for traveling such a long way to be here." },
+        { "id": "def-closing-008", "ja": "【謝辞】研究室の仲間たちにも、日々の議論と支えに感謝します。", "en": "I also thank my lab mates for the daily discussions and their support." },
+        { "id": "def-closing-009", "ja": "【謝辞】最後に、いつも支えてくれた家族に感謝します。", "en": "Finally, I would like to thank my family for always supporting me." },
+        { "id": "def-closing-010", "ja": "【質疑の終わり】本日いただいた鋭いご質問のおかげで、研究をさらに深く考えることができました。", "en": "Your insightful questions today have helped me think about my research more deeply." },
+        { "id": "def-closing-011", "ja": "【結果を受けて】温かいお言葉をありがとうございます。ご指摘の修正点には責任を持って対応いたします。", "en": "Thank you for your kind words. I will make sure to address all the requested revisions.", "note": "requested revisions = 求められた修正" },
+        { "id": "def-closing-012", "ja": "【修正期限の確認】修正版はいつまでに提出すればよろしいでしょうか。", "en": "By when should I submit the revised version?" }
+      ]
+    }
+  ]
+}

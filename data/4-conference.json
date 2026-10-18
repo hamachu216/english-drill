@@ -1,0 +1,225 @@
+{
+  "level": 4,
+  "title": "国際学会",
+  "decks": [
+    {
+      "id": "conf-open",
+      "title": "発表を始める・構成を示す",
+      "refs": [
+        { "name": "EAP Foundation: Presentation structure", "url": "https://www.eapfoundation.com/speaking/presentations/structure/" },
+        { "name": "EAP Foundation: Language for presentations", "url": "https://www.eapfoundation.com/speaking/presentations/language/" }
+      ],
+      "cards": [
+        { "id": "conf-open-001", "ja": "【発表冒頭】本日は、少ないラベルでも頑健に動く手法についてお話しします。", "en": "Today, I'd like to talk about a method that works robustly even with limited labels.", "note": "I'd like to talk about ~ は冒頭の定番。" },
+        { "id": "conf-open-002", "ja": "【座長に紹介された直後】ご紹介ありがとうございます。京都大学博士課程のタナカです。", "en": "Thank you for the kind introduction. My name is Tanaka, and I'm a PhD student at Kyoto University.", "note": "kind introduction で丁寧さが出る。" },
+        { "id": "conf-open-003", "ja": "この研究は東京大学の皆さんとの共同研究です。", "en": "This is joint work with colleagues at the University of Tokyo.", "note": "joint work with ~ が共著者紹介の定番。" },
+        { "id": "conf-open-004", "ja": "【構成提示】まず背景を説明し、次に提案手法、最後に実験結果をお見せします。", "en": "I'll start with some background, then walk you through our proposed method, and finally show you the experimental results.", "note": "walk you through = 順を追って説明する。" },
+        { "id": "conf-open-005", "ja": "発表は大きく3つのパートに分かれています。", "en": "My talk is divided into three main parts." },
+        { "id": "conf-open-006", "ja": "【問題提起】まず、なぜこの問題が重要なのかからお話しします。", "en": "Let me begin by explaining why this problem matters." },
+        { "id": "conf-open-007", "ja": "【聴衆を巻き込む】皆さんの多くも、データのラベル付けに苦労した経験があると思います。", "en": "I'm sure many of you have struggled with labeling data at some point." },
+        { "id": "conf-open-008", "ja": "本研究の主な貢献は2つあります。", "en": "Our work makes two main contributions." },
+        { "id": "conf-open-009", "ja": "一言で言えば、モデル自身に「いつ自信がないか」を判断させる、というアイデアです。", "en": "In a nutshell, the idea is to let the model decide when it's uncertain.", "note": "In a nutshell = 一言で言うと。" },
+        { "id": "conf-open-010", "ja": "時間が限られているので、細かい部分は論文に譲ります。", "en": "Since time is limited, I'll leave the details to the paper.", "note": "leave ~ to the paper で「詳細は論文で」。" },
+        { "id": "conf-open-011", "ja": "質問は最後にまとめて受けますが、わかりにくい所があれば途中でも遠慮なく止めてください。", "en": "I'll take questions at the end, but feel free to stop me if anything is unclear." },
+        { "id": "conf-open-012", "ja": "【オンライン発表】画面は見えていますか？音声は聞こえていますか？", "en": "Can everyone see my screen and hear me okay?" }
+      ]
+    },
+    {
+      "id": "conf-results",
+      "title": "図表・結果を説明する",
+      "refs": [
+        { "name": "EAP Foundation: Visuals in presentations", "url": "https://www.eapfoundation.com/speaking/presentations/visuals/" },
+        { "name": "EAP Foundation: Language for presentations", "url": "https://www.eapfoundation.com/speaking/presentations/language/" }
+      ],
+      "cards": [
+        { "id": "conf-results-001", "ja": "この図は、ラベル数に対して精度がどう変化するかを示しています。", "en": "This figure shows how accuracy changes with the number of labels." },
+        { "id": "conf-results-002", "ja": "横軸は学習ステップ数、縦軸は検証損失です。", "en": "The x-axis shows the number of training steps, and the y-axis shows the validation loss.", "note": "horizontal axis / vertical axis でも可。" },
+        { "id": "conf-results-003", "ja": "青い線が提案手法で、灰色の線がベースラインです。", "en": "The blue line is our method, and the gray line is the baseline." },
+        { "id": "conf-results-004", "ja": "ご覧のとおり、提案手法はすべての設定でベースラインを上回っています。", "en": "As you can see, our method outperforms the baseline in every setting.", "note": "outperform = 性能で上回る。" },
+        { "id": "conf-results-005", "ja": "特に、グラフのこの部分に注目してください。", "en": "In particular, I'd like you to focus on this part of the plot." },
+        { "id": "conf-results-006", "ja": "ラベルが10%しかない場合でも、精度はわずか2ポイントしか下がりません。", "en": "Even with only 10% of the labels, accuracy drops by just two points.", "note": "差は by で表す。" },
+        { "id": "conf-results-007", "ja": "表の太字は、各列で最も良い結果を示しています。", "en": "Bold numbers in the table indicate the best result in each column." },
+        { "id": "conf-results-008", "ja": "興味深いことに、データを増やすと逆に性能が下がりました。", "en": "Interestingly, adding more data actually hurt performance.", "note": "hurt performance = 性能を下げる（口語的）。" },
+        { "id": "conf-results-009", "ja": "この差は統計的に有意で、p値は0.01未満です。", "en": "This difference is statistically significant, with a p-value below 0.01." },
+        { "id": "conf-results-010", "ja": "ここで性能が頭打ちになっているのがわかります。", "en": "You can see that performance plateaus here.", "note": "plateau = 頭打ちになる（動詞）。" },
+        { "id": "conf-results-011", "ja": "数字が細かくて見づらいと思いますが、大事なのは全体の傾向です。", "en": "I know the numbers are hard to read, but the key point is the overall trend." },
+        { "id": "conf-results-012", "ja": "これは、ノイズの多いデータでこそ提案手法が特に有効であることを示唆しています。", "en": "This suggests that our method is especially beneficial when the data is noisy.", "note": "suggest で主張を控えめに。" }
+      ]
+    },
+    {
+      "id": "conf-transition",
+      "title": "スライド間のつなぎ・まとめ",
+      "refs": [
+        { "name": "EAP Foundation: Language for presentations", "url": "https://www.eapfoundation.com/speaking/presentations/language/" },
+        { "name": "EAP Foundation: Presentation structure", "url": "https://www.eapfoundation.com/speaking/presentations/structure/" }
+      ],
+      "cards": [
+        { "id": "conf-transition-001", "ja": "背景は以上です。では、提案手法に移ります。", "en": "That covers the background. Now let's move on to our method." },
+        { "id": "conf-transition-002", "ja": "では、これが実際にどう動くのかを見ていきましょう。", "en": "So let's look at how this actually works in practice." },
+        { "id": "conf-transition-003", "ja": "少し脇道にそれますが、関連する問題に触れておきます。", "en": "Let me digress for a moment to mention a related issue.", "note": "digress = 脇道にそれる。" },
+        { "id": "conf-transition-004", "ja": "先ほど述べたように、主な課題は計算コストです。", "en": "As I mentioned earlier, the main challenge is computational cost." },
+        { "id": "conf-transition-005", "ja": "この点については後ほど詳しく説明します。", "en": "I'll come back to this point later." },
+        { "id": "conf-transition-006", "ja": "言い換えると、モデルは簡単な例から順に学習するわけです。", "en": "In other words, the model learns from easy examples first." },
+        { "id": "conf-transition-007", "ja": "ここまでをまとめると、提案手法は速く、しかも正確です。", "en": "To sum up so far, our method is both faster and more accurate." },
+        { "id": "conf-transition-008", "ja": "これが次の疑問につながります。本当に汎化するのか、という点です。", "en": "This leads to the next question: does it really generalize?" },
+        { "id": "conf-transition-009", "ja": "【時間が押している】時間の都合で、このスライドは飛ばします。", "en": "In the interest of time, I'll skip this slide.", "note": "In the interest of time = 時間の都合で（丁寧）。" },
+        { "id": "conf-transition-010", "ja": "【結論】最後に、今日のポイントを3つ振り返ります。", "en": "To wrap up, let me go over the three key takeaways from today.", "note": "takeaway = 持ち帰ってほしい要点。" },
+        { "id": "conf-transition-011", "ja": "今後は、この手法を多言語データに拡張する予定です。", "en": "In future work, we plan to extend this approach to multilingual data." },
+        { "id": "conf-transition-012", "ja": "ご清聴ありがとうございました。ご質問があればどうぞ。", "en": "Thank you for your attention. I'd be happy to take any questions." }
+      ]
+    },
+    {
+      "id": "conf-qa",
+      "title": "質問を受ける・聞き返す",
+      "refs": [
+        { "name": "UTokyo English Academia: How to Survive a Q&A Session", "url": "https://www.he.u-tokyo.ac.jp/englishacademia/courses/EA001/course/module5/3.html" },
+        { "name": "EAP Foundation: Clarifying", "url": "https://www.eapfoundation.com/speaking/discussions/clarifying/" }
+      ],
+      "cards": [
+        { "id": "conf-qa-001", "ja": "ありがとうございます、良い質問ですね。", "en": "Thank you, that's a great question.", "note": "毎回言うと形骸化するので言い回しを変える。" },
+        { "id": "conf-qa-002", "ja": "すみません、最後の部分が聞き取れませんでした。もう一度言っていただけますか？", "en": "Sorry, I didn't catch the last part. Could you say that again?", "note": "catch = 聞き取る。" },
+        { "id": "conf-qa-003", "ja": "もう少しゆっくり話していただけますか？", "en": "Would you mind speaking a little more slowly?" },
+        { "id": "conf-qa-004", "ja": "確認させてください。データセットの規模についてのご質問でしょうか？", "en": "Just to make sure I understand, are you asking about the size of the dataset?" },
+        { "id": "conf-qa-005", "ja": "つまり、なぜ別の損失関数を使わなかったのか、というご質問ですね。", "en": "So, if I understand correctly, you're asking why we didn't use a different loss function." },
+        { "id": "conf-qa-006", "ja": "質問を言い換えると、この手法がリアルタイムで動くかどうか、ということでしょうか？", "en": "If I may rephrase your question, you're wondering whether this method can run in real time?" },
+        { "id": "conf-qa-007", "ja": "【会場向け】後ろの方にも聞こえるよう、質問を繰り返しますね。", "en": "Let me repeat the question for everyone in the back." },
+        { "id": "conf-qa-008", "ja": "「ドメインシフト」というのは、具体的にどういう意味でおっしゃっていますか？", "en": "When you say \"domain shift,\" what exactly do you mean?" },
+        { "id": "conf-qa-009", "ja": "これでご質問の答えになっていますか？", "en": "Does that answer your question?" },
+        { "id": "conf-qa-010", "ja": "おっしゃるとおりです。それは本研究の限界の一つです。", "en": "You're absolutely right. That's one of the limitations of our work." },
+        { "id": "conf-qa-011", "ja": "はい、まさにその点を確かめるために追加実験を行いました。", "en": "Yes, we actually ran an additional experiment to test exactly that." },
+        { "id": "conf-qa-012", "ja": "それに関する予備スライドがあるので、お見せします。", "en": "I have a backup slide on that, so let me show you.", "note": "backup slide = 質疑用の予備スライド。" }
+      ]
+    },
+    {
+      "id": "conf-tough",
+      "title": "答えにくい質問をかわす・後で回答する",
+      "refs": [
+        { "name": "UTokyo English Academia: How to Survive a Q&A Session", "url": "https://www.he.u-tokyo.ac.jp/englishacademia/courses/EA001/course/module5/3.html" },
+        { "name": "EAP Foundation: Giving opinions", "url": "https://www.eapfoundation.com/speaking/discussions/opinions/" }
+      ],
+      "cards": [
+        { "id": "conf-tough-001", "ja": "興味深いご指摘ですが、今回の研究の範囲外です。", "en": "That's an interesting point, but it's beyond the scope of this study.", "note": "beyond the scope = 範囲外。" },
+        { "id": "conf-tough-002", "ja": "正直に言うと、その点はまだ検証していません。", "en": "To be honest, we haven't tested that yet." },
+        { "id": "conf-tough-003", "ja": "今この場で正確にはお答えできないので、調べて後ほどご連絡します。", "en": "I'm not sure I can give you an accurate answer right now, but I'll look into it and get back to you.", "note": "get back to you = 改めて連絡する。" },
+        { "id": "conf-tough-004", "ja": "時間が押しているので、続きはセッション後に議論させていただけますか？", "en": "Since we're running short on time, could we continue this discussion after the session?" },
+        { "id": "conf-tough-005", "ja": "推測になりますが、おそらく正則化の効果だと思います。", "en": "This is just speculation, but I suspect it's due to the regularization effect.", "note": "推測だと明示するのは誠実さの表れ。" },
+        { "id": "conf-tough-006", "ja": "とても良い問いで、まさに次に取り組もうとしていることです。", "en": "That's a really good question, and it's exactly what we're planning to look at next." },
+        { "id": "conf-tough-007", "ja": "理論的な保証はありませんが、経験的にはかなり安定して動いています。", "en": "We don't have a theoretical guarantee, but empirically it's been quite stable." },
+        { "id": "conf-tough-008", "ja": "おっしゃることはわかりますが、私たちの結果は少し違うことを示していると思います。", "en": "I see your point, but I think our results suggest something slightly different.", "note": "I see your point で受け止めてから反論。" },
+        { "id": "conf-tough-009", "ja": "部分的には同意しますが、一点補足させてください。", "en": "I partly agree, but let me add one thing." },
+        { "id": "conf-tough-010", "ja": "その分野は専門外なので、確かなことは言えません。", "en": "That's a bit outside my area of expertise, so I can't say for sure." },
+        { "id": "conf-tough-011", "ja": "その部分は共著者の方が詳しいので、確認してメールでお答えします。", "en": "My co-author knows more about that part, so I'll check with them and email you." },
+        { "id": "conf-tough-012", "ja": "貴重なご意見ありがとうございます。今後の研究で検討させていただきます。", "en": "Thank you for the valuable feedback. We'll definitely take that into account in our future work.", "note": "take ~ into account = 考慮に入れる。" }
+      ]
+    },
+    {
+      "id": "conf-ask",
+      "title": "他者の発表へ質問する",
+      "refs": [
+        { "name": "Queen Mary Academic English Online: Contributing in seminars", "url": "https://aeo.sllf.qmul.ac.uk/speaking/contributing-in-seminars/" },
+        { "name": "EAP Foundation: Clarifying", "url": "https://www.eapfoundation.com/speaking/discussions/clarifying/" }
+      ],
+      "cards": [
+        { "id": "conf-ask-001", "ja": "素晴らしい発表をありがとうございました。一つ質問させてください。", "en": "Thank you for the great talk. I have one question." },
+        { "id": "conf-ask-002", "ja": "【質問の前に名乗る】大阪大学のサトウです。", "en": "Hi, I'm Sato from Osaka University.", "note": "質疑では名前と所属を先に言うのが慣例。" },
+        { "id": "conf-ask-003", "ja": "7枚目のスライドに戻っていただけますか？", "en": "Could you go back to slide seven, please?" },
+        { "id": "conf-ask-004", "ja": "確認ですが、ベースラインも同じデータで学習させたのですか？", "en": "Just to clarify, were the baselines trained on the same data?" },
+        { "id": "conf-ask-005", "ja": "この手法は、もっと大きなモデルにもスケールすると思いますか？", "en": "Do you think this approach would scale to larger models?" },
+        { "id": "conf-ask-006", "ja": "ハイパーパラメータの決め方について、もう少し詳しく教えていただけますか？", "en": "Could you elaborate a bit on how you chose the hyperparameters?", "note": "elaborate on ~ = ~を詳しく説明する。" },
+        { "id": "conf-ask-007", "ja": "質問が2つあります。1つ目は評価指標、2つ目は計算コストについてです。", "en": "I have two questions. The first is about the evaluation metric, and the second is about the computational cost." },
+        { "id": "conf-ask-008", "ja": "聞き逃したかもしれませんが、データはどう前処理したのですか？", "en": "I may have missed this, but how did you preprocess the data?", "note": "相手を責めない前置き。" },
+        { "id": "conf-ask-009", "ja": "関連して、私たちの研究では逆の傾向が見られたのですが、どう解釈されますか？", "en": "On a related note, we observed the opposite trend in our own work. How would you interpret that?" },
+        { "id": "conf-ask-010", "ja": "うまくいかなかったケースはどのようなものでしたか？", "en": "What did the failure cases look like?" },
+        { "id": "conf-ask-011", "ja": "実世界ではどのような応用を想定していますか？", "en": "What kind of real-world applications do you have in mind?" },
+        { "id": "conf-ask-012", "ja": "【回答を受けて】よくわかりました、ありがとうございます。", "en": "That makes sense. Thank you." }
+      ]
+    },
+    {
+      "id": "conf-poster",
+      "title": "ポスター発表での説明",
+      "refs": [
+        { "name": "UTokyo English Academia: Making a Presentation at a Poster Session", "url": "https://www.he.u-tokyo.ac.jp/englishacademia/courses/EA001/course/module4/1.html" }
+      ],
+      "cards": [
+        { "id": "conf-poster-001", "ja": "【ポスター前で】こんにちは。よろしければ簡単にご説明しましょうか？", "en": "Hi! Would you like a quick overview of the poster?" },
+        { "id": "conf-poster-002", "ja": "この分野にはお詳しいですか？", "en": "Are you familiar with this area?", "note": "相手の知識に合わせて説明の深さを変える。" },
+        { "id": "conf-poster-003", "ja": "2分の短い版と詳しい版、どちらがいいですか？", "en": "Would you like the two-minute version or the detailed one?" },
+        { "id": "conf-poster-004", "ja": "ご自由にご覧ください。何かあれば声をかけてください。", "en": "Feel free to take a look, and just let me know if you have any questions." },
+        { "id": "conf-poster-005", "ja": "ポスターは左上から始まって、時計回りに読む構成です。", "en": "The poster flows clockwise, starting from the top left." },
+        { "id": "conf-poster-006", "ja": "要するに、問題はこれで、私たちの解決策がこれです。", "en": "So basically, here's the problem, and here's our solution." },
+        { "id": "conf-poster-007", "ja": "一番お伝えしたい結果は、このグラフです。", "en": "The key result I want to highlight is this graph here." },
+        { "id": "conf-poster-008", "ja": "ノートPCで実際に動くデモがあるのですが、ご覧になりますか？", "en": "I have a live demo on my laptop. Would you like to see it?" },
+        { "id": "conf-poster-009", "ja": "論文はこちらのQRコードからダウンロードできます。", "en": "You can download the paper from this QR code." },
+        { "id": "conf-poster-010", "ja": "その発想はありませんでした。メモしてもいいですか？", "en": "I hadn't thought of that. Mind if I write it down?" },
+        { "id": "conf-poster-011", "ja": "お立ち寄りいただきありがとうございました。名刺をいただけますか？", "en": "Thanks so much for stopping by. Do you have a card I could take?", "note": "stop by = 立ち寄る。" },
+        { "id": "conf-poster-012", "ja": "【他の人が待っている】すみません、お待ちの方がいるので、続きは少し後でもいいですか？", "en": "Sorry, there are a few people waiting. Could we pick this up a bit later?", "note": "pick up = 中断した話を再開する。" }
+      ]
+    },
+    {
+      "id": "conf-network",
+      "title": "ネットワーキング・自己紹介・研究紹介",
+      "refs": [
+        { "name": "UTokyo English Academia: Socializing at a Conference", "url": "https://www.he.u-tokyo.ac.jp/englishacademia/courses/EA001/course/module6/1.html" },
+        { "name": "UTokyo English Academia: Discussing Your Research with a Colleague", "url": "https://www.he.u-tokyo.ac.jp/englishacademia/courses/EA001/course/module3/1.html" }
+      ],
+      "cards": [
+        { "id": "conf-network-001", "ja": "【コーヒーブレイク】ご一緒してもいいですか？", "en": "Mind if I join you?" },
+        { "id": "conf-network-002", "ja": "今日はどの発表が一番面白かったですか？", "en": "Which talk did you enjoy the most today?", "note": "学会の話題は無難なアイスブレイク。" },
+        { "id": "conf-network-003", "ja": "午前中のご発表、とても面白かったです。", "en": "I really enjoyed your talk this morning." },
+        { "id": "conf-network-004", "ja": "【自己紹介】京都大学の博士3年で、半教師あり学習を研究しています。", "en": "I'm a third-year PhD student at Kyoto University, working on semi-supervised learning." },
+        { "id": "conf-network-005", "ja": "【エレベーターピッチ】簡単に言うと、ラベルが少なくても高精度な分類器を作る方法を研究しています。", "en": "Basically, I'm working on ways to build accurate classifiers without needing lots of labeled data.", "note": "専門用語を避けて一文で言えるように。" },
+        { "id": "conf-network-006", "ja": "なぜ重要かというと、医療ではラベル付けに専門家が必要で、とても高くつくからです。", "en": "It matters because in medicine, labeling requires experts, which makes it very expensive." },
+        { "id": "conf-network-007", "ja": "最近はどんな研究をされているんですか？", "en": "What are you working on these days?" },
+        { "id": "conf-network-008", "ja": "実は、先生の2022年の論文をかなり参考にさせていただいています。", "en": "Actually, I've been building on your 2022 paper quite a lot.", "note": "build on = ~を土台にする。" },
+        { "id": "conf-network-009", "ja": "この学会に参加するのは初めてです。", "en": "This is my first time attending this conference." },
+        { "id": "conf-network-010", "ja": "東京にいらっしゃることがあれば、ぜひ研究室にお立ち寄りください。", "en": "If you're ever in Tokyo, you're very welcome to visit our lab." },
+        { "id": "conf-network-011", "ja": "もっとお話ししたいのですが、次のセッションに行かなければなりません。", "en": "I'd love to keep talking, but I need to head to the next session.", "note": "会話を感じよく切り上げる定番。" },
+        { "id": "conf-network-012", "ja": "お話しできてよかったです。連絡先を交換しませんか？", "en": "It was great talking with you. Shall we exchange contact details?" }
+      ]
+    },
+    {
+      "id": "conf-chair",
+      "title": "座長・セッション進行",
+      "refs": [
+        { "name": "UTokyo English Academia: Giving a Presentation at an International Conference", "url": "https://www.he.u-tokyo.ac.jp/englishacademia/courses/EA001/course/module5/1.html" },
+        { "name": "EAP Foundation: Participating in discussions", "url": "https://www.eapfoundation.com/speaking/discussions/participate/" }
+      ],
+      "cards": [
+        { "id": "conf-chair-001", "ja": "皆さん、おはようございます。機械学習セッションへようこそ。", "en": "Good morning, everyone, and welcome to the machine learning session." },
+        { "id": "conf-chair-002", "ja": "本セッションの座長を務めます、京都大学のタナカです。", "en": "I'm Tanaka from Kyoto University, and I'll be chairing this session.", "note": "chair は動詞で「座長を務める」。" },
+        { "id": "conf-chair-003", "ja": "各発表は15分、その後に質疑応答が5分です。", "en": "Each talk is 15 minutes, followed by 5 minutes for Q&A." },
+        { "id": "conf-chair-004", "ja": "最初の発表者は、MITのスミス先生です。", "en": "Our first speaker is Dr. Smith from MIT." },
+        { "id": "conf-chair-005", "ja": "【タイムキーパー】残り5分です。", "en": "You have five minutes left." },
+        { "id": "conf-chair-006", "ja": "そろそろまとめに入っていただけますか？", "en": "Could you start wrapping up, please?" },
+        { "id": "conf-chair-007", "ja": "ありがとうございました。では、会場からのご質問を受け付けます。", "en": "Thank you very much. We now have time for questions from the floor.", "note": "from the floor = 会場（聴衆）から。" },
+        { "id": "conf-chair-008", "ja": "ご質問の際は、マイクを使ってお名前とご所属をお願いします。", "en": "If you have a question, please use the microphone and state your name and affiliation." },
+        { "id": "conf-chair-009", "ja": "ご質問がないようでしたら、私から一つ伺います。", "en": "If there are no questions, I'll start with one of my own.", "note": "沈黙時に座長が質問を用意しておくのが礼儀。" },
+        { "id": "conf-chair-010", "ja": "申し訳ありませんが、時間になりましたので質疑はここまでとします。", "en": "I'm afraid we're out of time, so we'll have to stop here." },
+        { "id": "conf-chair-011", "ja": "続きの議論は、休憩時間にお願いします。", "en": "Please feel free to continue the discussion during the break." },
+        { "id": "conf-chair-012", "ja": "もう一度、すべての発表者に拍手をお願いします。", "en": "Let's thank all our speakers once again.", "note": "直訳の applause より自然。" }
+      ]
+    },
+    {
+      "id": "conf-follow",
+      "title": "学会後のフォローアップ",
+      "refs": [
+        { "name": "UTokyo English Academia: Socializing at a Conference", "url": "https://www.he.u-tokyo.ac.jp/englishacademia/courses/EA001/course/module6/1.html" },
+        { "name": "UTokyo English Academia: Discussing Your Research with a Colleague", "url": "https://www.he.u-tokyo.ac.jp/englishacademia/courses/EA001/course/module3/1.html" }
+      ],
+      "cards": [
+        { "id": "conf-follow-001", "ja": "【メール件名】学会でのお話についてのフォローアップ", "en": "Follow-up on our conversation at the conference" },
+        { "id": "conf-follow-002", "ja": "先週の学会では、ポスターにお立ち寄りいただきありがとうございました。", "en": "Thank you for stopping by my poster at the conference last week." },
+        { "id": "conf-follow-003", "ja": "京都大学のタナカです。火曜日のコーヒーブレイクで少しお話しさせていただきました。", "en": "This is Tanaka from Kyoto University. We chatted briefly during the coffee break on Tuesday.", "note": "どこで会ったかを具体的に書くと思い出してもらいやすい。" },
+        { "id": "conf-follow-004", "ja": "発表の際にいただいたご質問について、追加実験の結果を添付します。", "en": "Regarding the question you raised during my talk, I've attached the results of an additional experiment." },
+        { "id": "conf-follow-005", "ja": "お約束していたスライドとコードを添付します。", "en": "As promised, I've attached the slides and the code." },
+        { "id": "conf-follow-006", "ja": "いただいたコメントは大変参考になりました。", "en": "Your comments were extremely helpful." },
+        { "id": "conf-follow-007", "ja": "私たちの研究は相補的だと思うので、何か一緒にできないかと考えています。", "en": "I think our work is quite complementary, and I was wondering if there might be a way to collaborate.", "note": "I was wondering if ~ で控えめに打診。" },
+        { "id": "conf-follow-008", "ja": "ご興味があれば、来月どこかで短いオンラインミーティングをしませんか？", "en": "If you're interested, would you be open to a short video call sometime next month?", "note": "would you be open to ~ = 押し付けない提案。" },
+        { "id": "conf-follow-009", "ja": "そちらの研究室のデータセットを、研究目的で使わせていただくことは可能でしょうか？", "en": "Would it be possible to use your lab's dataset for research purposes?" },
+        { "id": "conf-follow-010", "ja": "この夏、貴研究室に短期滞在させていただくことは可能でしょうか？", "en": "Would it be possible for me to visit your lab for a short research stay this summer?" },
+        { "id": "conf-follow-011", "ja": "お忙しいところ恐縮ですが、ご検討いただけますと幸いです。", "en": "I know you're very busy, but I'd really appreciate it if you could consider this." },
+        { "id": "conf-follow-012", "ja": "お返事をお待ちしております。", "en": "I look forward to hearing from you.", "note": "look forward to の後は -ing。" }
+      ]
+    }
+  ]
+}
