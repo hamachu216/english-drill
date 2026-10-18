@@ -200,4 +200,9 @@ if (Recognition) {
 
 applyTheme();
 renderHome();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+if ('serviceWorker' in navigator) {
+  // A new deploy's worker took over: reload once so this page runs the new code too.
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => hadController && location.reload());
+  navigator.serviceWorker.register('sw.js');
+}
