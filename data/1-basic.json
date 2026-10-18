@@ -1,0 +1,1961 @@
+{
+  "level": 1,
+  "title": "基礎: 中学文法",
+  "decks": [
+    {
+      "id": "b-be",
+      "title": "be動詞・一般動詞",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "ぼくらの瞬間英作文",
+          "url": "https://urbanmeetup.tokyo/app/shunkan"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-be-001",
+          "ja": "私は大学院生です。",
+          "en": "I am a graduate student.",
+          "note": "主語がIならbe動詞はam"
+        },
+        {
+          "id": "b-be-002",
+          "ja": "彼女は私の指導教員です。",
+          "en": "She is my advisor."
+        },
+        {
+          "id": "b-be-003",
+          "ja": "この論文はとても長い。",
+          "en": "This paper is very long."
+        },
+        {
+          "id": "b-be-004",
+          "ja": "私たちの研究室は3階にあります。",
+          "en": "Our lab is on the third floor.",
+          "note": "be動詞＋場所で「〜にある」"
+        },
+        {
+          "id": "b-be-005",
+          "ja": "彼らは同じ大学の研究者です。",
+          "en": "They are researchers at the same university."
+        },
+        {
+          "id": "b-be-006",
+          "ja": "私は毎朝コーヒーを飲みます。",
+          "en": "I drink coffee every morning."
+        },
+        {
+          "id": "b-be-007",
+          "ja": "彼は毎日8時間実験をします。",
+          "en": "He does experiments for eight hours every day.",
+          "note": "三人称単数現在はdo→does"
+        },
+        {
+          "id": "b-be-008",
+          "ja": "私の教授は3か国語を話します。",
+          "en": "My professor speaks three languages."
+        },
+        {
+          "id": "b-be-009",
+          "ja": "私たちは毎週金曜日にミーティングをします。",
+          "en": "We have a meeting every Friday."
+        },
+        {
+          "id": "b-be-010",
+          "ja": "彼女は自転車で大学に通っています。",
+          "en": "She goes to the university by bike.",
+          "note": "習慣は現在形で表す"
+        },
+        {
+          "id": "b-be-011",
+          "ja": "その装置はとても高価です。",
+          "en": "The equipment is very expensive."
+        },
+        {
+          "id": "b-be-012",
+          "ja": "私は機械学習を研究しています。",
+          "en": "I study machine learning.",
+          "note": "継続的な事実は現在形でよい"
+        },
+        {
+          "id": "b-be-013",
+          "ja": "彼は毎晩論文を読みます。",
+          "en": "He reads papers every night."
+        },
+        {
+          "id": "b-be-014",
+          "ja": "この部屋はいつも寒い。",
+          "en": "This room is always cold."
+        },
+        {
+          "id": "b-be-015",
+          "ja": "私の兄は東京に住んでいます。",
+          "en": "My brother lives in Tokyo.",
+          "note": "liveは状態を表すので現在形"
+        },
+        {
+          "id": "b-be-016",
+          "ja": "彼女はPythonをとても上手に書きます。",
+          "en": "She writes Python very well."
+        },
+        {
+          "id": "b-be-017",
+          "ja": "私たちはその結果に満足しています。",
+          "en": "We are happy with the results."
+        },
+        {
+          "id": "b-be-018",
+          "ja": "田中先生は物理学の教授です。",
+          "en": "Dr. Tanaka is a professor of physics."
+        },
+        {
+          "id": "b-be-019",
+          "ja": "私は週末によく図書館で勉強します。",
+          "en": "I often study at the library on weekends.",
+          "note": "頻度の副詞は一般動詞の前"
+        },
+        {
+          "id": "b-be-020",
+          "ja": "彼は週に3回ジムに行きます。",
+          "en": "He goes to the gym three times a week."
+        }
+      ]
+    },
+    {
+      "id": "b-neg",
+      "title": "疑問文・否定文",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "毎日3秒英作文",
+          "url": "https://sunaoblog.com/3sec-game/"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-neg-001",
+          "ja": "あなたは学生ですか。",
+          "en": "Are you a student?"
+        },
+        {
+          "id": "b-neg-002",
+          "ja": "私は疲れていません。",
+          "en": "I am not tired."
+        },
+        {
+          "id": "b-neg-003",
+          "ja": "彼はコーヒーを飲みません。",
+          "en": "He doesn't drink coffee.",
+          "note": "三単現の否定はdoesn't＋原形"
+        },
+        {
+          "id": "b-neg-004",
+          "ja": "あなたは毎日研究室に来ますか。",
+          "en": "Do you come to the lab every day?"
+        },
+        {
+          "id": "b-neg-005",
+          "ja": "彼女は統計学を教えますか。",
+          "en": "Does she teach statistics?"
+        },
+        {
+          "id": "b-neg-006",
+          "ja": "この方法は新しくありません。",
+          "en": "This method is not new."
+        },
+        {
+          "id": "b-neg-007",
+          "ja": "私たちは週末には働きません。",
+          "en": "We don't work on weekends."
+        },
+        {
+          "id": "b-neg-008",
+          "ja": "あなたの研究テーマは何ですか。",
+          "en": "What is your research topic?"
+        },
+        {
+          "id": "b-neg-009",
+          "ja": "あなたはどこに住んでいますか。",
+          "en": "Where do you live?"
+        },
+        {
+          "id": "b-neg-010",
+          "ja": "彼はなぜそんなに忙しいのですか。",
+          "en": "Why is he so busy?"
+        },
+        {
+          "id": "b-neg-011",
+          "ja": "あなたは何時に寝ますか。",
+          "en": "What time do you go to bed?"
+        },
+        {
+          "id": "b-neg-012",
+          "ja": "そのコードは動きません。",
+          "en": "The code doesn't work."
+        },
+        {
+          "id": "b-neg-013",
+          "ja": "あなたの教授はどんな人ですか。",
+          "en": "What is your professor like?",
+          "note": "What is A like? で「Aはどんな人・物か」"
+        },
+        {
+          "id": "b-neg-014",
+          "ja": "誰がこのプロジェクトのリーダーですか。",
+          "en": "Who is the leader of this project?"
+        },
+        {
+          "id": "b-neg-015",
+          "ja": "彼らは日本語を話しますか。",
+          "en": "Do they speak Japanese?"
+        },
+        {
+          "id": "b-neg-016",
+          "ja": "私はその結果を信じません。",
+          "en": "I don't believe the result."
+        },
+        {
+          "id": "b-neg-017",
+          "ja": "あなたはどうやって大学に来ますか。",
+          "en": "How do you get to the university?"
+        },
+        {
+          "id": "b-neg-018",
+          "ja": "あなたは1週間に何本の論文を読みますか。",
+          "en": "How many papers do you read a week?",
+          "note": "How many＋複数名詞"
+        },
+        {
+          "id": "b-neg-019",
+          "ja": "どちらがあなたのノートパソコンですか。",
+          "en": "Which is your laptop?"
+        },
+        {
+          "id": "b-neg-020",
+          "ja": "その会議室は今空いていますか。",
+          "en": "Is the meeting room free now?"
+        }
+      ]
+    },
+    {
+      "id": "b-prog",
+      "title": "現在進行形",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "ぼくらの瞬間英作文",
+          "url": "https://urbanmeetup.tokyo/app/shunkan"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-prog-001",
+          "ja": "私は今論文を書いています。",
+          "en": "I am writing a paper now."
+        },
+        {
+          "id": "b-prog-002",
+          "ja": "彼は実験室でデータを分析しています。",
+          "en": "He is analyzing data in the lab."
+        },
+        {
+          "id": "b-prog-003",
+          "ja": "雨が降っています。",
+          "en": "It is raining.",
+          "note": "天候のitを主語にする"
+        },
+        {
+          "id": "b-prog-004",
+          "ja": "あなたは何をしているのですか。",
+          "en": "What are you doing?"
+        },
+        {
+          "id": "b-prog-005",
+          "ja": "私たちは新しいモデルを訓練しているところです。",
+          "en": "We are training a new model."
+        },
+        {
+          "id": "b-prog-006",
+          "ja": "彼女は電話で話しています。",
+          "en": "She is talking on the phone."
+        },
+        {
+          "id": "b-prog-007",
+          "ja": "学生たちは発表の準備をしています。",
+          "en": "The students are preparing for the presentation."
+        },
+        {
+          "id": "b-prog-008",
+          "ja": "私は今はコードを書いていません。",
+          "en": "I am not writing code right now."
+        },
+        {
+          "id": "b-prog-009",
+          "ja": "彼はまだ寝ていますか。",
+          "en": "Is he still sleeping?"
+        },
+        {
+          "id": "b-prog-010",
+          "ja": "誰がプロジェクターを使っているのですか。",
+          "en": "Who is using the projector?"
+        },
+        {
+          "id": "b-prog-011",
+          "ja": "私は明日大阪へ出発します。",
+          "en": "I am leaving for Osaka tomorrow.",
+          "note": "確定した近い予定は現在進行形で表せる"
+        },
+        {
+          "id": "b-prog-012",
+          "ja": "教授はゲストと話しています。",
+          "en": "The professor is talking with a guest."
+        },
+        {
+          "id": "b-prog-013",
+          "ja": "私は最近英語の論文をたくさん読んでいます。",
+          "en": "I am reading a lot of English papers these days."
+        },
+        {
+          "id": "b-prog-014",
+          "ja": "その計算はまだ走っています。",
+          "en": "The computation is still running."
+        },
+        {
+          "id": "b-prog-015",
+          "ja": "あなたは私の話を聞いていますか。",
+          "en": "Are you listening to me?"
+        },
+        {
+          "id": "b-prog-016",
+          "ja": "彼らは昼食を食べています。",
+          "en": "They are having lunch.",
+          "note": "「食べる」の意味のhaveは進行形にできる"
+        },
+        {
+          "id": "b-prog-017",
+          "ja": "気温が上がってきています。",
+          "en": "The temperature is rising."
+        },
+        {
+          "id": "b-prog-018",
+          "ja": "私は彼を待っています。",
+          "en": "I am waiting for him."
+        },
+        {
+          "id": "b-prog-019",
+          "ja": "彼女はどこに向かっているのですか。",
+          "en": "Where is she going?"
+        },
+        {
+          "id": "b-prog-020",
+          "ja": "私たちは新しいアパートを探しています。",
+          "en": "We are looking for a new apartment."
+        }
+      ]
+    },
+    {
+      "id": "b-past",
+      "title": "過去形・過去進行形",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "Score Bridge",
+          "url": "https://www.speech-pass.com/media/tool/instant-english-composition"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-past-001",
+          "ja": "私は昨日その論文を読みました。",
+          "en": "I read the paper yesterday.",
+          "note": "readの過去形は綴りが同じで発音は[red]"
+        },
+        {
+          "id": "b-past-002",
+          "ja": "彼は先週東京に行きました。",
+          "en": "He went to Tokyo last week."
+        },
+        {
+          "id": "b-past-003",
+          "ja": "実験は失敗しました。",
+          "en": "The experiment failed."
+        },
+        {
+          "id": "b-past-004",
+          "ja": "昨日は寒かった。",
+          "en": "It was cold yesterday."
+        },
+        {
+          "id": "b-past-005",
+          "ja": "私たちはそれについて3時間議論しました。",
+          "en": "We discussed it for three hours.",
+          "note": "discussは他動詞なのでaboutは不要"
+        },
+        {
+          "id": "b-past-006",
+          "ja": "あなたは昨日研究室にいましたか。",
+          "en": "Were you in the lab yesterday?"
+        },
+        {
+          "id": "b-past-007",
+          "ja": "彼女はその会議に来ませんでした。",
+          "en": "She didn't come to the meeting."
+        },
+        {
+          "id": "b-past-008",
+          "ja": "私は今朝朝食を食べませんでした。",
+          "en": "I didn't eat breakfast this morning."
+        },
+        {
+          "id": "b-past-009",
+          "ja": "あなたはいつ博士課程を始めたのですか。",
+          "en": "When did you start your PhD?"
+        },
+        {
+          "id": "b-past-010",
+          "ja": "私は2年前にその学会で彼に会いました。",
+          "en": "I met him at the conference two years ago."
+        },
+        {
+          "id": "b-past-011",
+          "ja": "指導教員は私の草稿にたくさんコメントをくれました。",
+          "en": "My advisor gave me a lot of comments on my draft."
+        },
+        {
+          "id": "b-past-012",
+          "ja": "何が起きたのですか。",
+          "en": "What happened?",
+          "note": "疑問詞が主語のときはdidを使わない"
+        },
+        {
+          "id": "b-past-013",
+          "ja": "電話が鳴ったとき、私はシャワーを浴びていました。",
+          "en": "I was taking a shower when the phone rang."
+        },
+        {
+          "id": "b-past-014",
+          "ja": "昨日の夜10時に何をしていましたか。",
+          "en": "What were you doing at ten last night?"
+        },
+        {
+          "id": "b-past-015",
+          "ja": "私たちはその時データを集めていました。",
+          "en": "We were collecting data at that time."
+        },
+        {
+          "id": "b-past-016",
+          "ja": "彼が入ってきたとき、学生たちは話していました。",
+          "en": "The students were talking when he came in."
+        },
+        {
+          "id": "b-past-017",
+          "ja": "私は昨年アメリカに留学しました。",
+          "en": "I studied abroad in the US last year."
+        },
+        {
+          "id": "b-past-018",
+          "ja": "サーバーは昨夜止まりました。",
+          "en": "The server went down last night."
+        },
+        {
+          "id": "b-past-019",
+          "ja": "彼女は発表の間ずっと緊張していました。",
+          "en": "She was nervous during the whole presentation."
+        },
+        {
+          "id": "b-past-020",
+          "ja": "駅に歩いて向かっていたとき、雨が降り始めました。",
+          "en": "It started to rain while I was walking to the station.",
+          "note": "進行中の動作に別の出来事が割り込む"
+        },
+        {
+          "id": "b-past-021",
+          "ja": "あなたはその結果を教授に見せましたか。",
+          "en": "Did you show the results to your professor?"
+        },
+        {
+          "id": "b-past-022",
+          "ja": "私たちはその問題について何も知りませんでした。",
+          "en": "We didn't know anything about the problem."
+        }
+      ]
+    },
+    {
+      "id": "b-future",
+      "title": "未来 (will / be going to)",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "毎日3秒英作文",
+          "url": "https://sunaoblog.com/3sec-game/"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-future-001",
+          "ja": "明日あなたに結果を送ります。",
+          "en": "I will send you the results tomorrow."
+        },
+        {
+          "id": "b-future-002",
+          "ja": "私は来年博士論文を提出するつもりです。",
+          "en": "I am going to submit my dissertation next year.",
+          "note": "前から決めている予定はbe going to"
+        },
+        {
+          "id": "b-future-003",
+          "ja": "彼はきっとその賞を取るでしょう。",
+          "en": "He will surely win the award."
+        },
+        {
+          "id": "b-future-004",
+          "ja": "明日は雨が降るでしょう。",
+          "en": "It will rain tomorrow."
+        },
+        {
+          "id": "b-future-005",
+          "ja": "私が手伝いますよ。",
+          "en": "I'll help you.",
+          "note": "その場で決めた意志はwill"
+        },
+        {
+          "id": "b-future-006",
+          "ja": "私たちは来月新しい実験を始める予定です。",
+          "en": "We are going to start a new experiment next month."
+        },
+        {
+          "id": "b-future-007",
+          "ja": "彼女は会議に来ないでしょう。",
+          "en": "She won't come to the meeting.",
+          "note": "will not = won't"
+        },
+        {
+          "id": "b-future-008",
+          "ja": "あなたは夏休みに何をするつもりですか。",
+          "en": "What are you going to do during summer vacation?"
+        },
+        {
+          "id": "b-future-009",
+          "ja": "私は今夜は早く寝るつもりです。",
+          "en": "I am going to go to bed early tonight."
+        },
+        {
+          "id": "b-future-010",
+          "ja": "このモデルはもっと良い結果を出すでしょう。",
+          "en": "This model will give better results."
+        },
+        {
+          "id": "b-future-011",
+          "ja": "あの雲を見て。雨が降りそうだ。",
+          "en": "Look at those clouds. It's going to rain.",
+          "note": "目の前の兆候に基づく予測はbe going to"
+        },
+        {
+          "id": "b-future-012",
+          "ja": "私は二度とそんな間違いをしません。",
+          "en": "I will never make that mistake again."
+        },
+        {
+          "id": "b-future-013",
+          "ja": "あなたは国際会議で発表するつもりですか。",
+          "en": "Are you going to give a presentation at the international conference?"
+        },
+        {
+          "id": "b-future-014",
+          "ja": "明日は晴れるでしょうか。",
+          "en": "Will it be sunny tomorrow?"
+        },
+        {
+          "id": "b-future-015",
+          "ja": "彼らは来週引っ越す予定です。",
+          "en": "They are going to move next week."
+        },
+        {
+          "id": "b-future-016",
+          "ja": "その計算は5分後に終わるでしょう。",
+          "en": "The calculation will finish in five minutes.",
+          "note": "in＋時間で「〜後に」"
+        },
+        {
+          "id": "b-future-017",
+          "ja": "私は30歳までに博士号を取るつもりです。",
+          "en": "I am going to get my PhD by the age of thirty.",
+          "note": "byは「〜までに」（期限）"
+        },
+        {
+          "id": "b-future-018",
+          "ja": "心配しないで。すべてうまくいくよ。",
+          "en": "Don't worry. Everything will be fine."
+        },
+        {
+          "id": "b-future-019",
+          "ja": "明日の朝あなたに電話します。",
+          "en": "I'll call you tomorrow morning."
+        },
+        {
+          "id": "b-future-020",
+          "ja": "あなたはいつ日本に戻ってくるつもりですか。",
+          "en": "When are you going to come back to Japan?"
+        }
+      ]
+    },
+    {
+      "id": "b-modal",
+      "title": "助動詞",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "Score Bridge",
+          "url": "https://www.speech-pass.com/media/tool/instant-english-composition"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-modal-001",
+          "ja": "私はPythonでコードを書くことができます。",
+          "en": "I can write code in Python."
+        },
+        {
+          "id": "b-modal-002",
+          "ja": "彼女は中国語を読むことができます。",
+          "en": "She can read Chinese."
+        },
+        {
+          "id": "b-modal-003",
+          "ja": "ここで写真を撮ってもいいですか。",
+          "en": "May I take pictures here?",
+          "note": "May I 〜? は丁寧な許可の求め"
+        },
+        {
+          "id": "b-modal-004",
+          "ja": "あなたは今日中にこれを終えなければなりません。",
+          "en": "You must finish this today.",
+          "note": "mustは話し手の強い義務感"
+        },
+        {
+          "id": "b-modal-005",
+          "ja": "私は明日早く起きなければなりません。",
+          "en": "I have to get up early tomorrow.",
+          "note": "have toは外的な事情による義務"
+        },
+        {
+          "id": "b-modal-006",
+          "ja": "彼は疲れているに違いない。",
+          "en": "He must be tired.",
+          "note": "must be 〜で「〜に違いない」"
+        },
+        {
+          "id": "b-modal-007",
+          "ja": "その話は本当のはずがない。",
+          "en": "The story can't be true.",
+          "note": "can't be 〜で「〜のはずがない」"
+        },
+        {
+          "id": "b-modal-008",
+          "ja": "午後は雨が降るかもしれない。",
+          "en": "It may rain in the afternoon."
+        },
+        {
+          "id": "b-modal-009",
+          "ja": "あなたはもっと寝るべきです。",
+          "en": "You should sleep more."
+        },
+        {
+          "id": "b-modal-010",
+          "ja": "窓を開けていただけますか。",
+          "en": "Could you open the window?",
+          "note": "Could you 〜? は丁寧な依頼"
+        },
+        {
+          "id": "b-modal-011",
+          "ja": "あなたは急ぐ必要はありません。",
+          "en": "You don't have to hurry.",
+          "note": "don't have toは「不要」、must notは「禁止」"
+        },
+        {
+          "id": "b-modal-012",
+          "ja": "実験室で飲食してはいけません。",
+          "en": "You must not eat or drink in the lab."
+        },
+        {
+          "id": "b-modal-013",
+          "ja": "手伝いましょうか。",
+          "en": "Shall I help you?"
+        },
+        {
+          "id": "b-modal-014",
+          "ja": "一緒に昼食を食べませんか。",
+          "en": "Shall we have lunch together?"
+        },
+        {
+          "id": "b-modal-015",
+          "ja": "私はその発表に出席できませんでした。",
+          "en": "I couldn't attend the presentation."
+        },
+        {
+          "id": "b-modal-016",
+          "ja": "彼女は来年留学できるでしょう。",
+          "en": "She will be able to study abroad next year.",
+          "note": "willの後にcanは置けないのでbe able to"
+        },
+        {
+          "id": "b-modal-017",
+          "ja": "私たちは結果をもう一度確認すべきです。",
+          "en": "We should check the results again."
+        },
+        {
+          "id": "b-modal-018",
+          "ja": "何か飲み物はいかがですか。",
+          "en": "Would you like something to drink?"
+        },
+        {
+          "id": "b-modal-019",
+          "ja": "私は締め切りに間に合わせなければなりませんでした。",
+          "en": "I had to meet the deadline.",
+          "note": "mustの過去はhad toで表す"
+        },
+        {
+          "id": "b-modal-020",
+          "ja": "彼は今オフィスにいるかもしれません。",
+          "en": "He might be in his office now."
+        },
+        {
+          "id": "b-modal-021",
+          "ja": "質問してもよろしいでしょうか。",
+          "en": "May I ask a question?"
+        },
+        {
+          "id": "b-modal-022",
+          "ja": "そのデータを使ってもいいですよ。",
+          "en": "You can use the data."
+        }
+      ]
+    },
+    {
+      "id": "b-inf",
+      "title": "不定詞",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "Score Bridge",
+          "url": "https://www.speech-pass.com/media/tool/instant-english-composition"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-inf-001",
+          "ja": "私は研究者になりたい。",
+          "en": "I want to be a researcher."
+        },
+        {
+          "id": "b-inf-002",
+          "ja": "私の夢は自分の研究室を持つことです。",
+          "en": "My dream is to have my own lab.",
+          "note": "名詞的用法（〜すること）"
+        },
+        {
+          "id": "b-inf-003",
+          "ja": "英語で論文を書くことは難しい。",
+          "en": "It is difficult to write papers in English.",
+          "note": "形式主語itで不定詞を後ろに置く"
+        },
+        {
+          "id": "b-inf-004",
+          "ja": "彼女は来年留学することに決めた。",
+          "en": "She decided to study abroad next year."
+        },
+        {
+          "id": "b-inf-005",
+          "ja": "私はその本を読み始めました。",
+          "en": "I started to read the book."
+        },
+        {
+          "id": "b-inf-006",
+          "ja": "私には読むべき論文がたくさんある。",
+          "en": "I have a lot of papers to read.",
+          "note": "形容詞的用法：名詞を後ろから修飾"
+        },
+        {
+          "id": "b-inf-007",
+          "ja": "何か飲むものが欲しい。",
+          "en": "I want something to drink."
+        },
+        {
+          "id": "b-inf-008",
+          "ja": "今日はやるべき仕事がたくさんあります。",
+          "en": "I have a lot of work to do today."
+        },
+        {
+          "id": "b-inf-009",
+          "ja": "彼には相談する人がいない。",
+          "en": "He has no one to talk to.",
+          "note": "talk toのtoを落とさない"
+        },
+        {
+          "id": "b-inf-010",
+          "ja": "そろそろ休憩する時間です。",
+          "en": "It's time to take a break."
+        },
+        {
+          "id": "b-inf-011",
+          "ja": "私はデータを集めるために大阪に行きました。",
+          "en": "I went to Osaka to collect data.",
+          "note": "副詞的用法（目的）"
+        },
+        {
+          "id": "b-inf-012",
+          "ja": "その知らせを聞いて私はうれしかった。",
+          "en": "I was happy to hear the news.",
+          "note": "感情の原因を表す不定詞"
+        },
+        {
+          "id": "b-inf-013",
+          "ja": "彼は英語を練習するために毎朝早く起きる。",
+          "en": "He gets up early every morning to practice English."
+        },
+        {
+          "id": "b-inf-014",
+          "ja": "彼女は学会に出席するために東京を訪れた。",
+          "en": "She visited Tokyo to attend a conference."
+        },
+        {
+          "id": "b-inf-015",
+          "ja": "私はこのソフトの使い方がわかりません。",
+          "en": "I don't know how to use this software.",
+          "note": "how to 〜で「〜の仕方」"
+        },
+        {
+          "id": "b-inf-016",
+          "ja": "次に何をすべきか教えてください。",
+          "en": "Please tell me what to do next."
+        },
+        {
+          "id": "b-inf-017",
+          "ja": "どこで降りればいいか教えてもらえますか。",
+          "en": "Could you tell me where to get off?"
+        },
+        {
+          "id": "b-inf-018",
+          "ja": "教授は私にその論文を読んでほしいと思っている。",
+          "en": "My professor wants me to read the paper.",
+          "note": "want 人 to 〜「人に〜してほしい」"
+        },
+        {
+          "id": "b-inf-019",
+          "ja": "彼は私にデータを確認するよう頼んだ。",
+          "en": "He asked me to check the data."
+        },
+        {
+          "id": "b-inf-020",
+          "ja": "先生は私たちに早く来るように言った。",
+          "en": "Our teacher told us to come early."
+        },
+        {
+          "id": "b-inf-021",
+          "ja": "彼にとってその問題を解くのは簡単だった。",
+          "en": "It was easy for him to solve the problem.",
+          "note": "不定詞の意味上の主語はfor 人"
+        },
+        {
+          "id": "b-inf-022",
+          "ja": "私は疲れすぎていてそのコードを理解できなかった。",
+          "en": "I was too tired to understand the code.",
+          "note": "too 〜 to …「…するには〜すぎる」"
+        }
+      ]
+    },
+    {
+      "id": "b-ger",
+      "title": "動名詞",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "毎日3秒英作文",
+          "url": "https://sunaoblog.com/3sec-game/"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-ger-001",
+          "ja": "論文を読むことは楽しい。",
+          "en": "Reading papers is fun.",
+          "note": "動名詞は主語になれる"
+        },
+        {
+          "id": "b-ger-002",
+          "ja": "私の趣味は写真を撮ることです。",
+          "en": "My hobby is taking pictures."
+        },
+        {
+          "id": "b-ger-003",
+          "ja": "彼はそのデータの分析を終えた。",
+          "en": "He finished analyzing the data.",
+          "note": "finishは動名詞を目的語にとる"
+        },
+        {
+          "id": "b-ger-004",
+          "ja": "私はコーヒーを飲むのをやめた。",
+          "en": "I stopped drinking coffee.",
+          "note": "stop 〜ingは「〜するのをやめる」"
+        },
+        {
+          "id": "b-ger-005",
+          "ja": "彼女は英語で話すのが得意です。",
+          "en": "She is good at speaking English.",
+          "note": "前置詞の後は動名詞"
+        },
+        {
+          "id": "b-ger-006",
+          "ja": "すぐに返信できずにすみません。",
+          "en": "I'm sorry for not replying sooner.",
+          "note": "動名詞の否定はnotを前に置く"
+        },
+        {
+          "id": "b-ger-007",
+          "ja": "窓を開けていただけませんか。",
+          "en": "Would you mind opening the window?",
+          "note": "mindは動名詞をとる"
+        },
+        {
+          "id": "b-ger-008",
+          "ja": "彼は何も言わずに部屋を出て行った。",
+          "en": "He left the room without saying anything."
+        },
+        {
+          "id": "b-ger-009",
+          "ja": "あなたに会えるのを楽しみにしています。",
+          "en": "I'm looking forward to seeing you.",
+          "note": "look forward toのtoは前置詞"
+        },
+        {
+          "id": "b-ger-010",
+          "ja": "私は人前で話すことに慣れていない。",
+          "en": "I'm not used to speaking in public."
+        },
+        {
+          "id": "b-ger-011",
+          "ja": "実験を始める前に手袋をつけてください。",
+          "en": "Please put on gloves before starting the experiment."
+        },
+        {
+          "id": "b-ger-012",
+          "ja": "彼女はその論文を書くのを楽しんだ。",
+          "en": "She enjoyed writing the paper.",
+          "note": "enjoyは動名詞のみをとる"
+        },
+        {
+          "id": "b-ger-013",
+          "ja": "私たちは計画を変更することを考えています。",
+          "en": "We are thinking about changing the plan."
+        },
+        {
+          "id": "b-ger-014",
+          "ja": "早起きは健康に良い。",
+          "en": "Getting up early is good for your health."
+        },
+        {
+          "id": "b-ger-015",
+          "ja": "私は以前彼に会ったことを覚えている。",
+          "en": "I remember meeting him before.",
+          "note": "remember 〜ingは「（過去に）〜したことを覚えている」"
+        },
+        {
+          "id": "b-ger-016",
+          "ja": "ドアに鍵をかけるのを忘れないで。",
+          "en": "Don't forget to lock the door.",
+          "note": "forget to 〜は「これから〜するのを忘れる」"
+        },
+        {
+          "id": "b-ger-017",
+          "ja": "彼は同じ間違いを繰り返すのを避けた。",
+          "en": "He avoided making the same mistake again."
+        },
+        {
+          "id": "b-ger-018",
+          "ja": "手伝ってくれてありがとう。",
+          "en": "Thank you for helping me."
+        },
+        {
+          "id": "b-ger-019",
+          "ja": "散歩に行くのはどうですか。",
+          "en": "How about going for a walk?"
+        },
+        {
+          "id": "b-ger-020",
+          "ja": "この本は読む価値がある。",
+          "en": "This book is worth reading.",
+          "note": "be worth 〜ing「〜する価値がある」"
+        }
+      ]
+    },
+    {
+      "id": "b-comp",
+      "title": "比較",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "ぼくらの瞬間英作文",
+          "url": "https://urbanmeetup.tokyo/app/shunkan"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-comp-001",
+          "ja": "この方法はあの方法より速い。",
+          "en": "This method is faster than that one."
+        },
+        {
+          "id": "b-comp-002",
+          "ja": "彼は私より背が高い。",
+          "en": "He is taller than I am."
+        },
+        {
+          "id": "b-comp-003",
+          "ja": "今日は昨日より暑い。",
+          "en": "It is hotter today than yesterday."
+        },
+        {
+          "id": "b-comp-004",
+          "ja": "この論文はあの論文より重要だ。",
+          "en": "This paper is more important than that one.",
+          "note": "長い形容詞はmoreで比較級を作る"
+        },
+        {
+          "id": "b-comp-005",
+          "ja": "富士山は日本で一番高い山です。",
+          "en": "Mt. Fuji is the highest mountain in Japan."
+        },
+        {
+          "id": "b-comp-006",
+          "ja": "彼女は研究室で一番優秀な学生です。",
+          "en": "She is the brightest student in the lab."
+        },
+        {
+          "id": "b-comp-007",
+          "ja": "これは私が今まで読んだ中で最も面白い論文だ。",
+          "en": "This is the most interesting paper I have ever read."
+        },
+        {
+          "id": "b-comp-008",
+          "ja": "私の部屋はあなたの部屋と同じくらい広い。",
+          "en": "My room is as large as yours.",
+          "note": "as 〜 as …で「…と同じくらい〜」"
+        },
+        {
+          "id": "b-comp-009",
+          "ja": "新しいGPUは古いものほど高くない。",
+          "en": "The new GPU is not as expensive as the old one."
+        },
+        {
+          "id": "b-comp-010",
+          "ja": "もっとゆっくり話していただけますか。",
+          "en": "Could you speak more slowly?"
+        },
+        {
+          "id": "b-comp-011",
+          "ja": "私はコーヒーより紅茶の方が好きです。",
+          "en": "I like tea better than coffee."
+        },
+        {
+          "id": "b-comp-012",
+          "ja": "どちらの方法がより正確ですか。",
+          "en": "Which method is more accurate?"
+        },
+        {
+          "id": "b-comp-013",
+          "ja": "この結果は予想よりずっと良い。",
+          "en": "This result is much better than expected.",
+          "note": "比較級の強調はmuch"
+        },
+        {
+          "id": "b-comp-014",
+          "ja": "状況はますます悪くなっている。",
+          "en": "The situation is getting worse and worse.",
+          "note": "比較級 and 比較級で「ますます〜」"
+        },
+        {
+          "id": "b-comp-015",
+          "ja": "練習すればするほど上手になる。",
+          "en": "The more you practice, the better you get.",
+          "note": "the 比較級, the 比較級"
+        },
+        {
+          "id": "b-comp-016",
+          "ja": "東京は世界で最も大きな都市の一つです。",
+          "en": "Tokyo is one of the largest cities in the world.",
+          "note": "one of the 最上級＋複数名詞"
+        },
+        {
+          "id": "b-comp-017",
+          "ja": "できるだけ早く返信してください。",
+          "en": "Please reply as soon as possible."
+        },
+        {
+          "id": "b-comp-018",
+          "ja": "このデータセットはあのデータセットの2倍の大きさだ。",
+          "en": "This dataset is twice as large as that one.",
+          "note": "倍数＋as 〜 as"
+        },
+        {
+          "id": "b-comp-019",
+          "ja": "彼ほど熱心に働く人はいない。",
+          "en": "No one works harder than he does.",
+          "note": "否定主語＋比較級で最上級の意味"
+        },
+        {
+          "id": "b-comp-020",
+          "ja": "英語は数学より難しいと思いますか。",
+          "en": "Do you think English is more difficult than math?"
+        },
+        {
+          "id": "b-comp-021",
+          "ja": "あなたはどの季節が一番好きですか。",
+          "en": "Which season do you like the best?"
+        },
+        {
+          "id": "b-comp-022",
+          "ja": "今年の学会は去年より参加者が多かった。",
+          "en": "This year's conference had more participants than last year's."
+        }
+      ]
+    },
+    {
+      "id": "b-passive",
+      "title": "受動態",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "Score Bridge",
+          "url": "https://www.speech-pass.com/media/tool/instant-english-composition"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-passive-001",
+          "ja": "この論文は多くの研究者に読まれている。",
+          "en": "This paper is read by many researchers.",
+          "note": "be動詞＋過去分詞"
+        },
+        {
+          "id": "b-passive-002",
+          "ja": "英語は世界中で話されている。",
+          "en": "English is spoken all over the world."
+        },
+        {
+          "id": "b-passive-003",
+          "ja": "その実験は2020年に行われた。",
+          "en": "The experiment was conducted in 2020."
+        },
+        {
+          "id": "b-passive-004",
+          "ja": "このソフトウェアは多くの大学で使われている。",
+          "en": "This software is used at many universities."
+        },
+        {
+          "id": "b-passive-005",
+          "ja": "私の論文は国際会議に採択された。",
+          "en": "My paper was accepted to an international conference."
+        },
+        {
+          "id": "b-passive-006",
+          "ja": "この建物はいつ建てられたのですか。",
+          "en": "When was this building built?"
+        },
+        {
+          "id": "b-passive-007",
+          "ja": "会議は来週開かれる予定です。",
+          "en": "The meeting will be held next week.",
+          "note": "助動詞＋be＋過去分詞"
+        },
+        {
+          "id": "b-passive-008",
+          "ja": "その結果は明日発表される。",
+          "en": "The results will be announced tomorrow."
+        },
+        {
+          "id": "b-passive-009",
+          "ja": "私たちは彼の発表に驚いた。",
+          "en": "We were surprised by his presentation.",
+          "note": "感情は受動態で表す"
+        },
+        {
+          "id": "b-passive-010",
+          "ja": "私はその分野に興味があります。",
+          "en": "I am interested in the field."
+        },
+        {
+          "id": "b-passive-011",
+          "ja": "山頂は雪で覆われていた。",
+          "en": "The top of the mountain was covered with snow."
+        },
+        {
+          "id": "b-passive-012",
+          "ja": "このプログラムはPythonで書かれている。",
+          "en": "This program is written in Python."
+        },
+        {
+          "id": "b-passive-013",
+          "ja": "彼の名前は多くの人に知られている。",
+          "en": "His name is known to many people.",
+          "note": "be known to 〜「〜に知られている」"
+        },
+        {
+          "id": "b-passive-014",
+          "ja": "その問題は会議で議論されなかった。",
+          "en": "The issue was not discussed at the meeting."
+        },
+        {
+          "id": "b-passive-015",
+          "ja": "このテーブルは木でできている。",
+          "en": "This table is made of wood.",
+          "note": "材料が見えるときはmade of"
+        },
+        {
+          "id": "b-passive-016",
+          "ja": "ワインはブドウから作られる。",
+          "en": "Wine is made from grapes.",
+          "note": "原料が変化するときはmade from"
+        },
+        {
+          "id": "b-passive-017",
+          "ja": "その会合には何人が招待されたのですか。",
+          "en": "How many people were invited to the meeting?"
+        },
+        {
+          "id": "b-passive-018",
+          "ja": "私は教授に褒められた。",
+          "en": "I was praised by my professor."
+        },
+        {
+          "id": "b-passive-019",
+          "ja": "このメールは自動で送信される。",
+          "en": "This email is sent automatically."
+        },
+        {
+          "id": "b-passive-020",
+          "ja": "サンプルは冷凍庫に保管されている。",
+          "en": "The samples are kept in the freezer."
+        },
+        {
+          "id": "b-passive-021",
+          "ja": "その論文は日本語に翻訳された。",
+          "en": "The paper was translated into Japanese."
+        },
+        {
+          "id": "b-passive-022",
+          "ja": "この部屋は毎日掃除されなければならない。",
+          "en": "This room must be cleaned every day."
+        }
+      ]
+    },
+    {
+      "id": "b-perfect",
+      "title": "現在完了",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "毎日3秒英作文",
+          "url": "https://sunaoblog.com/3sec-game/"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-perfect-001",
+          "ja": "私はアメリカに3回行ったことがある。",
+          "en": "I have been to the US three times.",
+          "note": "have been toで「〜に行ったことがある」"
+        },
+        {
+          "id": "b-perfect-002",
+          "ja": "あなたは国際学会で発表したことがありますか。",
+          "en": "Have you ever given a presentation at an international conference?"
+        },
+        {
+          "id": "b-perfect-003",
+          "ja": "私は一度もその教授に会ったことがない。",
+          "en": "I have never met the professor."
+        },
+        {
+          "id": "b-perfect-004",
+          "ja": "私はこんなに美しい景色を見たことがない。",
+          "en": "I have never seen such a beautiful view."
+        },
+        {
+          "id": "b-perfect-005",
+          "ja": "彼女はその論文を何回読んだことがありますか。",
+          "en": "How many times has she read the paper?"
+        },
+        {
+          "id": "b-perfect-006",
+          "ja": "私はちょうど論文を書き終えたところだ。",
+          "en": "I have just finished writing my paper."
+        },
+        {
+          "id": "b-perfect-007",
+          "ja": "あなたはもう昼食を食べましたか。",
+          "en": "Have you had lunch yet?",
+          "note": "疑問文のyetは「もう」"
+        },
+        {
+          "id": "b-perfect-008",
+          "ja": "私はまだ返事をもらっていない。",
+          "en": "I haven't received a reply yet.",
+          "note": "否定文のyetは「まだ」"
+        },
+        {
+          "id": "b-perfect-009",
+          "ja": "彼はもう家に帰ってしまった。",
+          "en": "He has already gone home."
+        },
+        {
+          "id": "b-perfect-010",
+          "ja": "実験はもう終わりました。",
+          "en": "The experiment has already finished."
+        },
+        {
+          "id": "b-perfect-011",
+          "ja": "私は鍵をなくしてしまった。",
+          "en": "I have lost my key.",
+          "note": "今も見つかっていない状態を含意する"
+        },
+        {
+          "id": "b-perfect-012",
+          "ja": "私は3年間この研究室にいる。",
+          "en": "I have been in this lab for three years."
+        },
+        {
+          "id": "b-perfect-013",
+          "ja": "私たちは子どもの頃からの知り合いです。",
+          "en": "We have known each other since we were children.",
+          "note": "knowは状態動詞なので現在完了で継続を表す"
+        },
+        {
+          "id": "b-perfect-014",
+          "ja": "彼は先週からずっと病気だ。",
+          "en": "He has been sick since last week."
+        },
+        {
+          "id": "b-perfect-015",
+          "ja": "あなたはどのくらいの間日本に住んでいますか。",
+          "en": "How long have you lived in Japan?"
+        },
+        {
+          "id": "b-perfect-016",
+          "ja": "私は朝からずっとこのバグを直そうとしている。",
+          "en": "I have been trying to fix this bug since this morning.",
+          "note": "動作の継続は現在完了進行形"
+        },
+        {
+          "id": "b-perfect-017",
+          "ja": "2時間ずっと雨が降っている。",
+          "en": "It has been raining for two hours."
+        },
+        {
+          "id": "b-perfect-018",
+          "ja": "彼女は博士課程に入ってから5本の論文を書いた。",
+          "en": "She has written five papers since she started her PhD."
+        },
+        {
+          "id": "b-perfect-019",
+          "ja": "私はこの日をずっと待っていました。",
+          "en": "I have been waiting for this day."
+        },
+        {
+          "id": "b-perfect-020",
+          "ja": "彼が東京に引っ越してから2年になる。",
+          "en": "It has been two years since he moved to Tokyo."
+        },
+        {
+          "id": "b-perfect-021",
+          "ja": "彼はどこへ行ってしまったのですか。",
+          "en": "Where has he gone?",
+          "note": "have gone toは「行ってしまった（今ここにいない）」"
+        },
+        {
+          "id": "b-perfect-022",
+          "ja": "私は最近彼を見かけていない。",
+          "en": "I haven't seen him recently."
+        },
+        {
+          "id": "b-perfect-023",
+          "ja": "私はこのソフトを5年間使っている。",
+          "en": "I have used this software for five years."
+        },
+        {
+          "id": "b-perfect-024",
+          "ja": "私たちはまだ結論に達していない。",
+          "en": "We haven't reached a conclusion yet."
+        }
+      ]
+    },
+    {
+      "id": "b-participle",
+      "title": "分詞の形容詞用法",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "ぼくらの瞬間英作文",
+          "url": "https://urbanmeetup.tokyo/app/shunkan"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-participle-001",
+          "ja": "向こうで走っている男の子は私の弟です。",
+          "en": "The boy running over there is my brother.",
+          "note": "現在分詞＋語句は名詞の後ろに置く"
+        },
+        {
+          "id": "b-participle-002",
+          "ja": "机の上で寝ている猫を見て。",
+          "en": "Look at the cat sleeping on the desk."
+        },
+        {
+          "id": "b-participle-003",
+          "ja": "教授と話している女性は誰ですか。",
+          "en": "Who is the woman talking with the professor?"
+        },
+        {
+          "id": "b-participle-004",
+          "ja": "割れた窓を直してください。",
+          "en": "Please fix the broken window.",
+          "note": "分詞1語は名詞の前に置く"
+        },
+        {
+          "id": "b-participle-005",
+          "ja": "これは英語で書かれた論文です。",
+          "en": "This is a paper written in English.",
+          "note": "過去分詞は「〜された」"
+        },
+        {
+          "id": "b-participle-006",
+          "ja": "私は日本製の車を持っています。",
+          "en": "I have a car made in Japan."
+        },
+        {
+          "id": "b-participle-007",
+          "ja": "私は中古の自転車を買った。",
+          "en": "I bought a used bike."
+        },
+        {
+          "id": "b-participle-008",
+          "ja": "実験に参加している学生が20人います。",
+          "en": "There are twenty students participating in the experiment."
+        },
+        {
+          "id": "b-participle-009",
+          "ja": "昨年発表されたその論文は多くの注目を集めた。",
+          "en": "The paper published last year attracted a lot of attention."
+        },
+        {
+          "id": "b-participle-010",
+          "ja": "沸騰しているお湯に触らないで。",
+          "en": "Don't touch the boiling water."
+        },
+        {
+          "id": "b-participle-011",
+          "ja": "私は眠っている赤ちゃんを起こしたくなかった。",
+          "en": "I didn't want to wake the sleeping baby."
+        },
+        {
+          "id": "b-participle-012",
+          "ja": "彼女は落ち葉を集めた。",
+          "en": "She gathered fallen leaves."
+        },
+        {
+          "id": "b-participle-013",
+          "ja": "昨日送られてきたメールを読みましたか。",
+          "en": "Did you read the email sent yesterday?"
+        },
+        {
+          "id": "b-participle-014",
+          "ja": "窓のそばに立っている男性は私の指導教員です。",
+          "en": "The man standing by the window is my advisor."
+        },
+        {
+          "id": "b-participle-015",
+          "ja": "これは多くの研究者に使われているツールです。",
+          "en": "This is a tool used by many researchers."
+        },
+        {
+          "id": "b-participle-016",
+          "ja": "その講義は退屈だった。",
+          "en": "The lecture was boring.",
+          "note": "boringは「（物事が）人を退屈させる」"
+        },
+        {
+          "id": "b-participle-017",
+          "ja": "学生たちは退屈していた。",
+          "en": "The students were bored.",
+          "note": "boredは「（人が）退屈している」"
+        },
+        {
+          "id": "b-participle-018",
+          "ja": "私たちは驚くべき結果を得た。",
+          "en": "We got a surprising result."
+        },
+        {
+          "id": "b-participle-019",
+          "ja": "私たちは集めたデータを分析した。",
+          "en": "We analyzed the collected data."
+        },
+        {
+          "id": "b-participle-020",
+          "ja": "ステージで歌っている女の子を知っていますか。",
+          "en": "Do you know the girl singing on the stage?"
+        }
+      ]
+    },
+    {
+      "id": "b-relative",
+      "title": "関係代名詞",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "Score Bridge",
+          "url": "https://www.speech-pass.com/media/tool/instant-english-composition"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-relative-001",
+          "ja": "私には東京に住んでいる友達がいる。",
+          "en": "I have a friend who lives in Tokyo.",
+          "note": "先行詞が人で主格→who"
+        },
+        {
+          "id": "b-relative-002",
+          "ja": "これは私が昨日読んだ論文です。",
+          "en": "This is the paper I read yesterday.",
+          "note": "目的格の関係代名詞は省略できる"
+        },
+        {
+          "id": "b-relative-003",
+          "ja": "彼女は3か国語を話す研究者です。",
+          "en": "She is a researcher who speaks three languages."
+        },
+        {
+          "id": "b-relative-004",
+          "ja": "私は速く動くパソコンが欲しい。",
+          "en": "I want a computer that runs fast.",
+          "note": "先行詞が物で主格→which / that"
+        },
+        {
+          "id": "b-relative-005",
+          "ja": "あなたが昨日会った男性は私の教授です。",
+          "en": "The man you met yesterday is my professor."
+        },
+        {
+          "id": "b-relative-006",
+          "ja": "これは多くの賞を取った映画です。",
+          "en": "This is a movie that won many awards."
+        },
+        {
+          "id": "b-relative-007",
+          "ja": "私が必要なのは時間です。",
+          "en": "What I need is time.",
+          "note": "whatは「〜こと・もの」（先行詞を含む）"
+        },
+        {
+          "id": "b-relative-008",
+          "ja": "彼が言ったことは正しかった。",
+          "en": "What he said was right."
+        },
+        {
+          "id": "b-relative-009",
+          "ja": "私には父親が医者の友人がいる。",
+          "en": "I have a friend whose father is a doctor.",
+          "note": "所有格whose"
+        },
+        {
+          "id": "b-relative-010",
+          "ja": "私たちは表紙が赤い本を探している。",
+          "en": "We are looking for a book whose cover is red."
+        },
+        {
+          "id": "b-relative-011",
+          "ja": "ここは私が生まれた町です。",
+          "en": "This is the town where I was born.",
+          "note": "関係副詞where"
+        },
+        {
+          "id": "b-relative-012",
+          "ja": "私は初めて彼に会った日を覚えている。",
+          "en": "I remember the day when I first met him.",
+          "note": "関係副詞when"
+        },
+        {
+          "id": "b-relative-013",
+          "ja": "それが私がこの研究室を選んだ理由です。",
+          "en": "That is the reason why I chose this lab.",
+          "note": "関係副詞why"
+        },
+        {
+          "id": "b-relative-014",
+          "ja": "これは私が毎日使っているソフトです。",
+          "en": "This is the software that I use every day."
+        },
+        {
+          "id": "b-relative-015",
+          "ja": "先週提出したレポートは返ってきましたか。",
+          "en": "Did you get back the report that you submitted last week?"
+        },
+        {
+          "id": "b-relative-016",
+          "ja": "締め切りを守れない学生は失格になります。",
+          "en": "Students who miss the deadline will be disqualified."
+        },
+        {
+          "id": "b-relative-017",
+          "ja": "私に最初に英語を教えてくれた先生はカナダ出身だった。",
+          "en": "The teacher who first taught me English was from Canada."
+        },
+        {
+          "id": "b-relative-018",
+          "ja": "彼女が書いたコードはとても読みやすい。",
+          "en": "The code she wrote is very easy to read."
+        },
+        {
+          "id": "b-relative-019",
+          "ja": "私たちが使っているデータセットは公開されている。",
+          "en": "The dataset we are using is publicly available."
+        },
+        {
+          "id": "b-relative-020",
+          "ja": "私には尊敬する研究者がたくさんいる。",
+          "en": "There are many researchers that I respect."
+        },
+        {
+          "id": "b-relative-021",
+          "ja": "隣に座っていた人が私に話しかけてきた。",
+          "en": "The person who was sitting next to me talked to me."
+        },
+        {
+          "id": "b-relative-022",
+          "ja": "これが私たちが解決しようとしている問題です。",
+          "en": "This is the problem that we are trying to solve."
+        },
+        {
+          "id": "b-relative-023",
+          "ja": "私は昨日あなたが話していた本を買った。",
+          "en": "I bought the book you were talking about yesterday.",
+          "note": "前置詞aboutを最後に残す"
+        },
+        {
+          "id": "b-relative-024",
+          "ja": "彼は私たちが信頼できる人です。",
+          "en": "He is someone we can trust."
+        }
+      ]
+    },
+    {
+      "id": "b-conj",
+      "title": "間接疑問・接続詞",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "毎日3秒英作文",
+          "url": "https://sunaoblog.com/3sec-game/"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-conj-001",
+          "ja": "彼がどこに住んでいるか知っていますか。",
+          "en": "Do you know where he lives?",
+          "note": "間接疑問は「疑問詞＋主語＋動詞」の語順"
+        },
+        {
+          "id": "b-conj-002",
+          "ja": "会議が何時に始まるか教えてください。",
+          "en": "Please tell me what time the meeting starts."
+        },
+        {
+          "id": "b-conj-003",
+          "ja": "私はなぜその実験が失敗したのかわからない。",
+          "en": "I don't know why the experiment failed."
+        },
+        {
+          "id": "b-conj-004",
+          "ja": "彼女が誰なのか知りません。",
+          "en": "I don't know who she is."
+        },
+        {
+          "id": "b-conj-005",
+          "ja": "彼が来るかどうかわからない。",
+          "en": "I'm not sure if he will come.",
+          "note": "if / whetherで「〜かどうか」"
+        },
+        {
+          "id": "b-conj-006",
+          "ja": "この論文を誰が書いたか知っていますか。",
+          "en": "Do you know who wrote this paper?",
+          "note": "疑問詞が主語ならそのままの語順"
+        },
+        {
+          "id": "b-conj-007",
+          "ja": "いくらかかるか教えてもらえますか。",
+          "en": "Could you tell me how much it costs?"
+        },
+        {
+          "id": "b-conj-008",
+          "ja": "私は彼が正しいと思う。",
+          "en": "I think that he is right.",
+          "note": "thatは省略できる"
+        },
+        {
+          "id": "b-conj-009",
+          "ja": "時間があれば手伝います。",
+          "en": "I'll help you if I have time.",
+          "note": "条件を表すif節では未来のことも現在形"
+        },
+        {
+          "id": "b-conj-010",
+          "ja": "彼が来たら出発しましょう。",
+          "en": "Let's leave when he comes.",
+          "note": "時を表すwhen節では未来のことも現在形"
+        },
+        {
+          "id": "b-conj-011",
+          "ja": "疲れていたので早く寝た。",
+          "en": "I went to bed early because I was tired."
+        },
+        {
+          "id": "b-conj-012",
+          "ja": "雨が降っていたけれど、私たちは出かけた。",
+          "en": "Although it was raining, we went out."
+        },
+        {
+          "id": "b-conj-013",
+          "ja": "実験が終わるまでここにいてください。",
+          "en": "Please stay here until the experiment is over."
+        },
+        {
+          "id": "b-conj-014",
+          "ja": "私が帰宅する前に雨が降り始めた。",
+          "en": "It started to rain before I got home."
+        },
+        {
+          "id": "b-conj-015",
+          "ja": "論文を提出した後、私は旅行に行った。",
+          "en": "After I submitted the paper, I went on a trip."
+        },
+        {
+          "id": "b-conj-016",
+          "ja": "私は大学生だったとき、よく図書館に行った。",
+          "en": "When I was a university student, I often went to the library."
+        },
+        {
+          "id": "b-conj-017",
+          "ja": "彼はとても忙しいので昼食をとる時間がない。",
+          "en": "He is so busy that he has no time for lunch.",
+          "note": "so 〜 that …「とても〜なので…」"
+        },
+        {
+          "id": "b-conj-018",
+          "ja": "急ぎなさい、さもないと電車に乗り遅れますよ。",
+          "en": "Hurry up, or you'll miss the train.",
+          "note": "命令文, or …「さもないと…」"
+        },
+        {
+          "id": "b-conj-019",
+          "ja": "一生懸命勉強しなさい、そうすれば試験に合格できますよ。",
+          "en": "Study hard, and you will pass the exam.",
+          "note": "命令文, and …「そうすれば…」"
+        },
+        {
+          "id": "b-conj-020",
+          "ja": "彼女は賢いだけでなく親切でもある。",
+          "en": "She is not only smart but also kind.",
+          "note": "not only A but also B"
+        },
+        {
+          "id": "b-conj-021",
+          "ja": "あなたか私のどちらかが発表しなければならない。",
+          "en": "Either you or I have to give the presentation.",
+          "note": "either A or Bの動詞はBに一致"
+        },
+        {
+          "id": "b-conj-022",
+          "ja": "私が寝ている間に誰かが電話してきた。",
+          "en": "Someone called me while I was sleeping."
+        },
+        {
+          "id": "b-conj-023",
+          "ja": "彼が本当のことを言ったかどうかは問題ではない。",
+          "en": "It doesn't matter whether he told the truth."
+        },
+        {
+          "id": "b-conj-024",
+          "ja": "結果が良ければ、論文を書くつもりです。",
+          "en": "If the results are good, I'm going to write a paper."
+        }
+      ]
+    },
+    {
+      "id": "b-subjunctive",
+      "title": "仮定法過去（入門）",
+      "refs": [
+        {
+          "name": "MAE 瞬間英作文",
+          "url": "https://blogmae.com/ieltsblog-pronunciation1/"
+        },
+        {
+          "name": "ぼくらの瞬間英作文",
+          "url": "https://urbanmeetup.tokyo/app/shunkan"
+        }
+      ],
+      "cards": [
+        {
+          "id": "b-subjunctive-001",
+          "ja": "もし時間があれば、その本を読むのに。",
+          "en": "If I had time, I would read the book.",
+          "note": "現在の事実に反する仮定は過去形で表す"
+        },
+        {
+          "id": "b-subjunctive-002",
+          "ja": "もし私が鳥だったら、空を飛べるのに。",
+          "en": "If I were a bird, I could fly.",
+          "note": "仮定法のbe動詞は主語に関わらずwereが基本"
+        },
+        {
+          "id": "b-subjunctive-003",
+          "ja": "もっとお金があれば、新しいGPUを買うのに。",
+          "en": "If I had more money, I would buy a new GPU."
+        },
+        {
+          "id": "b-subjunctive-004",
+          "ja": "もし私があなたなら、そのオファーを受けるだろう。",
+          "en": "If I were you, I would accept the offer."
+        },
+        {
+          "id": "b-subjunctive-005",
+          "ja": "英語がもっと上手に話せたらいいのに。",
+          "en": "I wish I could speak English better.",
+          "note": "I wish＋過去形で「〜ならいいのに」"
+        },
+        {
+          "id": "b-subjunctive-006",
+          "ja": "締め切りがもっと遅ければいいのに。",
+          "en": "I wish the deadline were later."
+        },
+        {
+          "id": "b-subjunctive-007",
+          "ja": "彼がここにいたら、私たちを助けてくれるのに。",
+          "en": "If he were here, he would help us."
+        },
+        {
+          "id": "b-subjunctive-008",
+          "ja": "もし宝くじに当たったら、何をしますか。",
+          "en": "What would you do if you won the lottery?"
+        },
+        {
+          "id": "b-subjunctive-009",
+          "ja": "もし車を持っていたら、そこへ車で行けるのに。",
+          "en": "If I had a car, I could drive there."
+        },
+        {
+          "id": "b-subjunctive-010",
+          "ja": "もっと計算資源があれば、もっと大きなモデルを訓練できるのに。",
+          "en": "If we had more computing resources, we could train a larger model."
+        },
+        {
+          "id": "b-subjunctive-011",
+          "ja": "私に姉がいればいいのに。",
+          "en": "I wish I had an older sister."
+        },
+        {
+          "id": "b-subjunctive-012",
+          "ja": "彼女の電話番号を知っていれば、電話するのに。",
+          "en": "If I knew her phone number, I would call her."
+        },
+        {
+          "id": "b-subjunctive-013",
+          "ja": "もし今日が日曜日なら、一日中寝ているのに。",
+          "en": "If today were Sunday, I would sleep all day."
+        },
+        {
+          "id": "b-subjunctive-014",
+          "ja": "彼はまるで何でも知っているかのように話す。",
+          "en": "He talks as if he knew everything.",
+          "note": "as if＋過去形で「まるで〜かのように」"
+        },
+        {
+          "id": "b-subjunctive-015",
+          "ja": "もし私が教授だったら、学生にもっと休みを与えるだろう。",
+          "en": "If I were a professor, I would give my students more time off."
+        },
+        {
+          "id": "b-subjunctive-016",
+          "ja": "もし近くに住んでいたら、毎日歩いて研究室に来られるのに。",
+          "en": "If I lived nearby, I could walk to the lab every day."
+        },
+        {
+          "id": "b-subjunctive-017",
+          "ja": "もう少し時間があれば、もっと実験ができるのに。",
+          "en": "If I had a little more time, I could do more experiments."
+        },
+        {
+          "id": "b-subjunctive-018",
+          "ja": "雨が降っていなければ、散歩に行くのに。",
+          "en": "If it weren't raining, I would go for a walk.",
+          "note": "進行形の仮定はwere＋〜ing"
+        },
+        {
+          "id": "b-subjunctive-019",
+          "ja": "あなたの助けがなければ、私は論文を終えられないだろう。",
+          "en": "Without your help, I wouldn't be able to finish my paper.",
+          "note": "Without 〜で「〜がなければ」"
+        },
+        {
+          "id": "b-subjunctive-020",
+          "ja": "もっと若ければ、もう一度留学するのに。",
+          "en": "If I were younger, I would study abroad again."
+        }
+      ]
+    }
+  ]
+}

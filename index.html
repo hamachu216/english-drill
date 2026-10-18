@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Research English Drill</title>
+<meta name="description" content="瞬間英作文から研究ディスカッション・国際学会・博士公聴会まで、毎日続ける英語トレーニング">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16181d" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<script>try { const t = JSON.parse(localStorage.getItem('eng:v1'))?.settings?.theme; if (t && t !== 'system') document.documentElement.dataset.theme = t; } catch {}</script>
+<style>
+:root {
+  --bg: #f7f6f2; --surface: #ffffff; --text: #1d1f24; --muted: #6b6f78; --line: #e3e1da;
+  --accent: #2f6f6a; --accent-text: #ffffff; --good: #2f7a44; --bad: #b4452f; --cell: #ebe9e2;
+  --radius: 14px; color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16181d; --surface: #1f2228; --text: #e8e6e1; --muted: #9a9ea8; --line: #30343c;
+    --accent: #6cc3b8; --accent-text: #0f1513; --good: #74c98b; --bad: #ef8a73; --cell: #2a2e35; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #16181d; --surface: #1f2228; --text: #e8e6e1; --muted: #9a9ea8; --line: #30343c;
+  --accent: #6cc3b8; --accent-text: #0f1513; --good: #74c98b; --bad: #ef8a73; --cell: #2a2e35; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.6 system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+main { max-width: 40rem; margin: 0 auto; padding: 0 16px calc(32px + env(safe-area-inset-bottom)); }
+header { display: flex; align-items: center; justify-content: space-between; max-width: 40rem; margin: 0 auto; padding: 12px 16px; }
+h1 { font-size: 1.05rem; margin: 0; letter-spacing: .02em; }
+h2 { font-size: .95rem; color: var(--muted); margin: 28px 0 8px; font-weight: 600; }
+button, select, input, textarea { font: inherit; color: inherit; }
+button {
+  min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--surface); cursor: pointer;
+}
+button:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.primary { background: var(--accent); color: var(--accent-text); border-color: transparent; font-weight: 600; width: 100%; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+.muted { color: var(--muted); font-size: .85rem; }
+
+/* home */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0 12px; }
+.stats div { text-align: center; padding: 12px 4px; }
+.stats b { display: block; font-size: 1.8rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.stats span { font-size: .8rem; color: var(--muted); }
+.goal { height: 8px; border-radius: 4px; background: var(--cell); overflow: hidden; margin: 6px 0 4px; }
+.goal i { display: block; height: 100%; background: var(--accent); transition: width .3s; }
+#heatmap { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; grid-auto-columns: minmax(0, 20px); gap: 3px; margin-top: 12px; }
+#heatmap i { aspect-ratio: 1; border-radius: 3px; background: var(--cell); }
+#heatmap i[data-l="1"] { background: color-mix(in srgb, var(--accent) 35%, var(--cell)); }
+#heatmap i[data-l="2"] { background: color-mix(in srgb, var(--accent) 65%, var(--cell)); }
+#heatmap i[data-l="3"] { background: var(--accent); }
+#start { margin-top: 16px; min-height: 52px; font-size: 1.05rem; }
+#flash { text-align: center; color: var(--good); font-weight: 600; min-height: 1.6em; margin: 8px 0 0; }
+details.level { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); margin-bottom: 8px; }
+details.level summary { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; list-style: none; }
+details.level summary::-webkit-details-marker { display: none; }
+details.level summary .n { margin-left: auto; color: var(--muted); font-size: .8rem; white-space: nowrap; }
+details.level label { display: flex; gap: 10px; align-items: center; padding: 8px 14px; border-top: 1px solid var(--line); font-size: .92rem; }
+details.level label .n { margin-left: auto; color: var(--muted); font-size: .8rem; }
+input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); flex: none; }
+.row { display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 0; }
+.row select, .row input[type="number"] { min-height: 40px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); padding: 0 10px; width: 7rem; }
+#refs a, .refs a { color: var(--accent); }
+.refs { margin: 8px 0 0; }
+#refs { padding-left: 36px; }
+#refs li { margin: 4px 0; }
+
+/* study */
+.bar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.bar .track { flex: 1; }
+.prompt { font-size: 1.2rem; font-weight: 600; margin: 4px 0 0; }
+textarea {
+  width: 100%; min-height: 88px; margin: 12px 0 8px; padding: 12px; resize: vertical;
+  border-radius: 10px; border: 1px solid var(--line); background: var(--bg);
+}
+.actions { display: flex; gap: 8px; }
+.actions .primary { flex: 1; }
+#mic.on { background: var(--bad); color: var(--accent-text); border-color: transparent; }
+.en { font-size: 1.15rem; margin: 0; }
+.diff span { padding: 0 1px; }
+.diff .miss { color: var(--bad); text-decoration: underline wavy; text-underline-offset: 3px; }
+.diff .hit { color: var(--good); }
+.note { border-left: 3px solid var(--accent); padding-left: 10px; margin: 12px 0 0; font-size: .9rem; color: var(--muted); }
+.grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 16px; }
+.grades button { padding: 6px 2px; font-size: .9rem; line-height: 1.2; }
+.grades small { display: block; color: var(--muted); font-size: .72rem; }
+.grades button:first-child { border-color: var(--bad); }
+kbd { font: .72rem ui-monospace, monospace; color: var(--muted); }
+@media (hover: none) { kbd { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Research English Drill</h1>
+  <button id="theme" aria-label="テーマ切替"></button>
+</header>
+<main>
+  <section id="home">
+    <div class="stats">
+      <div class="card"><b id="streak">0</b><span>日連続</span></div>
+      <div class="card"><b id="today">0</b><span>今日の回答</span></div>
+      <div class="card"><b id="due">0</b><span>復習待ち</span></div>
+    </div>
+    <div class="card">
+      <div class="muted" id="goal-label"></div>
+      <div class="goal"><i id="goal-bar"></i></div>
+      <div id="heatmap" aria-label="過去12週間の学習記録"></div>
+    </div>
+    <button id="start" class="primary"></button>
+    <p id="flash"></p>
+
+    <h2>出題範囲（デッキ単位で選べます）</h2>
+    <div id="levels"></div>
+
+    <h2>設定</h2>
+    <div class="card">
+      <div class="row"><span>1日の目標回答数</span><input id="goal" type="number" min="5" max="200" step="5"></div>
+      <div class="row"><span>1回の新規カード数</span><input id="newPerDay" type="number" min="0" max="50" step="5"></div>
+      <div class="row"><span>進捗の移行</span><span><button id="export">書き出し</button> <button id="import">読み込み</button></span></div>
+      <input id="import-file" type="file" accept="application/json" hidden>
+    </div>
+
+    <h2>参考サイト</h2>
+    <ul id="refs" class="card"></ul>
+    <p class="muted">問題はすべて本サイトのオリジナルです。各サイトは分野・文法項目の構成の参考にしています。</p>
+  </section>
+
+  <section id="study" hidden>
+    <div class="bar">
+      <button id="quit" aria-label="終了">✕</button>
+      <span class="track muted" id="track"></span>
+      <span class="muted" id="count"></span>
+    </div>
+    <div class="card">
+      <p class="prompt" id="ja"></p>
+      <textarea id="input" placeholder="英語で言ってみる（入力・音声は任意）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="actions">
+        <button id="mic" hidden aria-label="音声入力">🎤</button>
+        <button id="reveal" class="primary">答えを見る <kbd>Enter</kbd></button>
+      </div>
+      <div id="answer" hidden>
+        <div class="row"><p class="en" id="en"></p><button id="speak" aria-label="読み上げ">🔊</button></div>
+        <p class="diff" id="diff"></p>
+        <p class="note" id="note"></p>
+        <p class="muted refs" id="card-refs"></p>
+        <div class="grades">
+          <button data-g="0">もう一度<small>1日後</small><kbd>1</kbd></button>
+          <button data-g="1">難しい<small></small><kbd>2</kbd></button>
+          <button data-g="2">できた<small></small><kbd>3</kbd></button>
+          <button data-g="3">簡単<small></small><kbd>4</kbd></button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

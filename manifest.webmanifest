@@ -1,0 +1,23 @@
+{
+  "name": "Research English Drill",
+  "short_name": "EnglishDrill",
+  "description": "瞬間英作文から研究ディスカッション・国際学会・博士公聴会まで",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#16181d",
+  "theme_color": "#2f6f6a",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
