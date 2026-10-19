@@ -29,6 +29,7 @@
   --accent: #6cc3b8; --accent-text: #0f1513; --good: #74c98b; --bad: #ef8a73; --cell: #2a2e35; color-scheme: dark;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body {
   margin: 0; background: var(--bg); color: var(--text);
   font: 16px/1.6 system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
@@ -92,7 +93,10 @@ textarea {
 .diff span { padding: 0 1px; }
 .diff .miss { color: var(--bad); text-decoration: underline wavy; text-underline-offset: 3px; }
 .diff .hit { color: var(--good); }
-.note { border-left: 3px solid var(--accent); padding-left: 10px; margin: 12px 0 0; font-size: .9rem; color: var(--muted); }
+.note { border-left: 3px solid var(--accent); padding-left: 12px; margin: 14px 0 0; font-size: 1.05rem; line-height: 1.7; }
+.timer { height: 6px; border-radius: 3px; background: var(--cell); overflow: hidden; margin-bottom: 10px; }
+.timer i { display: block; height: 100%; width: 100%; background: var(--accent); }
+.timeout { color: var(--bad); font-weight: 600; margin: 12px 0 4px; }
 .grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 16px; }
 .grades button { padding: 6px 2px; font-size: .9rem; line-height: 1.2; }
 .grades small { display: block; color: var(--muted); font-size: .72rem; }
@@ -128,6 +132,9 @@ kbd { font: .72rem ui-monospace, monospace; color: var(--muted); }
     <div class="card">
       <div class="row"><span>1日の目標回答数</span><input id="goal" type="number" min="5" max="200" step="5"></div>
       <div class="row"><span>1回の新規カード数</span><input id="newPerDay" type="number" min="0" max="50" step="5"></div>
+      <div class="row"><span>1問の制限時間</span><select id="pace">
+        <option value="0">なし</option><option value="0.7">短め</option><option value="1">標準</option><option value="1.5">長め</option>
+      </select></div>
       <div class="row" id="voice-row"><span>読み上げの声</span><select id="voice"></select></div>
       <div class="row"><span>進捗の移行</span><span><button id="export">書き出し</button> <button id="import">読み込み</button></span></div>
       <input id="import-file" type="file" accept="application/json" hidden>
@@ -144,6 +151,7 @@ kbd { font: .72rem ui-monospace, monospace; color: var(--muted); }
       <span class="track muted" id="track"></span>
       <span class="muted" id="count"></span>
     </div>
+    <div class="timer" id="timer-track"><i id="timer"></i></div>
     <div class="card">
       <p class="prompt" id="ja"></p>
       <textarea id="input" placeholder="英語で言ってみる（入力・音声は任意）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
@@ -152,6 +160,7 @@ kbd { font: .72rem ui-monospace, monospace; color: var(--muted); }
         <button id="reveal" class="primary">答えを見る <kbd>Enter</kbd></button>
       </div>
       <div id="answer" hidden>
+        <p class="timeout" id="timeout" hidden>⏱ 時間切れ</p>
         <div class="row"><p class="en" id="en"></p><button id="speak" aria-label="読み上げ">🔊</button></div>
         <p class="diff" id="diff"></p>
         <p class="note" id="note"></p>
