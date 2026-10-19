@@ -44,8 +44,8 @@ export function buildSession(cards, { cards: seen, settings }, today) {
   return [...due, ...fresh];
 }
 
-// Seconds allowed per card: longer model answers get more time; `pace` scales it (0 = no limit).
-export const timeLimit = (en, pace) => pace && Math.round((2 + 0.5 * en.split(/\s+/).length) * pace);
+// Seconds allowed per card: a fixed number (0 = no limit), or 'auto' = 2s + 0.5s per word of the model answer.
+export const timeLimit = (en, limit) => (limit === 'auto' ? Math.round(2 + 0.5 * en.split(/\s+/).length) : limit);
 
 // Consecutive practiced days ending today (or yesterday if today isn't done yet).
 export function streak(log, today) {
