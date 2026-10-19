@@ -1,4 +1,4 @@
-import { FILES, flattenCards, schedule, answer, buildSession, streak, calendar, wordDiff, englishVoices } from './core.js';
+import { FILES, flattenCards, schedule, answer, buildSession, streak, calendar, timeLimit, wordDiff, englishVoices } from './core.js';
 
 const KEY = 'eng:v1';
 const $ = (id) => document.getElementById(id);
@@ -7,7 +7,7 @@ const files = await Promise.all(FILES.map((f) => fetch(f).then((r) => r.json()))
 const cards = flattenCards(files);
 
 // ---- state: one JSON blob in localStorage, replaced wholesale on every change
-const DEFAULT = { cards: {}, log: {}, settings: { theme: 'system', goal: 20, newPerDay: 10, voice: '', decks: files[0].decks.map((d) => d.id) } };
+const DEFAULT = { cards: {}, log: {}, settings: { theme: 'system', goal: 20, newPerDay: 10, pace: 1, voice: '', decks: files[0].decks.map((d) => d.id) } };
 const withDefaults = (s) => ({ ...DEFAULT, ...s, settings: { ...DEFAULT.settings, ...s?.settings } });
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } };
 let state = withDefaults(load());
@@ -74,12 +74,14 @@ function renderHome() {
   $('start').disabled = !size;
   $('goal').value = goal;
   $('newPerDay').value = state.settings.newPerDay;
+  $('pace').value = state.settings.pace;
   renderLevels();
 }
 
 const clampInput = (id, lo, hi) => ($(id).onchange = () => setSettings({ [id]: Math.min(hi, Math.max(lo, +$(id).value || lo)) }));
 clampInput('goal', 5, 200);
 clampInput('newPerDay', 0, 50);
+$('pace').onchange = () => setSettings({ pace: +$('pace').value });
 
 $('export').onclick = () => {
   const a = el('a', { href: URL.createObjectURL(new Blob([JSON.stringify(state)], { type: 'application/json' })), download: `english-progress-${today()}.json` });
@@ -110,7 +112,7 @@ $('refs').replaceChildren(...[...sites].map(([name, url]) => {
 }));
 
 // ---- study
-let queue = [], cur = null, answered = 0;
+let queue = [], cur = null, answered = 0, timer = 0;
 const show = (view) => { $('home').hidden = view !== 'home'; $('study').hidden = view !== 'study'; scrollTo(0, 0); };
 const canHover = matchMedia('(hover: hover)').matches;
 
@@ -118,16 +120,35 @@ function next() {
   cur = queue.shift();
   if (!cur) return finish();
   $('track').textContent = `Lv${cur.level} · ${cur.deckTitle}`;
-  $('count').textContent = `${answered + 1} / ${answered + queue.length + 1}`;
+  const sec = timeLimit(cur.en, state.settings.pace);
+  $('count').textContent = `${answered + 1} / ${answered + queue.length + 1}${sec ? ` · ${sec}秒` : ''}`;
   $('ja').textContent = cur.ja;
   $('input').value = '';
   $('answer').hidden = true;
   $('reveal').hidden = false;
   for (const b of document.querySelectorAll('.grades button')) b.querySelector('small').textContent = `${schedule(state.cards[cur.id], +b.dataset.g, today()).ivl}日後`;
   if (canHover) $('input').focus();
+  startTimer(sec);
 }
 
-function reveal() {
+// The bar shrinks via a CSS transition; one timeout reveals the answer when time is up.
+function startTimer(sec) {
+  clearTimeout(timer);
+  const bar = $('timer');
+  $('timer-track').hidden = !sec;
+  if (!sec) return;
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  bar.getBoundingClientRect(); // commit 100% before animating to 0
+  bar.style.transition = `width ${sec}s linear`;
+  bar.style.width = '0%';
+  timer = setTimeout(() => reveal(true), sec * 1000);
+}
+
+function reveal(timedOut = false) {
+  clearTimeout(timer);
+  Object.assign($('timer').style, { width: getComputedStyle($('timer')).width, transition: 'none' }); // freeze: shows time left
+  $('timeout').hidden = !timedOut;
   const typed = $('input').value.trim();
   $('en').replaceChildren(...(typed ? wordDiff(typed, cur.en).flatMap(({ w, ok }) => [el('span', { className: ok ? 'hit' : 'miss', textContent: w }), ' ']) : [cur.en]));
   $('en').className = typed ? 'en diff' : 'en';
@@ -147,6 +168,7 @@ function grade(g) {
 }
 
 function finish() {
+  clearTimeout(timer);
   show('home');
   renderHome();
   $('flash').textContent = answered ? `お疲れさまでした！ ${answered}問 回答・${streak(state.log, today())}日連続` : '';
@@ -154,7 +176,7 @@ function finish() {
 
 $('start').onclick = () => { queue = buildSession(cards, state, today()); answered = 0; $('flash').textContent = ''; show('study'); next(); };
 $('quit').onclick = finish;
-$('reveal').onclick = reveal;
+$('reveal').onclick = () => reveal();
 for (const b of document.querySelectorAll('.grades button')) b.onclick = () => grade(+b.dataset.g);
 document.addEventListener('keydown', (e) => {
   if ($('study').hidden || e.isComposing) return;

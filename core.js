@@ -44,6 +44,9 @@ export function buildSession(cards, { cards: seen, settings }, today) {
   return [...due, ...fresh];
 }
 
+// Seconds allowed per card: longer model answers get more time; `pace` scales it (0 = no limit).
+export const timeLimit = (en, pace) => pace && Math.round((2 + 0.5 * en.split(/\s+/).length) * pace);
+
 // Consecutive practiced days ending today (or yesterday if today isn't done yet).
 export function streak(log, today) {
   let d = log[today] ? today : addDays(today, -1), n = 0;

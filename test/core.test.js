@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, schedule, answer, buildSession, streak, calendar, wordDiff, flattenCards, englishVoices } from '../core.js';
+import { addDays, schedule, answer, buildSession, streak, calendar, timeLimit, wordDiff, flattenCards, englishVoices } from '../core.js';
 
 const T = '2026-10-19';
 
@@ -72,4 +72,11 @@ test('englishVoices keeps known-good voices, natural US first; falls back to any
   const names = (vs) => englishVoices(vs).map((x) => x.name);
   assert.deepEqual(names([v('Albert'), v('ささやき声'), v('Daniel', 'en-GB'), v('Kyoko', 'ja-JP'), v('Samantha'), v('Ava (Premium)'), v('Eddy (英語（アメリカ）)')]), ['Ava (Premium)', 'Samantha', 'Daniel']);
   assert.deepEqual(names([v('English India', 'en-IN'), v('English United States'), v('Kyoko', 'ja-JP')]), ['English United States', 'English India']);
+});
+
+test('timeLimit grows with answer length and scales with pace; 0 disables', () => {
+  assert.equal(timeLimit('I am a graduate student.', 1), 5);
+  assert.ok(timeLimit('word '.repeat(20).trim(), 1) > timeLimit('short one', 1));
+  assert.equal(timeLimit('I am a graduate student.', 1.5), 7);
+  assert.equal(timeLimit('anything', 0), 0);
 });
