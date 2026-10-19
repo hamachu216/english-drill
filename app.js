@@ -7,7 +7,7 @@ const files = await Promise.all(FILES.map((f) => fetch(f).then((r) => r.json()))
 const cards = flattenCards(files);
 
 // ---- state: one JSON blob in localStorage, replaced wholesale on every change
-const DEFAULT = { cards: {}, log: {}, settings: { theme: 'system', goal: 20, newPerDay: 10, pace: 1, voice: '', decks: files[0].decks.map((d) => d.id) } };
+const DEFAULT = { cards: {}, log: {}, settings: { theme: 'system', goal: 20, newPerDay: 10, limit: 10, voice: '', decks: files[0].decks.map((d) => d.id) } };
 const withDefaults = (s) => ({ ...DEFAULT, ...s, settings: { ...DEFAULT.settings, ...s?.settings } });
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } };
 let state = withDefaults(load());
@@ -74,14 +74,14 @@ function renderHome() {
   $('start').disabled = !size;
   $('goal').value = goal;
   $('newPerDay').value = state.settings.newPerDay;
-  $('pace').value = state.settings.pace;
+  $('limit').value = state.settings.limit;
   renderLevels();
 }
 
 const clampInput = (id, lo, hi) => ($(id).onchange = () => setSettings({ [id]: Math.min(hi, Math.max(lo, +$(id).value || lo)) }));
 clampInput('goal', 5, 200);
 clampInput('newPerDay', 0, 50);
-$('pace').onchange = () => setSettings({ pace: +$('pace').value });
+$('limit').onchange = () => setSettings({ limit: $('limit').value === 'auto' ? 'auto' : +$('limit').value });
 
 $('export').onclick = () => {
   const a = el('a', { href: URL.createObjectURL(new Blob([JSON.stringify(state)], { type: 'application/json' })), download: `english-progress-${today()}.json` });
@@ -120,7 +120,7 @@ function next() {
   cur = queue.shift();
   if (!cur) return finish();
   $('track').textContent = `Lv${cur.level} · ${cur.deckTitle}`;
-  const sec = timeLimit(cur.en, state.settings.pace);
+  const sec = timeLimit(cur.en, state.settings.limit);
   $('count').textContent = `${answered + 1} / ${answered + queue.length + 1}${sec ? ` · ${sec}秒` : ''}`;
   $('ja').textContent = cur.ja;
   $('input').value = '';

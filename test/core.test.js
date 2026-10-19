@@ -74,9 +74,9 @@ test('englishVoices keeps known-good voices, natural US first; falls back to any
   assert.deepEqual(names([v('English India', 'en-IN'), v('English United States'), v('Kyoko', 'ja-JP')]), ['English United States', 'English India']);
 });
 
-test('timeLimit grows with answer length and scales with pace; 0 disables', () => {
-  assert.equal(timeLimit('I am a graduate student.', 1), 5);
-  assert.ok(timeLimit('word '.repeat(20).trim(), 1) > timeLimit('short one', 1));
-  assert.equal(timeLimit('I am a graduate student.', 1.5), 7);
+test('timeLimit: fixed seconds, 0 disables, auto grows with answer length', () => {
+  assert.equal(timeLimit('I am a graduate student.', 10), 10);
   assert.equal(timeLimit('anything', 0), 0);
+  assert.equal(timeLimit('I am a graduate student.', 'auto'), 5);
+  assert.ok(timeLimit('word '.repeat(20).trim(), 'auto') > timeLimit('short one', 'auto'));
 });
