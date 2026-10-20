@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, schedule, answer, buildSession, streak, calendar, timeLimit, wordDiff, flattenCards, englishVoices } from '../core.js';
+import { addDays, ROUND, shuffle, nextRound, streak, calendar, timeLimit, wordDiff, flattenCards, englishVoices } from '../core.js';
 
 const T = '2026-10-19';
 
@@ -9,41 +9,38 @@ test('addDays crosses months and years', () => {
   assert.equal(addDays('2026-03-01', -1), '2026-02-28');
 });
 
-test('schedule: new card intervals by grade', () => {
-  assert.deepEqual([0, 1, 2, 3].map((g) => schedule(undefined, g, T).ivl), [1, 1, 1, 3]);
-  assert.equal(schedule(undefined, 2, T).due, '2026-10-20');
+test('flattenCards tags each card with level, deck title and refs', () => {
+  const [c] = flattenCards([{ level: 3, decks: [{ title: 'T', refs: [1], cards: [{ id: 'x' }] }] }]);
+  assert.deepEqual(c, { id: 'x', level: 3, deckTitle: 'T', refs: [1] });
 });
 
-test('schedule: Good grows, Again resets, ease has a floor', () => {
-  const s = schedule({ ivl: 10, ease: 2.5 }, 2, T);
-  assert.equal(s.ivl, 25);
-  assert.equal(schedule(s, 0, T).ivl, 1);
-  let x = { ivl: 5, ease: 1.35 };
-  for (let i = 0; i < 5; i++) x = schedule(x, 0, T);
-  assert.equal(x.ease, 1.3);
-  assert.ok(schedule({ ivl: 1, ease: 1.3 }, 2, T).ivl > 1, 'Good always progresses');
+const seq = (...xs) => () => (xs.length > 1 ? xs.shift() : xs[0]); // deterministic rand
+
+test('shuffle is a pure permutation', () => {
+  const xs = [1, 2, 3, 4, 5];
+  const ys = shuffle(xs, seq(0.9, 0.1, 0.5, 0.3));
+  assert.deepEqual(xs, [1, 2, 3, 4, 5]);
+  assert.deepEqual([...ys].sort(), xs);
+  assert.notDeepEqual(ys, xs);
 });
 
-test('answer is pure and counts today', () => {
-  const s0 = { cards: {}, log: {}, settings: {} };
-  const s1 = answer(s0, 'x', 2, T);
-  assert.deepEqual(s0, { cards: {}, log: {}, settings: {} });
-  assert.equal(answer(s1, 'y', 2, T).log[T], 2);
+test('nextRound: ROUND cards from the pool, refilled when empty', () => {
+  const all = Array.from({ length: 25 }, (_, i) => i);
+  const r1 = nextRound([], [], all);
+  assert.equal(r1.cards.length, ROUND);
+  assert.equal(r1.pool.length, 25 - ROUND);
+  assert.equal(r1.retry, false);
+  const r2 = nextRound([], r1.pool, all), r3 = nextRound([], r2.pool, all);
+  assert.equal(r3.cards.length, 5, 'last partial round');
+  assert.deepEqual([...r1.cards, ...r2.cards, ...r3.cards].sort((a, b) => a - b), all, 'no repeats before the pool is used up');
+  assert.equal(nextRound([], r3.pool, all).cards.length, ROUND, 'refilled');
 });
 
-const files = [
-  { level: 1, decks: [{ id: 'a', cards: [{ id: 'a1' }, { id: 'a2' }, { id: 'a3' }] }] },
-  { level: 3, decks: [{ id: 'b', cards: [{ id: 'b1' }, { id: 'b2' }] }, { id: 'c', cards: [{ id: 'c1' }] }] },
-];
-const cards = flattenCards(files);
-
-test('buildSession: due first, then new round-robin across levels, only selected decks', () => {
-  const state = {
-    cards: { a1: { due: T }, b1: { due: '2026-10-01' }, a2: { due: '2026-10-30' } },
-    settings: { decks: ['a', 'b'], newPerDay: 3 },
-  };
-  assert.deepEqual(buildSession(cards, state, T).map((c) => c.id), ['b1', 'a1', 'a3', 'b2']);
-  assert.equal(cards.find((c) => c.id === 'b2').level, 3);
+test('nextRound: misses are retried and the pool is kept', () => {
+  const r = nextRound(['a', 'b'], ['x', 'y'], ['x', 'y', 'a', 'b']);
+  assert.equal(r.retry, true);
+  assert.deepEqual([...r.cards].sort(), ['a', 'b']);
+  assert.deepEqual(r.pool, ['x', 'y']);
 });
 
 test('streak counts back from today or yesterday', () => {

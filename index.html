@@ -50,7 +50,7 @@ button:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2p
 .muted { color: var(--muted); font-size: .85rem; }
 
 /* home */
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0 12px; }
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 8px 0 12px; }
 .stats div { text-align: center; padding: 12px 4px; }
 .stats b { display: block; font-size: 1.8rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
 .stats span { font-size: .8rem; color: var(--muted); }
@@ -63,13 +63,11 @@ button:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2p
 #heatmap i[data-l="3"] { background: var(--accent); }
 #start { margin-top: 16px; min-height: 52px; font-size: 1.05rem; }
 #flash { text-align: center; color: var(--good); font-weight: 600; min-height: 1.6em; margin: 8px 0 0; }
-details.level { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); margin-bottom: 8px; }
-details.level summary { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; list-style: none; }
-details.level summary::-webkit-details-marker { display: none; }
-details.level summary .n { margin-left: auto; color: var(--muted); font-size: .8rem; white-space: nowrap; }
-details.level label { display: flex; gap: 10px; align-items: center; padding: 8px 14px; border-top: 1px solid var(--line); font-size: .92rem; }
-details.level label .n { margin-left: auto; color: var(--muted); font-size: .8rem; }
-input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); flex: none; }
+.level { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.level:has(input:checked) { border-color: var(--accent); }
+.level .n { margin-left: auto; color: var(--muted); font-size: .8rem; white-space: nowrap; }
+input[type="radio"] { width: 20px; height: 20px; accent-color: var(--accent); flex: none; margin: 0; }
 .row { display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 0; }
 #voice { width: auto; max-width: 60%; }
 .row select, .row input[type="number"] { min-height: 40px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); padding: 0 10px; width: 7rem; }
@@ -97,10 +95,17 @@ textarea {
 .timer { height: 6px; border-radius: 3px; background: var(--cell); overflow: hidden; margin-bottom: 10px; }
 .timer i { display: block; height: 100%; width: 100%; background: var(--accent); }
 .timeout { color: var(--bad); font-weight: 600; margin: 12px 0 4px; }
-.grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 16px; }
-.grades button { padding: 6px 2px; font-size: .9rem; line-height: 1.2; }
-.grades small { display: block; color: var(--muted); font-size: .72rem; }
-.grades button:first-child { border-color: var(--bad); }
+.judge { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+.judge button { min-height: 56px; font-size: 1.05rem; font-weight: 600; }
+.judge .ng { color: var(--bad); border-color: var(--bad); }
+.judge .ok { color: var(--good); border-color: var(--good); }
+
+/* result */
+.result-title { font-size: 1.6rem; color: var(--text); text-align: center; margin: 24px 0 16px; }
+.result-list { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 8px; }
+.result-list p { margin: 0; }
+.wide { width: 100%; margin-top: 8px; }
+#next-round { min-height: 52px; font-size: 1.05rem; }
 kbd { font: .72rem ui-monospace, monospace; color: var(--muted); }
 @media (hover: none) { kbd { display: none; } }
 </style>
@@ -115,30 +120,26 @@ kbd { font: .72rem ui-monospace, monospace; color: var(--muted); }
     <div class="stats">
       <div class="card"><b id="streak">0</b><span>日連続</span></div>
       <div class="card"><b id="today">0</b><span>今日の回答</span></div>
-      <div class="card"><b id="due">0</b><span>復習待ち</span></div>
     </div>
     <div class="card">
       <div class="muted" id="goal-label"></div>
       <div class="goal"><i id="goal-bar"></i></div>
       <div id="heatmap" aria-label="過去12週間の学習記録"></div>
     </div>
-    <button id="start" class="primary"></button>
+    <button id="start" class="primary">練習を始める（10問ずつ）</button>
     <p id="flash"></p>
 
-    <h2>出題範囲（デッキ単位で選べます）</h2>
+    <h2>レベル</h2>
     <div id="levels"></div>
 
     <h2>設定</h2>
     <div class="card">
       <div class="row"><span>1日の目標回答数</span><input id="goal" type="number" min="5" max="200" step="5"></div>
-      <div class="row"><span>1回の新規カード数</span><input id="newPerDay" type="number" min="0" max="50" step="5"></div>
       <div class="row"><span>1問の制限時間</span><select id="limit">
         <option value="0">なし</option><option value="5">5秒</option><option value="10">10秒</option><option value="15">15秒</option>
         <option value="20">20秒</option><option value="30">30秒</option><option value="auto">文の長さに応じて</option>
       </select></div>
       <div class="row" id="voice-row"><span>読み上げの声</span><select id="voice"></select></div>
-      <div class="row"><span>進捗の移行</span><span><button id="export">書き出し</button> <button id="import">読み込み</button></span></div>
-      <input id="import-file" type="file" accept="application/json" hidden>
     </div>
 
     <h2>参考サイト</h2>
@@ -163,17 +164,21 @@ kbd { font: .72rem ui-monospace, monospace; color: var(--muted); }
       <div id="answer" hidden>
         <p class="timeout" id="timeout" hidden>⏱ 時間切れ</p>
         <div class="row"><p class="en" id="en"></p><button id="speak" aria-label="読み上げ">🔊</button></div>
-        <p class="diff" id="diff"></p>
         <p class="note" id="note"></p>
         <p class="muted refs" id="card-refs"></p>
-        <div class="grades">
-          <button data-g="0">もう一度<small>1日後</small><kbd>1</kbd></button>
-          <button data-g="1">難しい<small></small><kbd>2</kbd></button>
-          <button data-g="2">できた<small></small><kbd>3</kbd></button>
-          <button data-g="3">簡単<small></small><kbd>4</kbd></button>
+        <div class="judge">
+          <button id="ng" class="ng">✕ 言えなかった <kbd>1</kbd></button>
+          <button id="ok" class="ok">○ 言えた <kbd>2</kbd></button>
         </div>
       </div>
     </div>
+  </section>
+
+  <section id="result" hidden>
+    <h2 class="result-title" id="result-title"></h2>
+    <ul class="result-list" id="result-list"></ul>
+    <button id="next-round" class="primary"></button>
+    <button id="home-btn" class="wide">ホームに戻る</button>
   </section>
 </main>
 <script type="module" src="app.js"></script>
