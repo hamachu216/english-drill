@@ -6,176 +6,256 @@
 <title>Research English Drill</title>
 <meta name="description" content="瞬間英作文から研究ディスカッション・国際学会・博士公聴会まで、毎日続ける英語トレーニング">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#16181d" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f4fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121220" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
 <script>try { const t = JSON.parse(localStorage.getItem('eng:v1'))?.settings?.theme; if (t && t !== 'system') document.documentElement.dataset.theme = t; } catch {}</script>
 <style>
 :root {
-  --bg: #f7f6f2; --surface: #ffffff; --text: #1d1f24; --muted: #6b6f78; --line: #e3e1da;
-  --accent: #2f6f6a; --accent-text: #ffffff; --good: #2f7a44; --bad: #b4452f; --cell: #ebe9e2;
-  --radius: 14px; color-scheme: light;
+  --bg: #f5f4fb; --surface: #ffffff; --text: #1c1b29; --muted: #6e6c80; --line: #e6e4f0; --cell: #ecebf5;
+  --accent: #5b5bd6; --accent-2: #d9468f; --accent-text: #ffffff; --good: #14905f; --bad: #d93a40;
+  --lv1: #2f7bf5; --lv2: #0f9f72; --lv3: #e08a00; --lv4: #df3f8f; --lv5: #7c4ddb;
+  --shadow: 0 1px 2px rgb(30 30 70 / .05), 0 10px 30px rgb(30 30 70 / .07);
+  --radius: 20px; color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #16181d; --surface: #1f2228; --text: #e8e6e1; --muted: #9a9ea8; --line: #30343c;
-    --accent: #6cc3b8; --accent-text: #0f1513; --good: #74c98b; --bad: #ef8a73; --cell: #2a2e35; color-scheme: dark;
+    --bg: #121220; --surface: #1c1b2e; --text: #ecebf7; --muted: #a3a2bb; --line: #2e2d47; --cell: #282741;
+    --accent: #8f8fff; --accent-2: #ff7ab8; --accent-text: #12121e; --good: #43d39d; --bad: #ff6b70;
+    --lv1: #6aa6ff; --lv2: #3fd3a2; --lv3: #ffb547; --lv4: #ff7ab8; --lv5: #b18cff;
+    --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 10px 30px rgb(0 0 0 / .25); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #16181d; --surface: #1f2228; --text: #e8e6e1; --muted: #9a9ea8; --line: #30343c;
-  --accent: #6cc3b8; --accent-text: #0f1513; --good: #74c98b; --bad: #ef8a73; --cell: #2a2e35; color-scheme: dark;
+  --bg: #121220; --surface: #1c1b2e; --text: #ecebf7; --muted: #a3a2bb; --line: #2e2d47; --cell: #282741;
+  --accent: #8f8fff; --accent-2: #ff7ab8; --accent-text: #12121e; --good: #43d39d; --bad: #ff6b70;
+  --lv1: #6aa6ff; --lv2: #3fd3a2; --lv3: #ffb547; --lv4: #ff7ab8; --lv5: #b18cff;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 10px 30px rgb(0 0 0 / .25); color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body {
-  margin: 0; background: var(--bg); color: var(--text);
-  font: 16px/1.6 system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  margin: 0; color: var(--text); min-height: 100vh;
+  font: 500 16px/1.65 "M PLUS Rounded 1c", system-ui, -apple-system, "Hiragino Sans", sans-serif;
+  background:
+    radial-gradient(40rem 24rem at 0% -5%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(36rem 24rem at 100% 0%, color-mix(in srgb, var(--accent-2) 13%, transparent), transparent 70%),
+    var(--bg);
   -webkit-text-size-adjust: 100%;
 }
 main { max-width: 40rem; margin: 0 auto; padding: 0 16px calc(32px + env(safe-area-inset-bottom)); }
-header { display: flex; align-items: center; justify-content: space-between; max-width: 40rem; margin: 0 auto; padding: 12px 16px; }
-h1 { font-size: 1.05rem; margin: 0; letter-spacing: .02em; }
-h2 { font-size: .95rem; color: var(--muted); margin: 28px 0 8px; font-weight: 600; }
+header { display: flex; align-items: center; gap: 10px; max-width: 40rem; margin: 0 auto; padding: 14px 16px; }
+.logo { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: var(--shadow); }
+h1 { font-size: 1.05rem; margin: 0; font-weight: 800; flex: 1; }
+h2 { font-size: .95rem; margin: 28px 4px 10px; font-weight: 800; }
 button, select, input, textarea { font: inherit; color: inherit; }
 button {
-  min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line);
-  background: var(--surface); cursor: pointer;
+  min-height: 44px; padding: 0 16px; border-radius: 14px; border: 1px solid var(--line);
+  background: var(--surface); cursor: pointer; transition: transform .12s, box-shadow .2s, background .2s;
 }
-button:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.primary { background: var(--accent); color: var(--accent-text); border-color: transparent; font-weight: 600; width: 100%; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+button:active { transform: scale(.97); }
+button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.primary {
+  width: 100%; border: 0; color: #fff; font-weight: 800; letter-spacing: .02em;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+:root[data-theme="dark"] .primary { color: var(--accent-text); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .primary { color: var(--accent-text); } }
+@media (hover: hover) { .primary:hover { transform: translateY(-1px); box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 45%, transparent); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
 .muted { color: var(--muted); font-size: .85rem; }
+.pill { font-size: .8rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--cell); white-space: nowrap; }
 
 /* home */
-.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 8px 0 12px; }
-.stats div { text-align: center; padding: 12px 4px; }
-.stats b { display: block; font-size: 1.8rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
-.stats span { font-size: .8rem; color: var(--muted); }
-.goal { height: 8px; border-radius: 4px; background: var(--cell); overflow: hidden; margin: 6px 0 4px; }
-.goal i { display: block; height: 100%; background: var(--accent); transition: width .3s; }
-#heatmap { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; grid-auto-columns: minmax(0, 20px); gap: 3px; margin-top: 12px; }
-#heatmap i { aspect-ratio: 1; border-radius: 3px; background: var(--cell); }
+.hero { display: flex; align-items: center; gap: 18px; margin-top: 4px; }
+.ring { --p: 0; flex: none; width: 104px; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  background: conic-gradient(var(--accent) 0, var(--accent-2) calc(var(--p) * 1%), var(--cell) 0); }
+.ring > div { width: 78%; aspect-ratio: 1; border-radius: 50%; background: var(--surface); display: grid; place-content: center; text-align: center; line-height: 1.1; }
+.ring b { font-size: 1.7rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.ring span { font-size: .72rem; color: var(--muted); }
+.greet { margin: 0; font-size: .85rem; color: var(--muted); }
+.streak { margin: 2px 0; font-size: 1.05rem; font-weight: 700; }
+.streak b { font-size: 2rem; font-weight: 800; margin: 0 2px; }
+.goal-label { margin: 0; font-size: .85rem; font-weight: 700; color: var(--accent); }
+.cal-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.cal-head b { font-size: .9rem; }
+#heatmap { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; grid-auto-columns: minmax(0, 20px); gap: 4px; }
+#heatmap i { aspect-ratio: 1; border-radius: 5px; background: var(--cell); }
 #heatmap i[data-l="1"] { background: color-mix(in srgb, var(--accent) 35%, var(--cell)); }
 #heatmap i[data-l="2"] { background: color-mix(in srgb, var(--accent) 65%, var(--cell)); }
-#heatmap i[data-l="3"] { background: var(--accent); }
-#start { margin-top: 16px; min-height: 52px; font-size: 1.05rem; }
-#flash { text-align: center; color: var(--good); font-weight: 600; min-height: 1.6em; margin: 8px 0 0; }
-.level { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer;
-  border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
-.level:has(input:checked) { border-color: var(--accent); }
-.level .n { margin-left: auto; color: var(--muted); font-size: .8rem; white-space: nowrap; }
-input[type="radio"] { width: 20px; height: 20px; accent-color: var(--accent); flex: none; margin: 0; }
+#heatmap i[data-l="3"] { background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+#flash { text-align: center; color: var(--good); font-weight: 700; margin: 12px 0 0; }
+#flash:empty { display: none; }
+.levels { display: grid; gap: 10px; }
+.level { --lv: var(--accent); display: flex; align-items: center; gap: 14px; padding: 14px 16px; cursor: pointer;
+  border: 2px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); transition: border-color .2s, background .2s, transform .12s; }
+.level:active { transform: scale(.98); }
+.level input { position: absolute; opacity: 0; pointer-events: none; }
+.level .icon { flex: none; width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-size: 1.5rem;
+  background: color-mix(in srgb, var(--lv) 16%, var(--surface)); }
+.level .name { display: block; font-weight: 800; }
+.level .sub { display: block; font-size: .78rem; color: var(--muted); }
+.level .check { margin-left: auto; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--line); flex: none; display: grid; place-items: center; color: transparent; font-size: .8rem; font-weight: 800; }
+.level:has(input:checked) { border-color: var(--lv); background: color-mix(in srgb, var(--lv) 7%, var(--surface)); }
+.level:has(input:checked) .check { background: var(--lv); border-color: var(--lv); color: var(--surface); }
+.level:has(input:focus-visible) { outline: 2px solid var(--lv); outline-offset: 2px; }
+.start-wrap { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom)); margin-top: 18px; z-index: 1; }
+#start { min-height: 58px; font-size: 1.1rem; border-radius: 18px; }
+details.panel { margin-top: 12px; }
+details.panel summary { cursor: pointer; font-weight: 800; list-style: none; display: flex; justify-content: space-between; }
+details.panel summary::after { content: "＋"; color: var(--muted); }
+details.panel[open] summary::after { content: "－"; }
+details.panel summary::-webkit-details-marker { display: none; }
+details.panel[open] summary { margin-bottom: 8px; }
 .row { display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 0; }
+.row select, .row input { min-height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); padding: 0 10px; width: 7.5rem; }
 #voice { width: auto; max-width: 60%; }
-.row select, .row input[type="number"] { min-height: 40px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); padding: 0 10px; width: 7rem; }
-#refs a, .refs a { color: var(--accent); }
-.refs { margin: 8px 0 0; }
-#refs { padding-left: 36px; }
+#refs { padding-left: 20px; margin: 0; }
 #refs li { margin: 4px 0; }
+#refs a, .refs a { color: var(--accent); }
 
 /* study */
-.bar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.bar .track { flex: 1; }
-.prompt { font-size: 1.2rem; font-weight: 600; margin: 4px 0 0; }
+.bar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.icon-btn { width: 44px; padding: 0; border-radius: 50%; flex: none; }
+.dots { flex: 1; display: flex; gap: 5px; align-items: center; }
+.dots i { flex: 1; height: 8px; border-radius: 4px; background: var(--cell); transition: background .25s; }
+.dots i.ok { background: var(--good); }
+.dots i.ng { background: var(--bad); }
+.dots i.now { background: var(--lv); }
+.timer { height: 6px; border-radius: 3px; background: var(--cell); overflow: hidden; margin-bottom: 12px; }
+.timer i { display: block; height: 100%; width: 100%; background: var(--accent); border-radius: 3px; }
+@keyframes drain { from { width: 100%; background: var(--accent); } 70% { background: var(--accent); } to { width: 0%; background: var(--bad); } }
+#study { --lv: var(--accent); }
+.tag { display: inline-block; margin: 0 0 10px; font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  color: color-mix(in srgb, var(--lv) 65%, var(--text)); background: color-mix(in srgb, var(--lv) 14%, var(--surface)); }
+.prompt { font-size: 1.3rem; font-weight: 800; margin: 0; line-height: 1.6; }
 textarea {
-  width: 100%; min-height: 88px; margin: 12px 0 8px; padding: 12px; resize: vertical;
-  border-radius: 10px; border: 1px solid var(--line); background: var(--bg);
+  width: 100%; min-height: 88px; margin: 14px 0 10px; padding: 12px 14px; resize: vertical;
+  border-radius: 14px; border: 1px solid var(--line); background: var(--bg);
 }
 .actions { display: flex; gap: 8px; }
-.actions .primary { flex: 1; }
-#mic.on { background: var(--bad); color: var(--accent-text); border-color: transparent; }
-.en { font-size: 1.15rem; margin: 0; }
-.diff span { padding: 0 1px; }
-.diff .miss { color: var(--bad); text-decoration: underline wavy; text-underline-offset: 3px; }
+.actions .primary { flex: 1; min-height: 50px; }
+#mic.on { background: var(--bad); color: #fff; border-color: transparent; }
+.answer { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line); }
+.en { font-size: 1.2rem; font-weight: 700; margin: 0; }
+.diff .miss { color: var(--bad); text-decoration: underline wavy; text-underline-offset: 4px; }
 .diff .hit { color: var(--good); }
-.note { border-left: 3px solid var(--accent); padding-left: 12px; margin: 14px 0 0; font-size: 1.05rem; line-height: 1.7; }
-.timer { height: 6px; border-radius: 3px; background: var(--cell); overflow: hidden; margin-bottom: 10px; }
-.timer i { display: block; height: 100%; width: 100%; background: var(--accent); }
-.timeout { color: var(--bad); font-weight: 600; margin: 12px 0 4px; }
-.judge { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
-.judge button { min-height: 56px; font-size: 1.05rem; font-weight: 600; }
-.judge .ng { color: var(--bad); border-color: var(--bad); }
-.judge .ok { color: var(--good); border-color: var(--good); }
+.note { margin: 14px 0 0; padding: 12px 14px; border-radius: 14px; font-size: 1.05rem; line-height: 1.7;
+  background: color-mix(in srgb, var(--lv) 9%, var(--surface)); }
+.note::before { content: "💡 "; }
+.refs { margin: 10px 0 0; }
+.timeout { display: inline-block; color: var(--bad); font-weight: 800; margin: 0 0 8px; }
+.judge { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.judge button { min-height: 60px; font-size: 1.05rem; font-weight: 800; border: 0; }
+.judge .ng { color: var(--bad); background: color-mix(in srgb, var(--bad) 13%, var(--surface)); }
+.judge .ok { color: var(--good); background: color-mix(in srgb, var(--good) 15%, var(--surface)); }
+kbd { font: .7rem ui-monospace, monospace; opacity: .6; margin-left: 4px; }
+@media (hover: none) { kbd { display: none; } }
 
 /* result */
-.result-title { font-size: 1.6rem; color: var(--text); text-align: center; margin: 24px 0 16px; }
-.result-list { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 8px; }
+.result-hero { text-align: center; padding: 26px 18px; margin-top: 8px; }
+.result-hero .emoji { font-size: 3rem; line-height: 1; }
+.result-hero .ring { width: 120px; margin: 14px auto 8px; }
+.result-hero h2 { font-size: 1.4rem; margin: 6px 0 0; }
+.result-list { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 10px; }
+.result-list li { border-left: 4px solid var(--bad); }
 .result-list p { margin: 0; }
-.wide { width: 100%; margin-top: 8px; }
-#next-round { min-height: 52px; font-size: 1.05rem; }
-kbd { font: .72rem ui-monospace, monospace; color: var(--muted); }
-@media (hover: none) { kbd { display: none; } }
+.result-list .en { font-size: 1.05rem; margin-top: 4px; }
+#next-round { min-height: 56px; font-size: 1.05rem; margin-top: 8px; }
+.wide { width: 100%; margin-top: 10px; }
+.confetti { position: fixed; top: -12px; width: 9px; height: 14px; border-radius: 2px; pointer-events: none; z-index: 9; animation: fall 1.6s ease-in forwards; }
+@keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: .8; } }
+@media (prefers-reduced-motion: reduce) { .confetti { display: none; } * { transition: none !important; } }
 </style>
 </head>
 <body>
 <header>
+  <div class="logo" aria-hidden="true">En</div>
   <h1>Research English Drill</h1>
   <button id="theme" aria-label="テーマ切替"></button>
 </header>
 <main>
   <section id="home">
-    <div class="stats">
-      <div class="card"><b id="streak">0</b><span>日連続</span></div>
-      <div class="card"><b id="today">0</b><span>今日の回答</span></div>
+    <div class="card hero">
+      <div class="ring" id="ring"><div><b id="today">0</b><span id="goal-of"></span></div></div>
+      <div>
+        <p class="greet" id="greet"></p>
+        <p class="streak">🔥<b id="streak">0</b>日連続</p>
+        <p class="goal-label" id="goal-label"></p>
+      </div>
     </div>
-    <div class="card">
-      <div class="muted" id="goal-label"></div>
-      <div class="goal"><i id="goal-bar"></i></div>
-      <div id="heatmap" aria-label="過去12週間の学習記録"></div>
-    </div>
-    <button id="start" class="primary">練習を始める（10問ずつ）</button>
     <p id="flash"></p>
 
-    <h2>レベル</h2>
-    <div id="levels"></div>
+    <h2>レベルを選ぶ</h2>
+    <div class="levels" id="levels"></div>
 
-    <h2>設定</h2>
+    <div class="start-wrap"><button id="start" class="primary">▶ スタート（10問ずつ）</button></div>
+
+    <h2>学習の記録</h2>
     <div class="card">
+      <div class="cal-head"><b>過去12週間</b><span class="muted">濃いほどたくさん回答</span></div>
+      <div id="heatmap" aria-label="過去12週間の学習記録"></div>
+    </div>
+
+    <details class="card panel">
+      <summary>⚙️ 設定</summary>
       <div class="row"><span>1日の目標回答数</span><input id="goal" type="number" min="5" max="200" step="5"></div>
       <div class="row"><span>1問の制限時間</span><select id="limit">
         <option value="0">なし</option><option value="5">5秒</option><option value="10">10秒</option><option value="15">15秒</option>
         <option value="20">20秒</option><option value="30">30秒</option><option value="auto">文の長さに応じて</option>
       </select></div>
       <div class="row" id="voice-row"><span>読み上げの声</span><select id="voice"></select></div>
-    </div>
-
-    <h2>参考サイト</h2>
-    <ul id="refs" class="card"></ul>
-    <p class="muted">問題はすべて本サイトのオリジナルです。各サイトは分野・文法項目の構成の参考にしています。</p>
+    </details>
+    <details class="card panel">
+      <summary>📚 参考サイト</summary>
+      <ul id="refs"></ul>
+      <p class="muted">問題はすべて本サイトのオリジナルです。各サイトは分野・文法項目の構成の参考にしています。</p>
+    </details>
   </section>
 
   <section id="study" hidden>
     <div class="bar">
-      <button id="quit" aria-label="終了">✕</button>
-      <span class="track muted" id="track"></span>
-      <span class="muted" id="count"></span>
+      <button id="quit" class="icon-btn" aria-label="終了">✕</button>
+      <div class="dots" id="dots"></div>
+      <span class="pill" id="count"></span>
     </div>
     <div class="timer" id="timer-track"><i id="timer"></i></div>
-    <div class="card">
+    <div class="card" id="qcard">
+      <p class="tag" id="track"></p>
       <p class="prompt" id="ja"></p>
-      <textarea id="input" placeholder="英語で言ってみる（入力・音声は任意）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+      <textarea id="input" placeholder="英語で言ってみよう（入力・音声は任意）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="actions">
         <button id="mic" hidden aria-label="音声入力">🎤</button>
         <button id="reveal" class="primary">答えを見る <kbd>Enter</kbd></button>
       </div>
-      <div id="answer" hidden>
+      <div class="answer" id="answer" hidden>
         <p class="timeout" id="timeout" hidden>⏱ 時間切れ</p>
-        <div class="row"><p class="en" id="en"></p><button id="speak" aria-label="読み上げ">🔊</button></div>
+        <div class="row"><p class="en" id="en"></p><button id="speak" class="icon-btn" aria-label="読み上げ">🔊</button></div>
         <p class="note" id="note"></p>
         <p class="muted refs" id="card-refs"></p>
         <div class="judge">
-          <button id="ng" class="ng">✕ 言えなかった <kbd>1</kbd></button>
-          <button id="ok" class="ok">○ 言えた <kbd>2</kbd></button>
+          <button id="ng" class="ng">✕ 言えなかった<kbd>1</kbd></button>
+          <button id="ok" class="ok">○ 言えた<kbd>2</kbd></button>
         </div>
       </div>
     </div>
   </section>
 
   <section id="result" hidden>
-    <h2 class="result-title" id="result-title"></h2>
+    <div class="card result-hero">
+      <div class="emoji" id="result-emoji"></div>
+      <div class="ring" id="result-ring"><div><b id="result-score"></b><span>正解</span></div></div>
+      <h2 id="result-title"></h2>
+      <p class="muted" id="result-sub"></p>
+    </div>
+    <h2 id="miss-head">もう一度チャレンジする問題</h2>
     <ul class="result-list" id="result-list"></ul>
     <button id="next-round" class="primary"></button>
     <button id="home-btn" class="wide">ホームに戻る</button>
