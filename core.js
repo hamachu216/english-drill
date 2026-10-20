@@ -8,40 +8,27 @@ export const addDays = (day, n) => {
   return d.toISOString().slice(0, 10);
 };
 
-// Level files → flat card list; each card knows its level and deck.
+// Level files → flat card list; each card knows its level, deck title and refs.
 export const flattenCards = (files) =>
-  files.flatMap((f) => f.decks.flatMap((d) => d.cards.map((c) => ({ ...c, level: f.level, deck: d.id, deckTitle: d.title, refs: d.refs }))));
+  files.flatMap((f) => f.decks.flatMap((d) => d.cards.map((c) => ({ ...c, level: f.level, deckTitle: d.title, refs: d.refs }))));
 
-// Simplified SM-2. grade: 0 Again, 1 Hard, 2 Good, 3 Easy.
-const EASE_DELTA = [-0.2, -0.15, 0, 0.15];
-const NEXT_IVL = [
-  () => 1,
-  (i) => Math.max(1, Math.round(i * 1.2)),
-  (i, e) => (i ? Math.max(i + 1, Math.round(i * e)) : 1),
-  (i, e) => (i ? Math.max(i + 2, Math.round(i * e * 1.3)) : 3),
-];
+export const ROUND = 10;
 
-export function schedule({ ivl = 0, ease = 2.5 } = {}, grade, today) {
-  const e = Math.max(1.3, ease + EASE_DELTA[grade]);
-  const next = NEXT_IVL[grade](ivl, e);
-  return { ivl: next, ease: +e.toFixed(2), due: addDays(today, next) };
+export function shuffle(xs, rand = Math.random) {
+  const a = [...xs];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
-export const answer = (state, id, grade, today) => ({
-  ...state,
-  cards: { ...state.cards, [id]: schedule(state.cards[id], grade, today) },
-  log: { ...state.log, [today]: (state.log[today] || 0) + 1 },
-});
-
-// Due reviews (oldest first), then up to newPerDay unseen cards, round-robin across levels.
-export function buildSession(cards, { cards: seen, settings }, today) {
-  const picked = cards.filter((c) => settings.decks.includes(c.deck));
-  const due = picked.filter((c) => seen[c.id]?.due <= today).sort((a, b) => seen[a.id].due.localeCompare(seen[b.id].due));
-  const byLevel = Object.values(Object.groupBy(picked.filter((c) => !seen[c.id]), (c) => c.level));
-  const fresh = [];
-  for (let i = 0; fresh.length < settings.newPerDay && byLevel.some((l) => i < l.length); i++)
-    for (const l of byLevel) if (i < l.length && fresh.length < settings.newPerDay) fresh.push(l[i]);
-  return [...due, ...fresh];
+// Misses are retried (reshuffled) until none remain; otherwise the next ROUND cards from the pool,
+// which is refilled with a fresh shuffle of `all` once used up.
+export function nextRound(misses, pool, all, rand) {
+  if (misses.length) return { cards: shuffle(misses, rand), pool, retry: true };
+  const p = pool.length ? pool : shuffle(all, rand);
+  return { cards: p.slice(0, ROUND), pool: p.slice(ROUND), retry: false };
 }
 
 // Seconds allowed per card: a fixed number (0 = no limit), or 'auto' = 2s + 0.5s per word of the model answer.
