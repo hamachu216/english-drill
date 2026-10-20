@@ -30,21 +30,27 @@ $('theme').onclick = () => {
 
 // ---- home
 const el = (tag, props) => Object.assign(document.createElement(tag), props);
+const LEVEL_ICONS = ['📘', '🚀', '💬', '🎤', '🎓'];
 const esc = (s) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 
 function renderHome() {
   const d = today(), done = state.log[d] || 0, { goal, level } = state.settings;
+  const hour = new Date().getHours();
+  $('greet').textContent = hour < 5 || hour >= 18 ? 'Good evening 🌙' : hour < 11 ? 'Good morning ☀️' : 'Good afternoon 🌤';
   $('streak').textContent = streak(state.log, d);
   $('today').textContent = done;
-  $('goal-label').textContent = done >= goal ? `今日の目標 ${goal}問 達成！` : `今日の目標まで あと ${goal - done}問`;
-  $('goal-bar').style.width = `${Math.min(100, (done / goal) * 100)}%`;
+  $('goal-of').textContent = `/ ${goal}問`;
+  $('ring').style.setProperty('--p', Math.min(100, (done / goal) * 100));
+  $('goal-label').textContent = done >= goal ? '🎉 今日の目標達成！' : `目標まであと ${goal - done}問`;
   $('heatmap').replaceChildren(...calendar(d, 12).map((day) => {
     const n = state.log[day] || 0, cell = el('i', { title: `${day}: ${n}問` });
     cell.dataset.l = Math.min(3, Math.ceil((n / goal) * 3));
     return cell;
   }));
-  $('levels').innerHTML = files.map((f) => `<label class="level"><input type="radio" name="level" value="${f.level}" ${f.level === level ? 'checked' : ''}>
-    <b>Lv${f.level} ${esc(f.title)}</b><span class="n">${f.decks.reduce((n, d) => n + d.cards.length, 0)}問</span></label>`).join('');
+  $('levels').innerHTML = files.map((f) => `<label class="level" style="--lv: var(--lv${f.level})">
+    <input type="radio" name="level" value="${f.level}" ${f.level === level ? 'checked' : ''}><span class="icon">${LEVEL_ICONS[f.level - 1]}</span>
+    <span><span class="name">Lv${f.level} ${esc(f.title)}</span><span class="sub">${f.decks.length}トピック · ${f.decks.reduce((n, d) => n + d.cards.length, 0)}問</span></span>
+    <span class="check">✓</span></label>`).join('');
   $('goal').value = goal;
   $('limit').value = state.settings.limit;
 }
@@ -64,17 +70,20 @@ $('refs').replaceChildren(...[...sites].map(([name, url]) => {
 }));
 
 // ---- study: rounds of ROUND cards; misses come back as the next round until all are correct
-let pool = [], round = { cards: [] }, idx = 0, misses = [], answered = 0, timer = 0, cur = null;
+let pool = [], round = { cards: [] }, idx = 0, results = [], answered = 0, timer = 0, cur = null;
 const VIEWS = ['home', 'study', 'result'];
 const show = (view) => { for (const v of VIEWS) $(v).hidden = v !== view; scrollTo(0, 0); };
 const canHover = matchMedia('(hover: hover)').matches;
 const levelCards = () => cards.filter((c) => c.level === state.settings.level);
+const misses = () => round.cards.filter((_, i) => results[i] === false);
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pop = (node) => calm || node.animate([{ opacity: 0, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
 
 function play(r) {
   round = r;
   pool = r.pool;
   idx = 0;
-  misses = [];
+  results = [];
   show('study');
   showCard();
 }
@@ -82,8 +91,11 @@ function play(r) {
 function showCard() {
   cur = round.cards[idx];
   const sec = timeLimit(cur.en, state.settings.limit);
-  $('track').textContent = `${round.retry ? '復習 · ' : ''}Lv${cur.level} · ${cur.deckTitle}`;
-  $('count').textContent = `${idx + 1} / ${round.cards.length}${sec ? ` · ${sec}秒` : ''}`;
+  $('study').style.setProperty('--lv', `var(--lv${cur.level})`);
+  $('track').textContent = `${round.retry ? '🔁 復習 · ' : ''}Lv${cur.level} · ${cur.deckTitle}`;
+  $('count').textContent = `${idx + 1} / ${round.cards.length}${sec ? ` · ⏱${sec}秒` : ''}`;
+  $('dots').replaceChildren(...round.cards.map((_, i) => el('i', { className: i === idx ? 'now' : results[i] === true ? 'ok' : results[i] === false ? 'ng' : '' })));
+  pop($('qcard'));
   $('ja').textContent = cur.ja;
   $('input').value = '';
   $('answer').hidden = true;
@@ -92,23 +104,21 @@ function showCard() {
   startTimer(sec);
 }
 
-// The bar shrinks via a CSS transition; one timeout reveals the answer when time is up.
+// The bar drains via a CSS animation (turning red near the end); one timeout reveals the answer.
 function startTimer(sec) {
   clearTimeout(timer);
   const bar = $('timer');
   $('timer-track').hidden = !sec;
   if (!sec) return;
-  bar.style.transition = 'none';
-  bar.style.width = '100%';
-  bar.getBoundingClientRect(); // commit 100% before animating to 0
-  bar.style.transition = `width ${sec}s linear`;
-  bar.style.width = '0%';
+  bar.style.animation = 'none';
+  bar.getBoundingClientRect(); // restart the animation
+  bar.style.animation = `drain ${sec}s linear forwards`;
   timer = setTimeout(() => reveal(true), sec * 1000);
 }
 
 function reveal(timedOut = false) {
   clearTimeout(timer);
-  Object.assign($('timer').style, { width: getComputedStyle($('timer')).width, transition: 'none' }); // freeze: shows time left
+  $('timer').style.animationPlayState = 'paused'; // freeze: shows time left
   $('timeout').hidden = !timedOut;
   const typed = $('input').value.trim();
   $('en').replaceChildren(...(typed ? wordDiff(typed, cur.en).flatMap(({ w, ok }) => [el('span', { className: ok ? 'hit' : 'miss', textContent: w }), ' ']) : [cur.en]));
@@ -118,6 +128,8 @@ function reveal(timedOut = false) {
   $('card-refs').replaceChildren('参考: ', ...cur.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)])));
   $('answer').hidden = false;
   $('reveal').hidden = true;
+  pop($('answer'));
+  $('answer').scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
   document.activeElement.blur();
 }
 
@@ -125,21 +137,39 @@ function judge(ok) {
   const d = today();
   save({ ...state, log: { ...state.log, [d]: (state.log[d] || 0) + 1 } });
   answered++;
-  if (!ok) misses.push(cur);
+  results[idx] = ok;
   if (++idx < round.cards.length) showCard();
   else showResult();
 }
 
+const CONFETTI = ['--accent', '--accent-2', '--lv1', '--lv2', '--lv3', '--lv5'];
+function confetti() {
+  if (calm) return;
+  for (let i = 0; i < 40; i++) {
+    const c = el('i', { className: 'confetti' });
+    Object.assign(c.style, { left: `${Math.random() * 100}vw`, background: `var(${CONFETTI[i % CONFETTI.length]})`, animationDelay: `${Math.random() * 0.4}s` });
+    document.body.append(c);
+    setTimeout(() => c.remove(), 2200);
+  }
+}
+
 function showResult() {
-  const n = round.cards.length, wrong = misses.length;
+  const n = round.cards.length, wrong = misses().length, rate = (n - wrong) / n;
   show('result');
-  $('result-title').textContent = wrong ? `${n - wrong} / ${n} 正解` : `${n} / ${n} 全問正解！`;
-  $('result-list').replaceChildren(...misses.map((c) => {
+  $('result-emoji').textContent = !wrong ? '🎉' : rate >= 0.7 ? '👍' : '💪';
+  $('result-score').textContent = `${n - wrong}/${n}`;
+  $('result-ring').style.setProperty('--p', rate * 100);
+  $('result-title').textContent = !wrong ? (round.retry ? '全部言えた！' : 'パーフェクト！') : rate >= 0.7 ? 'いい調子！' : 'ここから伸びる！';
+  $('result-sub').textContent = wrong ? `言えなかった${wrong}問を、言えるまで繰り返そう` : `次の${ROUND}問に進もう`;
+  $('miss-head').hidden = !wrong;
+  pop($('result'));
+  if (!wrong) confetti();
+  $('result-list').replaceChildren(...misses().map((c) => {
     const li = el('li', { className: 'card' });
     li.append(el('p', { className: 'muted', textContent: c.ja }), el('p', { className: 'en', textContent: c.en }));
     return li;
   }));
-  $('next-round').textContent = wrong ? `間違えた${wrong}問をもう一度` : `次の${ROUND}問へ`;
+  $('next-round').textContent = wrong ? `🔁 言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
 }
 
 function finish() {
@@ -150,7 +180,7 @@ function finish() {
 }
 
 $('start').onclick = () => { answered = 0; $('flash').textContent = ''; play(nextRound([], pool, levelCards())); };
-$('next-round').onclick = () => play(nextRound(misses, pool, levelCards()));
+$('next-round').onclick = () => play(nextRound(misses(), pool, levelCards()));
 $('quit').onclick = $('home-btn').onclick = finish;
 $('reveal').onclick = () => reveal();
 $('ng').onclick = () => judge(false);
