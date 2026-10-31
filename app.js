@@ -29,9 +29,9 @@ $('theme').onclick = () => {
 };
 
 // ---- home
-const el = (tag, props) => Object.assign(document.createElement(tag), props);
+// DOM is only ever built from nodes (never HTML strings), so data can't inject markup.
+const el = (tag, props, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids); return n; };
 const LEVEL_ICONS = ['📘', '🚀', '💬', '🎤', '🎓'];
-const esc = (s) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 
 function renderHome() {
   const d = today(), done = state.log[d] || 0, { goal, level } = state.settings;
@@ -47,10 +47,17 @@ function renderHome() {
     cell.dataset.l = Math.min(3, Math.ceil((n / goal) * 3));
     return cell;
   }));
-  $('levels').innerHTML = files.map((f) => `<label class="level" style="--lv: var(--lv${f.level})">
-    <input type="radio" name="level" value="${f.level}" ${f.level === level ? 'checked' : ''}><span class="icon">${LEVEL_ICONS[f.level - 1]}</span>
-    <span><span class="name">Lv${f.level} ${esc(f.title)}</span><span class="sub">${f.decks.length}トピック · ${f.decks.reduce((n, d) => n + d.cards.length, 0)}問</span></span>
-    <span class="check">✓</span></label>`).join('');
+  $('levels').replaceChildren(...files.map((f) => {
+    const label = el('label', { className: 'level' },
+      el('input', { type: 'radio', name: 'level', value: f.level, checked: f.level === level }),
+      el('span', { className: 'icon', textContent: LEVEL_ICONS[f.level - 1] }),
+      el('span', {},
+        el('span', { className: 'name', textContent: `Lv${f.level} ${f.title}` }),
+        el('span', { className: 'sub', textContent: `${f.decks.length}トピック · ${f.decks.reduce((n, d) => n + d.cards.length, 0)}問` })),
+      el('span', { className: 'check', textContent: '✓' }));
+    label.style.setProperty('--lv', `var(--lv${f.level})`);
+    return label;
+  }));
   $('goal').value = goal;
   $('limit').value = state.settings.limit;
 }
@@ -59,15 +66,11 @@ $('levels').onchange = (e) => { pool = []; setSettings({ level: +e.target.value 
 $('goal').onchange = () => setSettings({ goal: Math.min(200, Math.max(5, +$('goal').value || 5)) });
 $('limit').onchange = () => setSettings({ limit: $('limit').value === 'auto' ? 'auto' : +$('limit').value });
 
-const refLink = ({ name, url }) => el('a', { href: url, textContent: name, target: '_blank', rel: 'noopener' });
+const refLink = ({ name, url }) => el('a', { href: url, textContent: name, target: '_blank', rel: 'noreferrer' });
 // One entry per site: "EAP Foundation: Clarifying" → "EAP Foundation".
 const siteName = (r) => r.name.split(':')[0];
 const sites = new Map(files.flatMap((f) => f.decks.flatMap((d) => d.refs)).map((r) => [siteName(r), r.url]));
-$('refs').replaceChildren(...[...sites].map(([name, url]) => {
-  const li = el('li');
-  li.append(refLink({ name, url }));
-  return li;
-}));
+$('refs').replaceChildren(...[...sites].map(([name, url]) => el('li', {}, refLink({ name, url }))));
 
 // ---- study: rounds of ROUND cards; misses come back as the next round until all are correct
 let pool = [], round = { cards: [] }, idx = 0, results = [], answered = 0, timer = 0, cur = null;
@@ -164,11 +167,8 @@ function showResult() {
   $('miss-head').hidden = !wrong;
   pop($('result'));
   if (!wrong) confetti();
-  $('result-list').replaceChildren(...misses().map((c) => {
-    const li = el('li', { className: 'card' });
-    li.append(el('p', { className: 'muted', textContent: c.ja }), el('p', { className: 'en', textContent: c.en }));
-    return li;
-  }));
+  $('result-list').replaceChildren(...misses().map((c) =>
+    el('li', { className: 'card' }, el('p', { className: 'muted', textContent: c.ja }), el('p', { className: 'en', textContent: c.en }))));
   $('next-round').textContent = wrong ? `🔁 言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
 }
 
@@ -235,5 +235,6 @@ if ('serviceWorker' in navigator) {
   // A new deploy's worker took over: reload once so this page runs the new code too.
   const hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.addEventListener('controllerchange', () => hadController && location.reload());
-  navigator.serviceWorker.register('sw.js');
+  // The CSP enforces Trusted Types: the 'sw' policy can only ever produce this one script URL.
+  navigator.serviceWorker.register(window.trustedTypes?.createPolicy('sw', { createScriptURL: () => 'sw.js' }).createScriptURL('sw.js') ?? 'sw.js');
 }
