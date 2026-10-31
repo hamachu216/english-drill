@@ -31,6 +31,9 @@ export function nextRound(misses, pool, all, rand) {
   return { cards: p.slice(0, ROUND), pool: p.slice(ROUND), retry: false };
 }
 
+// An answer counts as attempted only once it has English letters: no peeking at the answer without trying.
+export const hasEnglish = (text) => /[a-z]/i.test(text);
+
 // Seconds allowed per card: a fixed number (0 = no limit), or 'auto' = 2s + 0.5s per word of the model answer.
 export const timeLimit = (en, limit) => (limit === 'auto' ? Math.round(2 + 0.5 * en.split(/\s+/).length) : limit);
 

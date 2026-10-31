@@ -23,6 +23,7 @@
 </header>
 <main>
   <section id="home">
+    <div class="today">
     <div class="card hero">
       <div class="ring" id="ring"><div><b id="today">0</b><span id="goal-of"></span></div></div>
       <div>
@@ -32,12 +33,16 @@
       </div>
     </div>
     <p id="flash"></p>
+    </div>
 
+    <div class="pick">
     <h2>レベルを選ぶ</h2>
     <div class="levels" id="levels"></div>
 
     <div class="start-wrap"><button id="start" class="primary">▶ スタート（10問ずつ）</button></div>
+    </div>
 
+    <div class="more">
     <h2>学習の記録</h2>
     <div class="card">
       <div class="cal-head"><b>過去12週間</b><span class="muted">濃いほどたくさん回答</span></div>
@@ -58,6 +63,7 @@
       <ul id="refs"></ul>
       <p class="muted">問題はすべて本サイトのオリジナルです。各サイトは分野・文法項目の構成の参考にしています。</p>
     </details>
+    </div>
   </section>
 
   <section id="study" hidden>
@@ -70,7 +76,7 @@
     <div class="card" id="qcard">
       <p class="tag" id="track"></p>
       <p class="prompt" id="ja"></p>
-      <textarea id="input" placeholder="英語で言ってみよう（入力・音声は任意）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+      <textarea id="input" placeholder="英語で入力すると答えを見られます（🎤で音声入力も可）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="actions">
         <button id="mic" hidden aria-label="音声入力">🎤</button>
         <button id="reveal" class="primary">答えを見る <kbd>Enter</kbd></button>

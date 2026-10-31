@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, ROUND, shuffle, nextRound, streak, calendar, timeLimit, wordDiff, flattenCards, englishVoices } from '../core.js';
+import { addDays, ROUND, shuffle, nextRound, streak, calendar, timeLimit, wordDiff, flattenCards, englishVoices, hasEnglish } from '../core.js';
 
 const T = '2026-10-19';
 
@@ -69,6 +69,11 @@ test('englishVoices keeps known-good voices, natural US first; falls back to any
   const names = (vs) => englishVoices(vs).map((x) => x.name);
   assert.deepEqual(names([v('Albert'), v('ささやき声'), v('Daniel', 'en-GB'), v('Kyoko', 'ja-JP'), v('Samantha'), v('Ava (Premium)'), v('Eddy (英語（アメリカ）)')]), ['Ava (Premium)', 'Samantha', 'Daniel']);
   assert.deepEqual(names([v('English India', 'en-IN'), v('English United States'), v('Kyoko', 'ja-JP')]), ['English United States', 'English India']);
+});
+
+test('hasEnglish: only English letters count as a try', () => {
+  for (const s of ['', '   ', 'えーと', '123 ?', 'ａｂｃ']) assert.equal(hasEnglish(s), false, s);
+  for (const s of ['I', 'えーと I think', ' maybe ']) assert.equal(hasEnglish(s), true, s);
 });
 
 test('timeLimit: fixed seconds, 0 disables, auto grows with answer length', () => {
