@@ -23,11 +23,12 @@ gh api repos/hamachu216/english-drill/pages/builds/latest --jq '.status+" "+.com
 
 - `data/{1..5}-*.json` — レベルごとに1ファイル。中身のデータはこれだけ。形は `{level, title, decks:[{id, title, refs:[{name,url}], cards:[{id, ja, en, note?}]}]}`。カードIDは `<deckId>-NNN` 形式で、全体で一意であること（`test/data.test.js` で検証）。ファイル一覧は `core.js` の `FILES` にあり、レベルはその順に 1..N であること。
 - `core.js` — 純粋関数のみ（DOM・ストレージに触らない）で、すべて単体テスト済み: `flattenCards`、`shuffle(xs, rand)`、`nextRound(misses, pool, all, rand)`（ラウンド進行の中核）、`timeLimit`、`streak`、`calendar`、`englishVoices`、`wordDiff`。
-- `app.js` — DOM と状態のすべて。`<script type="module">` 1つで、トップレベル `await` により全データファイルを fetch する。
+- `app.js` — DOM と状態のすべて。`<script type="module">` 1つで、トップレベル `await` により全データファイルを fetch する。DOM は `el(tag, props, ...kids)` でノードから組み立て、HTML 文字列は使わない。
+- `index.html`（マークアップのみ）、`style.css`、`theme.js` — インラインの `<script>`・`<style>`・`style=""` は CSP で禁止しているので、すべて別ファイルに置く。
 
 学習の流れ: レベルを1つ選ぶ → そのレベルのカードをシャッフルしてメモリ上の `pool` に入れる → `ROUND`（10）問ずつのラウンドで出題する。各回答は ○/✕ で判定し（`results[i]`）、ラウンド終了後は `misses()` を次のラウンドとして（`retry: true`）、全問○になるまで繰り返す。その後は pool から次の10問を出し、pool が空になったらシャッフルし直して補充する。カード単位の情報は意図的に保存しない。再読み込みすると pool と出し直し待ちの問題はリセットされる。
 
-保存: localStorage のキー `eng:v1` 1つに `{log: {"YYYY-MM-DD": その日の回答数}, settings: {theme, goal, level, limit, voice}}` を入れる。`restore()` は `DEFAULT` にあるキーだけを残すため、旧バージョンの不要な項目は捨てられる。`log` を元に連続日数・目標リング・12週間のヒートマップを表示する。テーマは `<head>` 内のインラインスクリプトが描画前に読み、ちらつきを防いでいる。
+保存: localStorage のキー `eng:v1` 1つに `{log: {"YYYY-MM-DD": その日の回答数}, settings: {theme, goal, level, limit, voice}}` を入れる。`restore()` は `DEFAULT` にあるキーだけを残すため、旧バージョンの不要な項目は捨てられる。`log` を元に連続日数・目標リング・12週間のヒートマップを表示する。テーマは `<head>` で同期読み込みする `theme.js` が描画前に読み、ちらつきを防いでいる。
 
 画面は3つの `<section>`（`home`、`study`、`result`）を `hidden` で切り替える。多くの要素が `display` を指定しているため、グローバルの `[hidden]{display:none!important}` が必要。
 
@@ -38,4 +39,5 @@ gh api repos/hamachu216/english-drill/pages/builds/latest --jq '.status+" "+.com
 - **制限時間**: `#timer` に CSS の `@keyframes drain` アニメーションを掛け、答えを表示したら `animationPlayState` で止める。これとは別に `setTimeout` を1つ置き、時間切れで `reveal(true)` を呼ぶ。既定は10秒。`'auto'` は 2秒 + 1単語0.5秒。
 - **テーマ**: 色は `:root` の CSS カスタムプロパティで定義する。ダークモードは `@media (prefers-color-scheme: dark) :root:not([data-theme="light"])` と `:root[data-theme="dark"]` の2か所で再定義しているので、両方を必ず揃えること。レベルごとのアクセント色は `--lv1`〜`--lv5` で、`--lv` 経由で適用する。
 - **問題文**: 必ずオリジナルで書く。`refs` に載せた参考サイトは分野構成の参考にしただけで、文をコピーしてはいけない。リポジトリは public なので、カードに利用者の実名や所属を入れないこと。
+- **CSP（セキュリティ）**: リポジトリは public で、`main` がそのまま本番になる。`index.html` 先頭の `<meta>` CSP は `default-src 'none'` で、自サイトの読み込みと Trusted Types（`require-trusted-types-for 'script'`）だけを許可している。外部の CDN・フォント・インラインコード・`innerHTML` を足すと動かなくなる（`test/security.test.js` でも検査している）。Service Worker の登録だけは `sw` ポリシーを通す。フォントは端末のもの（Apple 端末ではヒラギノ丸ゴ）を使い、Google Fonts は外部への通信をなくすためにやめた。`main` はルールセット `protect-main` で force push と削除を禁止している。コミットのメールアドレスは GitHub の noreply アドレスにする。
 - **ヘッドレス確認**: Chrome 拡張は使えないことが多い。セッションのスクラッチパッドに `playwright-core` を入れ、`executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'` で起動する。このリポジトリには入れないこと。
