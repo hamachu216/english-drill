@@ -1,4 +1,4 @@
-import { FILES, ROUND, flattenCards, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices } from './core.js';
+import { FILES, ROUND, flattenCards, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish } from './core.js';
 
 const KEY = 'eng:v1';
 const $ = (id) => document.getElementById(id);
@@ -103,6 +103,7 @@ function showCard() {
   $('input').value = '';
   $('answer').hidden = true;
   $('reveal').hidden = false;
+  $('reveal').disabled = true; // until some English is typed or spoken
   if (canHover) $('input').focus();
   startTimer(sec);
 }
@@ -126,6 +127,7 @@ function reveal(timedOut = false) {
   const typed = $('input').value.trim();
   $('en').replaceChildren(...(typed ? wordDiff(typed, cur.en).flatMap(({ w, ok }) => [el('span', { className: ok ? 'hit' : 'miss', textContent: w }), ' ']) : [cur.en]));
   $('en').className = typed ? 'en diff' : 'en';
+  $('ok').disabled = !hasEnglish(typed); // timed out without a try: it can only count as a miss
   $('note').textContent = cur.note || '';
   $('note').hidden = !cur.note;
   $('card-refs').replaceChildren('参考: ', ...cur.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)])));
@@ -183,15 +185,16 @@ $('start').onclick = () => { answered = 0; $('flash').textContent = ''; play(nex
 $('next-round').onclick = () => play(nextRound(misses(), pool, levelCards()));
 $('quit').onclick = $('home-btn').onclick = finish;
 $('reveal').onclick = () => reveal();
+$('input').oninput = () => ($('reveal').disabled = !hasEnglish($('input').value));
 $('ng').onclick = () => judge(false);
 $('ok').onclick = () => judge(true);
 document.addEventListener('keydown', (e) => {
   if (!$('home').hidden || e.isComposing) return;
   if (e.key === 'Escape') finish();
   else if (!$('result').hidden) { if (e.key === 'Enter') $('next-round').click(); }
-  else if ($('answer').hidden) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); reveal(); } }
-  else if (e.key === '1' || e.key === 'ArrowLeft') judge(false);
-  else if (e.key === '2' || e.key === 'ArrowRight') judge(true);
+  else if ($('answer').hidden) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('reveal').click(); } }
+  else if (e.key === '1' || e.key === 'ArrowLeft') $('ng').click();
+  else if (e.key === '2' || e.key === 'ArrowRight') $('ok').click();
   else if (e.key === 's') speak(cur.en);
 });
 
@@ -222,7 +225,7 @@ if (Recognition) {
   $('mic').hidden = false;
   $('mic').onclick = () => {
     const r = Object.assign(new Recognition(), { lang: 'en-US', interimResults: true });
-    r.onresult = (e) => ($('input').value = [...e.results].map((x) => x[0].transcript).join(''));
+    r.onresult = (e) => { $('input').value = [...e.results].map((x) => x[0].transcript).join(''); $('input').oninput(); };
     r.onend = () => $('mic').classList.remove('on');
     $('mic').classList.add('on');
     r.start();

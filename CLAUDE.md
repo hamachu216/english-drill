@@ -22,15 +22,15 @@ gh api repos/hamachu216/english-drill/pages/builds/latest --jq '.status+" "+.com
 データ → 純粋関数 → DOM の3層構成。
 
 - `data/{1..5}-*.json` — レベルごとに1ファイル。中身のデータはこれだけ。形は `{level, title, decks:[{id, title, refs:[{name,url}], cards:[{id, ja, en, note?}]}]}`。カードIDは `<deckId>-NNN` 形式で、全体で一意であること（`test/data.test.js` で検証）。ファイル一覧は `core.js` の `FILES` にあり、レベルはその順に 1..N であること。
-- `core.js` — 純粋関数のみ（DOM・ストレージに触らない）で、すべて単体テスト済み: `flattenCards`、`shuffle(xs, rand)`、`nextRound(misses, pool, all, rand)`（ラウンド進行の中核）、`timeLimit`、`streak`、`calendar`、`englishVoices`、`wordDiff`。
+- `core.js` — 純粋関数のみ（DOM・ストレージに触らない）で、すべて単体テスト済み: `flattenCards`、`shuffle(xs, rand)`、`nextRound(misses, pool, all, rand)`（ラウンド進行の中核）、`timeLimit`、`hasEnglish`、`streak`、`calendar`、`englishVoices`、`wordDiff`。
 - `app.js` — DOM と状態のすべて。`<script type="module">` 1つで、トップレベル `await` により全データファイルを fetch する。DOM は `el(tag, props, ...kids)` でノードから組み立て、HTML 文字列は使わない。
 - `index.html`（マークアップのみ）、`style.css`、`theme.js` — インラインの `<script>`・`<style>`・`style=""` は CSP で禁止しているので、すべて別ファイルに置く。
 
-学習の流れ: レベルを1つ選ぶ → そのレベルのカードをシャッフルしてメモリ上の `pool` に入れる → `ROUND`（10）問ずつのラウンドで出題する。各回答は ○/✕ で判定し（`results[i]`）、ラウンド終了後は `misses()` を次のラウンドとして（`retry: true`）、全問○になるまで繰り返す。その後は pool から次の10問を出し、pool が空になったらシャッフルし直して補充する。カード単位の情報は意図的に保存しない。再読み込みすると pool と出し直し待ちの問題はリセットされる。
+学習の流れ: レベルを1つ選ぶ → そのレベルのカードをシャッフルしてメモリ上の `pool` に入れる → `ROUND`（10）問ずつのラウンドで出題する。英語（アルファベット）を入力するか音声入力するまで「答えを見る」は押せない。時間切れで答えが出た場合、英語を入力していなければ ✕ しか選べない。各回答は ○/✕ で判定し（`results[i]`）、ラウンド終了後は `misses()` を次のラウンドとして（`retry: true`）、全問○になるまで繰り返す。その後は pool から次の10問を出し、pool が空になったらシャッフルし直して補充する。カード単位の情報は意図的に保存しない。再読み込みすると pool と出し直し待ちの問題はリセットされる。
 
 保存: localStorage のキー `eng:v1` 1つに `{log: {"YYYY-MM-DD": その日の回答数}, settings: {theme, goal, level, limit, voice}}` を入れる。`restore()` は `DEFAULT` にあるキーだけを残すため、旧バージョンの不要な項目は捨てられる。`log` を元に連続日数・目標リング・12週間のヒートマップを表示する。テーマは `<head>` で同期読み込みする `theme.js` が描画前に読み、ちらつきを防いでいる。
 
-画面は3つの `<section>`（`home`、`study`、`result`）を `hidden` で切り替える。多くの要素が `display` を指定しているため、グローバルの `[hidden]{display:none!important}` が必要。
+幅 960px 以上（PC）では最大 90rem まで横に広げる。ホームは `.today`・`.pick`・`.more` の3ブロックをグリッドに配置し（左: 今日の進み具合と記録・設定、右: レベル選択とスタート）、出題画面は `#qcard` を「問題・入力 | 模範解答」の2列にする。スマホ幅では HTML の順に縦に並ぶ。画面は3つの `<section>`（`home`、`study`、`result`）を `hidden` で切り替える。多くの要素が `display` を指定しているため、グローバルの `[hidden]{display:none!important}` が必要。
 
 ## ハマりどころ
 
