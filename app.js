@@ -391,10 +391,11 @@ $('mock-start').onclick = mock;
 $('cd-start').onclick = () => { if (freeList !== phraseCards) { freeList = phraseCards; pool = []; } playFree(); };
 $('quit').onclick = $('home-btn').onclick = finish;
 // The hint button stays enabled while hints are left; it does nothing once the answer is out.
+// One press goes straight to the first letters, with any hint before them; a ladder without them goes one at a time.
 $('hint').onclick = () => {
   if (!$('answer').hidden) return;
   now.hinted = true;
-  $('hints').append(...hintRow(now.pending.shift()));
+  $('hints').append(...now.pending.splice(0, now.pending.findIndex(([label]) => label === '頭文字') + 1 || 1).flatMap(hintRow));
   $('hint').disabled = !now.pending.length;
 };
 $('unknown').onclick = () => { now.gaveUp = true; reveal(); };
