@@ -45,7 +45,9 @@ const QA_LEVEL = ['Beginner', 'Intermediate', 'Advanced'];
 const session = () => (state.session?.day === today() && state.session.queue.every((s) => byId.has(s.id)) ? state.session : null);
 const left = (s) => s.queue.length - s.idx;
 // Seeded by the date, so the menu shown on the home screen is exactly the session that starts.
-const plan = (minutes, salt = '') => planSession({ items: cards, hist: state.hist, days: state.days, day: today(), minutes, rand: seeded(today() + salt) });
+// Cards marked rare (forms a research talk hardly needs) are left to free practice.
+const daily = cards.filter((c) => !c.rare);
+const plan = (minutes, salt = '') => planSession({ items: daily, hist: state.hist, days: state.days, day: today(), minutes, rand: seeded(today() + salt) });
 const fresh = (minutes, salt) => ({ day: today(), queue: plan(minutes, salt), idx: 0, grades: [] });
 
 const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, [icon, name]]) => {
@@ -185,8 +187,9 @@ function showStep() {
   const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
   now = { step, cur, ask: cur.deck.follow?.[step.follow] ?? cur, pending: [...hints], hinted: false, model: '', said: '', ex };
   const talk = isTalk(), [icon, name] = PHASE[step.phase] ?? [];
-  // Free practice keeps its timer setting; an Intermediate question gets a gentle 45s bar that never cuts you off.
-  const sec = run.free ? timeLimit((ex ?? cur).en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
+  // Free practice keeps its timer setting (not the Collocation Drill: composing a sentence takes its time);
+  // an Intermediate question gets a gentle 45s bar that never cuts you off.
+  const sec = run.free && !ex ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
   $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q ? 4 : ex ? 5 : 3)})`);
   $('track').textContent = [
     step.retry && '🔁 もう一度',
@@ -220,7 +223,7 @@ function showStep() {
   $('reveal').textContent = step.intro ? 'まねして言えた、次へ →' : '✓ 回答した';
   $('answer').hidden = true;
   $('reveal').hidden = false;
-  startTimer(sec, run.free);
+  startTimer(sec, run.free && !ex);
   if ((now.ask.q || step.intro) && state.settings.listen) speak(step.intro ? cur.en : now.ask.q);
 }
 

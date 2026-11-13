@@ -102,7 +102,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 
 | ファイル | kind | 量 | カードの形 | 使われ方 |
 |---|---|---|---|---|
-| `1-basic.json`・`2-advanced.json` | `grammar` | 25トピック・472問 | `{id, ja, en, note?}`。デッキに文法の1行解説 `note`（必須） | 今日の練習・自由練習 |
+| `1-basic.json`・`2-advanced.json` | `grammar` | 25トピック・472問 | `{id, ja, en, note?, rare?}`。デッキに文法の1行解説 `note`（必須）。`rare: true` は研究の場ではまず使わない形（if only・倒置など）で、今日の練習には出さず自由練習だけで出す（`app.js` の `daily`） | 今日の練習・自由練習 |
 | `3-discussion.json`〜`5-defense.json` | `phrase` | 30トピック・360問 | 同上 | 自由練習のみ |
 | `patterns.json` | `pattern` | 24の型・192文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
 | `replies.json` | `reply` | 7場面・63問 | `{id, scene, q, ja, frame, en}`。決まった返し方を日本語（`ja`）から言う。`scene` は場面、`q` は相手の質問で、どちらも出題時に表示する（答えるのは質問の中身ではなく `en` のひと言） | 今日の練習 |
@@ -181,7 +181,7 @@ iPhone の Safari は7日間開かないサイトの記録を消すが、ホー�
 
 - **Service Worker**（`sw.js`）: ネットワーク優先で `cache: 'no-cache'` を付けて取得し、`skipWaiting` と `clients.claim` を使う。`app.js` は `controllerchange` で1回だけ再読み込みする。GitHub Pages は `max-age=600` を返すため、この組み合わせでデプロイが次の再読み込みで反映される。キャッシュ優先や stale-while-revalidate に戻さないこと（以前それで利用者が古いコードから抜けられなくなった）。
 - **読み上げの声**: 声を指定しないと、macOS の Chrome はかすれ声のジョーク用音声「Albert」を使う。ジョーク用音声は名前がローカライズされる（例: ささやき声）ため除外リスト方式は使えない。`englishVoices` は品質の良い声の許可リストだけを残し、未知の環境では任意の英語音声にフォールバックする。
-- **制限時間**: `#timer` に CSS の `@keyframes drain` アニメーションを掛け、答えを表示したら `animationPlayState` で止める。自由練習ではこれとは別に `setTimeout` を1つ置き、時間切れで `reveal(true)` を呼ぶ（既定は10秒。`'auto'` は 2秒 + 1単語0.5秒）。時間切れは答えを見せるだけで、判定は自己評価。今日の練習では時間で打ち切らない（Intermediate の Q&A にバーが出るだけ）。
+- **制限時間**: `#timer` に CSS の `@keyframes drain` アニメーションを掛け、答えを表示したら `animationPlayState` で止める。自由練習（Collocation Drill を除く。英作文なので時間で切らない）ではこれとは別に `setTimeout` を1つ置き、時間切れで `reveal(true)` を呼ぶ（既定は10秒。`'auto'` は 2秒 + 1単語0.5秒）。時間切れは答えを見せるだけで、判定は自己評価。今日の練習では時間で打ち切らない（Intermediate の Q&A にバーが出るだけ）。
 - **話すのが先**: 回答は声に出すだけでよく、入力は任意（以前あった「英語を入力するまで答えを見られない」制限は、音声認識のない端末で詰むので外した）。🎤 は SpeechRecognition があれば文字起こし、なければ MediaRecorder で録音して回答例の横で再生する。どちらも無い端末ではボタンが出ないだけで練習は完了できる。録音の再生のために CSP に `media-src blob:` がある。
 - **テーマ**: 色は `:root` の CSS カスタムプロパティで定義する。ダークモードは `@media (prefers-color-scheme: dark) :root:not([data-theme="light"])` と `:root[data-theme="dark"]` の2か所で再定義しているので、両方を必ず揃えること。レベルごとのアクセント色は `--lv1`〜`--lv5` で、`--lv` 経由で適用する。
 - **問題文**: 必ずオリジナルで書く（例外は上の `replies.json` の定型句だけ）。`refs` に載せた参考サイトは分野構成の参考にしただけで、文をコピーしてはいけない。リポジトリは public なので、カードに利用者の実名や所属、実際の研究内容・結果を入れないこと（構文とQ&Aの例は架空の研究で、型を使い回す練習用）。

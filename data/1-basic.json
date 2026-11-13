@@ -1866,14 +1866,14 @@
       "cards": [
         {
           "id": "b-subjunctive-001",
-          "ja": "もし時間があれば、その本を読むのに。",
-          "en": "If I had time, I would read the book.",
+          "ja": "もっとデータがあれば、より多くの条件を試せるのですが。",
+          "en": "If we had more data, we could test more conditions.",
           "note": "現在の事実に反する仮定は過去形で表す"
         },
         {
           "id": "b-subjunctive-002",
-          "ja": "もし私が鳥だったら、空を飛べるのに。",
-          "en": "If I were a bird, I could fly.",
+          "ja": "センサーがもっと安ければ、多くの病院で使えるのですが。",
+          "en": "If the sensor were cheaper, many hospitals could use it.",
           "note": "仮定法のbe動詞は主語に関わらずwereが基本"
         },
         {
@@ -1883,8 +1883,8 @@
         },
         {
           "id": "b-subjunctive-004",
-          "ja": "もし私があなたなら、そのオファーを受けるだろう。",
-          "en": "If I were you, I would accept the offer."
+          "ja": "私があなたなら、まずデータをもう一度確認します。",
+          "en": "If I were you, I would check the data again first."
         },
         {
           "id": "b-subjunctive-005",
@@ -1899,18 +1899,19 @@
         },
         {
           "id": "b-subjunctive-007",
-          "ja": "彼がここにいたら、私たちを助けてくれるのに。",
-          "en": "If he were here, he would help us."
+          "ja": "共著者がここにいれば、この部分をもっとうまく説明できるのですが。",
+          "en": "If my co-author were here, we could explain this part better."
         },
         {
           "id": "b-subjunctive-008",
-          "ja": "もし宝くじに当たったら、何をしますか。",
-          "en": "What would you do if you won the lottery?"
+          "ja": "もっと予算があったら、何をしますか。",
+          "en": "What would you do if you had a bigger budget?"
         },
         {
           "id": "b-subjunctive-009",
-          "ja": "もし車を持っていたら、そこへ車で行けるのに。",
-          "en": "If I had a car, I could drive there."
+          "ja": "もっと大きなモデルを使えば、精度はおそらく上がるでしょう。",
+          "en": "If we used a larger model, the accuracy would probably improve.",
+          "note": "would で「（仮に〜すれば）〜だろう」と控えめに予測する"
         },
         {
           "id": "b-subjunctive-010",
@@ -1919,34 +1920,34 @@
         },
         {
           "id": "b-subjunctive-011",
-          "ja": "私に姉がいればいいのに。",
-          "en": "I wish I had an older sister."
+          "ja": "参加者がもっといればいいのですが。",
+          "en": "I wish we had more participants."
         },
         {
           "id": "b-subjunctive-012",
-          "ja": "彼女の電話番号を知っていれば、電話するのに。",
-          "en": "If I knew her phone number, I would call her."
+          "ja": "答えが分かればお伝えするのですが。",
+          "en": "If I knew the answer, I would tell you."
         },
         {
           "id": "b-subjunctive-013",
-          "ja": "もし今日が日曜日なら、一日中寝ているのに。",
-          "en": "If today were Sunday, I would sleep all day."
+          "ja": "この手順をなくすと、結果は悪くなるでしょう。",
+          "en": "If we removed this step, the results would get worse."
         },
         {
           "id": "b-subjunctive-014",
-          "ja": "彼はまるで何でも知っているかのように話す。",
-          "en": "He talks as if he knew everything.",
-          "note": "as if＋過去形で「まるで〜かのように」"
+          "ja": "ノイズがもっと少なければ、この手法はさらにうまく働くでしょう。",
+          "en": "If there were less noise, this method would work even better.",
+          "note": "There is の仮定は there were"
         },
         {
           "id": "b-subjunctive-015",
-          "ja": "もし私が教授だったら、学生にもっと休みを与えるだろう。",
-          "en": "If I were a professor, I would give my students more time off."
+          "ja": "もっと時間があれば、ユーザー調査を行うのですが。",
+          "en": "If we had more time, we would run a user study."
         },
         {
           "id": "b-subjunctive-016",
-          "ja": "もし近くに住んでいたら、毎日歩いて研究室に来られるのに。",
-          "en": "If I lived nearby, I could walk to the lab every day."
+          "ja": "このモデルがもっと速ければ、リアルタイムで使えるのですが。",
+          "en": "If the model were faster, we could use it in real time."
         },
         {
           "id": "b-subjunctive-017",
@@ -1955,9 +1956,8 @@
         },
         {
           "id": "b-subjunctive-018",
-          "ja": "雨が降っていなければ、散歩に行くのに。",
-          "en": "If it weren't raining, I would go for a walk.",
-          "note": "進行形の仮定はwere＋〜ing"
+          "ja": "バッテリーがもっと長くもてば、一日中身につけてもらえるのですが。",
+          "en": "If the battery lasted longer, people could wear the device all day."
         },
         {
           "id": "b-subjunctive-019",
@@ -1967,8 +1967,8 @@
         },
         {
           "id": "b-subjunctive-020",
-          "ja": "もっと若ければ、もう一度留学するのに。",
-          "en": "If I were younger, I would study abroad again."
+          "ja": "このプロジェクトを最初からやり直すなら、まずもっとデータを集めます。",
+          "en": "If I started this project again, I would collect more data first."
         }
       ]
     }
