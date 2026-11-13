@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded, restore, skeleton } from '../core.js';
-import { MISS, HINT, OK, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, overview, weekly, knownTopics, byNeed } from '../plan.js';
+import { MISS, HINT, OK, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, overview, mockSession, weekly, knownTopics, byNeed } from '../plan.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const byId = new Map(items.map((c) => [c.id, c]));
@@ -220,8 +220,8 @@ test('Q&A reply: dictation — nothing shown up front, the first letters and wor
 test('Q&A: a hint is always available, and a failed question is asked again right away with its answer frame', () => {
   const q = items.find((c) => c.id === 'q-method-001');
   for (const level of [0, 1, 2]) assert.ok(scaffold(q, { level }).hints.length > 0, `level ${level}`);
-  assert.deepEqual(scaffold(q, { level: 0 }).shown.map(([label]) => label), ['キーワード', '答え方の型'], 'Beginner');
-  assert.deepEqual(scaffold(q, { level: 1 }).shown.map(([label]) => label), ['キーワード'], 'Intermediate');
+  assert.deepEqual(scaffold(q, { level: 0 }).shown.map(([label]) => label), ['入れる要素', '答え方の型'], 'Beginner');
+  assert.deepEqual(scaffold(q, { level: 1 }).shown.map(([label]) => label), ['入れる要素'], 'Intermediate');
   assert.deepEqual(scaffold(q, { level: 2 }).shown, [], 'Advanced');
   assert.deepEqual(scaffold(q, { level: 2 }).hints.at(1), ['答え方の型', q.frame]);
   assert.deepEqual(choices(true, true), ['content', 'english', 'hint'], 'after a hint it cannot count as unaided');
@@ -238,21 +238,23 @@ test('Q&A: a hint is always available, and a failed question is asked again righ
   assert.equal(requeue(grammar, 6, MISS, 'grammar').at(-1).retry, true);
 });
 
-test('Q&A levels rise with the learner, then impromptu questions with a follow-up begin', () => {
-  const early = practice(2, () => OK), late = practice(12, () => OK);
-  assert.ok(overview(items, early.hist, early.next).unlock > 0);
-  assert.ok(early.sessions.flat().every((s) => s.phase !== 'impromptu'));
-  const o = overview(items, late.hist, late.next);
-  assert.equal(o.unlock, 0);
-  assert.ok(o.qa[2] >= 6, 'questions answered unaided on separate days are Advanced');
-  const wild = plan(late.hist, late.days, late.next).filter((s) => s.phase === 'impromptu');
-  assert.equal(wild.length, 2 * wild.filter((s) => s.follow != null).length, 'each impromptu question brings one follow-up');
-  const main = wild.find((s) => s.follow == null), follow = wild.find((s) => s.follow != null);
-  assert.deepEqual(scaffold(byId.get(main.id), main).shown, [], 'English question only');
-  assert.ok(byId.get(follow.id).deck.follow[follow.follow].q);
-  assert.ok(scaffold(byId.get(follow.id), follow).hints.length > 0);
-  const hinted = practice(12, () => HINT);
-  assert.ok(overview(items, hinted.hist, hinted.next).unlock > 0, 'not unlocked by answers with a hint alone');
+test('Q&A levels rise with the learner; the daily session never asks impromptu questions', () => {
+  const late = practice(12, () => OK);
+  assert.ok(overview(items, late.hist, late.next).qa[2] >= 6, 'questions answered unaided on separate days are Advanced');
+  assert.ok(late.sessions.flat().every((s) => s.phase !== 'mock' && s.follow == null), 'no mock questions or follow-ups in the daily session');
+});
+
+test('mock Q&A: five questions from across the topics, met ones first, each with a follow-up of its topic', () => {
+  const { hist } = practice(3, () => OK), met = items.filter((c) => c.kind === 'qa' && hist[c.id]);
+  const q = mockSession(items, hist, seeded('m'));
+  assert.equal(q.length, 10);
+  const main = q.filter((s) => s.follow == null), follow = q.filter((s) => s.follow != null);
+  assert.ok(main.every((s, i) => s.phase === 'mock' && s.level === 2 && follow[i].id === s.id));
+  assert.ok(main.every((s) => met.some((c) => c.id === s.id)) || met.length < 5, 'questions already met come first');
+  assert.ok(follow.every((s) => byId.get(s.id).deck.follow[s.follow]));
+  assert.deepEqual(scaffold(byId.get(main[0].id), main[0]).shown, [], 'English question only');
+  assert.deepEqual(scaffold(byId.get(follow[0].id), follow[0]).hints.map(([k]) => k), ['入れる要素', '答え方の型', '質問の意味']);
+  assert.equal(mockSession(items, {}, seeded('m')).length, 10, 'from the start, with new questions');
 });
 
 test('weekly check: after a week, a few never-seen cards from every kind, with no support and no hints', () => {

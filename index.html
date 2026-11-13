@@ -44,6 +44,11 @@
       <p class="muted" id="cd-summary"></p>
       <button id="cd-start" class="primary wide">▶ 始める（10問ずつ）</button>
     </div>
+    <div class="card mock">
+      <div class="cal-head"><b>模擬質疑応答</b></div>
+      <p class="muted" id="mock-summary"></p>
+      <button id="mock-start" class="primary wide">▶ 始める（5問＋追加質問）</button>
+    </div>
     <div class="card now">
       <div class="cal-head"><b>いまの状況</b></div>
       <dl id="status"></dl>
@@ -116,12 +121,13 @@
       </div>
       <div class="answer" id="answer" hidden>
         <p class="timeout" id="timeout" hidden>⏱ 時間切れ</p>
+        <p class="mine" id="mine"></p>
+        <button id="keep" class="wide" hidden></button>
         <p class="muted" id="model-label"></p>
         <div class="row"><p class="en" id="en"></p><button id="speak" class="icon-btn" aria-label="読み上げ">🔊</button></div>
         <audio id="playback" controls hidden></audio>
         <p class="note" id="note"></p>
         <p class="tip" id="tip"></p>
-        <p class="muted" id="mine"></p>
         <p class="muted" id="caveat"></p>
         <p class="muted refs" id="card-refs"></p>
         <p class="muted judge-label" id="judge-label">最初に答えたときの出来は？</p>

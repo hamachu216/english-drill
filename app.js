@@ -1,5 +1,5 @@
 import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish, slots, literal } from './core.js';
-import { MISS, HINT, OK, GRADE, review, byNeed, progress, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
+import { MISS, HINT, OK, GRADE, review, byNeed, progress, mockSession, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
 import { example, hints as pairHints, siblings } from './colloc.js';
 
 const KEY = 'eng:v1';
@@ -37,7 +37,7 @@ const el = (tag, props, ...kids) => { const n = Object.assign(document.createEle
 const LEVEL_ICONS = ['📘', '🚀', '💬', '🎤', '🎓'];
 const PHASE = {
   review: ['🔁', '前回の苦手を復習'], grammar: ['📘', '基礎文法'], pattern: ['🧩', '研究英語の構文'],
-  reply: ['🗣', '質疑応答の切り返し'], qa: ['💬', 'Research Q&A'], impromptu: ['⚡', '即興 Q&A'], check: ['📝', '週1回の初見チェック'],
+  reply: ['🗣', '質疑応答の切り返し'], qa: ['💬', 'Research Q&A'], mock: ['🎤', '模擬質疑応答'], check: ['📝', '週1回の初見チェック'],
 };
 const QA_LEVEL = ['Beginner', 'Intermediate', 'Advanced'];
 
@@ -62,7 +62,7 @@ const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, [icon, name]]
 
 // The Phrase Drill: adjective + preposition pairs and backchannels, mixed, outside the daily session.
 const drill = (c) => c.kind === 'colloc' || c.kind === 'backchannel';
-const drillCards = cards.filter(drill), replyCount = cards.filter((c) => c.kind === 'reply').length;
+const drillCards = cards.filter(drill), replyCount = cards.filter((c) => c.kind === 'reply').length, qaCount = cards.filter((c) => c.kind === 'qa').length;
 const stepLine = ([, practising, settled]) => `練習中 ${practising} ・ 定着 ${settled}`;
 const sum = (...xs) => xs.reduce((a, b = []) => a.map((v, i) => v + (b[i] ?? 0)), [0, 0]);
 const tenths = ([n = 0, said = 0] = []) => (n < 5 ? '—' : `${Math.round((said / n) * 10)}割`);
@@ -95,10 +95,10 @@ function renderHome() {
     ...pair('構文', `言える ${o.frames[2]} ・ 練習中 ${o.frames[0] + o.frames[1]} ／ ${o.framesTotal}`),
     ...pair('切り返し', `書き取れる ${o.reply[2]} ・ 練習中 ${o.reply[0] + o.reply[1]} ／ ${replyCount}`),
     ...pair('Q&A', QA_LEVEL.map((name, i) => `${name} ${o.qa[i]}`).join(' ・ ')),
-    ...pair('即興Q&A', o.unlock ? `あと${o.unlock}問で解放` : '出題中'),
     ...pair('フレーズ', `${stepLine(pr)} ／ ${drillCards.length}`));
   const wrong = drillCards.filter((c) => state.hist[c.id]?.box === 0).length;
   $('cd-summary').textContent = `未学習 ${pr[0]} ・ ${stepLine(pr)}${wrong ? ` ・ ✕ 前回間違えた ${wrong}（次の「始める」で最初に出ます）` : ''}`;
+  $('mock-summary').textContent = `英語の質問だけで、自分の研究について答える ・ 保存した回答例 ${Object.keys(state.answers).length} / ${qaCount}`;
   // This week, plus earlier weeks that have something to show.
   $('weekly').tBodies[0].replaceChildren(...weekly(state.days, cards, d).filter((w, i) => !i || Object.keys(w.kinds).length).flatMap((w) => {
     const [, m, dd] = w.from.split('-').map(Number), qa = w.kinds.qa;
@@ -148,13 +148,14 @@ $('refs').replaceChildren(...[...sites].map(([name, url]) => el('li', {}, refLin
 
 // ---- study: one screen per step of `run.queue`.
 // A daily run is {day, queue, idx, grades} and is saved after every answer, so it survives quitting and reloading.
-// A free run (one level, rounds of ROUND, misses repeated until none remain) adds {free, retry} and is never saved.
+// A free run (one level, rounds of ROUND, misses repeated until none remain) adds {free, retry} and is never saved;
+// neither is a mock Q&A {mock}. Only a daily run has a day, and only it retries misses.
 let run = null, now = null, pool = [], answered = 0, timer = 0;
 const VIEWS = ['home', 'study', 'result'];
 const show = (view) => { for (const v of VIEWS) $(v).hidden = v !== view; scrollTo(0, 0); };
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const pop = (node) => calm || node.animate([{ opacity: 0, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
-const persist = () => run.free || save({ session: run });
+const persist = () => run.day && save({ session: run });
 const isTalk = () => now.cur.kind === 'qa'; // a research question, answered in your own words
 const SAY = $('input').placeholder;
 const hintRow = ([label, text]) => pair(label, text);
@@ -180,7 +181,7 @@ function playFree(missed = []) {
   begin({ free: true, retry: r.retry, queue: r.cards.map((c) => ({ id: c.id, phase: 'free' })), idx: 0, grades: [] });
 }
 
-const TALK_GUIDE = ['まずは1文で。時間は気にしなくてOK', 'キーワードを使って、1〜2文で', 'ヒントなしで、2〜3文で'];
+const TALK_GUIDE = ['自分の研究で、まずは1文で。時間は気にしなくてOK', '入れる要素を見ながら、1〜2文で', 'ヒントなしで、2〜3文で'];
 function showStep() {
   const step = run.queue[run.idx], cur = byId.get(step.id), rec = state.hist[cur.id];
   // An adjective + preposition pair is said in an example sentence it hasn't just had (`ex` is set for pairs only).
@@ -199,7 +200,7 @@ function showStep() {
     step.retry && '🔁 もう一度',
     run.free ? `${run.retry ? '🔁 復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : `Lv${cur.level}`}` : `${icon} ${name}`,
     !drill(cur) && cur.deck.title, // a pair's deck is its preposition, a backchannel's its function: the answer
-    step.follow != null ? '追加質問' : step.intro ? '新しい型' : talk && !step.check && step.phase !== 'impromptu' && QA_LEVEL[step.retry ? 0 : step.level],
+    step.follow != null ? '追加質問' : step.intro ? '新しい型' : talk && !step.check && step.phase !== 'mock' && QA_LEVEL[step.retry ? 0 : step.level],
   ].filter(Boolean).join(' · ');
   $('count').textContent = `${run.idx + 1} / ${run.queue.length}${sec ? ` · ⏱${sec}秒` : ''}`;
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
@@ -214,7 +215,7 @@ function showStep() {
     : !talk ? ''
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'
     : step.retry ? '型を見ながら、もう一度声に出そう'
-    : step.phase === 'impromptu' ? '初めての質問です。まず1文、言えたら2〜3文' : TALK_GUIDE[step.level];
+    : step.phase === 'mock' ? '本番のつもりで、自分の研究で答えよう。まず1文、言えたら2〜3文' : TALK_GUIDE[step.level];
   $('hints').replaceChildren(...(step.intro
     ? [...pair('ポイント', cur.deck.note), el('dt', { textContent: '例文' }), el('dd', { className: 'en' }, ...mark(cur.en, phrases(cur))), ...pair('意味', cur.ja)]
     : shown.flatMap(hintRow)));
@@ -268,14 +269,14 @@ function reveal(timedOut = false) {
   const { ex } = now;
   now.model = ex ? ex.en : talk && step.level === 2 && !step.retry && ask.more ? `${ask.en} ${ask.more}` : ask.en;
   $('timeout').hidden = !timedOut;
-  $('model-label').textContent = talk ? '回答例（あくまで一例）' : '';
+  $('model-label').textContent = talk ? '参考（架空の研究の一例）' : '';
   // Accuracy practice compares your words with the model; fluency practice (Q&A) never marks your English.
   const compare = typed && !talk;
   $('en').replaceChildren(...(compare ? wordDiff(typed, now.model).flatMap(({ w, ok }) => [el('span', { className: ok ? 'hit' : 'miss', textContent: w }), ' ']) : mark(now.model, phrases(cur))));
   $('en').className = compare ? 'en diff' : 'en';
   $('note').textContent = talk ? '' : cur.deck.basic ? `基本：${cur.deck.basic.join(' / ')}${cur.deck.more.length ? `　ほかに：${cur.deck.more.join(' / ')}` : ''}` : cur.note ?? '';
   $('tip').textContent = ask.frame ? `答え方の型：${ask.frame}` : cur.deck.note ? `${cur.deck.frame ?? cur.deck.title}：${cur.deck.note}` : '';
-  $('mine').textContent = talk && step.follow == null && state.answers[cur.id] ? `前回のあなたの回答：${state.answers[cur.id]}` : '';
+  showMine();
   if (ex) {
     $('note').textContent = `${cur.collocation} ＝ ${cur.ja}`;
     $('tip').textContent = cur.note;
@@ -303,19 +304,28 @@ function reveal(timedOut = false) {
   document.activeElement.blur();
 }
 
+// Your own answers to the research questions: what you said this time, and the one you keep as your model
+// (saved only on this device, by the button). A follow-up has no card of its own, so nothing is kept for it.
+function showMine() {
+  const { cur, step, said } = now, kept = state.answers[cur.id], own = isTalk() && step.follow == null;
+  $('mine').textContent = own ? [kept && `あなたの回答例：${kept}`, hasEnglish(said) && said !== kept && `今回のあなたの回答：${said}`].filter(Boolean).join('\n') : '';
+  $('keep').hidden = !own || !hasEnglish(said) || said === kept;
+  $('keep').textContent = kept ? '今回の答えを回答例にする' : 'この答えを回答例にする';
+}
+$('keep').onclick = () => { save({ answers: { ...state.answers, [now.cur.id]: now.said } }); showMine(); };
+
 function grade(key) {
-  const d = today(), { cur, step, said } = now, talk = isTalk(), g = GRADE[key], before = state.hist[cur.id];
+  const d = today(), { cur, step } = now, g = GRADE[key], before = state.hist[cur.id];
   const after = review(before, g, d);
   save({
     log: { ...state.log, [d]: (state.log[d] || 0) + 1 },
     // A follow-up question is practice only; a retry updates the card (it can't raise it) but isn't counted again.
     hist: step.follow == null ? { ...state.hist, [cur.id]: after } : state.hist,
     days: step.retry ? state.days : { ...state.days, [d]: tally(state.days[d], cur, { grade: g, why: key, check: step.check }) },
-    answers: talk && step.follow == null && hasEnglish(said) ? { ...state.answers, [cur.id]: said } : state.answers,
   });
   answered++;
   run.grades[run.idx] = g;
-  if (!run.free) run.queue = requeue(run.queue, run.idx, g, cur.kind);
+  if (run.day) run.queue = requeue(run.queue, run.idx, g, cur.kind);
   advance();
 }
 
@@ -346,17 +356,19 @@ function showResult() {
   $('result-emoji').textContent = !wrong ? '🎉' : rate >= 0.7 ? '👍' : '💪';
   $('result-score').textContent = `${ok}/${n}`;
   $('result-ring').style.setProperty('--p', rate * 100);
-  $('result-title').textContent = run.free ? (!wrong ? (run.retry ? '全部言えた！' : 'パーフェクト！') : rate >= 0.7 ? 'いい調子！' : 'ここから伸びる！') : '今日の練習、完了！';
+  $('result-title').textContent = run.free ? (!wrong ? (run.retry ? '全部言えた！' : 'パーフェクト！') : rate >= 0.7 ? 'いい調子！' : 'ここから伸びる！')
+    : run.mock ? '模擬質疑応答、おつかれさま！' : '今日の練習、完了！';
   $('result-sub').textContent = `${LABEL.ok[0]} ${ok} ・ ${LABEL.hint} ${count(HINT)} ・ ${LABEL.miss} ${count(MISS)}`;
   $('result-next').textContent = run.free ? (wrong ? `言えなかった${wrong}問を、言えるまで繰り返そう` : `次の${ROUND}問に進もう`)
+    : run.mock ? '答えにくかった質問は、回答例を保存しておくと次から手本になります。'
     : wrong ? '言えなかった問題は、明日のメニューの最初にもう一度出ます。' : '明日は今日の結果をもとに、新しいメニューが用意されます。';
-  $('miss-head').textContent = run.free ? 'もう一度チャレンジする問題' : '明日もう一度出る問題';
+  $('miss-head').textContent = run.free ? 'もう一度チャレンジする問題' : run.mock ? '答えられなかった質問' : '明日もう一度出る問題';
   $('miss-head').hidden = !wrong;
   pop($('result'));
   if (!wrong || !run.free) confetti();
   $('result-list').replaceChildren(...run.missed.map((c) =>
     el('li', { className: 'card' }, el('p', { className: 'muted', textContent: c.ja ?? '' }), el('p', { className: 'en', textContent: (c.kind === 'qa' ? c.q : c.en) ?? c.collocation }))));
-  $('next-round').textContent = !run.free ? '＋ もう少し続ける（約5分）' : wrong ? `🔁 言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
+  $('next-round').textContent = run.mock ? '🎤 別の5問でもう一度' : !run.free ? '＋ もう少し続ける（約5分）' : wrong ? `🔁 言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
 }
 
 function finish() {
@@ -373,7 +385,9 @@ const more = () => begin(fresh(5, `+${state.log[today()] || 0}`));
 $('start').onclick = () => { const s = session(); if (!s) begin(fresh(state.settings.minutes)); else if (left(s)) begin(s); else more(); };
 $('short').onclick = () => begin(fresh(10));
 $('free').onclick = () => { if (freeList !== levelCards) { freeList = levelCards; pool = []; } playFree(); };
-$('next-round').onclick = () => (run.free ? playFree(run.missed) : more());
+const mock = () => begin({ mock: true, queue: mockSession(cards, state.hist), idx: 0, grades: [] });
+$('next-round').onclick = () => (run.free ? playFree(run.missed) : run.mock ? mock() : more());
+$('mock-start').onclick = mock;
 $('cd-start').onclick = () => { if (freeList !== phraseCards) { freeList = phraseCards; pool = []; } playFree(); };
 $('quit').onclick = $('home-btn').onclick = finish;
 // The hint button stays enabled while hints are left; it does nothing once the answer is out.

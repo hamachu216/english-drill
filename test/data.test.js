@@ -37,11 +37,11 @@ test('sentence frames: every card reuses its frame with different content', () =
   }
 });
 
-test('questions: an English question with its meaning, an answer frame, keywords and example answers; follow-ups per topic', () => {
+test('questions: an English question with its meaning, what to include, an answer frame and example answers; follow-ups per topic', () => {
   assert.equal(qa.kind, 'qa');
   for (const d of qa.decks) {
-    assert.ok(d.follow.length >= 2 && d.follow.every((f) => f.q && f.ja && f.frame && f.en), d.id);
-    for (const c of d.cards) assert.ok(c.q.endsWith('?') && c.frame.includes('...') && c.keys.length >= 2 && c.more?.trim(), c.id);
+    assert.ok(d.follow.length >= 2 && d.follow.every((f) => f.q && f.ja && f.points && f.frame && f.en), d.id);
+    for (const c of d.cards) assert.ok(c.q.endsWith('?') && c.points?.trim() && !c.keys && c.frame.includes('...') && c.more?.trim(), c.id);
   }
 });
 

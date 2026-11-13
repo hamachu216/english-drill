@@ -18,7 +18,7 @@ const SECONDS = { grammar: 60, pattern: 75, reply: 60, qa: 120 };
 const EVERY = { reply: 6 };
 const NEUTRAL = 0.65; // fluency at which the split is the default 15 : 10 : 5 minutes
 const BLOCK = 4; // sentences drilled on the day a frame is introduced, after the one to listen to and repeat
-const UNLOCK = 6; // questions answered without a hint on a second day or later, before impromptu Q&A starts
+const MOCK = 5; // questions in a mock Q&A, each with a follow-up
 const CHECK = { grammar: 3, pattern: 2, reply: 1, qa: 1 }; // weekly first-sight check
 const WEEK = 7;
 const HINT_BOX = 2; // answers with a hint alone get a card this far (7 days)
@@ -120,8 +120,13 @@ export function byNeed(pool, hist, day) {
 // How far a set has come: [not started, practising, settled (next review a week or more away)].
 export const progress = (items, hist) => items.reduce((n, c) => (n[!hist[c.id] ? 0 : hist[c.id].box >= 2 ? 2 : 1]++, n), [0, 0, 0]);
 
-// Questions answered without a hint, not just once: what unlocks impromptu Q&A.
-const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id]?.box >= 2 && hist[c.id].grade === OK).length;
+// A mock Q&A, outside the daily session: MOCK research questions from any topic, English only, each followed by one
+// of its topic's follow-ups — questions already met first, then new ones.
+export function mockSession(items, hist, rand = Math.random) {
+  const qs = items.filter((c) => c.kind === 'qa'), met = qs.filter((c) => hist[c.id]);
+  return [...shuffle(met, rand), ...shuffle(qs.filter((c) => !hist[c.id]), rand)].slice(0, MOCK).flatMap((c) => [
+    { id: c.id, phase: 'mock', level: 2 }, { id: c.id, phase: 'mock', level: 2, follow: Math.floor(rand() * c.deck.follow.length) }]);
+}
 
 // Today's session. Per kind: reviews that are due (weakest first), then unseen cards from the weakest topic that has any,
 // then new cards, then — when nothing is left — the cards practiced longest ago. Unless the review pile is
@@ -137,7 +142,6 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const stage = stageOf(items, hist), weak = weakTopics(items, hist), known = knownTopics(items, hist);
   const share = mix(days, items, day), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
   const rest = minutes - Object.entries(fixed).reduce((s, [k, n]) => s + (n * SECONDS[k]) / 60, 0); // the 15:10:5 split covers what they leave
-  const unlocked = fluent(items, hist) >= UNLOCK;
 
   const pick = (kind) => {
     const pool = items.filter((c) => c.kind === kind), n = fixed[kind] ?? Math.max(1, Math.round((rest * 60 * share[kind]) / SECONDS[kind]));
@@ -170,8 +174,6 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : c.kind === 'qa' ? Math.min(2, rec(c)?.box ?? 0) : undefined);
   const step = (phase) => (c) => ({ id: c.id, phase, level: level(c) });
 
-  const talk = [...old('qa'), ...added('qa')];
-  const wild = !unlocked ? [] : added('qa').length ? added('qa') : talk.slice(-1); // impromptu: unseen questions first
   const firstDay = Object.keys(days).sort()[0], lastCheck = Object.keys(days).filter((d) => days[d]['#check']).sort().at(-1);
   const check = firstDay && day >= addDays(lastCheck ?? firstDay, WEEK) ? Object.keys(CHECK).flatMap((k) => {
     const unseen = items.filter((c) => c.kind === k && c.held && !rec(c)), known = unseen.filter((c) => c.topic in stage);
@@ -185,9 +187,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     // A new frame opens with its first sentence to listen to and repeat; that sentence is recalled on a later day.
     ...added('pattern').map((c, i, a) => (c.topic in stage || a[i - 1]?.topic === c.topic ? step('pattern')(c) : { id: c.id, phase: 'pattern', intro: true })),
     ...[...old('reply'), ...added('reply')].map(step('reply')),
-    ...talk.flatMap((c) => (wild.includes(c)
-      ? [{ id: c.id, phase: 'impromptu', level: 2 }, { id: c.id, phase: 'impromptu', level: 2, follow: Math.floor(rand() * c.deck.follow.length) }]
-      : [step('qa')(c)])),
+    ...[...old('qa'), ...added('qa')].map(step('qa')),
     ...check.map((c) => ({ id: c.id, phase: 'check', level: 2, check: true })),
   ];
 }
@@ -202,16 +202,16 @@ export function requeue(queue, i, grade, kind) {
 
 // What a step shows up front and what the hint button reveals, in order. Support fades with the level:
 //   frame card   0: frame shown · 1: frame half hidden · 2: nothing; the hints then give the phrases that fill it
-//   question     0 (Beginner): keywords + answer frame · 1 (Intermediate): keywords · 2 (Advanced): nothing
+//   question     0 (Beginner): what to include + answer frame · 1 (Intermediate): what to include · 2 (Advanced): nothing
 // A retry shows everything (for a grammar card: its grammar in one line and the opening); the weekly check shows
 // nothing and has no hints.
 export function scaffold(c, { level = 2, retry, check, follow }) {
   const f = c.deck.follow?.[follow];
   const [ladder, shown] =
-    f ? [[['答え方の型', f.frame], ['質問の意味', f.ja]], 0]
+    f ? [[['入れる要素', f.points], ['答え方の型', f.frame], ['質問の意味', f.ja]], 0]
     : c.kind === 'reply' ? [[['頭文字', skeleton(c.en)]], retry ? 1 : 0] // dictation: the reply is heard, its meaning is the prompt
     : c.kind === 'backchannel' ? [[['相手の言葉の意味', c.saidJa], ['使う相槌', c.deck.basic.join(' / ')], ['頭文字', skeleton(c.en)]], 0]
-    : c.q ? [[['キーワード', c.keys.join(' / ')], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
+    : c.q ? [[['入れる要素', c.points], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
     : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['語句', slots(c.deck.frame, c.en).join(' / ')], ['頭文字', skeleton(c.en)]], retry ? 2 : level < 2 ? 1 : 0]
     : [[...(retry ? [['文法', c.deck.note]] : []), ['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], retry ? 2 : 0];
   return check ? { shown: [], hints: [] } : { shown: ladder.slice(0, shown), hints: ladder.slice(shown) };
@@ -232,7 +232,6 @@ export function overview(items, hist, day) {
     frames: [0, 1, 2].map((s) => frames.filter((t) => stage[t] === s).length),
     framesTotal: frames.length,
     ...Object.fromEntries(['qa', 'reply'].map((k) => [k, [0, 1, 2].map((l) => of(k).filter((c) => hist[c.id] && Math.min(2, hist[c.id].box) === l).length)])),
-    unlock: Math.max(0, UNLOCK - fluent(items, hist)),
   };
 }
 

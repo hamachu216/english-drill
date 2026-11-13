@@ -112,6 +112,10 @@ p:empty, #menu .sub:empty { display: none; }
 .grid th { color: var(--muted); font-size: .75rem; font-weight: 700; padding: 0 2px 6px; }
 .grid td { text-align: center; padding: 6px 2px; border-top: 1px solid var(--line); font-weight: 700; }
 .drill { --lv: var(--lv5); }
+.mock { --lv: var(--lv4); }
+#mock-summary { margin: 4px 0 0; }
+#mine { margin: 0 0 10px; white-space: pre-line; font-weight: 700; }
+#keep { margin: 0 0 14px; }
 #cd-summary { margin: 4px 0 0; }
 .grid .weak td { text-align: left; border-top: 0; padding-top: 0; font-size: .78rem; font-weight: 500; color: var(--muted); }
 .panel .levels { margin-top: 4px; }
@@ -175,7 +179,7 @@ textarea {
 .refs { margin: 10px 0 0; }
 .timeout { display: inline-block; color: var(--bad); font-weight: 800; margin: 0 0 8px; }
 .tip { margin: 10px 0 0; padding-left: 12px; border-left: 3px solid color-mix(in srgb, var(--lv) 45%, var(--line)); font-size: .9rem; }
-#mine, #caveat, #model-label { margin: 10px 0 0; }
+#caveat, #model-label { margin: 10px 0 0; }
 #model-label { margin: 0 0 4px; font-weight: 700; }
 #playback { width: 100%; margin-top: 12px; }
 .judge-label { margin: 16px 0 0; font-weight: 700; }
@@ -193,8 +197,8 @@ textarea {
   main, header { max-width: 90rem; padding-left: 40px; padding-right: 40px; }
   /* Two columns, one row per pair of cards: the cards of a row start and end together. */
   #home { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px;
-    grid-template-areas: "hero drill" "menu now" "history weekly" "free backup" "settings sources"; }
-  .hero { grid-area: hero; } .drill { grid-area: drill; } .menu { grid-area: menu; } .now { grid-area: now; }
+    grid-template-areas: "hero drill" "hero mock" "menu now" "history weekly" "free backup" "settings sources"; }
+  .hero { grid-area: hero; } .drill { grid-area: drill; } .mock { grid-area: mock; } .menu { grid-area: menu; } .now { grid-area: now; }
   .history { grid-area: history; } .weekly { grid-area: weekly; }
   .free { grid-area: free; } .settings { grid-area: settings; } .backup { grid-area: backup; } .sources { grid-area: sources; }
   #home > details { align-self: start; } /* opening one panel doesn't stretch its neighbour */
