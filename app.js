@@ -1,6 +1,6 @@
 import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish, slots, literal } from './core.js';
-import { MISS, HINT, OK, GRADE, review, byNeed, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
-import { PREPS, example, hints as pairHints, siblings, progress } from './colloc.js';
+import { MISS, HINT, OK, GRADE, review, byNeed, progress, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
+import { example, hints as pairHints, siblings } from './colloc.js';
 
 const KEY = 'eng:v1';
 const $ = (id) => document.getElementById(id);
@@ -60,8 +60,11 @@ const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, [icon, name]]
     el('span', { className: 'pill', textContent: `${asked.length}問` }))] : [];
 });
 
-const pairCount = cards.filter((c) => c.kind === 'colloc').length, replyCount = cards.filter((c) => c.kind === 'reply').length;
+// The Phrase Drill: adjective + preposition pairs and backchannels, mixed, outside the daily session.
+const drill = (c) => c.kind === 'colloc' || c.kind === 'backchannel';
+const drillCards = cards.filter(drill), replyCount = cards.filter((c) => c.kind === 'reply').length;
 const stepLine = ([, practising, settled]) => `練習中 ${practising} ・ 定着 ${settled}`;
+const sum = (...xs) => xs.reduce((a, b = []) => a.map((v, i) => v + (b[i] ?? 0)), [0, 0]);
 const tenths = ([n = 0, said = 0] = []) => (n < 5 ? '—' : `${Math.round((said / n) * 10)}割`);
 const pair = (k, v) => [el('dt', { textContent: k }), el('dd', { textContent: v })];
 
@@ -84,7 +87,7 @@ function renderHome() {
   $('start').textContent = done ? '＋ もう少し練習する（約5分）' : s ? '▶ 続きから再開する' : '▶ 今日の練習を始める';
   $('short').hidden = !!s;
 
-  const o = overview(cards, state.hist, d), pr = progress(cards, state.hist);
+  const o = overview(cards, state.hist, d), pr = progress(drillCards, state.hist);
   $('status').replaceChildren(
     ...pair('復習待ち', `${o.due}問`),
     ...pair('苦手な文法', o.weak.length ? o.weak.slice(0, 3).map((t) => topicTitle[t]).join('・') : 'なし'),
@@ -93,10 +96,9 @@ function renderHome() {
     ...pair('切り返し', `書き取れる ${o.reply[2]} ・ 練習中 ${o.reply[0] + o.reply[1]} ／ ${replyCount}`),
     ...pair('Q&A', QA_LEVEL.map((name, i) => `${name} ${o.qa[i]}`).join(' ・ ')),
     ...pair('即興Q&A', o.unlock ? `あと${o.unlock}問で解放` : '出題中'),
-    ...pair('前置詞', `${stepLine(pr.all)} ／ ${pairCount}`));
-  const wrong = cards.filter((c) => c.kind === 'colloc' && state.hist[c.id]?.box === 0).length;
-  $('cd-summary').textContent = `未学習 ${pr.all[0]} ・ ${stepLine(pr.all)}${wrong ? ` ・ ✕ 前回間違えた ${wrong}（次の「始める」で最初に出ます）` : ''}`;
-  $('cd-table').tBodies[0].replaceChildren(...PREPS.map((p) => el('tr', {}, el('td', { textContent: p }), ...pr[p].map((n) => el('td', { textContent: n })))));
+    ...pair('フレーズ', `${stepLine(pr)} ／ ${drillCards.length}`));
+  const wrong = drillCards.filter((c) => state.hist[c.id]?.box === 0).length;
+  $('cd-summary').textContent = `未学習 ${pr[0]} ・ ${stepLine(pr)}${wrong ? ` ・ ✕ 前回間違えた ${wrong}（次の「始める」で最初に出ます）` : ''}`;
   // This week, plus earlier weeks that have something to show.
   $('weekly').tBodies[0].replaceChildren(...weekly(state.days, cards, d).filter((w, i) => !i || Object.keys(w.kinds).length).flatMap((w) => {
     const [, m, dd] = w.from.split('-').map(Number), qa = w.kinds.qa;
@@ -105,7 +107,7 @@ function renderHome() {
       w.why && `Q&Aのつまずき: 内容 ${w.why[0]}・英文 ${w.why[1]}`,
     ].filter(Boolean);
     return [
-      el('tr', {}, ...[`${m}/${dd}〜`, tenths(w.kinds.grammar), tenths(w.kinds.colloc), tenths(w.kinds.pattern), qa ? `${qa[1]}問` : '—', w.check ? `${w.check[1]}/${w.check[0]}` : '—'].map((t) => el('td', { textContent: t }))),
+      el('tr', {}, ...[`${m}/${dd}〜`, tenths(w.kinds.grammar), tenths(sum(w.kinds.colloc, w.kinds.backchannel)), tenths(w.kinds.pattern), qa ? `${qa[1]}問` : '—', w.check ? `${w.check[1]}/${w.check[0]}` : '—'].map((t) => el('td', { textContent: t }))),
       ...(notes.length ? [el('tr', { className: 'weak' }, el('td', { colSpan: 6, textContent: notes.join(' ／ ') }))] : []),
     ];
   }));
@@ -167,10 +169,10 @@ function begin(r) {
   if (left(run)) { show('study'); showStep(); } else showResult();
 }
 
-// Free practice: rounds of ROUND from a set — all the grammar (Lv1–2), Lv3–5, or the Collocation Drill's pairs —
+// Free practice: rounds of ROUND from a set — all the grammar (Lv1–2), Lv3–5, or the Phrase Drill's cards —
 // in the order that helps most (wrong last time, due, new, then the rest).
 const levelCards = () => cards.filter((c) => (state.settings.level <= 2 ? c.kind === 'grammar' : c.level === state.settings.level));
-const pairCards = () => cards.filter((c) => c.kind === 'colloc');
+const phraseCards = () => drillCards;
 let freeList = levelCards;
 function playFree(missed = []) {
   const r = nextRound(missed, pool, byNeed(freeList(), state.hist, today()));
@@ -185,16 +187,17 @@ function showStep() {
   const ex = cur.kind === 'colloc' ? example(cur, rec) : null;
   const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
   // A Q&A reply is dictation: the stock phrase is read aloud and written down, with the asker's question as the prompt.
-  const dictate = cur.kind === 'reply', ask = cur.deck.follow?.[step.follow] ?? cur;
-  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : ask.q }; // audio: what 🔊 reads
+  // A backchannel answers what someone just said (`cur.said`, read aloud) with a short reaction and one more sentence.
+  const dictate = cur.kind === 'reply', back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
+  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : back ? cur.said : ask.q }; // audio: what 🔊 reads
   const talk = isTalk(), [icon, name] = PHASE[step.phase] ?? [];
   // Free practice keeps its timer setting (not the Collocation Drill: composing a sentence takes its time);
   // an Intermediate question gets a gentle 45s bar that never cuts you off.
-  const sec = run.free && !ex ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
-  $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q ? 4 : ex ? 5 : 3)})`);
+  const sec = run.free && !drill(cur) ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
+  $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q ? 4 : drill(cur) ? 5 : 3)})`);
   $('track').textContent = [
     step.retry && '🔁 もう一度',
-    run.free ? `${run.retry ? '🔁 復習 · ' : ''}${ex ? 'Collocation Drill' : `Lv${cur.level}`}` : `${icon} ${name}`,
+    run.free ? `${run.retry ? '🔁 復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : `Lv${cur.level}`}` : `${icon} ${name}`,
     !ex && cur.deck.title, // a pair's deck is its preposition: the answer
     step.follow != null ? '追加質問' : step.intro ? '新しい型' : talk && !step.check && step.phase !== 'impromptu' && QA_LEVEL[step.retry ? 0 : step.level],
   ].filter(Boolean).join(' · ');
@@ -202,10 +205,11 @@ function showStep() {
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
-  $('prompt').textContent = step.intro ? cur.deck.frame : talk || dictate ? now.ask.q : (ex ?? cur).ja;
+  $('prompt').textContent = step.intro ? cur.deck.frame : talk || dictate ? now.ask.q : back ? cur.said : (ex ?? cur).ja;
   $('sub').textContent = step.intro ? `${cur.deck.ja}　例文を聞いて、まねして声に出そう`
     : ex ? '形容詞＋前置詞を使って、英文全体を声に出そう'
     : dictate ? `場面：${cur.scene}　🔊 流れる返事を聞いて、書き取ろう`
+    : back ? '🔊 相手のひと言に、相槌＋ひと言で返そう'
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'
@@ -225,8 +229,8 @@ function showStep() {
   $('reveal').textContent = step.intro ? 'まねして言えた、次へ →' : '✓ 回答した';
   $('answer').hidden = true;
   $('reveal').hidden = false;
-  startTimer(sec, run.free && !ex);
-  if (now.audio && (dictate || state.settings.listen)) speak(now.audio);
+  startTimer(sec, run.free && !drill(cur));
+  if (now.audio && (dictate || back || state.settings.listen)) speak(now.audio);
 }
 
 // The bar drains via a CSS animation (turning red near the end); in free practice one timeout reveals the answer.
@@ -252,7 +256,8 @@ const mark = (en, parts) => parts.reduce((nodes, p) => nodes.flatMap((n) => {
   const m = typeof n === 'string' && p && n.match(new RegExp(`(?<![A-Za-z])${literal(p)}(?![A-Za-z])`, 'i'));
   return m ? [n.slice(0, m.index), el('mark', { textContent: m[0] }), n.slice(m.index + m[0].length)] : [n];
 }), [en]);
-const phrases = (c) => (c.kind === 'colloc' ? [c.collocation] : c.kind === 'pattern' ? slots(c.deck.frame, c.en) : []);
+const phrases = (c) => (c.kind === 'colloc' ? [c.collocation] : c.kind === 'pattern' ? slots(c.deck.frame, c.en)
+  : c.kind === 'backchannel' ? [...c.deck.basic, ...c.deck.more].map((p) => p.replace('...', '').trim()) : []);
 
 function reveal(timedOut = false) {
   clearTimeout(timer);
@@ -268,7 +273,7 @@ function reveal(timedOut = false) {
   const compare = typed && !talk;
   $('en').replaceChildren(...(compare ? wordDiff(typed, now.model).flatMap(({ w, ok }) => [el('span', { className: ok ? 'hit' : 'miss', textContent: w }), ' ']) : mark(now.model, phrases(cur))));
   $('en').className = compare ? 'en diff' : 'en';
-  $('note').textContent = talk ? '' : cur.note ?? '';
+  $('note').textContent = talk ? '' : cur.deck.basic ? `基本：${cur.deck.basic.join(' / ')}${cur.deck.more.length ? `　ほかに：${cur.deck.more.join(' / ')}` : ''}` : cur.note ?? '';
   $('tip').textContent = ask.frame ? `答え方の型：${ask.frame}` : cur.deck.note ? `${cur.deck.frame ?? cur.deck.title}：${cur.deck.note}` : '';
   $('mine').textContent = talk && step.follow == null && state.answers[cur.id] ? `前回のあなたの回答：${state.answers[cur.id]}` : '';
   if (ex) {
@@ -368,7 +373,7 @@ $('start').onclick = () => { const s = session(); if (!s) begin(fresh(state.sett
 $('short').onclick = () => begin(fresh(10));
 $('free').onclick = () => { if (freeList !== levelCards) { freeList = levelCards; pool = []; } playFree(); };
 $('next-round').onclick = () => (run.free ? playFree(run.missed) : more());
-$('cd-start').onclick = () => { if (freeList !== pairCards) { freeList = pairCards; pool = []; } playFree(); };
+$('cd-start').onclick = () => { if (freeList !== phraseCards) { freeList = phraseCards; pool = []; } playFree(); };
 $('quit').onclick = $('home-btn').onclick = finish;
 // The hint button stays enabled while hints are left; it does nothing once the answer is out.
 $('hint').onclick = () => {

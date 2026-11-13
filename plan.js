@@ -98,18 +98,27 @@ export function knownTopics(items, hist) {
 }
 const newFirst = (known) => (a, b) => known.has(a.topic) - known.has(b.topic) || easyFirst(a, b);
 
-// Free practice and the Collocation Drill: a set of cards in the order that helps most — wrong last time, due
+// Several kinds in one set (the Phrase Drill): taken in turn, each in its own order.
+const alternate = (xs) => {
+  const lanes = [...new Set(xs.map((c) => c.kind))].map((k) => xs.filter((c) => c.kind === k));
+  return Array.from({ length: Math.max(0, ...lanes.map((l) => l.length)) }, (_, i) => lanes.map((l) => l[i])).flat().filter(Boolean);
+};
+
+// Free practice and the Phrase Drill: a set of cards in the order that helps most — wrong last time, due
 // (longest overdue first), new (as in the daily session), then the rest, longest ago first. Cards kept for the
 // weekly first-sight check stay unseen.
 export function byNeed(pool, hist, day) {
   const rec = (c) => hist[c.id], by = (k) => (a, b) => rec(a)[k].localeCompare(rec(b)[k]);
-  return [...new Set([
+  return alternate([...new Set([
     ...pool.filter((c) => rec(c)?.box === 0).sort(by('last')),
     ...pool.filter((c) => rec(c)?.due <= day).sort(by('due')),
     ...pool.filter((c) => !rec(c) && !(c.held && c.kind in CHECK)).sort(newFirst(knownTopics(pool, hist))),
     ...pool.filter(rec).sort(by('last')),
-  ])];
+  ])]);
 }
+
+// How far a set has come: [not started, practising, settled (next review a week or more away)].
+export const progress = (items, hist) => items.reduce((n, c) => (n[!hist[c.id] ? 0 : hist[c.id].box >= 2 ? 2 : 1]++, n), [0, 0, 0]);
 
 // Questions answered without a hint, not just once: what unlocks impromptu Q&A.
 const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id]?.box >= 2 && hist[c.id].grade === OK).length;
@@ -201,6 +210,7 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
   const [ladder, shown] =
     f ? [[['答え方の型', f.frame], ['質問の意味', f.ja]], 0]
     : c.kind === 'reply' ? [[['意味', c.ja], ['頭文字', skeleton(c.en)]], retry ? 1 : 0] // dictation: the reply is heard, the question is the prompt
+    : c.kind === 'backchannel' ? [[['意味', c.ja], ['使う相槌', c.deck.basic.join(' / ')], ['頭文字', skeleton(c.en)]], 0]
     : c.q ? [[['キーワード', c.keys.join(' / ')], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
     : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['語句', slots(c.deck.frame, c.en).join(' / ')], ['頭文字', skeleton(c.en)]], retry ? 2 : level < 2 ? 1 : 0]
     : [[...(retry ? [['文法', c.deck.note]] : []), ['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], retry ? 2 : 0];

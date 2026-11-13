@@ -111,10 +111,7 @@ p:empty, #menu .sub:empty { display: none; }
 .grid { width: 100%; border-collapse: collapse; font-size: .85rem; font-variant-numeric: tabular-nums; margin-bottom: 10px; }
 .grid th { color: var(--muted); font-size: .75rem; font-weight: 700; padding: 0 2px 6px; }
 .grid td { text-align: center; padding: 6px 2px; border-top: 1px solid var(--line); font-weight: 700; }
-#cd-table td:first-child { text-align: left; color: var(--muted); }
 .drill { --lv: var(--lv5); }
-.drill details { margin-top: 10px; }
-.drill summary { cursor: pointer; }
 #cd-summary { margin: 4px 0 0; }
 .grid .weak td { text-align: left; border-top: 0; padding-top: 0; font-size: .78rem; font-weight: 500; color: var(--muted); }
 .panel .levels { margin-top: 4px; }

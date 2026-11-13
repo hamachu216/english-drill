@@ -2,8 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded } from '../core.js';
-import { MISS, OK, review, planSession, byNeed } from '../plan.js';
-import { example, hints, siblings, progress } from '../colloc.js';
+import { MISS, OK, review, planSession, byNeed, progress, scaffold } from '../plan.js';
+import { example, hints, siblings } from '../colloc.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const pairs = items.filter((c) => c.kind === 'colloc');
@@ -50,10 +50,24 @@ test('drill: every pair — wrong last time, then due, then new ones (easy first
   assert.equal(byNeed(pairs, {}, T).length, pairs.length);
 });
 
-test('progress counts pairs not started, practising and settled, overall and per preposition', () => {
-  const c = pair('interested in');
-  const p = progress(items, { [c.id]: { box: 1 }, [pair('afraid of').id]: { box: 2 } });
-  assert.deepEqual(p.all, [pairs.length - 2, 1, 1]);
-  assert.deepEqual(p.in.slice(1), [1, 0]);
-  assert.equal(p.of[2], 1);
+test('progress counts cards not started, practising and settled', () => {
+  const p = progress(pairs, { [pair('interested in').id]: { box: 1 }, [pair('afraid of').id]: { box: 2 } });
+  assert.deepEqual(p, [pairs.length - 2, 1, 1]);
+});
+
+const backs = items.filter((c) => c.kind === 'backchannel');
+
+test('the Phrase Drill mixes pairs and backchannels in turn, each in its own order', () => {
+  const order = byNeed([...pairs, ...backs], {}, T);
+  assert.equal(order.length, pairs.length + backs.length);
+  assert.ok(order.slice(0, 10).every((c, i, a) => !i || c.kind !== a[i - 1].kind), 'a round of ten is half and half');
+  const missed = { [backs[5].id]: review(undefined, MISS, addDays(T, -1)) };
+  assert.equal(byNeed([...pairs, ...backs], missed, T)[0].id, backs[5].id, 'a missed card still comes first');
+  assert.ok(planSession({ items, hist: missed, days: {}, day: T, minutes: 30, rand: seeded(T) }).every((s) => !s.id.startsWith('bc-')), 'never in the daily session');
+});
+
+test('backchannels: hints are the meaning of what was said, the basic reactions, then the first letters', () => {
+  const c = backs[0];
+  assert.deepEqual(scaffold(c, {}).hints.map(([k]) => k), ['意味', '使う相槌', '頭文字']);
+  assert.equal(scaffold(c, {}).hints[1][1], 'Exactly. / That\'s right. / Absolutely.');
 });

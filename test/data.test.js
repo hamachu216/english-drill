@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, slots } from '../core.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)));
-const levels = FILES.map(read), [patterns, qa, colloc, replies] = DRILLS.map(read), files = [...levels, patterns, qa, colloc, replies];
+const levels = FILES.map(read), [patterns, qa, colloc, replies, backchannels] = DRILLS.map(read), files = [...levels, patterns, qa, colloc, replies, backchannels];
 
 test('levels are 1..N in file order', () => assert.deepEqual(levels.map((f) => f.level), levels.map((_, i) => i + 1)));
 
@@ -89,6 +89,18 @@ test('Q&A handling: every phrase of the handout is practiced, each question with
   }
   const asked = handling.flatMap((d) => d.cards.slice(0, -2)).flatMap((c) => [c.q, c.en]);
   for (const p of HANDOUT) assert.ok(asked.some((t) => t.includes(p)), p);
+});
+
+test('backchannels: each function lists its reactions, and every answer opens with one of them', () => {
+  assert.equal(backchannels.kind, 'backchannel');
+  const stem = (p) => p.replace(/\s*\.\.\.$/, '').replace(/[.!?,]$/, '');
+  for (const d of backchannels.decks) {
+    assert.ok(d.note && d.basic.length >= 2 && Array.isArray(d.more) && d.cards.length >= 5, d.id);
+    for (const c of d.cards) {
+      assert.ok(/[.?!]$/.test(c.said) && /[。？）]$/.test(c.ja), c.id);
+      assert.ok([...d.basic, ...d.more].some((p) => c.en.startsWith(stem(p))), `${c.id}: opens with a reaction of its function`);
+    }
+  }
 });
 
 test('adjective + preposition: every pair has its fields and at least two sentences in different scenes', () => {

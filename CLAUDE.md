@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 英語スピーキング練習用の静的PWA（Research English Drill）。日本の博士課程学生向けで、目標は「国際学会で自分の研究を英語で説明し、質問に簡単な英語で1〜3文で答えられる」こと。
 
 - **今日の練習**: ホームのボタン1つで、学習履歴から組んだ1日分が始まる。順番は 基礎文法 → 研究英語の構文 → 質疑応答の切り返し → Research Q&A。30分でおよそ26問（1問約1分）。
-- **Collocation Drill**: 形容詞＋前置詞（interested in など）を英作文で10問ずつ練習する。今日の練習には入らない。
+- **Phrase Drill**: 形容詞＋前置詞（interested in など）の英作文と、相槌（Exactly. That's a good point, but… など）を混ぜて10問ずつ練習する。今日の練習には入らない。
 - **自由に練習**: 「基礎文法（Lv1〜2）」「Lv3 研究ディスカッション」「Lv4 国際学会」「Lv5 博士公聴会」から1つ選んで10問ずつ練習する。
 
 ビルド工程・フレームワーク・依存パッケージはない。GitHub Pages で `main` ブランチのルートから公開しており（https://hamachu216.github.io/english-drill/ 、リポジトリ `hamachu216/english-drill`）、`main` に push するとそのまま本番に反映される。利用者の指定で、PR を作らず `main` に直接コミットして push してよい（テストとヘッドレス確認のあと。push 後は Pages のビルド完了まで確認する）。
@@ -70,7 +70,7 @@ data/*.json ──catalog──▶ cards（全カード。kind・topic・deck・
 localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers, settings}
                               │
              ┌────────────────┴──────────────────┐
-     planSession（今日の練習）            byNeed（自由練習・Collocation Drill）
+     planSession（今日の練習）            byNeed（自由練習・Phrase Drill）
              └──────────────▶ queue [{id, phase, level?, intro?, follow?, check?, retry?}] ◀┘
                               │  1ステップ＝1画面
                        showStep → reveal → grade
@@ -89,8 +89,8 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 | `style.css` | 見た目のすべて。色はトークン（`:root` の変数）で定義する |
 | `theme.js` | `<head>` で同期読み込み。描画前にテーマを当ててちらつきを防ぐ |
 | `core.js` | 汎用の純粋関数: `catalog`、`restore`/`isBackup`、`seeded`、`shuffle`、`nextRound`、ヒント文字列（`skeleton`/`opening`/`mask`/`slots`）、`streak`/`calendar`、`englishVoices`、`wordDiff`、`timeLimit` |
-| `plan.js` | 学習アルゴリズム: `review`、`tally`、`shares`/`mix`、`planSession`、`requeue`、`scaffold`、`choices`、`knownTopics`、`byNeed`、`overview`/`weekly`。定数（間隔・配分・1枚の目安秒数・解放条件）はファイル先頭 |
-| `colloc.js` | 形容詞＋前置詞: `example`、`hints`、`siblings`、`progress` |
+| `plan.js` | 学習アルゴリズム: `review`、`tally`、`shares`/`mix`、`planSession`、`requeue`、`scaffold`、`choices`、`knownTopics`、`byNeed`、`progress`、`overview`/`weekly`。定数（間隔・配分・1枚の目安秒数・解放条件）はファイル先頭 |
+| `colloc.js` | 形容詞＋前置詞: `example`、`hints`、`siblings` |
 | `app.js` | DOM と状態のすべて。`<script type="module">` 1つで、トップレベル `await` で全データを fetch する。DOM は `el(tag, props, ...kids)` で組み立て、HTML 文字列は使わない |
 | `sw.js` | Service Worker（ネットワーク優先。下の「ハマりどころ」参照） |
 | `manifest.webmanifest`、`icons/` | ホーム画面に追加したときのアプリ情報 |
@@ -107,7 +107,8 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 | `patterns.json` | `pattern` | 24の型・192文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
 | `replies.json` | `reply` | 7場面・63問 | `{id, scene, q, ja, frame, en}`。決まった返し方（`en`）を読み上げで聞いて書き取る（ディクテーション）。`scene` は場面、`q` は相手の質問で、どちらも出題時に表示する。`ja` は1つ目のヒント、`frame` は答えの後に「答え方の型」として出す | 今日の練習 |
 | `qa.json` | `qa` | 10話題・70問 | `{id, q, ja, frame, keys, en, more}`（英語の質問・意味・答え方の型・キーワード・1文の回答例・続き）。デッキの `follow:[{q, ja, frame, en}]` は即興Q&Aの追加質問 | 今日の練習 |
-| `collocations.json` | `colloc` | 96組・例文288 | `{id, adj, prep, collocation, ja, difficulty, note, examples:[{id, scene, en, ja, also?}]}`。デッキ＝前置詞（デッキ名が答えなので出題中は表示しない） | Collocation Drill のみ |
+| `collocations.json` | `colloc` | 96組・例文288 | `{id, adj, prep, collocation, ja, difficulty, note, examples:[{id, scene, en, ja, also?}]}`。デッキ＝前置詞（デッキ名が答えなので出題中は表示しない） | Phrase Drill のみ |
+| `backchannels.json` | `backchannel` | 7機能・42問 | `{id, said, ja, en}`。デッキ＝相槌の機能（同意・一部同意・理解・驚き・つなぎ・反対・否定疑問への答え）で、`basic`（自分から言う言い方）・`more`（聞いて分かればよい言い方）・`note`（硬さや使い分け）を持つ。`said` は相手のひと言（表示して読み上げる）、`en` は相槌＋続きのひと言で、どれかの `basic`/`more` で始まる（テストで検証） | Phrase Drill のみ |
 
 - **ID**: カードIDは `<deckId>-NNN` で全ファイルを通じて一意（テストで検証）。学習履歴のキーなので、既存カードのIDは変えないこと。
 - **取り置き**: 各デッキの最後の2枚は週1回の初見チェック用（`catalog` の `held`。形容詞＋前置詞は対象外）。カードを足すときは途中に入れるか、末尾2枚が初見用になることを踏まえる。
@@ -136,7 +137,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 ### 記録の進め方
 
 - **`review`**（全種類）: 言えなかった → 翌日（箱0）。言えた → 箱+1（3・7・14・30・60日）。ヒントで言えた → 箱+1 だが7日止まり（初回なら3日後）。翌日に戻るのは言えなかったカードだけ。箱が上がるのは期限が来た日（か初回）だけで、同じ日に何度正解しても進まない。
-- **形容詞＋前置詞**（Collocation Drill のみ）: 覚える単位は文ではなく組み合わせで、出るたびに別の例文（`example`）を日本語から英文全体で言う。以前は空所に前置詞だけを入れる段階があったが、前置詞だけでは身につかないので廃止した。その頃の記録に残る `step`・`wins` は読まない。
+- **形容詞＋前置詞**（Phrase Drill のみ）: 覚える単位は文ではなく組み合わせで、出るたびに別の例文（`example`）を日本語から英文全体で言う。以前は空所に前置詞だけを入れる段階があったが、前置詞だけでは身につかないので廃止した。その頃の記録に残る `step`・`wins` は読まない。
 - **`tally`**: その日の集計を足す。最初の回答だけを数える。
 
 ### 回答と判定
@@ -146,9 +147,9 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 - **秒数は測らない**: 以前は回答までの秒数で「自力 / 時間はかかった」を分けていたが、ややこしく意味も薄かったので廃止した。保存済みの記録の grade 3（自力）は `restore` が 2（言えた）に直す。
 - **流暢さ優先**: 音声認識の結果は表示するだけで判定には使わない。Q&A では回答と模範の差分も出さない。
 
-### 自由練習と Collocation Drill
+### 自由練習と Phrase Drill
 
-選んだ組（基礎文法 = Lv1〜2 まとめて、Lv3〜5、または全組み合わせ）を `byNeed` の順に並べる: 前回間違えた → 期限の来た復習 → 新規（今日の練習と同じ順。初見チェック用の取り置きは使わない）→ 残りを練習が古い順。この順の `pool` から `ROUND`（10）問ずつ出し、言えなかった問題だけを全部言えるまで繰り返す（`nextRound`）。回答はカードの記録と日次集計に反映されるが、ラウンドの進行自体は保存しない。`settings.level` の 1 と 2 はどちらも基礎文法を指す。
+選んだ組（基礎文法 = Lv1〜2 まとめて、Lv3〜5、または全組み合わせ）を `byNeed` の順に並べる: 前回間違えた → 期限の来た復習 → 新規（今日の練習と同じ順。初見チェック用の取り置きは使わない）→ 残りを練習が古い順。この順の `pool` から `ROUND`（10）問ずつ出し、言えなかった問題だけを全部言えるまで繰り返す（`nextRound`）。回答はカードの記録と日次集計に反映されるが、ラウンドの進行自体は保存しない。`settings.level` の 1 と 2 はどちらも基礎文法を指す。Phrase Drill は形容詞＋前置詞と相槌を、それぞれ `byNeed` の順のまま交互に出す（`alternate`）。相槌は相手のひと言（`said`）を表示して読み上げ、ヒントは意味 → 基本の相槌 → 頭文字。答えの後に機能の言い方の一覧と使い分けを出す。
 
 ### 保存
 
@@ -172,7 +173,7 @@ iPhone の Safari は7日間開かないサイトの記録を消すが、ホー�
 
 画面は3つの `<section>`（`home`、`study`、`result`）を `hidden` で切り替える。多くの要素が `display` を指定しているため、グローバルの `[hidden]{display:none!important}` が必要。
 
-- **ホーム**: `#home` の直下にカードを1枚ずつ並べたグリッド（カードの間隔はグリッドの `gap` で取り、カード自身に余白を持たせない）。見出しはカードの中に置く。スマホ幅では HTML の順に1列: 進捗（`.hero`）・今日のメニュー（`.menu`）・Collocation Drill（`.drill`）・いまの状況（`.now`）・週ごとの変化（`.weekly`）・学習の記録（`.history`）・自由に練習（`.free`）・設定（`.settings`）・記録のバックアップ（`.backup`）・参考サイト（`.sources`）。
+- **ホーム**: `#home` の直下にカードを1枚ずつ並べたグリッド（カードの間隔はグリッドの `gap` で取り、カード自身に余白を持たせない）。見出しはカードの中に置く。スマホ幅では HTML の順に1列: 進捗（`.hero`）・今日のメニュー（`.menu`）・Phrase Drill（`.drill`。見出しと1行の要約と開始ボタンだけ）・いまの状況（`.now`）・週ごとの変化（`.weekly`）・学習の記録（`.history`）・自由に練習（`.free`）・設定（`.settings`）・記録のバックアップ（`.backup`）・参考サイト（`.sources`）。
 - **PC（幅 960px 以上）**: 最大 90rem まで横に広げる。ホームは2列で、`grid-template-areas` により1行に2枚ずつ（進捗｜Drill、メニュー｜いまの状況、学習の記録｜週ごとの変化、自由に練習｜バックアップ、設定｜参考サイト）。同じ行のカードは上端も下端もそろう。開閉する `details` だけは `align-self: start` で、片方を開いても隣は伸びない。
 - **出題画面**: PC では `#qcard` を「問題・回答 | 回答例・自己評価」の2列にする。
 
@@ -180,7 +181,7 @@ iPhone の Safari は7日間開かないサイトの記録を消すが、ホー�
 
 - **Service Worker**（`sw.js`）: ネットワーク優先で `cache: 'no-cache'` を付けて取得し、`skipWaiting` と `clients.claim` を使う。`app.js` は `controllerchange` で1回だけ再読み込みする。GitHub Pages は `max-age=600` を返すため、この組み合わせでデプロイが次の再読み込みで反映される。キャッシュ優先や stale-while-revalidate に戻さないこと（以前それで利用者が古いコードから抜けられなくなった）。
 - **読み上げの声**: 声を指定しないと、macOS の Chrome はかすれ声のジョーク用音声「Albert」を使う。ジョーク用音声は名前がローカライズされる（例: ささやき声）ため除外リスト方式は使えない。`englishVoices` は品質の良い声の許可リストだけを残し、未知の環境では任意の英語音声にフォールバックする。
-- **制限時間**: `#timer` に CSS の `@keyframes drain` アニメーションを掛け、答えを表示したら `animationPlayState` で止める。自由練習（Collocation Drill を除く。英作文なので時間で切らない）ではこれとは別に `setTimeout` を1つ置き、時間切れで `reveal(true)` を呼ぶ（既定は10秒。`'auto'` は 2秒 + 1単語0.5秒）。時間切れは答えを見せるだけで、判定は自己評価。今日の練習では時間で打ち切らない（Intermediate の Q&A にバーが出るだけ）。
+- **制限時間**: `#timer` に CSS の `@keyframes drain` アニメーションを掛け、答えを表示したら `animationPlayState` で止める。自由練習（Phrase Drill を除く。英作文と相槌なので時間で切らない）ではこれとは別に `setTimeout` を1つ置き、時間切れで `reveal(true)` を呼ぶ（既定は10秒。`'auto'` は 2秒 + 1単語0.5秒）。時間切れは答えを見せるだけで、判定は自己評価。今日の練習では時間で打ち切らない（Intermediate の Q&A にバーが出るだけ）。
 - **話すのが先**: 回答は声に出すだけでよく、入力は任意（以前あった「英語を入力するまで答えを見られない」制限は、音声認識のない端末で詰むので外した）。🎤 は SpeechRecognition があれば文字起こし、なければ MediaRecorder で録音して回答例の横で再生する。どちらも無い端末ではボタンが出ないだけで練習は完了できる。録音の再生のために CSP に `media-src blob:` がある。
 - **テーマ**: 色は `:root` の CSS カスタムプロパティで定義する。ダークモードは `@media (prefers-color-scheme: dark) :root:not([data-theme="light"])` と `:root[data-theme="dark"]` の2か所で再定義しているので、両方を必ず揃えること。レベルごとのアクセント色は `--lv1`〜`--lv5` で、`--lv` 経由で適用する。
 - **問題文**: 必ずオリジナルで書く（例外は上の `replies.json` の定型句だけ）。`refs` に載せた参考サイトは分野構成の参考にしただけで、文をコピーしてはいけない。リポジトリは public なので、カードに利用者の実名や所属、実際の研究内容・結果を入れないこと（構文とQ&Aの例は架空の研究で、型を使い回す練習用）。

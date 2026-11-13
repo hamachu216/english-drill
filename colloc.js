@@ -4,8 +4,6 @@
 // recalled as a lone preposition carry {step, wins}; nothing reads them any more.)
 import { skeleton } from './core.js';
 
-export const PREPS = ['about', 'at', 'by', 'for', 'from', 'in', 'of', 'to', 'with'];
-
 // A different sentence each time the pair comes up (the answer count rotates through them).
 export const example = (c, rec) => c.examples[(rec?.n ?? 0) % c.examples.length];
 
@@ -14,12 +12,3 @@ export const hints = (c, ex) => [['使う形容詞', c.adj], ['使う表現', c.
 
 // Other pairs with the same adjective: "happy about（…）/ happy with（…）", for telling them apart.
 export const siblings = (c, items) => items.filter((x) => x.kind === 'colloc' && x.adj === c.adj && x !== c);
-
-// How far the pairs have come: [not started, practising, settled (next review a week or more away)],
-// in total and per preposition.
-export function progress(items, hist) {
-  const at = (c) => (!hist[c.id] ? 0 : hist[c.id].box >= 2 ? 2 : 1);
-  const out = { all: [0, 0, 0] };
-  for (const c of items.filter((x) => x.kind === 'colloc')) for (const k of ['all', c.prep]) (out[k] ??= [0, 0, 0])[at(c)]++;
-  return out;
-}
