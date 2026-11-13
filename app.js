@@ -222,6 +222,7 @@ function showStep() {
     Object.assign(el('button', { onclick: () => choose(p) }, p), { value: p })) : []));
   $('input').hidden = $('hint').hidden = !!step.intro || pairStep === 1;
   $('mic').hidden = !!step.intro || pairStep === 1 || !canHear;
+  $('unknown').hidden = !!step.intro;
   $('input').value = '';
   $('hint').disabled = !hints.length;
   $('playback').hidden = true;
@@ -315,22 +316,26 @@ function reveal(timedOut = false) {
     : `${compare ? '緑＝あなたの回答にもあった語（文字起こしは不正確なこともあります）。' : ''}模範解答と違う言い方でも、意味と文法が合っていれば正解です。`;
   $('card-refs').replaceChildren(...(cur.deck.refs?.length ? ['参考: ', ...cur.deck.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)]))] : []));
   // "Said it" shows the time it took and whether that counts as quick, so the clock's verdict is never a surprise.
-  const secs = now.late ? Infinity : now.took, limit = quick(now.model, talk), fast = graded('ok', secs, now.model, talk) === SOLO;
-  const label = (key) => key !== 'ok' ? LABEL[key] : `${fast ? '◎' : '△'} ${LABEL.ok[+talk]}（${now.late ? '時間切れ' : `${Math.round(secs)}秒`}${fast ? '' : ` · すぐ言える目安は${limit}秒`}）`;
-  const keys = right == null ? choices(talk, now.hinted) : [right ? (now.hinted ? 'hint' : 'solo') : 'miss'];
+  // Typed: timed to the first keystroke. "I don't know" is a miss, with nothing to judge.
+  const typedFirst = now.typedAt != null, secs = now.late ? Infinity : typedFirst ? now.typedAt : now.took;
+  const limit = quick(now.model, talk, typedFirst), fast = graded('ok', secs, now.model, talk, typedFirst) === SOLO;
+  const label = (key) => key !== 'ok' ? LABEL[key] : `${fast ? '◎' : '△'} ${LABEL.ok[+talk]}（${now.late ? '時間切れ' : `${typedFirst ? '打ち始めまで' : ''}${Math.round(secs)}秒`}${fast ? '' : ` · 目安${limit}秒`}）`;
+  const verdict = now.gaveUp && !talk ? '✕ わからなかった — 次へ' : right == null ? null : right ? '○ 正解 — 次へ' : '✕ 不正解 — 次へ';
+  const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : right == null ? choices(talk, now.hinted) : [right ? (now.hinted ? 'hint' : 'solo') : 'miss'];
+  now.secs = secs; now.typedFirst = typedFirst;
   $('judge').replaceChildren(...keys.map((key, i) =>
-    el('button', { className: key === 'ok' ? (fast ? 'solo' : 'slow') : key, onclick: () => grade(key) }, right == null ? label(key) : right ? '○ 正解 — 次へ' : '✕ 不正解 — 次へ', el('kbd', { textContent: i + 1 }))));
-  $('judge-label').hidden = right != null;
+    el('button', { className: key === 'ok' ? (fast ? 'solo' : 'slow') : key, onclick: () => grade(key) }, verdict ?? label(key), el('kbd', { textContent: i + 1 }))));
+  $('judge-label').hidden = verdict != null;
   $('again').hidden = !talk;
   $('answer').hidden = false;
-  $('reveal').hidden = true;
+  $('reveal').hidden = $('unknown').hidden = true;
   pop($('answer'));
   $('answer').scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
   document.activeElement.blur();
 }
 
 function grade(key) {
-  const d = today(), { cur, step, said } = now, talk = isTalk(), g = graded(key, now.late ? Infinity : now.took, now.model, talk), before = state.hist[cur.id];
+  const d = today(), { cur, step, said } = now, talk = isTalk(), g = graded(key, now.secs, now.model, talk, now.typedFirst), before = state.hist[cur.id];
   const after = (cur.kind === 'colloc' ? practise : review)(before, { grade: g, hint: now.hinted }, d);
   if (cur.kind === 'colloc' && stepOf(after) > stepOf(before)) run.ups = [...(run.ups ?? []), `${cur.collocation} → Step ${after.step}`];
   save({
@@ -406,7 +411,8 @@ $('next-round').onclick = () => (run.free ? playFree(run.missed) : more());
 $('cd-start').onclick = () => { if (freeList !== pairCards) { freeList = pairCards; pool = []; } playFree(); };
 $('quit').onclick = $('home-btn').onclick = finish;
 $('hint').onclick = hint;
-$('input').oninput = started;
+$('input').oninput = () => { now.typedAt ??= elapsed(); started(); }; // a keystroke (a transcript fills it without one)
+$('unknown').onclick = () => { now.gaveUp = true; reveal(); };
 $('reveal').onclick = () => {
   if (now.pairStep === 1) return; // answered by tapping a choice
   if (now.step.intro) advance();

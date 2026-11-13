@@ -179,10 +179,11 @@ test('sentence frames fade their support: frame shown → half hidden → none',
 });
 
 test('"said it" is split by the clock: quick for the length of the example is solo, slower is slow', () => {
-  const en = 'We chose this method because we have limited data.'; // 9 words → 9 seconds; a question gets 6 more
-  assert.equal(quick(en, false), 9);
-  assert.equal(quick(en, true), 15);
-  assert.deepEqual([graded('ok', 8, en, false), graded('ok', 13, en, false), graded('ok', 13, en, true)], [SOLO, SLOW, SOLO]);
+  const en = 'We chose this method because we have limited data.'; // 9 words: 6 + 4.5 seconds spoken; a question gets 15 + 4.5
+  assert.equal(quick(en, false), 11);
+  assert.equal(quick(en, true), 20);
+  assert.deepEqual([graded('ok', 10, en, false), graded('ok', 13, en, false), graded('ok', 18, en, true)], [SOLO, SLOW, SOLO]);
+  assert.deepEqual([quick(en, false, true), graded('ok', 5, en, false, true), graded('ok', 8, en, false, true)], [6, SOLO, SLOW], 'typed: the time to the first key');
   assert.equal(graded('ok', Infinity, en, true), SLOW, 'a timeout is never quick');
   assert.deepEqual(['miss', 'hint', 'content', 'english'].map((k) => graded(k, 1, en, false)), [MISS, HINT, MISS, MISS]);
 });

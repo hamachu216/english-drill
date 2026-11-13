@@ -157,10 +157,11 @@ textarea {
   width: 100%; min-height: 64px; margin: 14px 0 0; padding: 12px 14px; resize: vertical;
   border-radius: 14px; border: 1px solid var(--line); background: var(--bg);
 }
-.actions { display: flex; gap: 8px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .actions { margin-top: 12px; }
-.actions .primary { flex: 1; min-height: 50px; }
-.actions button { white-space: nowrap; }
+.actions .primary { flex: 1 1 12rem; min-height: 50px; }
+.actions button { white-space: nowrap; padding: 0 12px; }
+.actions button:not(.primary) { flex: 1 0 auto; }
 #mic.on { background: var(--bad); color: #fff; border-color: transparent; }
 .answer { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line); }
 .en { font-size: 1.2rem; font-weight: 700; margin: 0; }
