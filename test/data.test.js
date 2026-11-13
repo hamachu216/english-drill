@@ -90,7 +90,7 @@ test('backchannels: each function lists its reactions, and every answer opens wi
   for (const d of backchannels.decks) {
     assert.ok(d.note && d.basic.length >= 2 && Array.isArray(d.more) && d.cards.length >= 5, d.id);
     for (const c of d.cards) {
-      assert.ok(/[.?!]$/.test(c.said) && /[。？）]$/.test(c.ja), c.id);
+      assert.ok(/[.?!]$/.test(c.said) && /[。？]$/.test(c.saidJa) && /[。？]$/.test(c.ja), c.id);
       assert.ok([...d.basic, ...d.more].some((p) => c.en.startsWith(stem(p))), `${c.id}: opens with a reaction of its function`);
     }
   }

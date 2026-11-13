@@ -68,6 +68,6 @@ test('the Phrase Drill mixes pairs and backchannels in turn, each in its own ord
 
 test('backchannels: hints are the meaning of what was said, the basic reactions, then the first letters', () => {
   const c = backs[0];
-  assert.deepEqual(scaffold(c, {}).hints.map(([k]) => k), ['意味', '使う相槌', '頭文字']);
+  assert.deepEqual(scaffold(c, {}).hints.map(([k]) => k), ['相手の言葉の意味', '使う相槌', '頭文字']);
   assert.equal(scaffold(c, {}).hints[1][1], 'Exactly. / That\'s right. / Absolutely.');
 });

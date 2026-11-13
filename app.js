@@ -187,7 +187,7 @@ function showStep() {
   const ex = cur.kind === 'colloc' ? example(cur, rec) : null;
   const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
   // A Q&A reply is dictation: the stock phrase is read aloud and written down, with its meaning as the prompt.
-  // A backchannel answers what someone just said (`cur.said`, read aloud) with a short reaction and one more sentence.
+  // A backchannel answers what someone just said (`cur.said`, read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = cur.kind === 'reply', back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
   now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : back ? cur.said : ask.q }; // audio: what 🔊 reads
   const talk = isTalk(), [icon, name] = PHASE[step.phase] ?? [];
@@ -198,18 +198,18 @@ function showStep() {
   $('track').textContent = [
     step.retry && '🔁 もう一度',
     run.free ? `${run.retry ? '🔁 復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : `Lv${cur.level}`}` : `${icon} ${name}`,
-    !ex && cur.deck.title, // a pair's deck is its preposition: the answer
+    !drill(cur) && cur.deck.title, // a pair's deck is its preposition, a backchannel's its function: the answer
     step.follow != null ? '追加質問' : step.intro ? '新しい型' : talk && !step.check && step.phase !== 'impromptu' && QA_LEVEL[step.retry ? 0 : step.level],
   ].filter(Boolean).join(' · ');
   $('count').textContent = `${run.idx + 1} / ${run.queue.length}${sec ? ` · ⏱${sec}秒` : ''}`;
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
-  $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : back ? cur.said : (ex ?? cur).ja;
+  $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : (ex ?? cur).ja;
   $('sub').textContent = step.intro ? `${cur.deck.ja}　例文を聞いて、まねして声に出そう`
     : ex ? '形容詞＋前置詞を使って、英文全体を声に出そう'
     : dictate ? `場面：${cur.scene}　🔊 流れる返事を聞いて、書き取ろう`
-    : back ? '🔊 相手のひと言に、相槌＋ひと言で返そう'
+    : back ? `🔊 相手：${cur.said}　→ 相槌＋ひと言で返そう`
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'
@@ -283,6 +283,7 @@ function reveal(timedOut = false) {
   const sibs = ex ? siblings(cur, cards) : [];
   $('caveat').textContent = talk ? 'まず伝わることが大事。自分の研究の内容で1文でも言えればOKで、文法の細かい正しさは気にしなくて大丈夫です。' : [
     ex?.also && `この文では ${ex.also.join(' / ')} も使えます。`,
+    cur.deck.basic && '相槌は、上の一覧の言い方ならどれでも正解です。',
     sibs.length && `同じ形容詞の別の組み合わせ：${sibs.map((s) => `${s.collocation}（${s.ja}）`).join(' ／ ')}`,
     now.dictate ? `${compare ? '緑＝書き取れた語。' : ''}黒い語は聞き取れなかったところ。🔊 でもう一度聞いてみよう。`
       : `${compare ? '緑＝あなたの回答にもあった語（文字起こしは不正確なこともあります）。' : ''}模範解答と違う言い方でも、意味と文法が合っていれば正解です。`,

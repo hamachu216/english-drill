@@ -1,7 +1,7 @@
 {
   "kind": "backchannel",
   "title": "相槌",
-  "note": "相手のひと言にすぐ返す短い反応。機能（同意・理解・驚き・反対…）ごとに、自分から言う基本の言い方（basic）と、聞いて分かればよい言い方（more）を分ける。答えは相槌＋続きのひと言。文・場面・訳はすべてオリジナル。",
+  "note": "相手のひと言にすぐ返す短い反応。機能（同意・理解・驚き・反対…）ごとに、自分から言う基本の言い方（basic）と、聞いて分かればよい言い方（more）を分ける。相手のひと言（said、意味は saidJa）に、日本語（ja）の内容を相槌＋続きのひと言で返す。文・場面・訳はすべてオリジナル。",
   "decks": [
     {
       "id": "bc-agree",
@@ -10,12 +10,12 @@
       "basic": ["Exactly.", "That's right.", "Absolutely."],
       "more": ["That's true.", "That's correct.", "Definitely.", "Completely.", "Certainly.", "Totally.", "Indeed."],
       "cards": [
-        {"id": "bc-agree-001", "said": "So the larger dataset gave you better accuracy?", "ja": "つまり、データが多いほど精度が上がったのですね？", "en": "Exactly. The accuracy went up by about five percent."},
-        {"id": "bc-agree-002", "said": "It sounds like collecting the data took a lot of time.", "ja": "データ集めにはずいぶん時間がかかったようですね。", "en": "That's right. It took us almost a year."},
-        {"id": "bc-agree-003", "said": "Do you agree that the evaluation needs real users?", "ja": "評価には実際のユーザーが必要だと思いますか？", "en": "Absolutely. That's our next step."},
-        {"id": "bc-agree-004", "said": "Small labs can't easily collect that much data.", "ja": "小さな研究室では、それだけのデータは簡単に集められませんね。", "en": "That's true. That's why we shared our dataset."},
-        {"id": "bc-agree-005", "said": "So you ran each test three times?", "ja": "では、各テストを3回ずつ行ったのですね？", "en": "That's correct. We report the average of the three runs."},
-        {"id": "bc-agree-006", "said": "This will be useful for other groups, too.", "ja": "これは他のグループにも役に立ちそうですね。", "en": "Definitely. We plan to release the code."}
+        {"id": "bc-agree-001", "said": "So the larger dataset gave you better accuracy?", "saidJa": "つまり、データが多いほど精度が上がったのですね？", "ja": "その通りです。精度は約5%上がりました。", "en": "Exactly. The accuracy went up by about five percent."},
+        {"id": "bc-agree-002", "said": "It sounds like collecting the data took a lot of time.", "saidJa": "データ集めにはずいぶん時間がかかったようですね。", "ja": "その通りです。ほぼ1年かかりました。", "en": "That's right. It took us almost a year."},
+        {"id": "bc-agree-003", "said": "Do you agree that the evaluation needs real users?", "saidJa": "評価には実際のユーザーが必要だと思いますか？", "ja": "まったくその通りです。それが次のステップです。", "en": "Absolutely. That's our next step."},
+        {"id": "bc-agree-004", "said": "Small labs can't easily collect that much data.", "saidJa": "小さな研究室では、それだけのデータは簡単に集められませんね。", "ja": "確かにそうですね。だからデータセットを公開しました。", "en": "That's true. That's why we shared our dataset."},
+        {"id": "bc-agree-005", "said": "So you ran each test three times?", "saidJa": "では、各テストを3回ずつ行ったのですね？", "ja": "その通りです。3回の平均を報告しています。", "en": "That's correct. We report the average of the three runs."},
+        {"id": "bc-agree-006", "said": "This will be useful for other groups, too.", "saidJa": "これは他のグループにも役に立ちそうですね。", "ja": "間違いないですね。コードも公開する予定です。", "en": "Definitely. We plan to release the code."}
       ]
     },
     {
@@ -25,12 +25,12 @@
       "basic": ["That's a good point, but ...", "I see what you mean, but ...", "That's true to some extent."],
       "more": ["You have a point, but ...", "I agree up to a point."],
       "cards": [
-        {"id": "bc-partly-001", "said": "Your sample is too small to say anything.", "ja": "サンプルが小さすぎて、何も言えないのでは。", "en": "That's a good point, but the trend was the same in every group."},
-        {"id": "bc-partly-002", "said": "Deep learning would surely work better here.", "ja": "ここはディープラーニングの方がきっとうまくいきますよ。", "en": "I see what you mean, but our data was too small for it."},
-        {"id": "bc-partly-003", "said": "Lab results never hold in the real world.", "ja": "実験室の結果は、現実では通用しませんよ。", "en": "That's true to some extent. That's why we also ran a field study."},
-        {"id": "bc-partly-004", "said": "The new method is just slower.", "ja": "新しい手法は遅いだけですね。", "en": "You have a point, but it's much more accurate."},
-        {"id": "bc-partly-005", "said": "More features always help.", "ja": "特徴量は多いほど良いですよね。", "en": "I agree up to a point, but too many can cause overfitting."},
-        {"id": "bc-partly-006", "said": "You should have used a public dataset.", "ja": "公開データセットを使うべきでしたね。", "en": "That's a good point, but none of them had the labels we needed."}
+        {"id": "bc-partly-001", "said": "Your sample is too small to say anything.", "saidJa": "サンプルが小さすぎて、何も言えないのでは。", "ja": "良いご指摘ですが、どのグループでも傾向は同じでした。", "en": "That's a good point, but the trend was the same in every group."},
+        {"id": "bc-partly-002", "said": "Deep learning would surely work better here.", "saidJa": "ここはディープラーニングの方がきっとうまくいきますよ。", "ja": "おっしゃることは分かりますが、私たちのデータはそれには少なすぎました。", "en": "I see what you mean, but our data was too small for it."},
+        {"id": "bc-partly-003", "said": "Lab results never hold in the real world.", "saidJa": "実験室の結果は、現実では通用しませんよ。", "ja": "ある程度はその通りです。だから実地調査も行いました。", "en": "That's true to some extent. That's why we also ran a field study."},
+        {"id": "bc-partly-004", "said": "The new method is just slower.", "saidJa": "新しい手法は遅いだけですね。", "ja": "一理ありますが、精度はずっと高いです。", "en": "You have a point, but it's much more accurate."},
+        {"id": "bc-partly-005", "said": "More features always help.", "saidJa": "特徴量は多いほど良いですよね。", "ja": "ある程度は同意しますが、多すぎると過学習の原因になります。", "en": "I agree up to a point, but too many can cause overfitting."},
+        {"id": "bc-partly-006", "said": "You should have used a public dataset.", "saidJa": "公開データセットを使うべきでしたね。", "ja": "良いご指摘ですが、必要なラベルが付いたものはありませんでした。", "en": "That's a good point, but none of them had the labels we needed."}
       ]
     },
     {
@@ -40,12 +40,12 @@
       "basic": ["I see.", "That makes sense.", "Got it."],
       "more": ["I understand.", "OK, I follow.", "Mm-hm."],
       "cards": [
-        {"id": "bc-follow-001", "said": "Our server crashed, so we lost a week of data.", "ja": "サーバーが落ちて、1週間分のデータを失ったんです。", "en": "I see. That must have been hard."},
-        {"id": "bc-follow-002", "said": "The deadline was moved to next Friday.", "ja": "締め切りは来週の金曜に変わりました。", "en": "Got it. I'll send my slides by Thursday."},
-        {"id": "bc-follow-003", "said": "We normalize the data first because the sensors are different.", "ja": "センサーが違うので、まずデータを正規化しています。", "en": "That makes sense. Otherwise the scales wouldn't match."},
-        {"id": "bc-follow-004", "said": "I think your baseline is too weak, so the comparison isn't fair.", "ja": "ベースラインが弱すぎて、比較が公平でないと思います。", "en": "I see. Which baseline would you suggest?"},
-        {"id": "bc-follow-005", "said": "You need to book the room through the office.", "ja": "部屋は事務室を通して予約する必要があります。", "en": "I understand. I'll ask them today."},
-        {"id": "bc-follow-006", "said": "First you choose the file, and then you press run.", "ja": "まずファイルを選んで、それから実行を押します。", "en": "OK, I follow. And then the results appear here?"}
+        {"id": "bc-follow-001", "said": "Our server crashed, so we lost a week of data.", "saidJa": "サーバーが落ちて、1週間分のデータを失ったんです。", "ja": "なるほど。それは大変でしたね。", "en": "I see. That must have been hard."},
+        {"id": "bc-follow-002", "said": "The deadline was moved to next Friday.", "saidJa": "締め切りは来週の金曜に変わりました。", "ja": "分かりました。木曜までにスライドを送ります。", "en": "Got it. I'll send my slides by Thursday."},
+        {"id": "bc-follow-003", "said": "We normalize the data first because the sensors are different.", "saidJa": "センサーが違うので、まずデータを正規化しています。", "ja": "なるほど、納得です。そうしないと尺度がそろいませんね。", "en": "That makes sense. Otherwise the scales wouldn't match."},
+        {"id": "bc-follow-004", "said": "I think your baseline is too weak, so the comparison isn't fair.", "saidJa": "ベースラインが弱すぎて、比較が公平でないと思います。", "ja": "なるほど。どのベースラインがよいと思われますか？", "en": "I see. Which baseline would you suggest?"},
+        {"id": "bc-follow-005", "said": "You need to book the room through the office.", "saidJa": "部屋は事務室を通して予約する必要があります。", "ja": "承知しました。今日聞いてみます。", "en": "I understand. I'll ask them today."},
+        {"id": "bc-follow-006", "said": "First you choose the file, and then you press run.", "saidJa": "まずファイルを選んで、それから実行を押します。", "ja": "はい、分かります。それから結果がここに出るのですね？", "en": "OK, I follow. And then the results appear here?"}
       ]
     },
     {
@@ -55,12 +55,12 @@
       "basic": ["Really?", "Interesting.", "That's surprising."],
       "more": ["Oh, I didn't know that.", "That's impressive.", "No way!"],
       "cards": [
-        {"id": "bc-surprise-001", "said": "Our model runs on a phone in real time.", "ja": "私たちのモデルはスマホでリアルタイムに動きます。", "en": "Really? How much battery does it use?"},
-        {"id": "bc-surprise-002", "said": "We found that people walk faster in the morning.", "ja": "人は朝の方が速く歩くことが分かりました。", "en": "Interesting. Do you know why?"},
-        {"id": "bc-surprise-003", "said": "Only ten percent of the users opened the app twice.", "ja": "アプリを2回開いたユーザーは1割だけでした。", "en": "That's surprising. I expected more."},
-        {"id": "bc-surprise-004", "said": "This conference started with only twenty people.", "ja": "この学会は、たった20人で始まったんですよ。", "en": "Oh, I didn't know that. It's so big now."},
-        {"id": "bc-surprise-005", "said": "We collected data from over a thousand people.", "ja": "千人以上からデータを集めました。", "en": "That's impressive. How long did it take?"},
-        {"id": "bc-surprise-006", "said": "Some participants wore the sensor upside down.", "ja": "センサーを逆さまに付けていた参加者もいました。", "en": "Really? Could you still use their data?"}
+        {"id": "bc-surprise-001", "said": "Our model runs on a phone in real time.", "saidJa": "私たちのモデルはスマホでリアルタイムに動きます。", "ja": "えっ、本当ですか？ 電池はどれくらい使いますか？", "en": "Really? How much battery does it use?"},
+        {"id": "bc-surprise-002", "said": "We found that people walk faster in the morning.", "saidJa": "人は朝の方が速く歩くことが分かりました。", "ja": "面白いですね。理由は分かっていますか？", "en": "Interesting. Do you know why?"},
+        {"id": "bc-surprise-003", "said": "Only ten percent of the users opened the app twice.", "saidJa": "アプリを2回開いたユーザーは1割だけでした。", "ja": "それは意外です。もっと多いと思っていました。", "en": "That's surprising. I expected more."},
+        {"id": "bc-surprise-004", "said": "This conference started with only twenty people.", "saidJa": "この学会は、たった20人で始まったんですよ。", "ja": "へえ、知りませんでした。今はこんなに大きいのに。", "en": "Oh, I didn't know that. It's so big now."},
+        {"id": "bc-surprise-005", "said": "We collected data from over a thousand people.", "saidJa": "千人以上からデータを集めました。", "ja": "すごいですね。どれくらいかかりましたか？", "en": "That's impressive. How long did it take?"},
+        {"id": "bc-surprise-006", "said": "Some participants wore the sensor upside down.", "saidJa": "センサーを逆さまに付けていた参加者もいました。", "ja": "えっ、本当ですか？ そのデータは使えたのですか？", "en": "Really? Could you still use their data?"}
       ]
     },
     {
@@ -70,12 +70,12 @@
       "basic": ["Let me see.", "Well,", "That's a good question."],
       "more": ["Let me think.", "Hmm, how can I put it?", "Good question."],
       "cards": [
-        {"id": "bc-think-001", "said": "Which part was the hardest?", "ja": "どの部分がいちばん大変でしたか？", "en": "Let me see. Probably the labeling."},
-        {"id": "bc-think-002", "said": "Why didn't you try a larger model?", "ja": "なぜもっと大きなモデルを試さなかったのですか？", "en": "Well, our data was quite small."},
-        {"id": "bc-think-003", "said": "How would this work for children?", "ja": "子どもだとどうなりますか？", "en": "That's a good question. We haven't tested it yet."},
-        {"id": "bc-think-004", "said": "What would you do differently next time?", "ja": "次は何を変えますか？", "en": "Let me think. I would collect more data first."},
-        {"id": "bc-think-005", "said": "How is your method different from theirs?", "ja": "あなたの手法は、彼らのものとどう違うのですか？", "en": "Hmm, how can I put it? Ours needs much less data."},
-        {"id": "bc-think-006", "said": "What was the most surprising result?", "ja": "いちばん意外だった結果は何ですか？", "en": "Good question. The results at night, I think."}
+        {"id": "bc-think-001", "said": "Which part was the hardest?", "saidJa": "どの部分がいちばん大変でしたか？", "ja": "そうですね…。おそらくラベル付けです。", "en": "Let me see. Probably the labeling."},
+        {"id": "bc-think-002", "said": "Why didn't you try a larger model?", "saidJa": "なぜもっと大きなモデルを試さなかったのですか？", "ja": "ええと、データがかなり少なかったんです。", "en": "Well, our data was quite small."},
+        {"id": "bc-think-003", "said": "How would this work for children?", "saidJa": "子どもだとどうなりますか？", "ja": "良い質問ですね。まだ試していません。", "en": "That's a good question. We haven't tested it yet."},
+        {"id": "bc-think-004", "said": "What would you do differently next time?", "saidJa": "次は何を変えますか？", "ja": "考えさせてください。まずデータをもっと集めると思います。", "en": "Let me think. I would collect more data first."},
+        {"id": "bc-think-005", "said": "How is your method different from theirs?", "saidJa": "あなたの手法は、彼らのものとどう違うのですか？", "ja": "うーん、何と言えばいいか…。私たちの手法はずっと少ないデータで済みます。", "en": "Hmm, how can I put it? Ours needs much less data."},
+        {"id": "bc-think-006", "said": "What was the most surprising result?", "saidJa": "いちばん意外だった結果は何ですか？", "ja": "良い質問ですね。夜間の結果だと思います。", "en": "Good question. The results at night, I think."}
       ]
     },
     {
@@ -85,12 +85,12 @@
       "basic": ["I'm not sure about that.", "I see it a bit differently.", "I'm afraid I disagree."],
       "more": ["I'm not so sure.", "Actually, ...", "I don't think so."],
       "cards": [
-        {"id": "bc-disagree-001", "said": "Your results are only true for young people.", "ja": "あなたの結果は、若い人にしか当てはまりませんね。", "en": "I'm not sure about that. Our oldest participant was seventy."},
-        {"id": "bc-disagree-002", "said": "Accuracy is the only thing that matters.", "ja": "大事なのは精度だけです。", "en": "I see it a bit differently. Speed matters too."},
-        {"id": "bc-disagree-003", "said": "This method can't be used outside the lab.", "ja": "この手法は実験室の外では使えません。", "en": "I'm afraid I disagree. We tested it at home, too."},
-        {"id": "bc-disagree-004", "said": "So you had ten participants?", "ja": "では、参加者は10人だったのですね？", "en": "Actually, we had twelve."},
-        {"id": "bc-disagree-005", "said": "Everyone already knows this result.", "ja": "この結果は、もう誰でも知っていますよ。", "en": "I'm not so sure. No one has measured it this way."},
-        {"id": "bc-disagree-006", "said": "One sensor is never enough.", "ja": "センサー1つでは絶対に足りません。", "en": "I'm not sure about that. One was enough for most activities."}
+        {"id": "bc-disagree-001", "said": "Your results are only true for young people.", "saidJa": "あなたの結果は、若い人にしか当てはまりませんね。", "ja": "それはどうでしょうか。最年長の参加者は70歳でした。", "en": "I'm not sure about that. Our oldest participant was seventy."},
+        {"id": "bc-disagree-002", "said": "Accuracy is the only thing that matters.", "saidJa": "大事なのは精度だけです。", "ja": "私は少し違う見方をしています。速さも大事です。", "en": "I see it a bit differently. Speed matters too."},
+        {"id": "bc-disagree-003", "said": "This method can't be used outside the lab.", "saidJa": "この手法は実験室の外では使えません。", "ja": "申し訳ないですが、同意できません。家庭でも試しました。", "en": "I'm afraid I disagree. We tested it at home, too."},
+        {"id": "bc-disagree-004", "said": "So you had ten participants?", "saidJa": "では、参加者は10人だったのですね？", "ja": "実は、12人でした。", "en": "Actually, we had twelve."},
+        {"id": "bc-disagree-005", "said": "Everyone already knows this result.", "saidJa": "この結果は、もう誰でも知っていますよ。", "ja": "そうとも限らないと思います。この方法で測った人はいません。", "en": "I'm not so sure. No one has measured it this way."},
+        {"id": "bc-disagree-006", "said": "One sensor is never enough.", "saidJa": "センサー1つでは絶対に足りません。", "ja": "それはどうでしょうか。ほとんどの活動は1つで十分でした。", "en": "I'm not sure about that. One was enough for most activities."}
       ]
     },
     {
@@ -100,12 +100,12 @@
       "basic": ["Yes, ...", "No, ..."],
       "more": [],
       "cards": [
-        {"id": "bc-negative-001", "said": "Didn't you use a control group?", "ja": "対照群は使わなかったのですか？（使わなかった）", "en": "No, we didn't. We compared before and after instead."},
-        {"id": "bc-negative-002", "said": "Isn't the sensor too heavy?", "ja": "センサーは重すぎませんか？（重くない）", "en": "No, it isn't. It weighs only twenty grams."},
-        {"id": "bc-negative-003", "said": "Don't you need more participants?", "ja": "もっと参加者が必要ではないですか？（必要だ）", "en": "Yes, we do. We're recruiting more now."},
-        {"id": "bc-negative-004", "said": "Doesn't it work at night?", "ja": "夜は動かないのですか？（動く）", "en": "Yes, it does. It works just as well at night."},
-        {"id": "bc-negative-005", "said": "Haven't you published this yet?", "ja": "まだ発表していないのですか？（まだしていない）", "en": "No, not yet. We're writing the paper now."},
-        {"id": "bc-negative-006", "said": "Aren't you worried about privacy?", "ja": "プライバシーは心配ではないですか？（心配している）", "en": "Yes, we are. That's why we don't record audio."}
+        {"id": "bc-negative-001", "said": "Didn't you use a control group?", "saidJa": "対照群は使わなかったのですか？", "ja": "はい、使っていません。代わりに前後で比べました。", "en": "No, we didn't. We compared before and after instead."},
+        {"id": "bc-negative-002", "said": "Isn't the sensor too heavy?", "saidJa": "センサーは重すぎませんか？", "ja": "はい、重くありません。たった20グラムです。", "en": "No, it isn't. It weighs only twenty grams."},
+        {"id": "bc-negative-003", "said": "Don't you need more participants?", "saidJa": "もっと参加者が必要ではないですか？", "ja": "いいえ、必要です。今、追加で募集しています。", "en": "Yes, we do. We're recruiting more now."},
+        {"id": "bc-negative-004", "said": "Doesn't it work at night?", "saidJa": "夜は動かないのですか？", "ja": "いいえ、動きます。夜も同じようによく動きます。", "en": "Yes, it does. It works just as well at night."},
+        {"id": "bc-negative-005", "said": "Haven't you published this yet?", "saidJa": "まだ発表していないのですか？", "ja": "はい、まだです。今、論文を書いています。", "en": "No, not yet. We're writing the paper now."},
+        {"id": "bc-negative-006", "said": "Aren't you worried about privacy?", "saidJa": "プライバシーは心配ではないですか？", "ja": "いいえ、心配しています。だから音声は録音していません。", "en": "Yes, we are. That's why we don't record audio."}
       ]
     }
   ]
