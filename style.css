@@ -107,9 +107,6 @@ p:empty, #menu .sub:empty { display: none; }
 .grid td { text-align: center; padding: 6px 2px; border-top: 1px solid var(--line); font-weight: 700; }
 #cd-table td:first-child { text-align: left; color: var(--muted); }
 .drill { margin-top: 12px; --lv: var(--lv5); }
-.drill select { min-height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); padding: 0 10px; width: 100%; }
-.drill .pair { margin-top: 8px; }
-.drill .pair:has(#cd-prep[hidden]) { grid-template-columns: 1fr; }
 .drill details { margin-top: 10px; }
 .drill summary { cursor: pointer; }
 #cd-summary { margin: 4px 0 0; }

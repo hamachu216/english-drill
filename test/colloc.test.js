@@ -127,22 +127,19 @@ test('a month of practice moves pairs through the steps without dropping the oth
   assert.ok(p[1] + p[2] >= 5, 'and new ones still coming');
 });
 
-test('drill lists: today = due, then new, then the rest; one preposition; weak = wrong last time; all', () => {
+test('drill: every pair — due ones first, then new ones (easy first), then the rest', () => {
   const a = pair('afraid of'), b = pair('good at'), c = pair('bored with');
   const hist = {
     [a.id]: practise(undefined, { grade: MISS }, addDays(T, -2)),
     [b.id]: practise(undefined, { grade: SOLO }, T),
     [c.id]: practise(undefined, { grade: SOLO }, addDays(T, -3)),
   };
-  const today = drill(items, hist, T, 'today');
+  const today = drill(items, hist, T);
   assert.deepEqual(today.slice(0, 2).map((x) => x.id), [c.id, a.id], 'due ones first, longest overdue first');
   assert.equal(today.length, pairs.length);
   assert.equal(today.at(-1).id, b.id, 'practiced today: last');
-  assert.ok(drill(items, hist, T, 'prep', 'of').every((x) => x.prep === 'of'));
-  assert.equal(drill(items, hist, T, 'prep', 'of')[0].id, a.id);
-  assert.deepEqual(drill(items, hist, T, 'weak').map((x) => x.id), [a.id]);
-  assert.equal(drill(items, hist, T, 'all').length, pairs.length);
-  assert.equal(drill(items, {}, T, 'all')[0].difficulty, 1);
+  assert.equal(today[2].difficulty, 1, 'then new pairs, easy first');
+  assert.equal(drill(items, {}, T).length, pairs.length);
 });
 
 test('progress counts pairs per step, overall and per preposition', () => {

@@ -30,7 +30,7 @@ gh api repos/hamachu216/english-drill/pages/builds/latest --jq '.status+" "+.com
 - カードIDは `<deckId>-NNN` 形式で全ファイルを通じて一意（`test/data.test.js` で検証）。IDは学習履歴のキーなので、既存カードのIDは変えないこと。各デッキの最後の2枚は「週1回の初見チェック」用に取り置かれる（`catalog` の `held`）ので、カードを足すときは末尾ではなく途中に入れるか、末尾2枚が初見用になることを踏まえる。
 - `core.js` — 純粋関数のみ（DOM・ストレージに触らない）: `catalog`（全ファイル → `kind`/`topic`/`deck`/`held` 付きのカード一覧）、`restore`（保存データ → 現在の形。旧データの移行を兼ねる）、`seeded`（日付から決まる乱数）、`skeleton`/`opening`/`mask`（ヒント文字列）、`shuffle`、`nextRound`（自由練習のラウンド進行）、`timeLimit`、`hasEnglish`、`streak`、`calendar`、`englishVoices`、`wordDiff`。
 - `plan.js` — 学習アルゴリズム。これも純粋関数のみ: `review`（1回の回答 → カードの次回復習日）、`tally`（1回の回答 → その日の集計）、`shares`/`mix`（直近2週間の出来 → 基礎:構文:Q&A の配分）、`planSession`（今日のセッション）、`requeue`（言えなかったカードを同じセッションでもう一度）、`scaffold`（最初に見せる支援とヒントの順）、`choices`（出す自己評価ボタン）、`overview`・`weekly`（ホームの表示用）。定数（間隔・配分・解放条件）はファイル先頭にまとまっている。
-- `colloc.js` — 形容詞＋前置詞の純粋関数: `practise`（1回の回答 → 組み合わせの記録。Step の上下を含む）、`example`（毎回別の例文）、`blank`・`options`・`accepted`・`heard`（出題と判定）、`hints`、`siblings`（同じ形容詞の別の前置詞）、`drill`（Collocation Drill の出題リスト）、`progress`（Step ごとの数）。
+- `colloc.js` — 形容詞＋前置詞の純粋関数: `practise`（1回の回答 → 組み合わせの記録。Step の上下を含む）、`example`（毎回別の例文）、`blank`・`options`・`accepted`・`heard`（出題と判定）、`hints`、`siblings`（同じ形容詞の別の前置詞）、`drill`（Collocation Drill の出題リスト。全組み合わせを、期限の来たもの → 未学習（易しい順）→ 練習が古い順）、`progress`（Step ごとの数）。
 - `app.js` — DOM と状態のすべて。`<script type="module">` 1つで、トップレベル `await` により全データファイルを fetch する。DOM は `el(tag, props, ...kids)` でノードから組み立て、HTML 文字列は使わない。
 - `index.html`（マークアップのみ）、`style.css`、`theme.js` — インラインの `<script>`・`<style>`・`style=""` は CSP で禁止しているので、すべて別ファイルに置く。
 

@@ -397,13 +397,9 @@ $('start').onclick = () => { const s = session(); if (!s) begin(fresh(state.sett
 $('short').onclick = () => begin(fresh(10));
 $('free').onclick = () => { if (freeList !== levelCards) { freeList = levelCards; pool = []; } playFree(); };
 $('next-round').onclick = () => (run.free ? playFree(run.missed) : more());
-// Collocation Drill: today's recommendation by default; or one preposition, the weak ones, or everything. Rounds of ROUND in order.
-$('cd-prep').replaceChildren(...PREPS.map((p) => el('option', { value: p, textContent: `形容詞 + ${p}` })));
-$('cd-mode').onchange = () => ($('cd-prep').hidden = $('cd-mode').value !== 'prep');
+// Collocation Drill: all the pairs, due ones first, in rounds of ROUND.
 $('cd-start').onclick = () => {
-  const mode = $('cd-mode').value, prep = $('cd-prep').value, list = () => drill(cards, state.hist, today(), mode, prep);
-  $('cd-msg').textContent = list().length ? '' : '今は苦手な表現はありません。';
-  if (!list().length) return;
+  const list = () => drill(cards, state.hist, today());
   freeList = list;
   pool = list(); // in the list's order: the most useful first
   playFree();

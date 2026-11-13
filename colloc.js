@@ -58,15 +58,14 @@ export const hints = (c, step, ex) =>
 // Other pairs with the same adjective: "happy about（…）/ happy with（…）", for telling them apart.
 export const siblings = (c, items) => items.filter((x) => x.kind === 'colloc' && x.adj === c.adj && x !== c);
 
-// The Collocation Drill's lists. today: due first (longest overdue), then new pairs, then the rest by how long ago;
-// prep: the same, one preposition only; weak: pairs answered wrong last time; all: every pair, easy first.
-export function drill(items, hist, day, mode, prep) {
+// The Collocation Drill: every pair, in the order that helps most — due first (longest overdue), then new pairs
+// (easy first), then the rest by how long ago they were practiced.
+export function drill(items, hist, day) {
   const all = items.filter((c) => c.kind === 'colloc').sort(easyFirst), rec = (c) => hist[c.id];
   const by = (k) => (a, b) => rec(a)[k].localeCompare(rec(b)[k]);
   const due = all.filter((c) => rec(c)?.due <= day).sort(by('due'));
   const rest = all.filter((c) => rec(c) && !(rec(c).due <= day)).sort(by('last'));
-  const today = [...due, ...all.filter((c) => !rec(c)), ...rest];
-  return { today, prep: today.filter((c) => c.prep === prep), weak: all.filter((c) => rec(c)?.box === 0).sort(by('last')), all }[mode];
+  return [...due, ...all.filter((c) => !rec(c)), ...rest];
 }
 
 // How far the pairs have come: [not started, step 1, step 2, step 3, settled (step 3, next review a week or more away)],
