@@ -1,4 +1,4 @@
-import { FILES, DRILLS, ROUND, catalog, restore, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish } from './core.js';
+import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish } from './core.js';
 import { MISS, HINT, SLOW, SOLO, GRADE, review, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
 
 const KEY = 'eng:v1';
@@ -152,6 +152,7 @@ const hintRow = ([label, text]) => pair(label, text);
 const setReveal = (text) => $('reveal').replaceChildren(text, el('kbd', { textContent: 'Enter' }));
 
 function begin(r) {
+  keep();
   answered = 0;
   $('flash').textContent = r.queue.length ? '' : '今日はもう出せる問題がありません。また明日！';
   if (!r.queue.length) return;
@@ -426,8 +427,39 @@ $('mic').onclick = async () => {
   try { await (Recognition ? transcribe() : record()); } catch { micOff(); }
 };
 
+// ---- keeping the record: ask the browser not to evict it, and back it up to / restore it from a file.
+// persist() is asked on a tap that starts practice: Firefox shows a prompt, others decide by site engagement.
+async function showKept() {
+  const kept = await navigator.storage?.persisted?.();
+  $('kept').textContent = kept == null ? '' : kept ? '✓ このブラウザは記録を自動では消さない設定になっています。' : 'ブラウザの空き容量が少ないと、記録が自動で消されることがあります。ときどき書き出しておくと安心です。';
+}
+const keep = async () => { if (await navigator.storage?.persist?.()) showKept(); };
+
+$('export').onclick = () => {
+  const a = el('a', { href: URL.createObjectURL(new Blob([JSON.stringify(state)], { type: 'application/json' })), download: `english-drill-${today()}.json` });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  $('backup-msg').textContent = `書き出しました（${a.download}）`;
+};
+$('import').onclick = () => $('import-file').click();
+$('import-file').onchange = async () => {
+  const file = $('import-file').files[0];
+  $('import-file').value = ''; // choosing the same file again still fires
+  let data = null;
+  try { data = JSON.parse(await file.text()); } catch {}
+  if (!isBackup(data)) { $('backup-msg').textContent = 'このファイルは記録のバックアップではないようです。'; return; }
+  const days = (s) => Object.keys(s.log ?? {}).length, cards = (s) => Object.keys(s.hist ?? {}).length;
+  if (!confirm(`「${file.name}」の記録（${days(data)}日分・${cards(data)}問）で、いまの記録（${days(state)}日分・${cards(state)}問）を置き換えます。よろしいですか？`)) return;
+  save(restore(data));
+  applyTheme();
+  renderHome();
+  if (canSpeak) renderVoices();
+  $('backup-msg').textContent = '読み込みました。';
+};
+
 applyTheme();
 renderHome();
+showKept();
 if ('serviceWorker' in navigator) {
   // A new deploy's worker took over: reload once so this page runs the new code too.
   const hadController = !!navigator.serviceWorker.controller;
