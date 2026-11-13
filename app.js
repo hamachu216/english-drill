@@ -188,9 +188,9 @@ function showStep() {
   const ex = cur.kind === 'colloc' ? example(cur, rec) : null;
   const { shown, hints } = ex ? { shown: [], hints: pairHints(ex) } : scaffold(cur, step);
   // A Q&A reply is dictation: the stock phrase is read aloud and written down, with its meaning as the prompt.
-  // A backchannel answers what someone just said (`cur.said`, read aloud) with a reaction and one more sentence, said from Japanese.
+  // A backchannel answers what someone just said (`cur.said`, shown, not read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = cur.kind === 'reply', back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
-  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : back ? cur.said : ask.q }; // audio: what 🔊 reads
+  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : ask.q }; // audio: what 🔊 reads
   const talk = isTalk(), [icon, name] = PHASE[step.phase] ?? [];
   // Free practice keeps its timer setting (not the Collocation Drill: composing a sentence takes its time);
   // an Intermediate question gets a gentle 45s bar that never cuts you off.
@@ -210,7 +210,7 @@ function showStep() {
   $('sub').textContent = step.intro ? `${cur.deck.ja}　例文を聞いて、まねして声に出そう`
     : ex ? '形容詞＋前置詞を使って、英文全体を声に出そう'
     : dictate ? `場面：${cur.scene}　🔊 流れる返事を聞いて、書き取ろう`
-    : back ? `🔊 相手：${cur.said}　→ 相槌＋ひと言で返そう`
+    : back ? `相手：${cur.said}　→ 相槌＋ひと言で返そう`
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'
@@ -231,7 +231,7 @@ function showStep() {
   $('answer').hidden = true;
   $('reveal').hidden = false;
   startTimer(sec, run.free && !drill(cur));
-  if (now.audio && (dictate || back || state.settings.listen)) speak(now.audio);
+  if (now.audio && (dictate || state.settings.listen)) speak(now.audio);
 }
 
 // The bar drains via a CSS animation (turning red near the end); in free practice one timeout reveals the answer.
