@@ -1,6 +1,6 @@
 import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish, slots, literal } from './core.js';
-import { MISS, HINT, SLOW, SOLO, review, graded, quick, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
-import { PREPS, STEPS, stepOf, example, accepted, blank, options, heard, practise, hints as pairHints, siblings, drill, progress } from './colloc.js';
+import { MISS, HINT, SLOW, SOLO, review, graded, quick, byNeed, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
+import { PREPS, STEPS, stepOf, example, accepted, blank, options, heard, practise, hints as pairHints, siblings, progress } from './colloc.js';
 
 const KEY = 'eng:v1';
 const $ = (id) => document.getElementById(id);
@@ -89,12 +89,14 @@ function renderHome() {
   $('status').replaceChildren(
     ...pair('復習待ち', `${o.due}問`),
     ...pair('苦手な文法', o.weak.length ? o.weak.slice(0, 3).map((t) => topicTitle[t]).join('・') : 'いまはありません'),
+    ...pair('得意な文法', o.known.length ? `${o.known.map((t) => topicTitle[t]).join('・')}（新しい問題は後回し）` : 'まだありません（1トピック3問続けてすぐ言えたら、そのトピックの新しい問題は後回し）'),
     ...pair('研究英語の構文', `型なしで言える ${o.frames[2]} ・ 練習中 ${o.frames[0] + o.frames[1]} ／ 全${o.framesTotal}`),
     ...pair('質疑応答の切り返し', `${QA_LEVEL.map((name, i) => `${name} ${o.reply[i]}`).join(' ・ ')} ／ 全${replyCount}`),
     ...pair('Research Q&A', QA_LEVEL.map((name, i) => `${name} ${o.qa[i]}`).join(' ・ ')),
     ...pair('即興 Q&A', o.unlock ? `別の日にもすぐ答えられた質問が、あと${o.unlock}問たまると始まります` : '毎日のメニューに入っています'),
     ...pair('形容詞＋前置詞', `${stepLine(pr.all)} ／ 全${pairCount}`));
-  $('cd-summary').textContent = `未学習 ${pr.all[0]} ・ ${stepLine(pr.all)}`;
+  const wrong = cards.filter((c) => c.kind === 'colloc' && state.hist[c.id]?.box === 0).length;
+  $('cd-summary').textContent = `未学習 ${pr.all[0]} ・ ${stepLine(pr.all)}${wrong ? ` ・ ✕ 前回間違えた ${wrong}（次の「始める」で最初に出ます）` : ''}`;
   $('cd-table').tBodies[0].replaceChildren(...PREPS.map((p) => el('tr', {}, el('td', { textContent: p }), ...pr[p].map((n) => el('td', { textContent: n })))));
   // This week, plus earlier weeks that have something to show.
   $('weekly').tBodies[0].replaceChildren(...weekly(state.days, cards, d).filter((w, i) => !i || Object.keys(w.kinds).length).flatMap((w) => {
@@ -115,12 +117,14 @@ function renderHome() {
     cell.dataset.l = Math.min(3, Math.ceil(n / 15));
     return cell;
   }));
-  $('levels').replaceChildren(...levels.map((f) => {
+  // Lv1 and Lv2 are one set, mixed as in the daily session; Lv3–5 (free practice only) one set each.
+  const sets = [{ level: 1, name: '基礎文法（Lv1〜2）', decks: levels.slice(0, 2).flatMap((f) => f.decks) }, ...levels.slice(2).map((f) => ({ level: f.level, name: `Lv${f.level} ${f.title}`, decks: f.decks }))];
+  $('levels').replaceChildren(...sets.map((f) => {
     const label = el('label', { className: 'level' },
-      el('input', { type: 'radio', name: 'level', value: f.level, checked: f.level === level }),
+      el('input', { type: 'radio', name: 'level', value: f.level, checked: f.level === (level <= 2 ? 1 : level) }),
       el('span', { className: 'icon', textContent: LEVEL_ICONS[f.level - 1] }),
       el('span', {},
-        el('span', { className: 'name', textContent: `Lv${f.level} ${f.title}` }),
+        el('span', { className: 'name', textContent: f.name }),
         el('span', { className: 'sub', textContent: `${f.decks.length}トピック · ${f.decks.reduce((n, d) => n + d.cards.length, 0)}問` })),
       el('span', { className: 'check', textContent: '✓' }));
     label.style.setProperty('--lv', `var(--lv${f.level})`);
@@ -169,11 +173,13 @@ function begin(r) {
   if (left(run)) { show('study'); showStep(); } else showResult();
 }
 
-// Free practice: rounds of ROUND from a list — a level's cards, or the Collocation Drill's pairs.
-const levelCards = () => cards.filter((c) => c.level === state.settings.level);
+// Free practice: rounds of ROUND from a set — all the grammar (Lv1–2), Lv3–5, or the Collocation Drill's pairs —
+// in the order that helps most (wrong last time, due, new, then the rest).
+const levelCards = () => cards.filter((c) => (state.settings.level <= 2 ? c.kind === 'grammar' : c.level === state.settings.level));
+const pairCards = () => cards.filter((c) => c.kind === 'colloc');
 let freeList = levelCards;
 function playFree(missed = []) {
-  const r = nextRound(missed, pool, freeList());
+  const r = nextRound(missed, pool, byNeed(freeList(), state.hist, today()));
   pool = r.pool;
   begin({ free: true, retry: r.retry, queue: r.cards.map((c) => ({ id: c.id, phase: 'free' })), idx: 0, grades: [] });
 }
@@ -397,13 +403,7 @@ $('start').onclick = () => { const s = session(); if (!s) begin(fresh(state.sett
 $('short').onclick = () => begin(fresh(10));
 $('free').onclick = () => { if (freeList !== levelCards) { freeList = levelCards; pool = []; } playFree(); };
 $('next-round').onclick = () => (run.free ? playFree(run.missed) : more());
-// Collocation Drill: all the pairs, due ones first, in rounds of ROUND.
-$('cd-start').onclick = () => {
-  const list = () => drill(cards, state.hist, today());
-  freeList = list;
-  pool = list(); // in the list's order: the most useful first
-  playFree();
-};
+$('cd-start').onclick = () => { if (freeList !== pairCards) { freeList = pairCards; pool = []; } playFree(); };
 $('quit').onclick = $('home-btn').onclick = finish;
 $('hint').onclick = hint;
 $('input').oninput = started;

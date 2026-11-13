@@ -26,6 +26,7 @@ const UNLOCK = 6; // questions answered without hesitation on a second day or la
 const CHECK = { grammar: 3, pattern: 2, reply: 1, qa: 1 }; // weekly first-sight check
 const WEEK = 7;
 const SLOW_BOX = 2; // slow answers alone get a card this far
+const KNOWN = 3; // grammar answers, all quick, after which a topic counts as known and its new cards wait
 
 // One answer → the card's new record. A box is only climbed on a day the card was due (or new):
 // answering again the same day, or early, can lower the box but never raise it or push the due date.
@@ -92,6 +93,28 @@ export function stageOf(items, hist) {
 // so every topic is tried early and topics are mixed.
 export const easyFirst = (a, b) => (a.difficulty ?? 0) - (b.difficulty ?? 0) || a.nth - b.nth;
 
+// Grammar topics already known: at least KNOWN cards answered, each said quickly last time and none missed.
+// Their new cards go after everyone else's, so the time goes where it is needed. One miss and the topic is back.
+export function knownTopics(items, hist) {
+  const said = {};
+  for (const c of items) if (c.kind === 'grammar' && hist[c.id]) (said[c.topic] ??= []).push(hist[c.id]);
+  return new Set(Object.keys(said).filter((t) => said[t].length >= KNOWN && said[t].every((r) => r.grade === SOLO && r.box >= 1)));
+}
+const newFirst = (known) => (a, b) => known.has(a.topic) - known.has(b.topic) || easyFirst(a, b);
+
+// Free practice and the Collocation Drill: a set of cards in the order that helps most — wrong last time, due
+// (longest overdue first), new (as in the daily session), then the rest, longest ago first. Cards kept for the
+// weekly first-sight check stay unseen.
+export function byNeed(pool, hist, day) {
+  const rec = (c) => hist[c.id], by = (k) => (a, b) => rec(a)[k].localeCompare(rec(b)[k]);
+  return [...new Set([
+    ...pool.filter((c) => rec(c)?.box === 0).sort(by('last')),
+    ...pool.filter((c) => rec(c)?.due <= day).sort(by('due')),
+    ...pool.filter((c) => !rec(c) && !(c.held && c.kind in CHECK)).sort(newFirst(knownTopics(pool, hist))),
+    ...pool.filter(rec).sort(by('last')),
+  ])];
+}
+
 // Questions that can be answered without hesitation, not just once: what unlocks impromptu Q&A.
 const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id]?.box >= 2 && hist[c.id].grade === SOLO).length;
 
@@ -105,7 +128,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const due = (c) => rec(c)?.due <= day;
   const sore = (c) => rec(c)?.box === 0;
   const idle = (c) => rec(c) && !due(c) && rec(c).last < day;
-  const stage = stageOf(items, hist), weak = weakTopics(items, hist);
+  const stage = stageOf(items, hist), weak = weakTopics(items, hist), known = knownTopics(items, hist);
   const share = mix(days, items, day), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
   const rest = minutes - Object.entries(fixed).reduce((s, [k, n]) => s + (n * SECONDS[k]) / 60, 0); // the 15:10:5 split covers what they leave
   const unlocked = fluent(items, hist) >= UNLOCK;
@@ -126,7 +149,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     const ready = pool.every((c) => !(c.topic in stage) || stage[c.topic] >= 1) && n - reviews.length - focus.length - open.length >= 2;
     const untouched = [...new Set(fresh.filter((c) => !(c.topic in stage)).map((c) => c.topic))].slice(0, n > 6 ? 2 : 1);
     const added = {
-      grammar: [...fresh].sort(easyFirst),
+      grammar: [...fresh].sort(newFirst(known)),
       pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, 1 + BLOCK)) : [])],
       qa: [...fresh].sort(easyFirst),
       reply: [...fresh].sort(easyFirst),
@@ -196,6 +219,7 @@ export function overview(items, hist, day) {
   return {
     due: items.filter((c) => hist[c.id]?.due <= day).length,
     weak: weakTopics(of('grammar'), hist),
+    known: [...knownTopics(items, hist)],
     frames: [0, 1, 2].map((s) => frames.filter((t) => stage[t] === s).length),
     framesTotal: frames.length,
     ...Object.fromEntries(['qa', 'reply'].map((k) => [k, [0, 1, 2].map((l) => of(k).filter((c) => hist[c.id] && Math.min(2, hist[c.id].box) === l).length)])),

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded } from '../core.js';
-import { MISS, HINT, SLOW, SOLO, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, quick, graded, overview, weekly } from '../plan.js';
+import { MISS, HINT, SLOW, SOLO, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, quick, graded, overview, weekly, knownTopics, byNeed } from '../plan.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const byId = new Map(items.map((c) => [c.id, c]));
@@ -136,6 +136,28 @@ test('a weak topic with no unseen sentences left gets only its misses back; the 
   const queue = plan(hist, {}, next), bes = queue.filter((s) => byId.get(s.id).topic === 'b-be');
   assert.deepEqual(bes.map((s) => s.id).sort(), be.filter((_, i) => !(i % 2)).map((c) => c.id).sort(), 'only the misses');
   assert.ok(new Set(queue.filter((s) => s.phase === 'grammar').map((s) => byId.get(s.id).topic)).size >= 10);
+});
+
+test('a grammar topic said quickly three times is known: its new cards wait, and one miss brings it back', () => {
+  const day = '2026-11-13', next = '2026-11-14', said = (g) => (id) => [id, review(undefined, { grade: g }, day)];
+  const hist = Object.fromEntries(['b-be-001', 'b-be-002', 'b-be-003', 'b-neg-001', 'b-neg-002'].map(said(SOLO)));
+  assert.deepEqual([...knownTopics(items, hist)], ['b-be'], 'two quick answers are not enough');
+  const fresh = plan(hist, {}, next).filter((s) => s.phase === 'grammar' && !hist[s.id]).map((s) => byId.get(s.id).topic);
+  assert.ok(fresh.length && !fresh.includes('b-be'), 'its new cards wait while the others go on');
+  assert.deepEqual(overview(items, hist, next).known, ['b-be']);
+  assert.equal(knownTopics(items, { ...hist, 'b-be-002': review(hist['b-be-002'], { grade: MISS }, next) }).size, 0, 'a miss and it is back');
+  assert.equal(knownTopics(items, { ...hist, 'b-be-002': review(undefined, { grade: SLOW }, day) }).size, 0, 'slow is not known');
+});
+
+test('free practice of grammar: Lv1 and Lv2 together, wrong first, then due, then new as in the daily session', () => {
+  const grammar = items.filter((c) => c.kind === 'grammar'), day = '2026-11-13';
+  const hist = { 'b-be-001': review(undefined, { grade: MISS }, day), ...Object.fromEntries(['b-neg-001', 'b-neg-002', 'b-neg-003'].map((id) => [id, review(undefined, { grade: SOLO }, day)])) };
+  const order = byNeed(grammar, hist, '2026-11-14');
+  assert.equal(order[0].id, 'b-be-001');
+  assert.deepEqual(new Set(order.slice(1, 26).map((c) => c.level)), new Set([1, 2]), 'both levels, mixed');
+  const fresh = order.filter((c) => !hist[c.id]);
+  assert.ok(fresh.slice(-15).every((c) => c.topic === 'b-neg') && fresh.filter((c) => c.topic === 'b-neg').length === 15, 'new cards of a known topic come last');
+  assert.ok(!order.some((c) => c.held), 'the weekly check keeps its unseen cards');
 });
 
 test('sentence frames fade their support: frame shown → half hidden → none', () => {

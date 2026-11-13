@@ -2,8 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded } from '../core.js';
-import { MISS, HINT, SLOW, SOLO, planSession, requeue } from '../plan.js';
-import { PREPS, example, accepted, blank, options, heard, practise, hints, siblings, drill, progress, stepOf } from '../colloc.js';
+import { MISS, HINT, SLOW, SOLO, planSession, requeue, byNeed } from '../plan.js';
+import { PREPS, example, accepted, blank, options, heard, practise, hints, siblings, progress, stepOf } from '../colloc.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const pairs = items.filter((c) => c.kind === 'colloc');
@@ -127,19 +127,20 @@ test('a month of practice moves pairs through the steps without dropping the oth
   assert.ok(p[1] + p[2] >= 5, 'and new ones still coming');
 });
 
-test('drill: every pair — due ones first, then new ones (easy first), then the rest', () => {
+test('drill: every pair — wrong last time, then due, then new ones (easy first), then the rest', () => {
   const a = pair('afraid of'), b = pair('good at'), c = pair('bored with');
   const hist = {
     [a.id]: practise(undefined, { grade: MISS }, addDays(T, -2)),
     [b.id]: practise(undefined, { grade: SOLO }, T),
     [c.id]: practise(undefined, { grade: SOLO }, addDays(T, -3)),
   };
-  const today = drill(items, hist, T);
-  assert.deepEqual(today.slice(0, 2).map((x) => x.id), [c.id, a.id], 'due ones first, longest overdue first');
+  const today = byNeed(pairs, hist, T), wrongToday = byNeed(pairs, { ...hist, [b.id]: practise(hist[b.id], { grade: MISS }, T) }, T);
+  assert.deepEqual(today.slice(0, 2).map((x) => x.id), [a.id, c.id], 'wrong last time first, then due');
+  assert.equal(wrongToday[1].id, b.id, 'a pair missed a moment ago is up front for the next sitting too');
   assert.equal(today.length, pairs.length);
   assert.equal(today.at(-1).id, b.id, 'practiced today: last');
   assert.equal(today[2].difficulty, 1, 'then new pairs, easy first');
-  assert.equal(drill(items, {}, T).length, pairs.length);
+  assert.equal(byNeed(pairs, {}, T).length, pairs.length);
 });
 
 test('progress counts pairs per step, overall and per preposition', () => {

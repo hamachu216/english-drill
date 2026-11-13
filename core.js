@@ -67,10 +67,10 @@ export function shuffle(xs, rand = Math.random) {
 }
 
 // Misses are retried (reshuffled) until none remain; otherwise the next ROUND cards from the pool,
-// which is refilled with a fresh shuffle of `all` once used up.
+// which is refilled from `all` (already in the order to practice) once used up.
 export function nextRound(misses, pool, all, rand) {
   if (misses.length) return { cards: shuffle(misses, rand), pool, retry: true };
-  const p = pool.length ? pool : shuffle(all, rand);
+  const p = pool.length ? pool : all;
   return { cards: p.slice(0, ROUND), pool: p.slice(ROUND), retry: false };
 }
 

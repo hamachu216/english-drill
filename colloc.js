@@ -7,7 +7,7 @@
 //   step 3 (say)     say the whole sentence from Japanese → the usual review boxes (7, 14, 30, 60 days)
 // A wrong answer at any step brings the pair back tomorrow.
 import { shuffle, addDays, skeleton } from './core.js';
-import { SLOW, review, easyFirst } from './plan.js';
+import { SLOW, review } from './plan.js';
 
 export const PREPS = ['about', 'at', 'by', 'for', 'from', 'in', 'of', 'to', 'with'];
 export const STEPS = ['', '選ぶ', '思い出す', '文で言う'];
@@ -57,16 +57,6 @@ export const hints = (c, step, ex) =>
 
 // Other pairs with the same adjective: "happy about（…）/ happy with（…）", for telling them apart.
 export const siblings = (c, items) => items.filter((x) => x.kind === 'colloc' && x.adj === c.adj && x !== c);
-
-// The Collocation Drill: every pair, in the order that helps most — due first (longest overdue), then new pairs
-// (easy first), then the rest by how long ago they were practiced.
-export function drill(items, hist, day) {
-  const all = items.filter((c) => c.kind === 'colloc').sort(easyFirst), rec = (c) => hist[c.id];
-  const by = (k) => (a, b) => rec(a)[k].localeCompare(rec(b)[k]);
-  const due = all.filter((c) => rec(c)?.due <= day).sort(by('due'));
-  const rest = all.filter((c) => rec(c) && !(rec(c).due <= day)).sort(by('last'));
-  return [...due, ...all.filter((c) => !rec(c)), ...rest];
-}
 
 // How far the pairs have come: [not started, step 1, step 2, step 3, settled (step 3, next review a week or more away)],
 // in total and per preposition.
