@@ -21,8 +21,6 @@ python3 -m http.server 8931 --bind 127.0.0.1       # ローカル確認（fetch(
 gh api repos/hamachu216/english-drill/pages/builds/latest --jq '.status+" "+.commit'   # デプロイ状況
 ```
 
-このマシンではポート 8765/8766 が使用中のことが多い。`scc` は未導入（Xcode のライセンス未同意で Homebrew が使えない）ため、行数は `grep -cvE '^\s*($|//)' file` で数える。
-
 ## アーキテクチャ
 
 ### システム構成
@@ -193,4 +191,4 @@ iPhone の Safari は7日間開かないサイトの記録を消すが、ホー�
 - **テーマ**: 色は `:root` の CSS カスタムプロパティで定義する。ダークモードは `@media (prefers-color-scheme: dark) :root:not([data-theme="light"])` と `:root[data-theme="dark"]` の2か所で再定義しているので、両方を必ず揃えること。レベルごとのアクセント色は `--lv1`〜`--lv5` で、`--lv` 経由で適用する。
 - **問題文**: 必ずオリジナルで書く（例外は上の `replies.json` の定型句だけ）。`refs` に載せた参考サイトは分野構成の参考にしただけで、文をコピーしてはいけない。リポジトリは public なので、カードに利用者の実名や所属、実際の研究内容・結果を入れないこと（構文とQ&Aの例は架空の研究で、型を使い回す練習用）。
 - **CSP（セキュリティ）**: リポジトリは public で、`main` がそのまま本番になる。`index.html` 先頭の `<meta>` CSP は `default-src 'none'` で、自サイトの読み込みと Trusted Types（`require-trusted-types-for 'script'`）だけを許可している。外部の CDN・フォント・インラインコード・`innerHTML` を足すと動かなくなる（`test/security.test.js` でも検査している）。Service Worker の登録だけは `sw` ポリシーを通す。フォントは端末のもの（Apple 端末ではヒラギノ丸ゴ）を使い、Google Fonts は外部への通信をなくすためにやめた。`main` はルールセット `protect-main` で force push と削除を禁止している。コミットのメールアドレスは GitHub の noreply アドレスにする。
-- **ヘッドレス確認**: Chrome 拡張は使えないことが多い。セッションのスクラッチパッドに `playwright-core` を入れ、`executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'` で起動する。このリポジトリには入れないこと。
+- **ヘッドレス確認**: 画面の確認は `playwright-core` でローカルの Chrome を動かして行う。依存パッケージを持たない方針なので、`playwright-core` はこのリポジトリに入れず、作業用の一時フォルダに入れること。
