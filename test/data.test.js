@@ -47,7 +47,7 @@ test('questions: an English question with its meaning, an answer frame, keywords
 
 // The stock phrases of the Wordvice handout on research Q&A (typos fixed: rationale, identify; where the handout is
 // blunt — "Please speak slowly and clearly.", "I'd rather discuss …" — the cards use politer wording). Each is the answer
-// (or the question) of a card that is not held back, so every one of them comes up in the daily practice.
+// of a card that is not held back, so every one of them comes up in the daily practice.
 const HANDOUT = [
   "I didn't catch all of that.", 'repeat your question', "I'm afraid I don't understand.",
   'Could you please rephrase the question?', "I don't quite understand.", 'Are you asking about', 'Are you referring to', 'Do you mean',
@@ -71,23 +71,16 @@ const HANDOUT = [
   'We need more information to answer this question.', 'Our conclusions are limited to this area of research.',
   'As I mentioned earlier,', "Let's look at this slide again.", 'Yes. Looking at slide', "Let's take a look at this figure again.",
   'As you can see in this', 'Let me explain this figure again.',
-  // questions
-  'Have you used this approach?', 'Why did you use this method of analysis?', 'What limitations to the study did you identify?',
-  'Could you elaborate on the results of', 'What are the implications of these findings?',
-  'Could this study impact any other related areas of research?', 'Could you repeat what methods of analysis you used?',
-  'Are the data in Figure 4 representative of all sample groups?', 'What is being measured in Table 2.2?',
-  'When is the latest version of this study going to be published?', 'Were all sample groups in the study in the same cohort?',
-  'What about the data collected between',
 ];
 
-test('Q&A handling: every phrase of the handout is practiced, each question with the situation it answers', () => {
+test('Q&A handling: every phrase of the handout is practiced, each with the situation it answers', () => {
   assert.equal(replies.kind, 'reply');
   const handling = replies.decks;
   for (const d of handling) {
     assert.ok(d.refs.some((r) => r.url.includes('wordvice')) && d.cards.length >= 6, d.id);
-    for (const c of d.cards) assert.ok(c.scene?.trim() && c.q.endsWith('?') && c.frame.includes('...') && /[。？]$/.test(c.ja), c.id);
+    for (const c of d.cards) assert.ok(c.scene?.trim() && !('q' in c) && c.frame.includes('...') && /[。？]$/.test(c.ja), c.id);
   }
-  const asked = handling.flatMap((d) => d.cards.slice(0, -2)).flatMap((c) => [c.q, c.en]);
+  const asked = handling.flatMap((d) => d.cards.slice(0, -2)).map((c) => c.en);
   for (const p of HANDOUT) assert.ok(asked.some((t) => t.includes(p)), p);
 });
 
