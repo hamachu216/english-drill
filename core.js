@@ -8,8 +8,9 @@ export const addDays = (day, n) => {
   return d.toISOString().slice(0, 10);
 };
 
-// Research-English sentence frames, research Q&A and adjective + preposition pairs: same deck shape as a level file, tagged with a `kind`.
-export const DRILLS = ['data/patterns.json', 'data/qa.json', 'data/collocations.json'];
+// Research-English sentence frames, research Q&A, adjective + preposition pairs and the first words of a Q&A reply:
+// same deck shape as a level file, tagged with a `kind`.
+export const DRILLS = ['data/patterns.json', 'data/qa.json', 'data/collocations.json', 'data/replies.json'];
 
 // Every card of every file, tagged with what the rest needs: its kind, its topic (deck id), the deck itself,
 // and whether it is held back for the weekly first-sight check (the last HOLD cards of each deck; none for collocations,

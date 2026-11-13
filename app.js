@@ -37,7 +37,7 @@ const el = (tag, props, ...kids) => { const n = Object.assign(document.createEle
 const LEVEL_ICONS = ['📘', '🚀', '💬', '🎤', '🎓'];
 const PHASE = {
   review: ['🔁', '前回の苦手を復習'], grammar: ['📘', '基礎文法'], colloc: ['🔗', '形容詞＋前置詞'], pattern: ['🧩', '研究英語の構文'],
-  qa: ['💬', 'Research Q&A'], impromptu: ['⚡', '即興 Q&A'], check: ['📝', '週1回の初見チェック'],
+  reply: ['🗣', '質疑応答の切り返し'], qa: ['💬', 'Research Q&A'], impromptu: ['⚡', '即興 Q&A'], check: ['📝', '週1回の初見チェック'],
 };
 const QA_LEVEL = ['Beginner', 'Intermediate', 'Advanced'];
 
@@ -60,7 +60,7 @@ const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, [icon, name]]
     el('span', { className: 'pill', textContent: `${asked.length}問` }))] : [];
 });
 
-const pairCount = cards.filter((c) => c.kind === 'colloc').length;
+const pairCount = cards.filter((c) => c.kind === 'colloc').length, replyCount = cards.filter((c) => c.kind === 'reply').length;
 const stepLine = ([, s1, s2, s3, done]) => `Step1 ${s1} ・ Step2 ${s2} ・ Step3 ${s3} ・ 定着 ${done}`;
 const tenths = ([n = 0, slow = 0, solo = 0] = []) => (n < 5 ? '—' : `${Math.round(((slow + solo) / n) * 10)}割`);
 const mean = ([sum, n] = []) => (n ? `${Math.round(sum / n)}秒` : '—');
@@ -90,6 +90,7 @@ function renderHome() {
     ...pair('復習待ち', `${o.due}問`),
     ...pair('苦手な文法', o.weak.length ? o.weak.slice(0, 3).map((t) => topicTitle[t]).join('・') : 'いまはありません'),
     ...pair('研究英語の構文', `型なしで言える ${o.frames[2]} ・ 練習中 ${o.frames[0] + o.frames[1]} ／ 全${o.framesTotal}`),
+    ...pair('質疑応答の切り返し', `${QA_LEVEL.map((name, i) => `${name} ${o.reply[i]}`).join(' ・ ')} ／ 全${replyCount}`),
     ...pair('Research Q&A', QA_LEVEL.map((name, i) => `${name} ${o.qa[i]}`).join(' ・ ')),
     ...pair('即興 Q&A', o.unlock ? `別の日にもすぐ答えられた質問が、あと${o.unlock}問たまると始まります` : '毎日のメニューに入っています'),
     ...pair('形容詞＋前置詞', `${stepLine(pr.all)} ／ 全${pairCount}`));
@@ -152,7 +153,7 @@ const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const pop = (node) => calm || node.animate([{ opacity: 0, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
 const persist = () => run.free || save({ session: run });
 const elapsed = () => (Date.now() - now.at) / 1000;
-const isTalk = () => now.cur.kind === 'qa';
+const isTalk = () => now.cur.q != null; // a question to answer: research Q&A or a Q&A reply
 // Advanced questions start with a "start speaking" tap, which is what measures the time to start answering.
 const mustStart = () => isTalk() && now.step.level === 2 && !now.step.retry;
 const hintRow = ([label, text]) => pair(label, text);
@@ -201,6 +202,7 @@ function showStep() {
   $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : pairStep ? (pairStep < 3 ? blank(cur, ex) : ex.ja) : cur.ja;
   $('sub').textContent = step.intro ? cur.deck.ja
     : pairStep ? (pairStep < 3 ? ex.ja : '形容詞＋前置詞を使って、英文全体を声に出そう')
+    : now.ask.scene ? `場面：${now.ask.scene}` // a Q&A-handling question: the right answer depends on the situation
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'

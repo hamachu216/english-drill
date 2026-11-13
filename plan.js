@@ -11,13 +11,14 @@ export const MISS = 0, HINT = 1, SLOW = 2, SOLO = 3;
 export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, slow: SLOW, solo: SOLO };
 
 const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
-const KINDS = ['grammar', 'colloc', 'pattern', 'qa'];
-const SECONDS = { grammar: 35, colloc: 30, pattern: 45, qa: 90 }; // rough cost of one card: turns minutes into card counts
-const COLLOC = 6; // one adjective + preposition pair per this many minutes (5 in a 30-minute session), outside the split
+const KINDS = ['grammar', 'colloc', 'pattern', 'reply', 'qa'];
+const SECONDS = { grammar: 35, colloc: 30, pattern: 45, reply: 30, qa: 90 }; // rough cost of one card: turns minutes into card counts
+// Short kinds outside the split, one card per this many minutes: 5 adjective + preposition pairs and 6 Q&A replies in 30 minutes.
+const EVERY = { colloc: 6, reply: 5 };
 const NEUTRAL = 0.65; // fluency at which the split is the default 15 : 10 : 5 minutes
 const BLOCK = 4; // sentences drilled on the day a frame is introduced
 const UNLOCK = 6; // questions answered without hesitation on a second day or later, before impromptu Q&A starts
-const CHECK = { grammar: 3, pattern: 2, qa: 1 }; // weekly first-sight check
+const CHECK = { grammar: 3, pattern: 2, reply: 1, qa: 1 }; // weekly first-sight check
 const WEEK = 7;
 const SLOW_BOX = 2; // slow answers alone get a card this far
 
@@ -92,19 +93,19 @@ const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id
 // then new cards, then — when nothing is left — the cards practiced longest ago. Unless the review pile is
 // more than two sessions deep, a quarter of each kind is kept for new cards, so there is progress every day.
 // Every kind gets at least one card, so research English is touched no matter how grammar is going.
-// Order: cards failed last time → grammar → adjective + preposition → sentence frames → Q&A → (weekly) first-sight check.
+// Order: cards failed last time → grammar → adjective + preposition → sentence frames → Q&A replies → Q&A → (weekly) first-sight check.
 export function planSession({ items, hist, days, day, minutes, rand = Math.random }) {
   const rec = (c) => hist[c.id];
   const due = (c) => rec(c)?.due <= day;
   const sore = (c) => rec(c)?.box === 0;
   const idle = (c) => rec(c) && !due(c) && rec(c).last < day;
   const stage = stageOf(items, hist), weak = weakTopics(items, hist);
-  const share = mix(days, items, day), pairs = Math.max(1, Math.round(minutes / COLLOC));
-  const rest = minutes - (pairs * SECONDS.colloc) / 60; // the 15:10:5 split covers what the pairs leave
+  const share = mix(days, items, day), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
+  const rest = minutes - Object.entries(fixed).reduce((s, [k, n]) => s + (n * SECONDS[k]) / 60, 0); // the 15:10:5 split covers what they leave
   const unlocked = fluent(items, hist) >= UNLOCK;
 
   const pick = (kind) => {
-    const pool = items.filter((c) => c.kind === kind), n = kind === 'colloc' ? pairs : Math.max(1, Math.round((rest * 60 * share[kind]) / SECONDS[kind]));
+    const pool = items.filter((c) => c.kind === kind), n = fixed[kind] ?? Math.max(1, Math.round((rest * 60 * share[kind]) / SECONDS[kind]));
     const fresh = pool.filter((c) => !rec(c) && !c.held);
     const pile = pool.filter(due).sort((a, b) => rec(a).box - rec(b).box || rec(a).due.localeCompare(rec(b).due));
     const quota = pile.length < 2 * n ? Math.min(n, Math.max(kind === 'pattern' ? 2 : 1, Math.ceil(n / 4))) : 0;
@@ -121,6 +122,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
       grammar: fresh,
       pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, BLOCK)) : [])],
       qa: [...fresh].sort(easyFirst),
+      reply: [...fresh].sort(easyFirst),
       colloc: [...fresh].sort(easyFirst),
     }[kind];
     return [...new Set([...reviews, ...focus, ...added, ...pile, ...rested])].slice(0, n);
@@ -128,7 +130,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
 
   const chosen = Object.fromEntries(KINDS.map((k) => [k, pick(k)]));
   const old = (k) => shuffle(chosen[k].filter((c) => rec(c) && !sore(c)), rand), added = (k) => chosen[k].filter((c) => !rec(c));
-  const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : c.kind === 'qa' ? Math.min(2, rec(c)?.box ?? 0) : undefined);
+  const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : c.q ? Math.min(2, rec(c)?.box ?? 0) : undefined);
   const step = (phase) => (c) => ({ id: c.id, phase, level: level(c) });
 
   const talk = [...old('qa'), ...added('qa')];
@@ -145,6 +147,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     ...[...old('colloc'), ...added('colloc')].map(step('colloc')),
     ...old('pattern').map(step('pattern')),
     ...added('pattern').flatMap((c, i, a) => [...(c.topic in stage || a[i - 1]?.topic === c.topic ? [] : [{ id: c.id, phase: 'pattern', intro: true }]), step('pattern')(c)]),
+    ...[...old('reply'), ...added('reply')].map(step('reply')),
     ...talk.flatMap((c) => (wild.includes(c)
       ? [{ id: c.id, phase: 'impromptu', level: 2 }, { id: c.id, phase: 'impromptu', level: 2, follow: Math.floor(rand() * c.deck.follow.length) }]
       : [step('qa')(c)])),
@@ -156,7 +159,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
 export function requeue(queue, i, grade, kind) {
   const s = queue[i];
   if (grade >= SLOW || s.retry || s.check || s.follow != null) return queue;
-  const at = Math.min(queue.length, i + (kind === 'qa' ? 1 : 4));
+  const at = Math.min(queue.length, i + (kind === 'qa' || kind === 'reply' ? 1 : 4));
   return [...queue.slice(0, at), { ...s, retry: true }, ...queue.slice(at)];
 }
 
@@ -168,7 +171,7 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
   const f = c.deck.follow?.[follow];
   const [ladder, shown] =
     f ? [[['答え方の型', f.frame], ['質問の意味', f.ja]], 0]
-    : c.kind === 'qa' ? [[['キーワード', c.keys.join(' / ')], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
+    : c.q ? [[['キーワード', c.keys.join(' / ')], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
     : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['頭文字', skeleton(c.en)]], retry || level < 2 ? 1 : 0]
     : [[['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], 0];
   return check ? { shown: [], hints: [] } : { shown: ladder.slice(0, shown), hints: ladder.slice(shown) };
@@ -187,7 +190,7 @@ export function overview(items, hist, day) {
     weak: weakTopics(of('grammar'), hist),
     frames: [0, 1, 2].map((s) => frames.filter((t) => stage[t] === s).length),
     framesTotal: frames.length,
-    qa: [0, 1, 2].map((l) => of('qa').filter((c) => hist[c.id] && Math.min(2, hist[c.id].box) === l).length),
+    ...Object.fromEntries(['qa', 'reply'].map((k) => [k, [0, 1, 2].map((l) => of(k).filter((c) => hist[c.id] && Math.min(2, hist[c.id].box) === l).length)])),
     unlock: Math.max(0, UNLOCK - fluent(items, hist)),
   };
 }

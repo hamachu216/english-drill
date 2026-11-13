@@ -59,9 +59,9 @@ test('review: answering again the same day never moves the due date forward or r
 
 test('first use: about 30 minutes with grammar, 5 adjective + preposition pairs, new sentence frames and Beginner Q&A, in that order', () => {
   const queue = plan(), n = kinds(queue);
-  assert.ok(n.grammar >= 20 && n.pattern >= 6 && n.qa >= 3 && n.colloc === 5, JSON.stringify(n));
+  assert.ok(n.grammar >= 20 && n.pattern >= 6 && n.qa >= 3 && n.colloc === 5 && n.reply === 6, JSON.stringify(n));
   assert.ok(n.grammar > n.pattern && n.pattern > n.qa);
-  assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'colloc', 'pattern', 'qa'], 'no review, impromptu or check on day one');
+  assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'colloc', 'pattern', 'reply', 'qa'], 'no review, impromptu or check on day one');
   assert.ok(queue.filter((s) => byId.get(s.id).kind === 'grammar').every((s) => byId.get(s.id).level === 1), 'grammar starts at Lv1');
   const frames = queue.filter((s) => s.phase === 'pattern');
   assert.ok(frames[0].intro, 'a frame is explained before it is used');
@@ -75,7 +75,7 @@ test('first use: about 30 minutes with grammar, 5 adjective + preposition pairs,
 
 test('the 10-minute session is shorter and still has both grammar and research English', () => {
   const short = kinds(plan({}, {}, T, 10)), full = kinds(plan());
-  assert.ok(short.grammar < full.grammar && short.grammar >= 5 && short.pattern >= 2 && short.qa >= 1 && short.colloc >= 1, JSON.stringify(short));
+  assert.ok(short.grammar < full.grammar && short.grammar >= 5 && short.pattern >= 2 && short.qa >= 1 && short.colloc >= 1 && short.reply >= 1, JSON.stringify(short));
 });
 
 test('shares: 15/10/5 by default; weak grammar gets more time, solid grammar gives it to research English', () => {
@@ -190,7 +190,7 @@ test('weekly check: after a week, a few never-seen cards from every kind, with n
   const { hist, days, sessions, next } = practice(7, () => SOLO);
   assert.ok(sessions.flat().every((s) => !s.check), 'not in the first week');
   const queue = plan(hist, days, next), check = queue.filter((s) => s.check);
-  assert.deepEqual(kinds(check), { grammar: 3, pattern: 2, qa: 1 });
+  assert.deepEqual(kinds(check), { grammar: 3, pattern: 2, reply: 1, qa: 1 });
   assert.ok(check.every((s) => !hist[s.id] && byId.get(s.id).held));
   assert.deepEqual(queue.slice(-check.length), check, 'at the end of the session');
   assert.deepEqual(scaffold(byId.get(check[0].id), check[0]), { shown: [], hints: [] });
