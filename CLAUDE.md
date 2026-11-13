@@ -93,7 +93,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 | `colloc.js` | 形容詞＋前置詞: `example`、`hints`、`siblings`、`progress` |
 | `app.js` | DOM と状態のすべて。`<script type="module">` 1つで、トップレベル `await` で全データを fetch する。DOM は `el(tag, props, ...kids)` で組み立て、HTML 文字列は使わない |
 | `sw.js` | Service Worker（ネットワーク優先。下の「ハマりどころ」参照） |
-| `manifest.webmanifest`、`icon*` | ホーム画面に追加したときのアプリ情報 |
+| `manifest.webmanifest`、`icons/` | ホーム画面に追加したときのアプリ情報 |
 | `test/*.test.js` | `core`・`plan`・`colloc` の単体テスト、データの検査（`data`）、CSP の検査（`security`） |
 
 ### データ（`data/`）
@@ -102,7 +102,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 
 | ファイル | kind | 量 | カードの形 | 使われ方 |
 |---|---|---|---|---|
-| `1-basic.json`・`2-advanced.json` | `grammar` | 25トピック・472問 | `{id, ja, en, note?, rare?}`。デッキに文法の1行解説 `note`（必須）。`rare: true` は研究の場ではまず使わない形（if only・倒置など）で、今日の練習には出さず自由練習だけで出す（`app.js` の `daily`） | 今日の練習・自由練習 |
+| `1-basic.json`・`2-advanced.json` | `grammar` | 25トピック・453問 | `{id, ja, en, note?}`。デッキに文法の1行解説 `note`（必須）。研究の場ではまず使わない形（if only・倒置・文学的な分詞構文など）は入れない | 今日の練習・自由練習 |
 | `3-discussion.json`〜`5-defense.json` | `phrase` | 30トピック・360問 | 同上 | 自由練習のみ |
 | `patterns.json` | `pattern` | 24の型・192文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
 | `replies.json` | `reply` | 7場面・63問 | `{id, scene, q, ja, frame, en}`。決まった返し方を日本語（`ja`）から言う。`scene` は場面、`q` は相手の質問で、どちらも出題時に表示する（答えるのは質問の中身ではなく `en` のひと言） | 今日の練習 |

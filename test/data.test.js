@@ -27,11 +27,6 @@ test('the daily grammar decks (Lv1–2) each explain their grammar in one line',
   for (const d of levels.slice(0, 2).flatMap((f) => f.decks)) assert.ok(d.note?.trim(), d.id);
 });
 
-test('rare marks a grammar card for free practice only, and no deck is emptied out of the daily session', () => {
-  for (const f of files) for (const d of f.decks) for (const c of d.cards) assert.ok(c.rare === undefined || (c.rare === true && f.level <= 2), c.id);
-  for (const d of levels.slice(0, 2).flatMap((f) => f.decks)) assert.ok(d.cards.filter((c) => !c.rare).length >= 5, d.id);
-});
-
 test('sentence frames: every card reuses its frame with different content', () => {
   assert.equal(patterns.kind, 'pattern');
   for (const d of patterns.decks) {

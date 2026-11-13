@@ -45,9 +45,7 @@ const QA_LEVEL = ['Beginner', 'Intermediate', 'Advanced'];
 const session = () => (state.session?.day === today() && state.session.queue.every((s) => byId.has(s.id)) ? state.session : null);
 const left = (s) => s.queue.length - s.idx;
 // Seeded by the date, so the menu shown on the home screen is exactly the session that starts.
-// Cards marked rare (forms a research talk hardly needs) are left to free practice.
-const daily = cards.filter((c) => !c.rare);
-const plan = (minutes, salt = '') => planSession({ items: daily, hist: state.hist, days: state.days, day: today(), minutes, rand: seeded(today() + salt) });
+const plan = (minutes, salt = '') => planSession({ items: cards, hist: state.hist, days: state.days, day: today(), minutes, rand: seeded(today() + salt) });
 const fresh = (minutes, salt) => ({ day: today(), queue: plan(minutes, salt), idx: 0, grades: [] });
 
 const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, [icon, name]]) => {
