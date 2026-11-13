@@ -207,11 +207,11 @@ test('a grammar card retried in the session shows its grammar and its opening up
   assert.deepEqual(scaffold(c, {}).shown, []);
 });
 
-test('Q&A reply: dictation — nothing shown up front, the meaning then the first letters as hints', () => {
+test('Q&A reply: dictation — nothing shown up front, the first letters and word lengths as the hint', () => {
   const r = items.find((c) => c.id === 'r-hear-001'), queue = plan();
   assert.deepEqual(scaffold(r, {}).shown, []);
-  assert.deepEqual(scaffold(r, {}).hints, [['意味', r.ja], ['頭文字', skeleton(r.en)]]);
-  assert.deepEqual(scaffold(r, { retry: true }).shown.map(([label]) => label), ['意味'], 'a retry shows the meaning');
+  assert.deepEqual(scaffold(r, {}).hints, [['頭文字', skeleton(r.en)]]);
+  assert.deepEqual(scaffold(r, { retry: true }).shown.map(([label]) => label), ['頭文字'], 'a retry shows them up front');
   assert.ok(queue.filter((s) => s.phase === 'reply').every((s) => s.level === undefined), 'no Beginner / Advanced ladder');
   const i = queue.findIndex((s) => s.phase === 'reply');
   assert.equal(requeue(queue, i, MISS, 'reply').findIndex((s, j) => j > i && s.retry), i + 4, 'a missed phrase comes back a few cards later, not straight away');

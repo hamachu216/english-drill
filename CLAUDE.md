@@ -105,7 +105,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 | `1-basic.json`・`2-advanced.json` | `grammar` | 25トピック・453問 | `{id, ja, en, note?}`。デッキに文法の1行解説 `note`（必須）。研究の場ではまず使わない形（if only・倒置・文学的な分詞構文など）は入れない | 今日の練習・自由練習 |
 | `3-discussion.json`〜`5-defense.json` | `phrase` | 30トピック・360問 | 同上 | 自由練習のみ |
 | `patterns.json` | `pattern` | 24の型・192文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
-| `replies.json` | `reply` | 7場面・63問 | `{id, scene, ja, frame, en}`。決まった返し方（`en`）を読み上げで聞いて書き取る（ディクテーション）。`scene`（場面）を問題文として表示する。`ja` は1つ目のヒント、`frame` は答えの後に「答え方の型」として出す | 今日の練習 |
+| `replies.json` | `reply` | 7場面・63問 | `{id, scene, ja, frame, en}`。決まった返し方（`en`）を読み上げで聞いて書き取る（ディクテーション）。`ja`（意味）を問題文に、`scene`（場面）をその下に表示する。ヒントは英文の頭文字と語の長さ（`skeleton`）だけ。`frame` は答えの後に「答え方の型」として出す | 今日の練習 |
 | `qa.json` | `qa` | 10話題・70問 | `{id, q, ja, frame, keys, en, more}`（英語の質問・意味・答え方の型・キーワード・1文の回答例・続き）。デッキの `follow:[{q, ja, frame, en}]` は即興Q&Aの追加質問 | 今日の練習 |
 | `collocations.json` | `colloc` | 96組・例文288 | `{id, adj, prep, collocation, ja, difficulty, note, examples:[{id, scene, en, ja, also?}]}`。デッキ＝前置詞（デッキ名が答えなので出題中は表示しない） | Phrase Drill のみ |
 | `backchannels.json` | `backchannel` | 7機能・42問 | `{id, said, ja, en}`。デッキ＝相槌の機能（同意・一部同意・理解・驚き・つなぎ・反対・否定疑問への答え）で、`basic`（自分から言う言い方）・`more`（聞いて分かればよい言い方）・`note`（硬さや使い分け）を持つ。`said` は相手のひと言（表示して読み上げる）、`en` は相槌＋続きのひと言で、どれかの `basic`/`more` で始まる（テストで検証） | Phrase Drill のみ |
@@ -121,7 +121,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 |---|---|---|---|---|---|
 | `grammar` | 配分の中 | 60秒 | まだ得意でないトピックをファイル順に3つずつ（`ROTATION`）、その中で1枚目 → 2枚目 …。得意になったトピックは抜けて次が入る（Lv2 は Lv1 がほぼ得意になってから） | ヒント: 出だし → 頭文字 | `review` |
 | `pattern` | 配分の中 | 75秒 | 始めた型の続き → 全部の型を1回言えたら新しい型を1〜2個 | 型の表示 → 半分隠す → なし。ヒント: 型 → 語句 → 頭文字 | `review` |
-| `reply` | 6分に1問（30分なら5問） | 60秒 | 各場面の1枚目 → 2枚目 … | 書き取り。場面を表示し、返事を自動で読み上げる（🔊で何度でも）。ヒント: 意味 → 頭文字 | `review` |
+| `reply` | 6分に1問（30分なら5問） | 60秒 | 各場面の1枚目 → 2枚目 … | 書き取り。意味と場面を表示し、返事を自動で読み上げる（🔊で何度でも）。ヒント: 頭文字と語の長さ | `review` |
 | `qa` | 配分の中 | 120秒 | 各話題の1枚目 → 2枚目 … | Beginner（キーワード＋型）→ Intermediate（キーワード、45秒のゆるいバー）→ Advanced（質問のみ） | `review` |
 
 - **順番**: 前回言えなかったカード（phase `review`）→ 基礎文法 → 構文 → 切り返し → Q&A（→ 即興Q&A）→ 週1回の初見チェック。

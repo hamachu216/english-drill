@@ -186,7 +186,7 @@ function showStep() {
   // An adjective + preposition pair is said in an example sentence it hasn't just had (`ex` is set for pairs only).
   const ex = cur.kind === 'colloc' ? example(cur, rec) : null;
   const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
-  // A Q&A reply is dictation: the stock phrase is read aloud and written down, with its situation as the prompt.
+  // A Q&A reply is dictation: the stock phrase is read aloud and written down, with its meaning as the prompt.
   // A backchannel answers what someone just said (`cur.said`, read aloud) with a short reaction and one more sentence.
   const dictate = cur.kind === 'reply', back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
   now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : back ? cur.said : ask.q }; // audio: what 🔊 reads
@@ -205,10 +205,10 @@ function showStep() {
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
-  $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : dictate ? cur.scene : back ? cur.said : (ex ?? cur).ja;
+  $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : back ? cur.said : (ex ?? cur).ja;
   $('sub').textContent = step.intro ? `${cur.deck.ja}　例文を聞いて、まねして声に出そう`
     : ex ? '形容詞＋前置詞を使って、英文全体を声に出そう'
-    : dictate ? '🔊 流れる返事を聞いて、書き取ろう'
+    : dictate ? `場面：${cur.scene}　🔊 流れる返事を聞いて、書き取ろう`
     : back ? '🔊 相手のひと言に、相槌＋ひと言で返そう'
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
