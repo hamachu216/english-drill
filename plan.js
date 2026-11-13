@@ -10,11 +10,11 @@ import { addDays, shuffle, skeleton, opening, mask, slots } from './core.js';
 export const MISS = 0, HINT = 1, SLOW = 2, SOLO = 3;
 export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, slow: SLOW, solo: SOLO };
 
-// "Said it" is split by the clock, not by the learner. Spoken: the whole answer, within the time to start plus half a
-// a second per word of the example. Typed: only the time to the first keystroke, as typing speed is not speaking speed.
+// "Said it" is split by the clock, not by the learner: the time until "answered" is pressed, against the time to start
+// plus the time to say the example (half a second a word) — or, when the answer was typed, to type it (TYPING a character).
 // Within it is solo, slower is slow (a free-practice timeout passes Infinity). A question allows more time to think.
-const START = { sentence: 6, question: 15 };
-export const quick = (model, talk, typed = false) => Math.round(START[talk ? 'question' : 'sentence'] + (typed ? 0 : 0.5 * model.split(/\s+/).length));
+const START = { sentence: 6, question: 15 }, TYPING = 0.3;
+export const quick = (model, talk, typed = 0) => Math.round(START[talk ? 'question' : 'sentence'] + (typed ? TYPING * typed : 0.5 * model.split(/\s+/).length));
 export const graded = (key, secs, model, talk, typed) => (key === 'ok' ? (secs <= quick(model, talk, typed) ? SOLO : SLOW) : GRADE[key]);
 
 const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
