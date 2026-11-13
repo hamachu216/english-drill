@@ -145,7 +145,6 @@ const refLink = ({ name, url }) => el('a', { href: url, textContent: name, targe
 const siteName = (r) => r.name.split(':')[0];
 const sites = new Map(files.flatMap((f) => f.decks.flatMap((d) => d.refs ?? [])).map((r) => [siteName(r), r.url]));
 $('refs').replaceChildren(...[...sites].map(([name, url]) => el('li', {}, refLink({ name, url }))));
-$('cd-ref').replaceChildren('収録した組み合わせの参考: ', refLink(files.find((f) => f.kind === 'colloc').decks[0].refs[0]), '（例文・訳・解説は本サイトのオリジナル）');
 
 // ---- study: one screen per step of `run.queue`.
 // A daily run is {day, queue, idx, grades} and is saved after every answer, so it survives quitting and reloading.
