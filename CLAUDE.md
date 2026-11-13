@@ -25,7 +25,46 @@ gh api repos/hamachu216/english-drill/pages/builds/latest --jq '.status+" "+.com
 
 ## アーキテクチャ
 
-### 全体の流れ
+### システム構成
+
+サーバ側に処理はない。GitHub Pages は静的ファイルを配るだけで、学習の判断・記録・画面はすべて利用者のブラウザ（クライアント）の中で完結する。
+
+```mermaid
+flowchart LR
+  subgraph Dev["開発（ローカル）"]
+    local["リポジトリ<br>node --test・ヘッドレス確認"]
+  end
+  subgraph Server["サーバ（GitHub）"]
+    repo["リポジトリ main<br>（protect-main）"] -->|Pages のビルド| pages["GitHub Pages<br>静的ファイルの配信のみ<br>max-age=600"]
+  end
+  subgraph Client["クライアント（ブラウザ / ホーム画面の PWA）"]
+    app["app.js<br>画面・状態"] <--> pure["core.js / plan.js / colloc.js<br>出題・判定・記録の純粋関数"]
+    app -->|"fetch（起動時に全データ）"| sw["Service Worker（sw.js）<br>ネットワーク優先"]
+    sw <--> cache[("Cache Storage<br>オフライン用の写し")]
+    app <--> ls[("localStorage eng:v1<br>学習の記録のすべて")]
+    app --> apis["ブラウザの API<br>読み上げ・音声認識・録音・storage.persist"]
+    app <-->|書き出し / 読み込み| file[["JSON ファイル<br>（バックアップ）"]]
+  end
+  speech["音声認識サービス<br>（ブラウザの提供元）"]
+  local -->|git push| repo
+  sw -->|"HTTPS GET<br>自サイトの静的ファイルのみ"| pages
+  apis -.->|"※ブラウザによっては音声を送る"| speech
+```
+
+| 要素 | 場所 | 役割 |
+|---|---|---|
+| GitHub リポジトリ（`main`） | サーバ | ソースとデータの正本。push するとそのまま本番になる（`protect-main` で force push・削除は禁止） |
+| GitHub Pages | サーバ | 静的ファイルを HTTPS で配るだけ（`max-age=600`）。API・DB・ログイン・アクセス解析はない |
+| Service Worker | クライアント | 自サイトのファイルを、ネットワーク優先で取得してキャッシュに写す。オフラインならキャッシュから返す |
+| `app.js` ＋ 純粋関数 | クライアント | 起動時に `data/*.json` を全部 fetch し、出題の組み立て・判定・記録の更新をすべて端末内で行う |
+| localStorage `eng:v1` | クライアント | 学習の記録のすべて（下の「保存」）。サーバには送らない |
+| ファイルの書き出し・読み込み | クライアント | 端末の移行・消えたときの復元の唯一の手段（サーバ同期はない） |
+
+- **通信**: クライアントからサーバへの通信は、自サイトの静的ファイルの GET だけ。CSP（`connect-src 'self'` ほか `default-src 'none'`）で、外部サイトへの通信・外部スクリプト・外部フォントを読み込めないようにしている。学習の記録はどこにも送信しない。
+- **※ 音声認識**: `SpeechRecognition` はブラウザの機能で、ブラウザによっては音声をブラウザの提供元（Chrome なら Google、Safari なら Apple）のサーバに送って文字起こしする。これはアプリの通信ではなくブラウザ側の仕組みで、CSP の対象外。読み上げ・録音・再生は端末内で完結する。
+- **更新**: `main` に push → Pages のビルド → 利用者が次に開いたとき、Service Worker が新しいファイルを取得して切り替わる（`controllerchange` で1回だけ再読み込み）。
+
+### クライアント内部のデータの流れ
 
 ```
 data/*.json ──catalog──▶ cards（全カード。kind・topic・deck・held 付き）
