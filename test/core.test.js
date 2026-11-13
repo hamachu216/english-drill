@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, ROUND, shuffle, nextRound, streak, calendar, timeLimit, wordDiff, flattenCards, englishVoices, hasEnglish } from '../core.js';
+import { addDays, ROUND, shuffle, nextRound, streak, calendar, timeLimit, wordDiff, catalog, restore, DEFAULT, seeded, skeleton, opening, mask, englishVoices, hasEnglish } from '../core.js';
 
 const T = '2026-10-19';
 
@@ -9,9 +9,37 @@ test('addDays crosses months and years', () => {
   assert.equal(addDays('2026-03-01', -1), '2026-02-28');
 });
 
-test('flattenCards tags each card with level, deck title and refs', () => {
-  const [c] = flattenCards([{ level: 3, decks: [{ title: 'T', refs: [1], cards: [{ id: 'x' }] }] }]);
-  assert.deepEqual(c, { id: 'x', level: 3, deckTitle: 'T', refs: [1] });
+test('catalog tags each card with kind, level, topic and deck, and holds back the last two of a deck', () => {
+  const deck = { id: 'd', title: 'T', refs: [1], cards: [{ id: 'x' }, { id: 'y' }, { id: 'z' }] };
+  const [x, y, z] = catalog([{ level: 3, decks: [deck] }]);
+  assert.deepEqual(x, { id: 'x', kind: 'phrase', level: 3, topic: 'd', deck, nth: 0, held: false });
+  assert.deepEqual([y.held, z.held], [true, true]);
+  assert.equal(catalog([{ level: 2, decks: [deck] }])[0].kind, 'grammar');
+  assert.equal(catalog([{ kind: 'qa', decks: [deck] }])[0].kind, 'qa');
+});
+
+test('restore migrates v1 data: the log and known settings survive, new fields get defaults, and it is idempotent', () => {
+  const v1 = { log: { '2026-10-18': 12 }, settings: { theme: 'dark', goal: 30, level: 2, limit: 'auto', voice: 'Ava' } };
+  const s = restore(v1);
+  assert.deepEqual(s.log, v1.log);
+  assert.deepEqual(s.settings, { ...DEFAULT, theme: 'dark', level: 2, limit: 'auto', voice: 'Ava' });
+  assert.deepEqual([s.hist, s.days, s.answers, s.session], [{}, {}, {}, null]);
+  assert.deepEqual(restore(JSON.parse(JSON.stringify(s))), s);
+  assert.deepEqual(restore(null).settings, DEFAULT);
+});
+
+test('seeded: the same text gives the same sequence in [0, 1)', () => {
+  const a = seeded('2026-10-19'), b = seeded('2026-10-19'), c = seeded('2026-10-20');
+  const xs = [a(), a(), a()];
+  assert.deepEqual(xs, [b(), b(), b()]);
+  assert.notDeepEqual(xs, [c(), c(), c()]);
+  assert.ok(xs.every((x) => x >= 0 && x < 1));
+});
+
+test('hints cue a sentence without giving it away', () => {
+  assert.equal(skeleton("I don't have a pen."), "I d____ h___ a p__.");
+  assert.equal(opening('I am a graduate student.'), 'I am …');
+  assert.equal(mask('We chose this method because ...'), 'We _____ this ______ because ...');
 });
 
 const seq = (...xs) => () => (xs.length > 1 ? xs.shift() : xs[0]); // deterministic rand

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'; trusted-types sw">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; media-src blob:; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'; trusted-types sw">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Research English Drill</title>
 <meta name="description" content="瞬間英作文から研究ディスカッション・国際学会・博士公聴会まで、毎日続ける英語トレーニング">
@@ -32,14 +32,27 @@
         <p class="goal-label" id="goal-label"></p>
       </div>
     </div>
+    <div class="card menu">
+      <div class="cal-head"><b>今日のメニュー</b><span class="muted" id="menu-time"></span></div>
+      <ul id="menu"></ul>
+      <p class="muted" id="mix"></p>
+      <button id="start" class="primary"></button>
+      <button id="short" class="wide">⏱ 時間がない日は10分版</button>
+    </div>
     <p id="flash"></p>
     </div>
 
-    <div class="pick">
-    <h2>レベルを選ぶ</h2>
-    <div class="levels" id="levels"></div>
-
-    <div class="start-wrap"><button id="start" class="primary">▶ スタート（10問ずつ）</button></div>
+    <div class="status">
+    <h2>いまの状況</h2>
+    <div class="card"><dl id="status"></dl></div>
+    <h2>週ごとの変化</h2>
+    <div class="card">
+      <table id="weekly">
+        <thead><tr><th>週</th><th>基礎</th><th>構文</th><th>Q&amp;A</th><th>速さ</th><th>初見</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p class="muted">基礎・構文＝ヒントなしで言えた割合、Q&amp;A＝自力で答えられた数、速さ＝基礎文法を言い終えるまでの平均、初見＝週1回のチェックで初めての問題に答えられた数。自己評価にもとづくおおまかな目安です。</p>
+    </div>
     </div>
 
     <div class="more">
@@ -50,16 +63,24 @@
     </div>
 
     <details class="card panel">
+      <summary>📚 レベルを選んで自由に練習</summary>
+      <div class="levels" id="levels"></div>
+      <button id="free" class="wide">▶ このレベルを10問ずつ練習</button>
+    </details>
+    <details class="card panel">
       <summary>⚙️ 設定</summary>
-      <div class="row"><span>1日の目標回答数</span><input id="goal" type="number" min="5" max="200" step="5"></div>
-      <div class="row"><span>1問の制限時間</span><select id="limit">
+      <div class="row"><span>1日の練習時間の目安</span><select id="minutes">
+        <option value="15">15分</option><option value="20">20分</option><option value="30">30分</option><option value="45">45分</option><option value="60">60分</option>
+      </select></div>
+      <div class="row"><span>Q&amp;Aの質問を読み上げる</span><input id="listen-on" type="checkbox"></div>
+      <div class="row"><span>自由練習の制限時間</span><select id="limit">
         <option value="0">なし</option><option value="5">5秒</option><option value="10">10秒</option><option value="15">15秒</option>
         <option value="20">20秒</option><option value="30">30秒</option><option value="auto">文の長さに応じて</option>
       </select></div>
       <div class="row" id="voice-row"><span>読み上げの声</span><select id="voice"></select></div>
     </details>
     <details class="card panel">
-      <summary>📚 参考サイト</summary>
+      <summary>🔗 参考サイト</summary>
       <ul id="refs"></ul>
       <p class="muted">問題はすべて本サイトのオリジナルです。各サイトは分野・文法項目の構成の参考にしています。</p>
     </details>
@@ -68,28 +89,35 @@
 
   <section id="study" hidden>
     <div class="bar">
-      <button id="quit" class="icon-btn" aria-label="終了">✕</button>
+      <button id="quit" class="icon-btn" aria-label="中断してホームへ">✕</button>
       <div class="dots" id="dots"></div>
       <span class="pill" id="count"></span>
     </div>
     <div class="timer" id="timer-track"><i id="timer"></i></div>
     <div class="card" id="qcard">
       <p class="tag" id="track"></p>
-      <p class="prompt" id="ja"></p>
-      <textarea id="input" placeholder="英語で入力すると答えを見られます（🎤で音声入力も可）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="row ask"><p class="prompt" id="prompt"></p><button id="listen" class="icon-btn" aria-label="質問を読み上げ">🔊</button></div>
+      <p class="sub" id="sub"></p>
+      <dl class="hints" id="hints"></dl>
+      <textarea id="input" placeholder="声に出して答えよう（入力は任意。🎤で文字起こし）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="actions">
         <button id="mic" hidden aria-label="音声入力">🎤</button>
-        <button id="reveal" class="primary">答えを見る <kbd>Enter</kbd></button>
+        <button id="hint">💡 ヒント<kbd>H</kbd></button>
+        <button id="reveal" class="primary"></button>
       </div>
       <div class="answer" id="answer" hidden>
         <p class="timeout" id="timeout" hidden>⏱ 時間切れ</p>
+        <p class="muted" id="model-label"></p>
         <div class="row"><p class="en" id="en"></p><button id="speak" class="icon-btn" aria-label="読み上げ">🔊</button></div>
+        <audio id="playback" controls hidden></audio>
         <p class="note" id="note"></p>
+        <p class="tip" id="tip"></p>
+        <p class="muted" id="mine"></p>
+        <p class="muted" id="caveat"></p>
         <p class="muted refs" id="card-refs"></p>
-        <div class="judge">
-          <button id="ng" class="ng">✕ 言えなかった<kbd>1</kbd></button>
-          <button id="ok" class="ok">○ 言えた<kbd>2</kbd></button>
-        </div>
+        <p class="muted judge-label">最初に答えたときの出来は？</p>
+        <div class="judge" id="judge"></div>
+        <button id="again" class="wide">🔁 同じ質問にもう一度答える</button>
       </div>
     </div>
   </section>
@@ -97,9 +125,10 @@
   <section id="result" hidden>
     <div class="card result-hero">
       <div class="emoji" id="result-emoji"></div>
-      <div class="ring" id="result-ring"><div><b id="result-score"></b><span>正解</span></div></div>
+      <div class="ring" id="result-ring"><div><b id="result-score"></b><span>ヒントなし</span></div></div>
       <h2 id="result-title"></h2>
       <p class="muted" id="result-sub"></p>
+      <p class="muted" id="result-next"></p>
     </div>
     <h2 id="miss-head">もう一度チャレンジする問題</h2>
     <ul class="result-list" id="result-list"></ul>
