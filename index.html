@@ -80,6 +80,17 @@
       <div class="row" id="voice-row"><span>読み上げの声</span><select id="voice"></select></div>
     </details>
     <details class="card panel">
+      <summary>💾 記録のバックアップ</summary>
+      <p class="muted">記録はこのブラウザの中にだけ保存されています。ファイルに書き出しておくと、ブラウザのデータを消したときや別の端末に移るときに読み込んで戻せます。</p>
+      <p class="muted" id="kept"></p>
+      <div class="pair">
+        <button id="export">⬇ 書き出す</button>
+        <button id="import">⬆ 読み込む</button>
+      </div>
+      <input id="import-file" type="file" accept="application/json,.json" hidden>
+      <p id="backup-msg" class="muted"></p>
+    </details>
+    <details class="card panel">
       <summary>🔗 参考サイト</summary>
       <ul id="refs"></ul>
       <p class="muted">問題はすべて本サイトのオリジナルです。各サイトは分野・文法項目の構成の参考にしています。</p>

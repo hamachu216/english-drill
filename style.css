@@ -107,6 +107,8 @@ p:empty, #menu .sub:empty { display: none; }
 #weekly td { text-align: center; padding: 6px 2px; border-top: 1px solid var(--line); font-weight: 700; }
 #weekly .weak td { text-align: left; border-top: 0; padding-top: 0; font-size: .78rem; font-weight: 500; color: var(--muted); }
 .panel .levels { margin-top: 4px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+#backup-msg { margin: 10px 0 0; font-weight: 700; color: var(--good); }
 .panel .level { box-shadow: none; }
 details.panel { margin-top: 12px; }
 details.panel summary { cursor: pointer; font-weight: 800; list-style: none; display: flex; justify-content: space-between; }

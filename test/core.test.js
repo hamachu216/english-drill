@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, ROUND, shuffle, nextRound, streak, calendar, timeLimit, wordDiff, catalog, restore, DEFAULT, seeded, skeleton, opening, mask, englishVoices, hasEnglish } from '../core.js';
+import { addDays, ROUND, shuffle, nextRound, streak, calendar, timeLimit, wordDiff, catalog, restore, isBackup, DEFAULT, seeded, skeleton, opening, mask, englishVoices, hasEnglish } from '../core.js';
 
 const T = '2026-10-19';
 
@@ -26,6 +26,12 @@ test('restore migrates v1 data: the log and known settings survive, new fields g
   assert.deepEqual([s.hist, s.days, s.answers, s.session], [{}, {}, {}, null]);
   assert.deepEqual(restore(JSON.parse(JSON.stringify(s))), s);
   assert.deepEqual(restore(null).settings, DEFAULT);
+});
+
+test('isBackup accepts saved state (old or new) and rejects anything else', () => {
+  const s = restore({ log: { '2026-10-18': 3 } });
+  for (const ok of [s, JSON.parse(JSON.stringify(s)), { log: {} }, { hist: {} }, { log: {}, settings: { theme: 'dark', goal: 20 } }]) assert.ok(isBackup(ok), JSON.stringify(ok));
+  for (const bad of [null, 3, 'x', [], {}, { settings: {} }, { log: [] }, { log: 5 }, { log: {}, hist: 'x' }, { hist: {}, days: [1] }]) assert.equal(isBackup(bad), false, JSON.stringify(bad));
 });
 
 test('seeded: the same text gives the same sequence in [0, 1)', () => {
