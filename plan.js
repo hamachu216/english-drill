@@ -11,8 +11,9 @@ export const MISS = 0, HINT = 1, SLOW = 2, SOLO = 3;
 export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, slow: SLOW, solo: SOLO };
 
 const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
-const KINDS = ['grammar', 'pattern', 'qa'];
-const SECONDS = { grammar: 35, pattern: 45, qa: 90 }; // rough cost of one card: turns minutes into card counts
+const KINDS = ['grammar', 'colloc', 'pattern', 'qa'];
+const SECONDS = { grammar: 35, colloc: 30, pattern: 45, qa: 90 }; // rough cost of one card: turns minutes into card counts
+const COLLOC = 6; // one adjective + preposition pair per this many minutes (5 in a 30-minute session), outside the split
 const NEUTRAL = 0.65; // fluency at which the split is the default 15 : 10 : 5 minutes
 const BLOCK = 4; // sentences drilled on the day a frame is introduced
 const UNLOCK = 6; // questions answered without hesitation on a second day or later, before impromptu Q&A starts
@@ -81,6 +82,9 @@ export function stageOf(items, hist) {
   return stage;
 }
 
+// New cards one topic at a time in turn, easy ones first (questions have no difficulty: just in turn).
+export const easyFirst = (a, b) => (a.difficulty ?? 0) - (b.difficulty ?? 0) || a.nth - b.nth;
+
 // Questions that can be answered without hesitation, not just once: what unlocks impromptu Q&A.
 const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id]?.box >= 2 && hist[c.id].grade === SOLO).length;
 
@@ -88,18 +92,19 @@ const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id
 // then new cards, then — when nothing is left — the cards practiced longest ago. Unless the review pile is
 // more than two sessions deep, a quarter of each kind is kept for new cards, so there is progress every day.
 // Every kind gets at least one card, so research English is touched no matter how grammar is going.
-// Order: cards failed last time → grammar → sentence frames → Q&A → (weekly) first-sight check.
+// Order: cards failed last time → grammar → adjective + preposition → sentence frames → Q&A → (weekly) first-sight check.
 export function planSession({ items, hist, days, day, minutes, rand = Math.random }) {
   const rec = (c) => hist[c.id];
   const due = (c) => rec(c)?.due <= day;
   const sore = (c) => rec(c)?.box === 0;
   const idle = (c) => rec(c) && !due(c) && rec(c).last < day;
   const stage = stageOf(items, hist), weak = weakTopics(items, hist);
-  const share = mix(days, items, day);
+  const share = mix(days, items, day), pairs = Math.max(1, Math.round(minutes / COLLOC));
+  const rest = minutes - (pairs * SECONDS.colloc) / 60; // the 15:10:5 split covers what the pairs leave
   const unlocked = fluent(items, hist) >= UNLOCK;
 
   const pick = (kind) => {
-    const pool = items.filter((c) => c.kind === kind), n = Math.max(1, Math.round((minutes * 60 * share[kind]) / SECONDS[kind]));
+    const pool = items.filter((c) => c.kind === kind), n = kind === 'colloc' ? pairs : Math.max(1, Math.round((rest * 60 * share[kind]) / SECONDS[kind]));
     const fresh = pool.filter((c) => !rec(c) && !c.held);
     const pile = pool.filter(due).sort((a, b) => rec(a).box - rec(b).box || rec(a).due.localeCompare(rec(b).due));
     const quota = pile.length < 2 * n ? Math.min(n, Math.max(kind === 'pattern' ? 2 : 1, Math.ceil(n / 4))) : 0;
@@ -115,7 +120,8 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     const added = {
       grammar: fresh,
       pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, BLOCK)) : [])],
-      qa: [...fresh].sort((a, b) => a.nth - b.nth),
+      qa: [...fresh].sort(easyFirst),
+      colloc: [...fresh].sort(easyFirst),
     }[kind];
     return [...new Set([...reviews, ...focus, ...added, ...pile, ...rested])].slice(0, n);
   };
@@ -128,7 +134,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const talk = [...old('qa'), ...added('qa')];
   const wild = !unlocked ? [] : added('qa').length ? added('qa') : talk.slice(-1); // impromptu: unseen questions first
   const firstDay = Object.keys(days).sort()[0], lastCheck = Object.keys(days).filter((d) => days[d]['#check']).sort().at(-1);
-  const check = firstDay && day >= addDays(lastCheck ?? firstDay, WEEK) ? KINDS.flatMap((k) => {
+  const check = firstDay && day >= addDays(lastCheck ?? firstDay, WEEK) ? Object.keys(CHECK).flatMap((k) => {
     const unseen = items.filter((c) => c.kind === k && c.held && !rec(c)), known = unseen.filter((c) => c.topic in stage);
     return shuffle(known.length >= CHECK[k] ? known : unseen, rand).slice(0, CHECK[k]);
   }) : [];
@@ -136,6 +142,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   return [
     ...KINDS.flatMap((k) => chosen[k].filter(sore)).map(step('review')),
     ...[...old('grammar'), ...added('grammar')].map(step('grammar')),
+    ...[...old('colloc'), ...added('colloc')].map(step('colloc')),
     ...old('pattern').map(step('pattern')),
     ...added('pattern').flatMap((c, i, a) => [...(c.topic in stage || a[i - 1]?.topic === c.topic ? [] : [{ id: c.id, phase: 'pattern', intro: true }]), step('pattern')(c)]),
     ...talk.flatMap((c) => (wild.includes(c)
