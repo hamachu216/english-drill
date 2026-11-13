@@ -155,7 +155,6 @@ const pop = (node) => calm || node.animate([{ opacity: 0, transform: 'translateY
 const persist = () => run.free || save({ session: run });
 const isTalk = () => now.cur.kind === 'qa'; // a research question, answered in your own words (a Q&A reply is a fixed phrase, said like a sentence)
 const hintRow = ([label, text]) => pair(label, text);
-const setReveal = (text) => $('reveal').replaceChildren(text, el('kbd', { textContent: 'Enter' }));
 
 function begin(r) {
   keep();
@@ -218,7 +217,7 @@ function showStep() {
   $('input').value = '';
   $('hint').disabled = !hints.length;
   $('playback').hidden = true;
-  setReveal(step.intro ? 'まねして言えた、次へ →' : '✓ 回答した');
+  $('reveal').textContent = step.intro ? 'まねして言えた、次へ →' : '✓ 回答した';
   $('answer').hidden = true;
   $('reveal').hidden = false;
   startTimer(sec, run.free && !pairStep);
@@ -293,8 +292,8 @@ function reveal(timedOut = false) {
   // "I don't know" is a miss, with nothing to judge. "Answer again" keeps the first attempt's hint use and so its choices.
   const verdict = now.gaveUp && !talk ? '✕ わからなかった — 次へ' : right == null ? null : right ? '○ 正解 — 次へ' : '✕ 不正解 — 次へ';
   const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : right == null ? choices(talk, now.hinted) : [right ? (now.hinted ? 'hint' : 'ok') : 'miss'];
-  $('judge').replaceChildren(...keys.map((key, i) =>
-    el('button', { className: key, onclick: () => grade(key) }, verdict ?? (key === 'ok' ? LABEL.ok[+talk] : LABEL[key]), el('kbd', { textContent: i + 1 }))));
+  $('judge').replaceChildren(...keys.map((key) =>
+    el('button', { className: key, onclick: () => grade(key), textContent: verdict ?? (key === 'ok' ? LABEL.ok[+talk] : LABEL[key]) })));
   $('judge-label').hidden = verdict != null;
   $('again').hidden = !talk;
   $('answer').hidden = false;
@@ -393,19 +392,6 @@ $('again').onclick = () => {
   $('input').value = '';
   if (state.settings.listen) speak(now.ask.q);
 };
-document.addEventListener('keydown', (e) => {
-  if (!$('home').hidden || e.isComposing || e.metaKey || e.ctrlKey) return;
-  const typing = e.target === $('input');
-  if (e.key === 'Escape') finish();
-  else if (!$('result').hidden) { if (e.key === 'Enter') $('next-round').click(); }
-  else if ($('answer').hidden) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('reveal').click(); }
-    else if (e.key === 'h' && !typing) hint();
-  } else if (!typing) {
-    if (e.key === 's') speak(now.model);
-    else $('judge').children[+e.key - 1]?.click();
-  }
-});
 
 // ---- speech: read English aloud with a natural voice; speak your answer into the mic.
 const canSpeak = 'speechSynthesis' in window;

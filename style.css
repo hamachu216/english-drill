@@ -191,8 +191,6 @@ textarea {
 .judge .miss, .judge .content, .judge .english { --c: var(--bad); }
 .judge .ok { --c: var(--good); }
 #again { margin-top: 10px; }
-kbd { font: .7rem ui-monospace, monospace; opacity: .6; margin-left: 4px; }
-@media (hover: none) { kbd { display: none; } }
 
 /* PC: use the width. Home = today + history | levels; study = question | answer side by side. */
 @media (min-width: 960px) {
