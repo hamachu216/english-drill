@@ -57,11 +57,11 @@ test('review: answering again the same day never moves the due date forward or r
   assert.equal(review(first, { grade: MISS }, T).due, addDays(T, 1), 'but a same-day miss does pull it back');
 });
 
-test('first use: about 30 minutes with grammar, new sentence frames and Beginner Q&A, in that order', () => {
+test('first use: about 30 minutes with grammar, 5 adjective + preposition pairs, new sentence frames and Beginner Q&A, in that order', () => {
   const queue = plan(), n = kinds(queue);
-  assert.ok(n.grammar >= 20 && n.pattern >= 6 && n.qa >= 3, JSON.stringify(n));
+  assert.ok(n.grammar >= 20 && n.pattern >= 6 && n.qa >= 3 && n.colloc === 5, JSON.stringify(n));
   assert.ok(n.grammar > n.pattern && n.pattern > n.qa);
-  assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'pattern', 'qa'], 'no review, impromptu or check on day one');
+  assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'colloc', 'pattern', 'qa'], 'no review, impromptu or check on day one');
   assert.ok(queue.filter((s) => byId.get(s.id).kind === 'grammar').every((s) => byId.get(s.id).level === 1), 'grammar starts at Lv1');
   const frames = queue.filter((s) => s.phase === 'pattern');
   assert.ok(frames[0].intro, 'a frame is explained before it is used');
@@ -75,7 +75,7 @@ test('first use: about 30 minutes with grammar, new sentence frames and Beginner
 
 test('the 10-minute session is shorter and still has both grammar and research English', () => {
   const short = kinds(plan({}, {}, T, 10)), full = kinds(plan());
-  assert.ok(short.grammar < full.grammar && short.grammar >= 5 && short.pattern >= 2 && short.qa >= 1, JSON.stringify(short));
+  assert.ok(short.grammar < full.grammar && short.grammar >= 5 && short.pattern >= 2 && short.qa >= 1 && short.colloc >= 1, JSON.stringify(short));
 });
 
 test('shares: 15/10/5 by default; weak grammar gets more time, solid grammar gives it to research English', () => {
