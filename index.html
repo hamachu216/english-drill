@@ -22,7 +22,7 @@
 </header>
 <main>
   <section id="home">
-    <div class="today">
+    <!-- One card per grid cell: in this order on a phone, two aligned columns on a PC (style.css). -->
     <div class="card hero">
       <div class="ring" id="ring"><div><b id="today">0</b><span id="goal-of"></span></div></div>
       <div>
@@ -37,11 +37,8 @@
       <p class="muted" id="mix"></p>
       <button id="start" class="primary"></button>
       <button id="short" class="wide">⏱ 時間がない日は10分版</button>
+      <p id="flash"></p>
     </div>
-    <p id="flash"></p>
-    </div>
-
-    <div class="status">
     <div class="card drill">
       <div class="cal-head"><b>Collocation Drill</b><span class="muted">形容詞＋前置詞</span></div>
       <p class="muted" id="cd-summary"></p>
@@ -55,34 +52,28 @@
         <p class="muted">空所の前置詞を、2日に分けて別の例文で2回正解すると「文で言う」へ。文で言えるたびに復習の間隔が延びます（定着＝次の復習が1週間以上先）。毎日の練習にも1日5問ほど自動で入ります。</p>
       </details>
     </div>
-    <h2>いまの状況</h2>
-    <div class="card"><dl id="status"></dl></div>
-    <h2>週ごとの変化</h2>
-    <div class="card">
+    <div class="card now">
+      <div class="cal-head"><b>いまの状況</b></div>
+      <dl id="status"></dl>
+    </div>
+    <div class="card weekly">
+      <div class="cal-head"><b>週ごとの変化</b></div>
       <table id="weekly" class="grid">
         <thead><tr><th>週</th><th>基礎</th><th>前置詞</th><th>構文</th><th>Q&amp;A</th><th>速さ</th><th>初見</th></tr></thead>
         <tbody></tbody>
       </table>
       <p class="muted">基礎・前置詞・構文＝ヒントなしで言えた割合、Q&amp;A＝自力で答えられた数、速さ＝基礎文法を言い終えるまでの平均、初見＝週1回のチェックで初めての問題に答えられた数。自己評価にもとづくおおまかな目安です。</p>
     </div>
-    </div>
-
-    <div class="records">
-    <h2>学習の記録</h2>
-    <div class="card">
-      <div class="cal-head"><b>過去12週間</b><span class="muted">濃いほどたくさん回答</span></div>
+    <div class="card history">
+      <div class="cal-head"><b>学習の記録（過去12週間）</b><span class="muted">濃いほどたくさん回答</span></div>
       <div id="heatmap" aria-label="過去12週間の学習記録"></div>
     </div>
-    </div>
-
-    <div class="panels">
-
-    <details class="card panel">
+    <details class="card panel free">
       <summary>📚 自由に練習</summary>
       <div class="levels" id="levels"></div>
       <button id="free" class="wide">▶ 選んだものを練習</button>
     </details>
-    <details class="card panel">
+    <details class="card panel settings">
       <summary>⚙️ 設定</summary>
       <div class="row"><span>1日の練習時間の目安</span><select id="minutes">
         <option value="15">15分</option><option value="20">20分</option><option value="30">30分</option><option value="45">45分</option><option value="60">60分</option>
@@ -94,10 +85,7 @@
       </select></div>
       <div class="row" id="voice-row"><span>読み上げの声</span><select id="voice"></select></div>
     </details>
-    </div>
-
-    <div class="extra">
-    <details class="card panel">
+    <details class="card panel backup">
       <summary>💾 記録のバックアップ</summary>
       <p class="muted">記録はこのブラウザの中にだけ保存されています。ファイルに書き出しておくと、ブラウザのデータを消したときや別の端末に移るときに読み込んで戻せます。</p>
       <p class="muted" id="kept"></p>
@@ -108,12 +96,11 @@
       <input id="import-file" type="file" accept="application/json,.json" hidden>
       <p id="backup-msg" class="muted"></p>
     </details>
-    <details class="card panel">
+    <details class="card panel sources">
       <summary>🔗 参考サイト</summary>
       <ul id="refs"></ul>
       <p class="muted">問題は本サイトのオリジナルです。各サイトは分野・文法項目の構成と、収録した形容詞＋前置詞の組み合わせ（EnglishClub: Adjective + Preposition）の参考にしています（例文・訳・解説はオリジナル）。質疑応答の切り返しの定型句だけは、Wordvice の資料「研究発表の質疑応答対処法」の英文を収録しています。</p>
     </details>
-    </div>
   </section>
 
   <section id="study" hidden>
