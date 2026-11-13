@@ -1,0 +1,415 @@
+{
+  "kind": "pattern",
+  "title": "研究英語の構文",
+  "note": "研究全般で使える文の型。例文はすべて架空の研究内容で、型を別の内容に当てはめ直す練習用。",
+  "decks": [
+    {
+      "id": "p-goal",
+      "title": "目的を述べる",
+      "frame": "The goal of this study is to ...",
+      "ja": "この研究の目的は〜することです。",
+      "note": "to の後は動詞の原形。goal の代わりに aim / purpose でも同じ形。",
+      "cards": [
+        {"id":"p-goal-001","ja":"この研究の目的は、睡眠の質を改善することです。","en":"The goal of this study is to improve sleep quality."},
+        {"id":"p-goal-002","ja":"この研究の目的は、ラベル付けのコストを減らすことです。","en":"The goal of this study is to reduce the cost of labeling."},
+        {"id":"p-goal-003","ja":"この研究の目的は、ユーザーがこのシステムをどう使うかを理解することです。","en":"The goal of this study is to understand how users use this system."},
+        {"id":"p-goal-004","ja":"この研究の目的は、少ないデータで動くモデルを作ることです。","en":"The goal of this study is to build a model that works with limited data."},
+        {"id":"p-goal-005","ja":"この研究の目的は、スマートフォンで人の行動を認識することです。","en":"The goal of this study is to recognize human activities with a smartphone."},
+        {"id":"p-goal-006","ja":"この研究の目的は、2つの手法を公平に比較することです。","en":"The goal of this study is to compare the two methods fairly."},
+        {"id":"p-goal-007","ja":"この研究の目的は、高齢者の転倒を素早く検知することです。","en":"The goal of this study is to detect falls of older adults quickly."},
+        {"id":"p-goal-008","ja":"この研究の目的は、センサの電池を長持ちさせることです。","en":"The goal of this study is to make the sensor's battery last longer."}
+      ]
+    },
+    {
+      "id": "p-focus",
+      "title": "対象を絞る",
+      "frame": "This study focuses on ...",
+      "ja": "この研究は〜に焦点を当てています。",
+      "note": "focus on の後は名詞か動名詞（-ing）。focuses の三単現の s を忘れずに。",
+      "cards": [
+        {"id":"p-focus-001","ja":"この研究は屋内環境に焦点を当てています。","en":"This study focuses on indoor environments."},
+        {"id":"p-focus-002","ja":"この研究は高齢のユーザーに焦点を当てています。","en":"This study focuses on older users."},
+        {"id":"p-focus-003","ja":"この研究は日常生活で集めたデータに焦点を当てています。","en":"This study focuses on data collected in daily life."},
+        {"id":"p-focus-004","ja":"この研究はエラーを減らすことに焦点を当てています。","en":"This study focuses on reducing errors."},
+        {"id":"p-focus-005","ja":"この研究は精度ではなく、使いやすさに焦点を当てています。","en":"This study focuses on usability, not accuracy."},
+        {"id":"p-focus-006","ja":"この研究は学習の初期段階に焦点を当てています。","en":"This study focuses on the early stage of learning."},
+        {"id":"p-focus-007","ja":"この研究は小さなデバイスで動く軽いモデルに焦点を当てています。","en":"This study focuses on light models that run on small devices."},
+        {"id":"p-focus-008","ja":"この研究はユーザーのプライバシーを守ることに焦点を当てています。","en":"This study focuses on protecting user privacy."}
+      ]
+    },
+    {
+      "id": "p-problem",
+      "title": "問題を指摘する",
+      "frame": "The problem is that ...",
+      "ja": "問題は〜ということです。",
+      "note": "that の後は「主語＋動詞」の完全な文を置く。",
+      "cards": [
+        {"id":"p-problem-001","ja":"問題は、ラベル付きデータが高価だということです。","en":"The problem is that labeled data is expensive."},
+        {"id":"p-problem-002","ja":"問題は、既存の手法が多くの計算を必要とすることです。","en":"The problem is that existing methods need a lot of computation."},
+        {"id":"p-problem-003","ja":"問題は、ユーザーが毎日はデバイスを着けないことです。","en":"The problem is that users do not wear the device every day."},
+        {"id":"p-problem-004","ja":"問題は、実験室での結果が実世界では成り立たないことが多いことです。","en":"The problem is that lab results often do not hold in the real world."},
+        {"id":"p-problem-005","ja":"問題は、人によってデータが大きく違うことです。","en":"The problem is that the data differs a lot from person to person."},
+        {"id":"p-problem-006","ja":"問題は、この作業に時間がかかりすぎることです。","en":"The problem is that this task takes too much time."},
+        {"id":"p-problem-007","ja":"問題は、センサのデータにノイズがとても多いことです。","en":"The problem is that the sensor data is very noisy."},
+        {"id":"p-problem-008","ja":"問題は、誰も正解を知らないことです。","en":"The problem is that nobody knows the correct answer."}
+      ]
+    },
+    {
+      "id": "p-important",
+      "title": "重要性を述べる",
+      "frame": "This is important because ...",
+      "ja": "これが重要なのは〜だからです。",
+      "note": "because の後は「主語＋動詞」。because of の後は名詞。",
+      "cards": [
+        {"id":"p-important-001","ja":"これが重要なのは、多くの人がこの問題を抱えているからです。","en":"This is important because many people have this problem."},
+        {"id":"p-important-002","ja":"これが重要なのは、間違いが事故につながりうるからです。","en":"This is important because mistakes can lead to accidents."},
+        {"id":"p-important-003","ja":"これが重要なのは、ラベル付けに多くの時間とお金がかかるからです。","en":"This is important because labeling takes a lot of time and money."},
+        {"id":"p-important-004","ja":"これが重要なのは、既存のシステムは専門家にしか使えないからです。","en":"This is important because only experts can use existing systems."},
+        {"id":"p-important-005","ja":"これが重要なのは、高齢者の数が増えているからです。","en":"This is important because the number of older people is increasing."},
+        {"id":"p-important-006","ja":"これが重要なのは、ユーザーは遅いシステムを使うのをやめてしまうからです。","en":"This is important because users stop using slow systems."},
+        {"id":"p-important-007","ja":"これが重要なのは、早期の発見が命を救うことがあるからです。","en":"This is important because early detection can save lives."},
+        {"id":"p-important-008","ja":"これが重要なのは、小さな誤りが時間とともに大きくなるからです。","en":"This is important because small errors grow over time."}
+      ]
+    },
+    {
+      "id": "p-propose",
+      "title": "提案を述べる",
+      "frame": "We propose a method to ...",
+      "ja": "私たちは〜する手法を提案します。",
+      "note": "a method to ＋動詞の原形。a method for ＋ -ing でも同じ意味。",
+      "cards": [
+        {"id":"p-propose-001","ja":"私たちは、少ないラベルでモデルを学習する手法を提案します。","en":"We propose a method to train a model with few labels."},
+        {"id":"p-propose-002","ja":"私たちは、音から行動を認識する手法を提案します。","en":"We propose a method to recognize activities from sound."},
+        {"id":"p-propose-003","ja":"私たちは、ノイズの多いデータを自動で取り除く手法を提案します。","en":"We propose a method to remove noisy data automatically."},
+        {"id":"p-propose-004","ja":"私たちは、複数のセンサのデータを組み合わせる手法を提案します。","en":"We propose a method to combine data from multiple sensors."},
+        {"id":"p-propose-005","ja":"私たちは、ユーザーの疲労を推定する手法を提案します。","en":"We propose a method to estimate user fatigue."},
+        {"id":"p-propose-006","ja":"私たちは、消費電力を減らす手法を提案します。","en":"We propose a method to reduce power consumption."},
+        {"id":"p-propose-007","ja":"私たちは、新しいユーザーにモデルを素早く適応させる手法を提案します。","en":"We propose a method to adapt a model to new users quickly."},
+        {"id":"p-propose-008","ja":"私たちは、異常なパターンを早く見つける手法を提案します。","en":"We propose a method to find unusual patterns early."}
+      ]
+    },
+    {
+      "id": "p-because",
+      "title": "手法を選んだ理由",
+      "frame": "We chose this method because ...",
+      "ja": "〜なので、この手法を選びました。",
+      "note": "choose の過去形は chose。because の後は「主語＋動詞」。",
+      "cards": [
+        {"id":"p-because-001","ja":"データが少ないため、この手法を選びました。","en":"We chose this method because we have limited data."},
+        {"id":"p-because-002","ja":"解釈しやすいため、この手法を選びました。","en":"We chose this method because it is easy to interpret."},
+        {"id":"p-because-003","ja":"計算コストが低いため、この手法を選びました。","en":"We chose this method because it has a low computational cost."},
+        {"id":"p-because-004","ja":"この分野で広く使われているため、この手法を選びました。","en":"We chose this method because it is widely used in this field."},
+        {"id":"p-because-005","ja":"スマートフォン上で動かせるため、この手法を選びました。","en":"We chose this method because it can run on a smartphone."},
+        {"id":"p-because-006","ja":"追加の機器を必要としないため、この手法を選びました。","en":"We chose this method because it does not need extra devices."},
+        {"id":"p-because-007","ja":"ノイズに強いため、この手法を選びました。","en":"We chose this method because it is robust to noise."},
+        {"id":"p-because-008","ja":"実装が簡単で再現しやすいため、この手法を選びました。","en":"We chose this method because it is simple to implement and easy to reproduce."}
+      ]
+    },
+    {
+      "id": "p-use",
+      "title": "使ったものと目的",
+      "frame": "We used ... to ...",
+      "ja": "〜するために…を使いました。",
+      "note": "used ＋道具＋ to ＋動詞の原形。英語では「道具 → 目的」の順で言う。",
+      "cards": [
+        {"id":"p-use-001","ja":"動きを測るために加速度センサを使いました。","en":"We used an accelerometer to measure movement."},
+        {"id":"p-use-002","ja":"モデルを評価するために公開データセットを使いました。","en":"We used a public dataset to evaluate the model."},
+        {"id":"p-use-003","ja":"意見を集めるためにアンケートを使いました。","en":"We used a questionnaire to collect opinions."},
+        {"id":"p-use-004","ja":"特徴を抽出するためにニューラルネットワークを使いました。","en":"We used a neural network to extract features."},
+        {"id":"p-use-005","ja":"データを記録するためにスマートウォッチを使いました。","en":"We used a smartwatch to record the data."},
+        {"id":"p-use-006","ja":"2つのグループを比べるために統計的検定を使いました。","en":"We used a statistical test to compare the two groups."},
+        {"id":"p-use-007","ja":"参加者が何をしていたかを確認するためにビデオを使いました。","en":"We used video to check what the participants were doing."},
+        {"id":"p-use-008","ja":"学習データを増やすためにシミュレーションを使いました。","en":"We used simulation to increase the training data."}
+      ]
+    },
+    {
+      "id": "p-evaluate",
+      "title": "評価方法を述べる",
+      "frame": "We evaluated our method with ...",
+      "ja": "〜を使って手法を評価しました。",
+      "note": "evaluate A with B。with の後は名詞（データ・人数・指標）。",
+      "cards": [
+        {"id":"p-evaluate-001","ja":"20人の参加者で手法を評価しました。","en":"We evaluated our method with twenty participants."},
+        {"id":"p-evaluate-002","ja":"3つの公開データセットで手法を評価しました。","en":"We evaluated our method with three public datasets."},
+        {"id":"p-evaluate-003","ja":"実世界のデータで手法を評価しました。","en":"We evaluated our method with real-world data."},
+        {"id":"p-evaluate-004","ja":"2週間のユーザー調査で手法を評価しました。","en":"We evaluated our method with a two-week user study."},
+        {"id":"p-evaluate-005","ja":"自分たちで集めたデータで手法を評価しました。","en":"We evaluated our method with data that we collected ourselves."},
+        {"id":"p-evaluate-006","ja":"精度と応答時間で手法を評価しました。","en":"We evaluated our method with accuracy and response time."},
+        {"id":"p-evaluate-007","ja":"異なる年齢のユーザーで手法を評価しました。","en":"We evaluated our method with users of different ages."},
+        {"id":"p-evaluate-008","ja":"学習に使っていない新しいデータで手法を評価しました。","en":"We evaluated our method with new data that was not used for training."}
+      ]
+    },
+    {
+      "id": "p-diff",
+      "title": "違いを述べる",
+      "frame": "The main difference is that ...",
+      "ja": "主な違いは〜という点です。",
+      "note": "that の後は完全な文。our method や we を主語にすると言いやすい。",
+      "cards": [
+        {"id":"p-diff-001","ja":"主な違いは、私たちの手法がラベルを必要としない点です。","en":"The main difference is that our method does not need labels."},
+        {"id":"p-diff-002","ja":"主な違いは、私たちが実世界のデータを使っている点です。","en":"The main difference is that we use real-world data."},
+        {"id":"p-diff-003","ja":"主な違いは、私たちのシステムがリアルタイムで動く点です。","en":"The main difference is that our system works in real time."},
+        {"id":"p-diff-004","ja":"主な違いは、私たちが個人差を考慮している点です。","en":"The main difference is that we consider individual differences."},
+        {"id":"p-diff-005","ja":"主な違いは、私たちが特別な機器を使わない点です。","en":"The main difference is that we do not use special devices."},
+        {"id":"p-diff-006","ja":"主な違いは、私たちのモデルの方がずっと小さい点です。","en":"The main difference is that our model is much smaller."},
+        {"id":"p-diff-007","ja":"主な違いは、私たちがユーザーを長期間追跡した点です。","en":"The main difference is that we followed users for a long period."},
+        {"id":"p-diff-008","ja":"主な違いは、私たちの手法が学習なしで新しい環境に使える点です。","en":"The main difference is that our method can be used in new environments without training."}
+      ]
+    },
+    {
+      "id": "p-unlike",
+      "title": "先行研究と対比する",
+      "frame": "Unlike previous work, our method ...",
+      "ja": "先行研究と違って、私たちの手法は〜。",
+      "note": "Unlike ＋名詞 の後にコンマ。our method に続く動詞は三単現の s。",
+      "cards": [
+        {"id":"p-unlike-001","ja":"先行研究と違って、私たちの手法はセンサを1つしか使いません。","en":"Unlike previous work, our method uses only one sensor."},
+        {"id":"p-unlike-002","ja":"先行研究と違って、私たちの手法は大量の学習データを必要としません。","en":"Unlike previous work, our method does not need a lot of training data."},
+        {"id":"p-unlike-003","ja":"先行研究と違って、私たちの手法はデバイス上で動きます。","en":"Unlike previous work, our method runs on the device."},
+        {"id":"p-unlike-004","ja":"先行研究と違って、私たちの手法はユーザーごとに適応します。","en":"Unlike previous work, our method adapts to each user."},
+        {"id":"p-unlike-005","ja":"先行研究と違って、私たちの手法は屋外でも機能します。","en":"Unlike previous work, our method also works outdoors."},
+        {"id":"p-unlike-006","ja":"先行研究と違って、私たちの手法は生のデータをサーバーに送りません。","en":"Unlike previous work, our method does not send raw data to a server."},
+        {"id":"p-unlike-007","ja":"先行研究と違って、私たちの手法は事前の設定を必要としません。","en":"Unlike previous work, our method does not need any setup in advance."},
+        {"id":"p-unlike-008","ja":"先行研究と違って、私たちの手法は複数の人を同時に扱えます。","en":"Unlike previous work, our method can handle several people at the same time."}
+      ]
+    },
+    {
+      "id": "p-gap",
+      "title": "未解決の点を述べる",
+      "frame": "Previous studies have not ...",
+      "ja": "これまでの研究は〜していません。",
+      "note": "have not ＋過去分詞（現在完了の否定）。「今までのところ〜ない」。",
+      "cards": [
+        {"id":"p-gap-001","ja":"これまでの研究は長期的な効果を調べていません。","en":"Previous studies have not examined long-term effects."},
+        {"id":"p-gap-002","ja":"これまでの研究はこれを実環境で試していません。","en":"Previous studies have not tested this in real environments."},
+        {"id":"p-gap-003","ja":"これまでの研究は個人差を考慮していません。","en":"Previous studies have not considered individual differences."},
+        {"id":"p-gap-004","ja":"これまでの研究はこの問題に十分に取り組んでいません。","en":"Previous studies have not fully addressed this problem."},
+        {"id":"p-gap-005","ja":"これまでの研究は高齢のユーザーに注目していません。","en":"Previous studies have not focused on older users."},
+        {"id":"p-gap-006","ja":"これまでの研究はこれらの手法を同じ条件で比較していません。","en":"Previous studies have not compared these methods under the same conditions."},
+        {"id":"p-gap-007","ja":"これまでの研究はその理由を説明していません。","en":"Previous studies have not explained the reason."},
+        {"id":"p-gap-008","ja":"これまでの研究はこのアプローチを小さなデバイスで使っていません。","en":"Previous studies have not used this approach on small devices."}
+      ]
+    },
+    {
+      "id": "p-suggest",
+      "title": "結果から言えること",
+      "frame": "Our results suggest that ...",
+      "ja": "私たちの結果は〜ことを示唆しています。",
+      "note": "suggest は「断定せずに示す」。that の後は完全な文。",
+      "cards": [
+        {"id":"p-suggest-001","ja":"私たちの結果は、この手法が有効であることを示唆しています。","en":"Our results suggest that this method is effective."},
+        {"id":"p-suggest-002","ja":"私たちの結果は、データが多いほど良いとは限らないことを示唆しています。","en":"Our results suggest that more data is not always better."},
+        {"id":"p-suggest-003","ja":"私たちの結果は、ユーザーが単純なフィードバックを好むことを示唆しています。","en":"Our results suggest that users prefer simple feedback."},
+        {"id":"p-suggest-004","ja":"私たちの結果は、このモデルが他の分野にも応用できることを示唆しています。","en":"Our results suggest that the model can be applied to other fields."},
+        {"id":"p-suggest-005","ja":"私たちの結果は、センサの位置が重要であることを示唆しています。","en":"Our results suggest that the sensor position is important."},
+        {"id":"p-suggest-006","ja":"私たちの結果は、個人差が大きいことを示唆しています。","en":"Our results suggest that individual differences are large."},
+        {"id":"p-suggest-007","ja":"私たちの結果は、短い学習時間で十分であることを示唆しています。","en":"Our results suggest that a short training time is enough."},
+        {"id":"p-suggest-008","ja":"私たちの結果は、2つの要因が関係していることを示唆しています。","en":"Our results suggest that the two factors are related."}
+      ]
+    },
+    {
+      "id": "p-show",
+      "title": "結果を示す",
+      "frame": "The results show that ...",
+      "ja": "結果は〜ことを示しています。",
+      "note": "show は suggest より強い言い方。that の後は完全な文。",
+      "cards": [
+        {"id":"p-show-001","ja":"結果は、提案手法がベースラインを上回ることを示しています。","en":"The results show that our method outperforms the baseline."},
+        {"id":"p-show-002","ja":"結果は、データが増えると精度が上がることを示しています。","en":"The results show that accuracy increases with more data."},
+        {"id":"p-show-003","ja":"結果は、2つのグループの間に有意な差がないことを示しています。","en":"The results show that there is no significant difference between the two groups."},
+        {"id":"p-show-004","ja":"結果は、エラーが半分に減ったことを示しています。","en":"The results show that the errors decreased by half."},
+        {"id":"p-show-005","ja":"結果は、参加者がタスクをより速く終えたことを示しています。","en":"The results show that participants finished the task faster."},
+        {"id":"p-show-006","ja":"結果は、ノイズの多い環境でもシステムが動くことを示しています。","en":"The results show that the system works even in noisy environments."},
+        {"id":"p-show-007","ja":"結果は、性能が時間とともに下がることを示しています。","en":"The results show that the performance drops over time."},
+        {"id":"p-show-008","ja":"結果は、ほとんどのユーザーが満足していたことを示しています。","en":"The results show that most users were satisfied."}
+      ]
+    },
+    {
+      "id": "p-compared",
+      "title": "比べて述べる",
+      "frame": "Compared with the baseline, our method ...",
+      "ja": "ベースラインと比べて、私たちの手法は〜。",
+      "note": "Compared with ＋名詞 の後にコンマ。続く文では比較級（-er / more / less）をよく使う。",
+      "cards": [
+        {"id":"p-compared-001","ja":"ベースラインと比べて、私たちの手法はより正確です。","en":"Compared with the baseline, our method is more accurate."},
+        {"id":"p-compared-002","ja":"ベースラインと比べて、私たちの手法は2倍速いです。","en":"Compared with the baseline, our method is twice as fast."},
+        {"id":"p-compared-003","ja":"ベースラインと比べて、私たちの手法はメモリの使用量が少ないです。","en":"Compared with the baseline, our method uses less memory."},
+        {"id":"p-compared-004","ja":"ベースラインと比べて、私たちの手法は誤りを10%減らしました。","en":"Compared with the baseline, our method reduced errors by ten percent."},
+        {"id":"p-compared-005","ja":"ベースラインと比べて、私たちの手法は必要なラベルが少ないです。","en":"Compared with the baseline, our method needs fewer labels."},
+        {"id":"p-compared-006","ja":"ベースラインと比べて、私たちの手法はノイズに対してより頑健です。","en":"Compared with the baseline, our method is more robust to noise."},
+        {"id":"p-compared-007","ja":"ベースラインと比べて、私たちの手法は学習により長い時間がかかります。","en":"Compared with the baseline, our method takes longer to train."},
+        {"id":"p-compared-008","ja":"ベースラインと比べて、私たちの手法は新しいユーザーに対してよりうまく機能します。","en":"Compared with the baseline, our method works better for new users."}
+      ]
+    },
+    {
+      "id": "p-found",
+      "title": "発見を述べる",
+      "frame": "We found that ...",
+      "ja": "〜ということがわかりました。",
+      "note": "find の過去形は found。that の後は完全な文。",
+      "cards": [
+        {"id":"p-found-001","ja":"多くのユーザーが数日でやめたことがわかりました。","en":"We found that many users stopped after a few days."},
+        {"id":"p-found-002","ja":"モデルが夜間のデータで失敗することがわかりました。","en":"We found that the model fails on night-time data."},
+        {"id":"p-found-003","ja":"単純な特徴でうまくいくことがわかりました。","en":"We found that simple features work well."},
+        {"id":"p-found-004","ja":"参加者が通知を無視することが多かったことがわかりました。","en":"We found that participants often ignored the notifications."},
+        {"id":"p-found-005","ja":"精度がセンサの位置に左右されることがわかりました。","en":"We found that the accuracy depends on the sensor position."},
+        {"id":"p-found-006","ja":"ラベルの一部が間違っていたことがわかりました。","en":"We found that some of the labels were wrong."},
+        {"id":"p-found-007","ja":"週末は結果が違うことがわかりました。","en":"We found that the results are different on weekends."},
+        {"id":"p-found-008","ja":"短い説明がユーザーの信頼を高めたことがわかりました。","en":"We found that short explanations increased user trust."}
+      ]
+    },
+    {
+      "id": "p-reason",
+      "title": "理由を推測する",
+      "frame": "One possible reason is that ...",
+      "ja": "考えられる理由の1つは〜ということです。",
+      "note": "possible を入れると断定を避けられる。that の後は完全な文。",
+      "cards": [
+        {"id":"p-reason-001","ja":"考えられる理由の1つは、学習データが小さすぎたことです。","en":"One possible reason is that the training data was too small."},
+        {"id":"p-reason-002","ja":"考えられる理由の1つは、参加者がタスクに慣れたことです。","en":"One possible reason is that the participants got used to the task."},
+        {"id":"p-reason-003","ja":"考えられる理由の1つは、センサが正しく装着されていなかったことです。","en":"One possible reason is that the sensor was not worn correctly."},
+        {"id":"p-reason-004","ja":"考えられる理由の1つは、2つのクラスがとても似ていることです。","en":"One possible reason is that the two classes are very similar."},
+        {"id":"p-reason-005","ja":"考えられる理由の1つは、テストデータの環境が違っていたことです。","en":"One possible reason is that the environment of the test data was different."},
+        {"id":"p-reason-006","ja":"考えられる理由の1つは、タスクが簡単すぎたことです。","en":"One possible reason is that the task was too easy."},
+        {"id":"p-reason-007","ja":"考えられる理由の1つは、ユーザーが疲れていたことです。","en":"One possible reason is that the users were tired."},
+        {"id":"p-reason-008","ja":"考えられる理由の1つは、モデルが背景のノイズを学習したことです。","en":"One possible reason is that the model learned the background noise."}
+      ]
+    },
+    {
+      "id": "p-means",
+      "title": "意味を説明する",
+      "frame": "This means that ...",
+      "ja": "これは〜ということを意味します。",
+      "note": "means の s を忘れずに。直前に言った結果を言い換えるときに使う。",
+      "cards": [
+        {"id":"p-means-001","ja":"これは、モデルが新しいユーザーにも使えることを意味します。","en":"This means that the model can be used for new users."},
+        {"id":"p-means-002","ja":"これは、追加のセンサが必要ないことを意味します。","en":"This means that we do not need extra sensors."},
+        {"id":"p-means-003","ja":"これは、ユーザーの手間が減ることを意味します。","en":"This means that users need less effort."},
+        {"id":"p-means-004","ja":"これは、この問題がまだ解決されていないことを意味します。","en":"This means that the problem is not solved yet."},
+        {"id":"p-means-005","ja":"これは、システムを安いデバイスで動かせることを意味します。","en":"This means that the system can run on cheap devices."},
+        {"id":"p-means-006","ja":"これは、もっと多くのデータを集める必要があることを意味します。","en":"This means that we need to collect more data."},
+        {"id":"p-means-007","ja":"これは、結果を一般化するときに注意が必要だということを意味します。","en":"This means that we should be careful when we generalize the results."},
+        {"id":"p-means-008","ja":"これは、小さなモデルで十分だということを意味します。","en":"This means that a small model is enough."}
+      ]
+    },
+    {
+      "id": "p-limit",
+      "title": "限界を述べる",
+      "frame": "One limitation is that ...",
+      "ja": "限界の1つは〜という点です。",
+      "note": "限界は自分から先に言うと誠実に聞こえる。that の後は完全な文。",
+      "cards": [
+        {"id":"p-limit-001","ja":"限界の1つは、参加者の数が少ない点です。","en":"One limitation is that the number of participants is small."},
+        {"id":"p-limit-002","ja":"限界の1つは、1つのデータセットでしか試していない点です。","en":"One limitation is that we tested only one dataset."},
+        {"id":"p-limit-003","ja":"限界の1つは、参加者が全員学生だった点です。","en":"One limitation is that all the participants were students."},
+        {"id":"p-limit-004","ja":"限界の1つは、実験が実験室で行われた点です。","en":"One limitation is that the experiment was done in a lab."},
+        {"id":"p-limit-005","ja":"限界の1つは、調査期間が短かった点です。","en":"One limitation is that the study period was short."},
+        {"id":"p-limit-006","ja":"限界の1つは、私たちの手法が多くのラベル付きデータを必要とする点です。","en":"One limitation is that our method needs a lot of labeled data."},
+        {"id":"p-limit-007","ja":"限界の1つは、1種類のデバイスしか使っていない点です。","en":"One limitation is that we used only one type of device."},
+        {"id":"p-limit-008","ja":"限界の1つは、結果が自己申告に基づいている点です。","en":"One limitation is that the results are based on self-reports."}
+      ]
+    },
+    {
+      "id": "p-nottested",
+      "title": "未検証を認める",
+      "frame": "We have not tested ...",
+      "ja": "〜はまだ試していません。",
+      "note": "have not ＋過去分詞。文末に yet を付けると「まだ」がはっきりする。",
+      "cards": [
+        {"id":"p-nottested-001","ja":"実世界のデータでは、まだ試していません。","en":"We have not tested it with real-world data yet."},
+        {"id":"p-nottested-002","ja":"屋外環境では、このシステムを試していません。","en":"We have not tested the system in outdoor environments."},
+        {"id":"p-nottested-003","ja":"高齢のユーザーでは、まだ試していません。","en":"We have not tested it with older users yet."},
+        {"id":"p-nottested-004","ja":"他の言語では、このモデルを試していません。","en":"We have not tested the model on other languages."},
+        {"id":"p-nottested-005","ja":"長期間の使用は、まだ試していません。","en":"We have not tested long-term use yet."},
+        {"id":"p-nottested-006","ja":"より大きなデータセットでは、私たちの手法を試していません。","en":"We have not tested our method on larger datasets."},
+        {"id":"p-nottested-007","ja":"他の種類のセンサは、まだ試していません。","en":"We have not tested other types of sensors yet."},
+        {"id":"p-nottested-008","ja":"多くの人が同時に使う場合は、試していません。","en":"We have not tested the case where many people use it at the same time."}
+      ]
+    },
+    {
+      "id": "p-assume",
+      "title": "前提を述べる",
+      "frame": "We assume that ...",
+      "ja": "〜と仮定しています。",
+      "note": "前提を聞かれたときの定番。that の後は完全な文。",
+      "cards": [
+        {"id":"p-assume-001","ja":"ユーザーが一日中デバイスを着けていると仮定しています。","en":"We assume that users wear the device all day."},
+        {"id":"p-assume-002","ja":"ラベルが正しいと仮定しています。","en":"We assume that the labels are correct."},
+        {"id":"p-assume-003","ja":"部屋には1人しかいないと仮定しています。","en":"We assume that there is only one person in the room."},
+        {"id":"p-assume-004","ja":"デバイスがインターネットにつながっていると仮定しています。","en":"We assume that the device is connected to the internet."},
+        {"id":"p-assume-005","ja":"学習データとテストデータが似ていると仮定しています。","en":"We assume that the training data and the test data are similar."},
+        {"id":"p-assume-006","ja":"ユーザーの行動は大きく変わらないと仮定しています。","en":"We assume that user behavior does not change much."},
+        {"id":"p-assume-007","ja":"センサが同じ位置に固定されていると仮定しています。","en":"We assume that the sensor is fixed in the same position."},
+        {"id":"p-assume-008","ja":"参加者が正直に答えたと仮定しています。","en":"We assume that the participants answered honestly."}
+      ]
+    },
+    {
+      "id": "p-depends",
+      "title": "条件によると答える",
+      "frame": "It depends on ...",
+      "ja": "それは〜によります。",
+      "note": "depend on の後は名詞、または how / where / whether の節。即答しにくい質問で役立つ。",
+      "cards": [
+        {"id":"p-depends-001","ja":"それはデータの量によります。","en":"It depends on the amount of data."},
+        {"id":"p-depends-002","ja":"それは使うデバイスによります。","en":"It depends on the device you use."},
+        {"id":"p-depends-003","ja":"それはセンサをどこに置くかによります。","en":"It depends on where you put the sensor."},
+        {"id":"p-depends-004","ja":"それはタスクがどれくらい難しいかによります。","en":"It depends on how difficult the task is."},
+        {"id":"p-depends-005","ja":"それはユーザーの年齢によります。","en":"It depends on the age of the user."},
+        {"id":"p-depends-006","ja":"それはラベルが手に入るかどうかによります。","en":"It depends on whether labels are available."},
+        {"id":"p-depends-007","ja":"それはどの指標を使うかによります。","en":"It depends on which metric you use."},
+        {"id":"p-depends-008","ja":"それは環境がどれくらいうるさいかによります。","en":"It depends on how noisy the environment is."}
+      ]
+    },
+    {
+      "id": "p-plan",
+      "title": "今後の計画",
+      "frame": "We plan to investigate ...",
+      "ja": "〜を調べる予定です。",
+      "note": "plan to ＋動詞の原形。investigate の後は名詞か how / why / whether の節。",
+      "cards": [
+        {"id":"p-plan-001","ja":"長期的な効果を調べる予定です。","en":"We plan to investigate long-term effects."},
+        {"id":"p-plan-002","ja":"この手法が他のタスクでも使えるかどうかを調べる予定です。","en":"We plan to investigate whether this method works for other tasks."},
+        {"id":"p-plan-003","ja":"なぜ精度が下がるのかを調べる予定です。","en":"We plan to investigate why the accuracy drops."},
+        {"id":"p-plan-004","ja":"ユーザーが時間とともに行動をどう変えるかを調べる予定です。","en":"We plan to investigate how users change their behavior over time."},
+        {"id":"p-plan-005","ja":"他の種類のセンサを調べる予定です。","en":"We plan to investigate other types of sensors."},
+        {"id":"p-plan-006","ja":"モデルの大きさの影響を調べる予定です。","en":"We plan to investigate the effect of model size."},
+        {"id":"p-plan-007","ja":"失敗が起きる条件を調べる予定です。","en":"We plan to investigate the conditions where failures happen."},
+        {"id":"p-plan-008","ja":"この結果が子どもにも当てはまるかどうかを調べる予定です。","en":"We plan to investigate whether these results also apply to children."}
+      ]
+    },
+    {
+      "id": "p-next",
+      "title": "次のステップ",
+      "frame": "As a next step, we will ...",
+      "ja": "次のステップとして、〜します。",
+      "note": "As a next step の後にコンマ。will ＋動詞の原形。",
+      "cards": [
+        {"id":"p-next-001","ja":"次のステップとして、もっと多くのデータを集めます。","en":"As a next step, we will collect more data."},
+        {"id":"p-next-002","ja":"次のステップとして、実環境でシステムを評価します。","en":"As a next step, we will evaluate the system in real environments."},
+        {"id":"p-next-003","ja":"次のステップとして、私たちの手法を他の手法と比較します。","en":"As a next step, we will compare our method with other methods."},
+        {"id":"p-next-004","ja":"次のステップとして、参加者の数を増やします。","en":"As a next step, we will increase the number of participants."},
+        {"id":"p-next-005","ja":"次のステップとして、モデルを小さくします。","en":"As a next step, we will make the model smaller."},
+        {"id":"p-next-006","ja":"次のステップとして、長期のユーザー調査を行います。","en":"As a next step, we will run a long-term user study."},
+        {"id":"p-next-007","ja":"次のステップとして、コードとデータを公開します。","en":"As a next step, we will release the code and the data."},
+        {"id":"p-next-008","ja":"次のステップとして、失敗した例を詳しく分析します。","en":"As a next step, we will analyze the failure cases in detail."}
+      ]
+    },
+    {
+      "id": "p-apply",
+      "title": "応用を述べる",
+      "frame": "This method can be applied to ...",
+      "ja": "この手法は〜に応用できます。",
+      "note": "can be ＋過去分詞（助動詞つきの受動態）。to の後は名詞。",
+      "cards": [
+        {"id":"p-apply-001","ja":"この手法は他の種類のデータに応用できます。","en":"This method can be applied to other types of data."},
+        {"id":"p-apply-002","ja":"この手法は医療に応用できます。","en":"This method can be applied to healthcare."},
+        {"id":"p-apply-003","ja":"この手法は似た問題に応用できます。","en":"This method can be applied to similar problems."},
+        {"id":"p-apply-004","ja":"この手法は他の言語に応用できます。","en":"This method can be applied to other languages."},
+        {"id":"p-apply-005","ja":"この手法はリハビリテーションに応用できます。","en":"This method can be applied to rehabilitation."},
+        {"id":"p-apply-006","ja":"この手法はラベルの少ない分野に応用できます。","en":"This method can be applied to fields with few labels."},
+        {"id":"p-apply-007","ja":"この手法は工場で働く人の安全に応用できます。","en":"This method can be applied to the safety of factory workers."},
+        {"id":"p-apply-008","ja":"この手法はスポーツのトレーニングに応用できます。","en":"This method can be applied to sports training."}
+      ]
+    }
+  ]
+}

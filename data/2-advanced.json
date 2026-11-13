@@ -5,6 +5,7 @@
     {
       "id": "a-perfect",
       "title": "完了形の使い分け",
+      "note": "過去完了 had ＋過去分詞は「過去のある時点より前」、未来完了 will have ＋過去分詞は「未来のある時点までに」。",
       "refs": [
         { "name": "native-real 瞬間英作文", "url": "https://native-real.com/speaking/instant/" }
       ],
@@ -29,6 +30,7 @@
     {
       "id": "a-subjunctive",
       "title": "仮定法 (過去完了・without・I wish・if only)",
+      "note": "If ＋ had 過去分詞, would have ＋過去分詞で過去の事実と逆のこと。I wish ＋過去形で今の願望。",
       "refs": [
         { "name": "native-real 瞬間英作文", "url": "https://native-real.com/speaking/instant/" },
         { "name": "ぼくらの瞬間英作文", "url": "https://urbanmeetup.tokyo/app/shunkan" }
@@ -54,6 +56,7 @@
     {
       "id": "a-participle",
       "title": "分詞構文",
+      "note": "-ing や過去分詞で文を始めて、「〜しながら／〜なので／〜すると」を短く言う。",
       "refs": [
         { "name": "MAE 瞬間英作文", "url": "https://blogmae.com/ieltsblog-pronunciation1/" }
       ],
@@ -78,6 +81,7 @@
     {
       "id": "a-relative",
       "title": "関係副詞・非制限用法",
+      "note": "where / when / why ＋文で場所・時・理由を説明する。コンマ＋ which は前の内容に補足を足す。",
       "refs": [
         { "name": "native-real 瞬間英作文", "url": "https://native-real.com/speaking/instant/" }
       ],
@@ -102,6 +106,7 @@
     {
       "id": "a-emphasis",
       "title": "強調構文・倒置",
+      "note": "It is 〜 that … で〜を強調する。否定語を文頭に出すと、後ろは疑問文の語順（倒置）。",
       "refs": [
         { "name": "MAE 瞬間英作文", "url": "https://blogmae.com/ieltsblog-pronunciation1/" }
       ],
@@ -126,6 +131,7 @@
     {
       "id": "a-causative",
       "title": "使役動詞・知覚動詞",
+      "note": "make / let / have ＋人＋原形（させる・してもらう）。see / hear ＋人＋原形 / -ing（〜するのを見る・聞く）。",
       "refs": [
         { "name": "ぼくらの瞬間英作文", "url": "https://urbanmeetup.tokyo/app/shunkan" }
       ],
@@ -150,6 +156,7 @@
     {
       "id": "a-modal-perfect",
       "title": "助動詞 + have 過去分詞",
+      "note": "must / may / should ＋ have ＋過去分詞で、過去のことへの推量や後悔を言う。",
       "refs": [
         { "name": "native-real 瞬間英作文", "url": "https://native-real.com/speaking/instant/" },
         { "name": "毎日3秒英作文", "url": "https://sunaoblog.com/3sec-game/" }
@@ -175,6 +182,7 @@
     {
       "id": "a-daily",
       "title": "日常会話",
+      "note": "決まり文句はかたまりで覚えて、そのまま口に出す。",
       "refs": [
         { "name": "毎日3秒英作文", "url": "https://sunaoblog.com/3sec-game/" }
       ],
@@ -199,6 +207,7 @@
     {
       "id": "a-business",
       "title": "ビジネスメール・打ち合わせ",
+      "note": "丁寧さは Could you 〜? / I would like to 〜 / I apologize for 〜 などの型で出す。",
       "refs": [
         { "name": "native-real 瞬間英作文", "url": "https://native-real.com/speaking/instant/" }
       ],
@@ -223,6 +232,7 @@
     {
       "id": "a-travel",
       "title": "旅行・学会出張",
+      "note": "場面ごとの定番表現。I'd like to 〜 / Could I 〜? でほぼ対応できる。",
       "refs": [
         { "name": "ぼくらの瞬間英作文", "url": "https://urbanmeetup.tokyo/app/shunkan" },
         { "name": "毎日3秒英作文", "url": "https://sunaoblog.com/3sec-game/" }
