@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded } from '../core.js';
 import { MISS, HINT, SLOW, SOLO, planSession, requeue, byNeed } from '../plan.js';
-import { PREPS, example, accepted, blank, options, heard, practise, hints, siblings, progress, stepOf } from '../colloc.js';
+import { example, blank, heard, practise, hints, siblings, progress, stepOf } from '../colloc.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const pairs = items.filter((c) => c.kind === 'colloc');
@@ -26,18 +26,8 @@ test('blank hides the preposition after the adjective, and only that one', () =>
   for (const c of pairs) for (const e of c.examples) assert.equal(blank(c, e).split('___').length, 2, e.id);
 });
 
-test('choices: four different prepositions, one right; the same adjective\'s other prepositions first; never another right one', () => {
-  for (const c of pairs) for (const e of c.examples) {
-    const o = options(c, e, items, seeded(e.id)), ok = accepted(c, e);
-    assert.equal(new Set(o).size, 4, e.id);
-    assert.deepEqual(o.filter((p) => ok.includes(p)), [c.prep], `${e.id}: exactly one acceptable choice`);
-    assert.ok(o.every((p) => PREPS.includes(p)));
-  }
-  const happy = pair('happy about'), e = happy.examples[0];
-  assert.ok(options(happy, e, items, seeded('x')).includes('with'), 'happy about is asked against happy with');
-  const angry = pair('angry about'), a = angry.examples[0];
-  assert.ok(!options(angry, a, items, seeded('x')).includes('at'), '"at" also fits this sentence, so it is not offered as wrong');
-  assert.ok(options(angry, a, items, seeded('x')).includes('with'));
+test('the four-choice step is gone: a new pair, or one saved at the old step 1, starts by recalling the preposition', () => {
+  assert.deepEqual([stepOf(undefined), stepOf({ step: 1, box: 1 }), stepOf({ step: 3 })], [2, 2, 3]);
 });
 
 test('heard: the preposition after the adjective, else the only one said; otherwise unknown', () => {
@@ -53,15 +43,13 @@ test('heard: the preposition after the adjective, else the only one said; otherw
 
 test('practise: two right answers on two different days move a pair up a step; one wrong answer resets the count', () => {
   let r = practise(undefined, { grade: SOLO }, T);
-  assert.deepEqual([r.step, r.wins, r.box, r.due], [1, 1, 1, addDays(T, 1)]);
+  assert.deepEqual([r.step, r.wins, r.box, r.due], [2, 1, 1, addDays(T, 1)]);
   const again = practise(r, { grade: SOLO }, T);
-  assert.deepEqual([again.step, again.wins, again.due], [1, 1, r.due], 'answering again the same day does not count');
-  r = practise(r, { grade: SOLO }, r.due);
-  assert.deepEqual([r.step, r.wins], [2, 0], 'step 2 after two days');
+  assert.deepEqual([again.step, again.wins, again.due], [2, 1, r.due], 'answering again the same day does not count');
   const miss = practise(r, { grade: MISS }, r.due);
-  assert.deepEqual([miss.step, miss.wins, miss.box, miss.due], [2, 0, 0, addDays(r.due, 1)], 'a miss: back tomorrow, count reset, no step down');
-  r = practise(practise(r, { grade: SOLO }, r.due), { grade: SOLO }, addDays(r.due, 1));
-  assert.equal(r.step, 3);
+  assert.deepEqual([miss.step, miss.wins, miss.box, miss.due], [2, 0, 0, addDays(r.due, 1)], 'a miss: back tomorrow, count reset');
+  r = practise(r, { grade: SOLO }, r.due);
+  assert.deepEqual([r.step, r.wins], [3, 0], 'saying the sentence after two days');
   assert.equal(practise(undefined, { grade: HINT, hint: true }, T).wins, 0, 'a hint is not a win');
 });
 
@@ -81,13 +69,12 @@ test('a pair reaches step 3 only after being right in different sentences on dif
   let rec, day = T;
   const used = [];
   while (stepOf(rec) < 3) { used.push(example(pair('satisfied with'), rec).id); rec = practise(rec, { grade: SOLO }, day); day = rec.due; }
-  assert.equal(used.length, 4);
-  assert.ok(new Set(used.slice(0, 2)).size === 2 && new Set(used.slice(2)).size === 2, 'two different sentences at each step');
+  assert.equal(used.length, 2);
+  assert.equal(new Set(used).size, 2, 'two different sentences');
 });
 
-test('hints: none for choosing, the meaning then the first letter for recall, the adjective then the pair for saying it', () => {
+test('hints: the meaning then the first letter for recall, the adjective then the pair for saying it', () => {
   const c = pair('satisfied with'), e = c.examples[0];
-  assert.deepEqual(hints(c, 1, e), []);
   assert.deepEqual(hints(c, 2, e).map(([k]) => k), ['意味', '頭文字']);
   assert.equal(hints(c, 2, e)[1][1], 'w___');
   assert.deepEqual(hints(c, 3, e).slice(0, 2), [['使う形容詞', 'satisfied'], ['使う表現', 'satisfied with']]);
@@ -109,7 +96,7 @@ test('daily session: five pairs, new ones easy first and from different preposit
   assert.equal(next[0].id, chosen[0].id, 'the missed pair opens the next session');
   assert.equal(next[0].phase, 'review');
   const again = next.filter((s) => s.phase === 'colloc').map((s) => s.id);
-  assert.ok(chosen.slice(1).filter((c) => again.includes(c.id)).length >= 2, 'pairs at step 1 come back the next day');
+  assert.ok(chosen.slice(1).filter((c) => again.includes(c.id)).length >= 2, 'pairs still being recalled come back the next day');
   assert.equal(again.filter((id) => !hist[id]).length, 2, 'and room is kept for two new pairs');
   assert.equal(requeue(queue, queue.indexOf(steps[0]), MISS, 'colloc').filter((s) => s.id === steps[0].id).length, 2, 'a miss is retried later in the session');
 });
@@ -123,8 +110,8 @@ test('a month of practice moves pairs through the steps without dropping the oth
   }
   const p = progress(items, hist).all;
   assert.equal(p.reduce((a, b) => a + b), pairs.length);
-  assert.ok(p[3] + p[4] >= 10, `pairs at step 3 after a month: ${p}`);
-  assert.ok(p[1] + p[2] >= 5, 'and new ones still coming');
+  assert.ok(p[2] + p[3] >= 10, `pairs said in a sentence after a month: ${p}`);
+  assert.ok(pairs.length - p[0] >= 30, `and new ones keep coming: ${p}`);
 });
 
 test('drill: every pair — wrong last time, then due, then new ones (easy first), then the rest', () => {
@@ -146,7 +133,7 @@ test('drill: every pair — wrong last time, then due, then new ones (easy first
 test('progress counts pairs per step, overall and per preposition', () => {
   const c = pair('interested in');
   const p = progress(items, { [c.id]: { step: 2, box: 1 }, [pair('afraid of').id]: { step: 3, box: 2 } });
-  assert.deepEqual(p.all, [pairs.length - 2, 0, 1, 0, 1]);
-  assert.deepEqual(p.in.slice(1), [0, 1, 0, 0]);
-  assert.equal(p.of[4], 1);
+  assert.deepEqual(p.all, [pairs.length - 2, 1, 0, 1]);
+  assert.deepEqual(p.in.slice(1), [1, 0, 0]);
+  assert.equal(p.of[3], 1);
 });

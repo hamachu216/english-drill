@@ -1,33 +1,25 @@
 // Adjective + preposition pairs ("interested in"), as pure functions: which sentence to ask, what to show, and how
-// one answer moves a pair along its three steps. The pair is what is learned, not a sentence: every time it comes
+// one answer moves a pair along its steps. The pair is what is learned, not a sentence: every time it comes
 // up it is asked in a different example sentence.
 //
-//   step 1 (choose)  pick the preposition from four   ─┐ two right answers, on two different days,
-//   step 2 (recall)  say or type it, no choices        ─┘ in two different sentences → next step
+//   step 2 (recall)  type or say the preposition: two right answers, on two different days, in two different sentences
 //   step 3 (say)     say the whole sentence from Japanese → the usual review boxes (7, 14, 30, 60 days)
-// A wrong answer at any step brings the pair back tomorrow.
-import { shuffle, addDays, skeleton } from './core.js';
+// A wrong answer at any step brings the pair back tomorrow. There is no step 1 any more: choosing from four was
+// too easy (the pairs were recognized; recalling them is the work), so records saved at step 1 count as step 2.
+import { addDays, skeleton } from './core.js';
 import { SLOW, review } from './plan.js';
 
 export const PREPS = ['about', 'at', 'by', 'for', 'from', 'in', 'of', 'to', 'with'];
-export const STEPS = ['', '選ぶ', '思い出す', '文で言う'];
+export const STEPS = { 2: '思い出す', 3: '文で言う' };
 const WINS = 2;
 
-export const stepOf = (rec) => rec?.step ?? 1;
+export const stepOf = (rec) => Math.max(2, rec?.step ?? 2);
 // A different sentence each time the pair comes up (the answer count rotates through them).
 export const example = (c, rec) => c.examples[(rec?.n ?? 0) % c.examples.length];
 // Prepositions that are right in this sentence: the pair's own, plus any the sentence also allows.
 export const accepted = (c, ex) => [c.prep, ...(ex.also ?? [])];
 // "She is interested in ML." → "She is interested ___ ML."
 export const blank = (c, ex) => ex.en.replace(new RegExp(`\\b(${c.adj}) ${c.prep}\\b`, 'i'), '$1 ___');
-
-// Four choices: the answer, then the prepositions this adjective takes in other pairs (the real confusions),
-// then others. Never one that would also be right in this sentence.
-export function options(c, ex, items, rand) {
-  const ok = accepted(c, ex), rivals = items.filter((x) => x.adj === c.adj && x.prep !== c.prep).map((x) => x.prep);
-  const wrong = [...new Set([...shuffle(rivals, rand), ...shuffle(PREPS, rand)])].filter((p) => !ok.includes(p)).slice(0, 3);
-  return shuffle([c.prep, ...wrong], rand);
-}
 
 // The preposition in a typed or transcribed answer: the word after the adjective, else the only preposition said.
 // null when it can't tell (then the learner judges it).
@@ -39,7 +31,7 @@ export function heard(text, c) {
 }
 
 // One answer → the pair's new record: the review record plus {step, wins}. As with review(), only an answer on a
-// day the pair is due counts toward moving up; a same-day retry can't. Steps 1–2 come back the next day either way.
+// day the pair is due counts toward moving up; a same-day retry can't. Step 2 comes back the next day either way.
 export function practise(rec, { grade, hint = false }, day) {
   const step = stepOf(rec), wins = rec?.wins ?? 0;
   if (step === 3) return { ...review(rec, { grade, hint }, day), step, wins: 0 };
@@ -50,19 +42,19 @@ export function practise(rec, { grade, hint = false }, day) {
   };
 }
 
-// What the hint button reveals, one at a time (nothing is shown up front; step 1 has its choices instead).
+// What the hint button reveals, one at a time (nothing is shown up front).
 export const hints = (c, step, ex) =>
-  step === 1 ? [] : step === 2 ? [['意味', c.ja], ['頭文字', c.prep[0] + '_'.repeat(c.prep.length - 1)]]
+  step === 2 ? [['意味', c.ja], ['頭文字', c.prep[0] + '_'.repeat(c.prep.length - 1)]]
   : [['使う形容詞', c.adj], ['使う表現', c.collocation], ['頭文字', skeleton(ex.en)]];
 
 // Other pairs with the same adjective: "happy about（…）/ happy with（…）", for telling them apart.
 export const siblings = (c, items) => items.filter((x) => x.kind === 'colloc' && x.adj === c.adj && x !== c);
 
-// How far the pairs have come: [not started, step 1, step 2, step 3, settled (step 3, next review a week or more away)],
+// How far the pairs have come: [not started, recall, say, settled (step 3, next review a week or more away)],
 // in total and per preposition.
 export function progress(items, hist) {
-  const at = (c) => { const r = hist[c.id]; return !r ? 0 : r.step === 3 && r.box >= 2 ? 4 : stepOf(r); };
-  const out = { all: [0, 0, 0, 0, 0] };
-  for (const c of items.filter((x) => x.kind === 'colloc')) for (const k of ['all', c.prep]) (out[k] ??= [0, 0, 0, 0, 0])[at(c)]++;
+  const at = (c) => { const r = hist[c.id]; return !r ? 0 : r.step === 3 && r.box >= 2 ? 3 : stepOf(r) - 1; };
+  const out = { all: [0, 0, 0, 0] };
+  for (const c of items.filter((x) => x.kind === 'colloc')) for (const k of ['all', c.prep]) (out[k] ??= [0, 0, 0, 0])[at(c)]++;
   return out;
 }

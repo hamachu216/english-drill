@@ -43,16 +43,16 @@
 
     <div class="status">
     <div class="card drill">
-      <div class="cal-head"><b>🔗 Collocation Drill</b><span class="muted">形容詞＋前置詞</span></div>
+      <div class="cal-head"><b>Collocation Drill</b><span class="muted">形容詞＋前置詞</span></div>
       <p class="muted" id="cd-summary"></p>
       <button id="cd-start" class="wide">▶ 始める（10問ずつ）</button>
       <details>
-        <summary class="muted">前置詞ごとの進み具合（Step1 選ぶ → Step2 思い出す → Step3 文で言う）</summary>
+        <summary class="muted">前置詞ごとの進み具合（前置詞を思い出す → 文で言う）</summary>
         <table id="cd-table" class="grid">
-          <thead><tr><th></th><th>未学習</th><th>Step1</th><th>Step2</th><th>Step3</th><th>定着</th></tr></thead>
+          <thead><tr><th></th><th>未学習</th><th>思い出す</th><th>文で言う</th><th>定着</th></tr></thead>
           <tbody></tbody>
         </table>
-        <p class="muted">2日に分けて、別の例文で2回正解すると次の Step へ。Step3 で言えるたびに復習の間隔が延びます（定着＝次の復習が1週間以上先）。毎日の練習にも1日5問ほど自動で入ります。</p>
+        <p class="muted">空所の前置詞を、2日に分けて別の例文で2回正解すると「文で言う」へ。文で言えるたびに復習の間隔が延びます（定着＝次の復習が1週間以上先）。毎日の練習にも1日5問ほど自動で入ります。</p>
       </details>
     </div>
     <h2>いまの状況</h2>
@@ -67,12 +67,15 @@
     </div>
     </div>
 
-    <div class="more">
+    <div class="records">
     <h2>学習の記録</h2>
     <div class="card">
       <div class="cal-head"><b>過去12週間</b><span class="muted">濃いほどたくさん回答</span></div>
       <div id="heatmap" aria-label="過去12週間の学習記録"></div>
     </div>
+    </div>
+
+    <div class="panels">
 
     <details class="card panel">
       <summary>📚 自由に練習</summary>
@@ -125,7 +128,6 @@
       <div class="row ask"><p class="prompt" id="prompt"></p><button id="listen" class="icon-btn" aria-label="質問を読み上げ">🔊</button></div>
       <p class="sub" id="sub"></p>
       <dl class="hints" id="hints"></dl>
-      <div class="choices" id="choices"></div>
       <textarea id="input" placeholder="声に出して答えよう（入力は任意。🎤で文字起こし）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="actions">
         <button id="mic" hidden aria-label="音声入力">🎤</button>

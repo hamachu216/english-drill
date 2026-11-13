@@ -177,11 +177,6 @@ textarea {
 #model-label { margin: 0 0 4px; font-weight: 700; }
 #playback { width: 100%; margin-top: 12px; }
 .judge-label { margin: 16px 0 0; font-weight: 700; }
-.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-.choices:empty { display: none; }
-.choices button { min-height: 56px; font-size: 1.15rem; font-weight: 800; }
-.choices button.right { background: color-mix(in srgb, var(--good) 18%, var(--surface)); border-color: var(--good); color: var(--good); }
-.choices button.wrong { background: color-mix(in srgb, var(--bad) 14%, var(--surface)); border-color: var(--bad); color: var(--bad); }
 .en mark { background: color-mix(in srgb, var(--lv) 22%, transparent); color: inherit; border-radius: 6px; padding: 0 3px; }
 #caveat, #result-ups { white-space: pre-line; }
 .judge { --c: var(--lv3); display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 10px; margin-top: 8px; }
@@ -196,8 +191,8 @@ kbd { font: .7rem ui-monospace, monospace; opacity: .6; margin-left: 4px; }
 /* PC: use the width. Home = today + history | levels; study = question | answer side by side. */
 @media (min-width: 960px) {
   main, header { max-width: 90rem; padding-left: 40px; padding-right: 40px; }
-  #home { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "today status" "more status" "more extra"; grid-template-rows: auto auto 1fr; gap: 0 40px; align-items: start; }
-  .today { grid-area: today; } .status { grid-area: status; } .more { grid-area: more; } .extra { grid-area: extra; }
+  #home { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "today status" "records status" "panels extra"; gap: 0 40px; align-items: start; }
+  .today { grid-area: today; } .status { grid-area: status; } .records { grid-area: records; } .panels { grid-area: panels; } .extra { grid-area: extra; }
   .status > :first-child { margin-top: 4px; }
   #heatmap { grid-auto-columns: minmax(0, 32px); justify-content: space-between; }
   #qcard { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: repeat(6, auto) 1fr; column-gap: 40px; padding: 28px; }
