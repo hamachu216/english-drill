@@ -27,6 +27,10 @@ export const restore = (s) => ({
   settings: Object.fromEntries(Object.entries(DEFAULT).map(([k, v]) => [k, s?.settings?.[k] ?? v])),
 });
 
+// A backup file is saved state: an object whose records, where present, are plain objects, with a log or a history.
+const record = (x) => x == null || (typeof x === 'object' && !Array.isArray(x));
+export const isBackup = (s) => record(s) && s != null && (s.log != null || s.hist != null) && ['log', 'hist', 'days', 'answers', 'settings'].every((k) => record(s[k]));
+
 // Deterministic random numbers from a string (FNV-1a seed → mulberry32): the same day plans the same session.
 export function seeded(text) {
   let a = [...text].reduce((h, ch) => Math.imul(h ^ ch.charCodeAt(0), 16777619), 2166136261);
