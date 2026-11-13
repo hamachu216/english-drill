@@ -23,6 +23,7 @@ const CHECK = { grammar: 3, pattern: 2, reply: 1, qa: 1 }; // weekly first-sight
 const WEEK = 7;
 const HINT_BOX = 2; // answers with a hint alone get a card this far (7 days)
 const KNOWN = 3; // grammar answers, all said, after which a topic counts as known and its new cards wait
+const ROTATION = 3; // grammar topics taking new cards at a time
 
 // One answer → the card's new record. A box is only climbed on a day the card was due (or new):
 // answering again the same day, or early, can lower the box but never raise it or push the due date.
@@ -115,7 +116,8 @@ const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id
 
 // Today's session. Per kind: reviews that are due (weakest first), then unseen cards from the weakest topic that has any,
 // then new cards, then — when nothing is left — the cards practiced longest ago. Unless the review pile is
-// more than two sessions deep, a quarter of each kind is kept for new cards, so there is progress every day.
+// more than two sessions deep, a quarter of each kind is kept for new cards, so there is progress every day —
+// but never at the cost of a card missed last time: those always come back (as many as fit).
 // Every kind gets at least one card, so research English is touched no matter how grammar is going.
 // Order: cards failed last time → grammar → sentence frames → Q&A replies → Q&A → (weekly) first-sight check.
 export function planSession({ items, hist, days, day, minutes, rand = Math.random }) {
@@ -133,18 +135,20 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     const fresh = pool.filter((c) => !rec(c) && !c.held);
     const pile = pool.filter(due).sort((a, b) => rec(a).box - rec(b).box || rec(a).due.localeCompare(rec(b).due));
     const quota = pile.length < 2 * n ? Math.min(n, Math.max(kind === 'pattern' ? 2 : 1, Math.ceil(n / 4))) : 0;
-    const reviews = pile.slice(0, n - quota);
+    const reviews = pile.slice(0, Math.max(n - quota, Math.min(n, pile.filter(sore).length)));
     const rested = pool.filter(idle).sort((a, b) => rec(a).last.localeCompare(rec(b).last));
     // Extra practice for the weakest topic means its unseen sentences: one said well yesterday wouldn't move today.
     const worst = weak.find((t) => fresh.some((c) => c.topic === t));
     const focus = fresh.filter((c) => c.topic === worst).slice(0, Math.ceil(n / 5));
     // New frames: more sentences for frames already started, then (once every started frame has been said
     // at least once) one or two new frames, one sentence to repeat and BLOCK to say. New questions: one per topic in turn.
+    // New grammar: ROTATION topics at a time, in file order (so Lv2 waits for Lv1), each until it is known.
+    const learning = [...new Set(fresh.map((c) => c.topic))].filter((t) => !known.has(t)).slice(0, ROTATION);
     const open = fresh.filter((c) => c.topic in stage);
     const ready = pool.every((c) => !(c.topic in stage) || stage[c.topic] >= 1) && n - reviews.length - focus.length - open.length >= 2;
     const untouched = [...new Set(fresh.filter((c) => !(c.topic in stage)).map((c) => c.topic))].slice(0, n > 6 ? 2 : 1);
     const added = {
-      grammar: [...fresh].sort(newFirst(known)),
+      grammar: [...fresh.filter((c) => learning.includes(c.topic)).sort(easyFirst), ...[...fresh].sort(newFirst(known))],
       pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, 1 + BLOCK)) : [])],
       qa: [...fresh].sort(easyFirst),
       reply: [...fresh].sort(easyFirst),
@@ -190,7 +194,8 @@ export function requeue(queue, i, grade, kind) {
 // What a step shows up front and what the hint button reveals, in order. Support fades with the level:
 //   frame card   0: frame shown · 1: frame half hidden · 2: nothing; the hints then give the phrases that fill it
 //   question     0 (Beginner): keywords + answer frame · 1 (Intermediate): keywords · 2 (Advanced): nothing
-// A retry shows everything; the weekly check shows nothing and has no hints.
+// A retry shows everything (for a grammar card: its grammar in one line and the opening); the weekly check shows
+// nothing and has no hints.
 export function scaffold(c, { level = 2, retry, check, follow }) {
   const f = c.deck.follow?.[follow];
   const [ladder, shown] =
@@ -198,7 +203,7 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
     : c.kind === 'reply' ? [[['相手の質問', c.q], ['答え方の型', c.frame], ['頭文字', skeleton(c.en)]], retry ? 2 : 1]
     : c.q ? [[['キーワード', c.keys.join(' / ')], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
     : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['語句', slots(c.deck.frame, c.en).join(' / ')], ['頭文字', skeleton(c.en)]], retry ? 2 : level < 2 ? 1 : 0]
-    : [[['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], 0];
+    : [[...(retry ? [['文法', c.deck.note]] : []), ['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], retry ? 2 : 0];
   return check ? { shown: [], hints: [] } : { shown: ladder.slice(0, shown), hints: ladder.slice(shown) };
 }
 

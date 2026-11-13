@@ -63,8 +63,8 @@ test('first use: about 30 minutes with grammar, new sentence frames, Q&A replies
   assert.ok(n.grammar > n.pattern && n.pattern > n.qa);
   assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'pattern', 'reply', 'qa'], 'no review, impromptu or check on day one');
   const grammar = queue.filter((s) => byId.get(s.id).kind === 'grammar').map((s) => byId.get(s.id));
-  assert.ok(grammar.every((c) => c.nth === 0), 'new grammar: the first card of each topic in turn, not one topic at a time');
-  assert.ok(grammar.slice(0, 15).every((c) => c.level === 1), 'Lv1 topics first in each round');
+  assert.deepEqual([...new Set(grammar.map((c) => c.topic))], ['b-be', 'b-neg', 'b-prog'], 'new grammar: three topics at a time, the first ones');
+  assert.deepEqual(grammar.slice(0, 3).map((c) => c.nth), [0, 0, 0], 'taken in turn, not one topic at a time');
   const frames = queue.filter((s) => s.phase === 'pattern');
   assert.ok(frames[0].intro, 'a frame is explained, with its first sentence to repeat, before it is used');
   const first = frames.filter((s) => byId.get(s.id).topic === byId.get(frames[0].id).topic);
@@ -135,7 +135,7 @@ test('a weak topic with no unseen sentences left gets only its misses back; the 
   const hist = Object.fromEntries(be.map((c, i) => [c.id, review(undefined, i % 2 ? OK : MISS, day)]));
   const queue = plan(hist, {}, next), bes = queue.filter((s) => byId.get(s.id).topic === 'b-be');
   assert.deepEqual(bes.map((s) => s.id).sort(), be.filter((_, i) => !(i % 2)).map((c) => c.id).sort(), 'only the misses');
-  assert.ok(new Set(queue.filter((s) => s.phase === 'grammar').map((s) => byId.get(s.id).topic)).size >= 4, 'the room left goes to new cards of other topics');
+  assert.ok(new Set(queue.filter((s) => s.phase === 'grammar').map((s) => byId.get(s.id).topic)).size >= 3, 'the room left goes to new cards of other topics');
 });
 
 test('a grammar topic said without a hint three times is known: its new cards wait, and one miss brings it back', () => {
@@ -183,6 +183,28 @@ test('a new frame waits until every started frame has been said at least once', 
   assert.equal(new Set(stuck.sessions.flat().filter((s) => s.intro).map((s) => byId.get(s.id).topic)).size, 2, 'only the first day introduces frames');
   const moving = practice(3, () => OK);
   assert.ok(new Set(moving.sessions.flat().filter((s) => s.intro).map((s) => byId.get(s.id).topic)).size > 2);
+});
+
+test('a missed card comes back the next day even when its kind has room for only a couple of cards', () => {
+  const missed = { box: 0, n: 1, last: T, due: addDays(T, 1), grade: MISS };
+  const queue = plan({ 'q-goal-001': missed, 'q-method-001': missed }, {}, addDays(T, 1));
+  assert.deepEqual(queue.filter((s) => s.phase === 'review').map((s) => s.id).sort(), ['q-goal-001', 'q-method-001']);
+});
+
+test('new grammar comes from three topics at a time: a known topic hands over to the next, and Lv2 waits until Lv1 is nearly known', () => {
+  const said = (ids) => Object.fromEntries(ids.map((id) => [id, review(undefined, OK, T)]));
+  const topics = (hist) => [...new Set(plan(hist, {}, addDays(T, 1)).filter((s) => s.phase === 'grammar' && !hist[s.id]).map((s) => byId.get(s.id).topic))];
+  assert.deepEqual(topics(said(['b-be-001', 'b-be-002', 'b-be-003'])), ['b-neg', 'b-prog', 'b-past'], 'b-be is known: b-past takes its place');
+  const lv1 = items.filter((c) => c.kind === 'grammar' && c.level === 1 && c.nth < 3).map((c) => c.id);
+  assert.ok(topics(said(lv1)).every((t) => t.startsWith('a-')), 'every Lv1 topic known: Lv2 begins');
+  assert.deepEqual(topics(said(lv1.slice(9))), ['b-be', 'b-neg', 'b-prog'], 'three Lv1 topics still being learned: no Lv2 yet');
+});
+
+test('a grammar card retried in the session shows its grammar and its opening up front', () => {
+  const c = byId.get('b-subjunctive-001');
+  assert.deepEqual(scaffold(c, { retry: true }).shown.map(([label]) => label), ['文法', '出だし']);
+  assert.deepEqual(scaffold(c, { retry: true }).hints.map(([label]) => label), ['頭文字']);
+  assert.deepEqual(scaffold(c, {}).shown, []);
 });
 
 test('Q&A reply: said like a sentence from its Japanese, with the question shown and the answer frame as the first hint', () => {
