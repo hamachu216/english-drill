@@ -75,7 +75,7 @@ function renderHome() {
   $('today').textContent = s ? s.idx : 0;
   $('goal-of').textContent = `/ ${queue.length}`;
   $('ring').style.setProperty('--p', s && queue.length ? (s.idx / queue.length) * 100 : 0);
-  $('goal-label').textContent = done ? '🎉 今日の練習は完了！' : s ? `あと${left(s)}問で今日は完了` : 'ボタン1つで今日の分が始まります';
+  $('goal-label').textContent = done ? '🎉 今日の練習は完了！' : s ? `あと${left(s)}問で今日は完了` : '';
   $('menu-time').textContent = done ? '' : s ? `残り${left(s)}問` : `約${minutes}分`;
   $('menu').replaceChildren(...(done
     ? [el('li', { className: 'muted', textContent: '今日のメニューは終わりました。明日は今日の結果をもとに、新しいメニューが自動で用意されます。' })]
@@ -88,13 +88,13 @@ function renderHome() {
   const o = overview(cards, state.hist, d), pr = progress(cards, state.hist);
   $('status').replaceChildren(
     ...pair('復習待ち', `${o.due}問`),
-    ...pair('苦手な文法', o.weak.length ? o.weak.slice(0, 3).map((t) => topicTitle[t]).join('・') : 'いまはありません'),
-    ...pair('得意な文法', o.known.length ? `${o.known.map((t) => topicTitle[t]).join('・')}（新しい問題は後回し）` : 'まだありません（1トピック3問続けてすぐ言えたら、そのトピックの新しい問題は後回し）'),
-    ...pair('研究英語の構文', `型なしで言える ${o.frames[2]} ・ 練習中 ${o.frames[0] + o.frames[1]} ／ 全${o.framesTotal}`),
-    ...pair('質疑応答の切り返し', `すぐ言える ${o.reply[2]} ・ 練習中 ${o.reply[0] + o.reply[1]} ／ 全${replyCount}`),
-    ...pair('Research Q&A', QA_LEVEL.map((name, i) => `${name} ${o.qa[i]}`).join(' ・ ')),
-    ...pair('即興 Q&A', o.unlock ? `別の日にもすぐ答えられた質問が、あと${o.unlock}問たまると始まります` : '毎日のメニューに入っています'),
-    ...pair('形容詞＋前置詞', `${stepLine(pr.all)} ／ 全${pairCount}`));
+    ...pair('苦手な文法', o.weak.length ? o.weak.slice(0, 3).map((t) => topicTitle[t]).join('・') : 'なし'),
+    ...pair('得意な文法', o.known.length ? o.known.map((t) => topicTitle[t]).join('・') : 'なし'),
+    ...pair('構文', `言える ${o.frames[2]} ・ 練習中 ${o.frames[0] + o.frames[1]} ／ ${o.framesTotal}`),
+    ...pair('切り返し', `言える ${o.reply[2]} ・ 練習中 ${o.reply[0] + o.reply[1]} ／ ${replyCount}`),
+    ...pair('Q&A', QA_LEVEL.map((name, i) => `${name} ${o.qa[i]}`).join(' ・ ')),
+    ...pair('即興Q&A', o.unlock ? `あと${o.unlock}問で解放` : '出題中'),
+    ...pair('前置詞', `${stepLine(pr.all)} ／ ${pairCount}`));
   const wrong = cards.filter((c) => c.kind === 'colloc' && state.hist[c.id]?.box === 0).length;
   $('cd-summary').textContent = `未学習 ${pr.all[0]} ・ ${stepLine(pr.all)}${wrong ? ` ・ ✕ 前回間違えた ${wrong}（次の「始める」で最初に出ます）` : ''}`;
   $('cd-table').tBodies[0].replaceChildren(...PREPS.map((p) => el('tr', {}, el('td', { textContent: p }), ...pr[p].map((n) => el('td', { textContent: n })))));

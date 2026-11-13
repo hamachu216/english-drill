@@ -101,8 +101,12 @@ button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-
 p:empty, #menu .sub:empty { display: none; }
 .card > p:last-child { margin-bottom: 0; }
 #start { min-height: 58px; font-size: 1.1rem; border-radius: 18px; }
-#status { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0; }
-#status dt { color: var(--muted); font-size: .85rem; white-space: nowrap; }
+/* Rows ruled like a table; on a PC the list fills the card (its row is as tall as the menu) and the rows share the height. */
+.now { display: flex; flex-direction: column; }
+#status { flex: 1; display: grid; grid-template-columns: auto 1fr; margin: 4px 0 0; }
+#status > * { display: flex; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+#status > :nth-child(-n+2) { border-top: 0; }
+#status dt { color: var(--muted); font-size: .85rem; white-space: nowrap; padding-right: 16px; }
 #status dd { margin: 0; font-weight: 700; font-size: .92rem; }
 .grid { width: 100%; border-collapse: collapse; font-size: .85rem; font-variant-numeric: tabular-nums; margin-bottom: 10px; }
 .grid th { color: var(--muted); font-size: .75rem; font-weight: 700; padding: 0 2px 6px; }
