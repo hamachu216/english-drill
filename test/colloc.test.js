@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { FILES, DRILLS, catalog, addDays, seeded } from '../core.js';
+import { FILES, DRILLS, catalog, addDays, seeded, skeleton } from '../core.js';
 import { MISS, OK, review, planSession, byNeed, progress, scaffold } from '../plan.js';
 import { example, hints, siblings } from '../colloc.js';
 
@@ -18,10 +18,9 @@ test('every pair is in the catalog, none held back, each asked in a different se
   assert.equal(example(c, undefined), c.examples[0]);
 });
 
-test('hints: the adjective, then the pair, then the first letters of the sentence', () => {
-  const c = pair('satisfied with'), e = c.examples[0];
-  assert.deepEqual(hints(c, e).map(([k]) => k), ['使う形容詞', '使う表現', '頭文字']);
-  assert.deepEqual(hints(c, e).slice(0, 2), [['使う形容詞', 'satisfied'], ['使う表現', 'satisfied with']]);
+test('hints: only the first letters of the sentence, never the adjective or the pair', () => {
+  const e = pair('satisfied with').examples[0];
+  assert.deepEqual(hints(e), [['頭文字', skeleton(e.en)]]);
 });
 
 test('siblings: the other prepositions the same adjective takes', () => {

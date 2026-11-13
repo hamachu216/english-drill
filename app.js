@@ -186,7 +186,7 @@ function showStep() {
   const step = run.queue[run.idx], cur = byId.get(step.id), rec = state.hist[cur.id];
   // An adjective + preposition pair is said in an example sentence it hasn't just had (`ex` is set for pairs only).
   const ex = cur.kind === 'colloc' ? example(cur, rec) : null;
-  const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
+  const { shown, hints } = ex ? { shown: [], hints: pairHints(ex) } : scaffold(cur, step);
   // A Q&A reply is dictation: the stock phrase is read aloud and written down, with its meaning as the prompt.
   // A backchannel answers what someone just said (`cur.said`, read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = cur.kind === 'reply', back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
