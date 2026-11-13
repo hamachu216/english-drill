@@ -95,7 +95,7 @@ export const easyFirst = (a, b) => (a.difficulty ?? 0) - (b.difficulty ?? 0) || 
 // Questions that can be answered without hesitation, not just once: what unlocks impromptu Q&A.
 const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id]?.box >= 2 && hist[c.id].grade === SOLO).length;
 
-// Today's session. Per kind: reviews that are due (weakest first), then extra cards from the weakest topic,
+// Today's session. Per kind: reviews that are due (weakest first), then unseen cards from the weakest topic that has any,
 // then new cards, then — when nothing is left — the cards practiced longest ago. Unless the review pile is
 // more than two sessions deep, a quarter of each kind is kept for new cards, so there is progress every day.
 // Every kind gets at least one card, so research English is touched no matter how grammar is going.
@@ -117,8 +117,9 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     const quota = pile.length < 2 * n ? Math.min(n, Math.max(kind === 'pattern' ? 2 : 1, Math.ceil(n / 4))) : 0;
     const reviews = pile.slice(0, n - quota);
     const rested = pool.filter(idle).sort((a, b) => rec(a).last.localeCompare(rec(b).last));
-    const worst = weak.find((t) => pool.some((c) => c.topic === t));
-    const focus = [...fresh, ...rested].filter((c) => c.topic === worst).slice(0, Math.ceil(n / 5));
+    // Extra practice for the weakest topic means its unseen sentences: one said well yesterday wouldn't move today.
+    const worst = weak.find((t) => fresh.some((c) => c.topic === t));
+    const focus = fresh.filter((c) => c.topic === worst).slice(0, Math.ceil(n / 5));
     // New frames: more sentences for frames already started, then (once every started frame has been said
     // at least once) one or two new frames, one sentence to repeat and BLOCK to say. New questions: one per topic in turn.
     const open = fresh.filter((c) => c.topic in stage);

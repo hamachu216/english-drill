@@ -213,7 +213,7 @@ function showStep() {
     : shown.flatMap(hintRow)));
   $('listen').hidden = !canSpeak || !(talk || step.intro);
   $('choices').replaceChildren(...(pairStep === 1 ? options(cur, ex, cards, Math.random).map((p, i) =>
-    Object.assign(el('button', { onclick: () => choose(p) }, p, el('kbd', { textContent: i + 1 })), { value: p })) : []));
+    Object.assign(el('button', { onclick: () => choose(p) }, p), { value: p })) : []));
   $('input').hidden = $('hint').hidden = !!step.intro || pairStep === 1;
   $('mic').hidden = !!step.intro || pairStep === 1 || !canHear;
   $('input').value = '';

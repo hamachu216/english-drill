@@ -127,6 +127,15 @@ test('a weak grammar topic is named and gets extra cards', () => {
   assert.deepEqual(overview(items, hist, next).weak, ['b-neg']);
   const queue = plan(hist, days, next), negs = queue.filter((s) => byId.get(s.id).topic === 'b-neg');
   assert.ok(negs.length > queue.filter((s) => byId.get(s.id).kind === 'grammar').length / 5);
+  assert.ok(negs.every((s) => s.phase === 'review' || !hist[s.id]), 'the extras are unseen sentences, not ones said well yesterday');
+});
+
+test('a weak topic with no unseen sentences left gets only its misses back; the rest goes to other topics', () => {
+  const be = items.filter((c) => c.topic === 'b-be' && !c.held), day = '2026-11-13', next = '2026-11-14';
+  const hist = Object.fromEntries(be.map((c, i) => [c.id, review(undefined, { grade: i % 2 ? SOLO : MISS }, day)]));
+  const queue = plan(hist, {}, next), bes = queue.filter((s) => byId.get(s.id).topic === 'b-be');
+  assert.deepEqual(bes.map((s) => s.id).sort(), be.filter((_, i) => !(i % 2)).map((c) => c.id).sort(), 'only the misses');
+  assert.ok(new Set(queue.filter((s) => s.phase === 'grammar').map((s) => byId.get(s.id).topic)).size >= 10);
 });
 
 test('sentence frames fade their support: frame shown → half hidden → none', () => {
