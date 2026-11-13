@@ -1,0 +1,505 @@
+{
+  "kind": "colloc",
+  "title": "形容詞＋前置詞",
+  "note": "形容詞と前置詞の組み合わせ。例文・訳・解説はすべて本サイトのオリジナル。収録する組み合わせは EnglishClub の一覧を参考にした。also は、その文でほかに自然に使える前置詞（選択肢には出さず、答えても正解にする）。",
+  "decks": [
+    {"id": "ap-about", "title": "形容詞 + about", "prep": "about", "note": "話題・心配や感情が向く先（〜について）", "refs": [{"name":"EnglishClub: Adjective + Preposition","url":"https://www.englishclub.com/vocabulary/adjective-preposition.php"}], "cards": [
+        {"id": "ap-about-001", "adj": "angry", "prep": "about", "collocation": "angry about", "ja": "〈出来事・事柄〉に腹を立てて", "difficulty": 1, "steps": [1,2,3], "note": "怒りの原因になった「事柄」には about。人に向けた怒りは angry with / at。", "examples": [
+          {"id":"ap-about-001-1","scene":"daily","en":"He was angry about the noise from next door.","ja":"彼は隣の部屋の騒音に腹を立てていた。","also":["at"]},
+          {"id":"ap-about-001-2","scene":"meeting","en":"Our advisor was angry about the missed deadline.","ja":"指導教員は締め切りに間に合わなかったことに腹を立てていた。","also":["at"]},
+          {"id":"ap-about-001-3","scene":"conference","en":"A few attendees were angry about the sudden schedule change.","ja":"急なスケジュール変更に腹を立てている参加者が何人かいた。","also":["at"]}
+        ]},
+        {"id": "ap-about-002", "adj": "annoyed", "prep": "about", "collocation": "annoyed about", "ja": "〈事柄〉にいらいらして", "difficulty": 2, "steps": [1,2,3], "note": "annoyed は about / at / by / with のどれも使われ、境界はあいまい。事柄なら about が無難で、人に対しては with / at。", "examples": [
+          {"id":"ap-about-002-1","scene":"daily","en":"I'm annoyed about the slow internet at home.","ja":"家のネットが遅くていらいらしている。","also":["at","by","with"]},
+          {"id":"ap-about-002-2","scene":"lab","en":"She was annoyed about the broken printer in the lab.","ja":"彼女は研究室のプリンターが壊れていることにいらいらしていた。","also":["at","by","with"]},
+          {"id":"ap-about-002-3","scene":"meeting","en":"He seemed annoyed about the extra meeting on Friday.","ja":"彼は金曜日に会議が追加されたことにいらいらしているようだった。","also":["at","by","with"]}
+        ]},
+        {"id": "ap-about-003", "adj": "anxious", "prep": "about", "collocation": "anxious about", "ja": "〜を心配して・不安に思って", "difficulty": 2, "steps": [1,2,3], "note": "worried about より少し硬く、緊張を伴う不安。anxious to do は「〜したがっている」で意味が違う。", "examples": [
+          {"id":"ap-about-003-1","scene":"daily","en":"My mother is anxious about my health.","ja":"母は私の健康を心配している。","also":["for"]},
+          {"id":"ap-about-003-2","scene":"lab","en":"Many first-year students are anxious about writing their first paper.","ja":"1年生の多くは初めての論文執筆を不安に思っている。 |"},
+          {"id":"ap-about-003-3","scene":"conference","en":"I was anxious about the Q&A session before my talk.","ja":"発表の前、質疑応答のことが不安だった。 |"}
+        ]},
+        {"id": "ap-about-004", "adj": "concerned", "prep": "about", "collocation": "concerned about", "ja": "〜を懸念して", "difficulty": 2, "steps": [1,2,3], "note": "「心配・懸念」なら about。concerned with は「〜に関係している・〜を扱う」で別の意味。", "examples": [
+          {"id":"ap-about-004-1","scene":"lab","en":"The professor is concerned about the safety of the experiment.","ja":"教授は実験の安全性を懸念している。","also":["for","with","by"]},
+          {"id":"ap-about-004-2","scene":"meeting","en":"We're a bit concerned about the sample size.","ja":"サンプルサイズが少し気がかりです。","also":["with","by"]},
+          {"id":"ap-about-004-3","scene":"conference","en":"One reviewer was concerned about the lack of a baseline.","ja":"査読者の一人はベースラインがないことを懸念していた。","also":["with","by"]}
+        ]},
+        {"id": "ap-about-005", "adj": "excited", "prep": "about", "collocation": "excited about", "ja": "〜にわくわくして・〜を楽しみにして", "difficulty": 1, "steps": [1,2,3], "note": "楽しみなことには about。米語のくだけた会話では excited for も使う。", "examples": [
+          {"id":"ap-about-005-1","scene":"daily","en":"The kids are excited about the summer trip.","ja":"子どもたちは夏の旅行を楽しみにしている。","also":["for","by"]},
+          {"id":"ap-about-005-2","scene":"lab","en":"I'm really excited about the new project.","ja":"新しいプロジェクトにとてもわくわくしている。","also":["for","by"]},
+          {"id":"ap-about-005-3","scene":"conference","en":"We're excited about presenting our work in Europe.","ja":"ヨーロッパで研究を発表できるのが楽しみです。 |"}
+        ]},
+        {"id": "ap-about-006", "adj": "happy", "prep": "about", "collocation": "happy about", "ja": "〈出来事・知らせ〉を喜んで", "difficulty": 1, "steps": [1,2,3], "note": "happy about は出来事や知らせを喜ぶこと。happy with は出来や内容に満足していること。", "examples": [
+          {"id":"ap-about-006-1","scene":"daily","en":"Everyone was happy about the long weekend.","ja":"連休をみんな喜んでいた。 |"},
+          {"id":"ap-about-006-2","scene":"meeting","en":"The team was happy about the paper's acceptance.","ja":"チームは論文の採択を喜んでいた。","also":["at"]},
+          {"id":"ap-about-006-3","scene":"conference","en":"We were happy about the news that the conference will be held in person.","ja":"学会が対面で開かれるという知らせを私たちは喜んだ。","also":["at"]}
+        ]},
+        {"id": "ap-about-007", "adj": "nervous", "prep": "about", "collocation": "nervous about", "ja": "〜に緊張して", "difficulty": 1, "steps": [1,2,3], "note": "緊張の原因になる予定や行動には about。後ろは名詞か動名詞（-ing）。", "examples": [
+          {"id":"ap-about-007-1","scene":"daily","en":"I'm nervous about my driving test tomorrow.","ja":"明日の運転免許の試験に緊張している。 |"},
+          {"id":"ap-about-007-2","scene":"meeting","en":"He's nervous about showing his results to the group.","ja":"彼はグループに結果を見せることに緊張している。 |"},
+          {"id":"ap-about-007-3","scene":"conference","en":"She was nervous about answering questions in English.","ja":"彼女は英語で質問に答えることに緊張していた。 |"}
+        ]},
+        {"id": "ap-about-008", "adj": "pleased", "prep": "about", "collocation": "pleased about", "ja": "〈出来事〉を喜んで", "difficulty": 2, "steps": [1,2,3], "note": "about は出来事、with は出来や内容への満足に使いやすいが、重なる部分も多い。happy より少し丁寧。", "examples": [
+          {"id":"ap-about-008-1","scene":"daily","en":"My parents were pleased about my scholarship.","ja":"両親は私が奨学金をもらえたことを喜んだ。","also":["with","by","at"]},
+          {"id":"ap-about-008-2","scene":"meeting","en":"The professor was pleased about the progress we made this month.","ja":"教授は今月の進み具合を喜んでいた。","also":["with","by"]},
+          {"id":"ap-about-008-3","scene":"conference","en":"We were pleased about the large audience at our session.","ja":"セッションに多くの聴衆が来てくれて嬉しかった。","also":["with","by","at"]}
+        ]},
+        {"id": "ap-about-009", "adj": "sad", "prep": "about", "collocation": "sad about", "ja": "〜を悲しんで・残念に思って", "difficulty": 1, "steps": [1,2,3], "note": "悲しい出来事には about。", "examples": [
+          {"id":"ap-about-009-1","scene":"daily","en":"She was sad about leaving her hometown.","ja":"彼女は故郷を離れることを悲しんでいた。 |"},
+          {"id":"ap-about-009-2","scene":"lab","en":"We were all sad about our labmate moving to another university.","ja":"研究室の仲間が別の大学に移ることを皆さみしく思った。 |"},
+          {"id":"ap-about-009-3","scene":"conference","en":"I was a little sad about missing the closing session.","ja":"閉会セッションに出られなくて少し残念だった。 |"}
+        ]},
+        {"id": "ap-about-010", "adj": "sorry", "prep": "about", "collocation": "sorry about", "ja": "〈事柄〉について申し訳なく思って", "difficulty": 1, "steps": [1,2,3], "note": "謝る内容には about / for のどちらも使える。人を気の毒に思う sorry for は for だけ。", "examples": [
+          {"id":"ap-about-010-1","scene":"daily","en":"I'm sorry about the mess in the kitchen.","ja":"台所を散らかしてしまってごめんなさい。","also":["for"]},
+          {"id":"ap-about-010-2","scene":"meeting","en":"Sorry about the delay in sending the slides.","ja":"スライドを送るのが遅れてすみません。","also":["for"]},
+          {"id":"ap-about-010-3","scene":"conference","en":"I'm sorry about the technical problem at the start of my talk.","ja":"発表の冒頭で機材トラブルがあり、申し訳ありませんでした。","also":["for"]}
+        ]},
+        {"id": "ap-about-011", "adj": "upset", "prep": "about", "collocation": "upset about", "ja": "〜に動揺して・腹を立てて", "difficulty": 1, "steps": [1,2,3], "note": "原因の出来事には about。by も使える。人に腹を立てるときは upset with。", "examples": [
+          {"id":"ap-about-011-1","scene":"daily","en":"He was upset about losing his wallet.","ja":"彼は財布をなくして動揺していた。","also":["at","by"]},
+          {"id":"ap-about-011-2","scene":"lab","en":"She was upset about the reviewer's harsh comments.","ja":"彼女は査読者の厳しいコメントに落ち込んでいた。","also":["at","by"]},
+          {"id":"ap-about-011-3","scene":"conference","en":"Nobody was upset about the short delay.","ja":"少しの遅れに腹を立てる人はいなかった。","also":["at","by"]}
+        ]},
+        {"id": "ap-about-012", "adj": "worried", "prep": "about", "collocation": "worried about", "ja": "〜を心配して", "difficulty": 1, "steps": [1,2,3], "note": "心配の対象には about。worried by は「〜で心配になった」と原因を示す。", "examples": [
+          {"id":"ap-about-012-1","scene":"daily","en":"I'm worried about my grandfather's health.","ja":"祖父の健康が心配だ。","also":["for"]},
+          {"id":"ap-about-012-2","scene":"lab","en":"She's worried about finishing her thesis on time.","ja":"彼女は論文を期限内に書き終えられるか心配している。 |"},
+          {"id":"ap-about-012-3","scene":"conference","en":"I was worried about the time limit, so I practiced my talk many times.","ja":"時間制限が心配だったので、発表を何度も練習した。","also":["by"]}
+        ]}
+    ]},
+    {"id": "ap-at", "title": "形容詞 + at", "prep": "at", "note": "能力や反応が向かう一点（〜が得意・〜に驚く）", "refs": [{"name":"EnglishClub: Adjective + Preposition","url":"https://www.englishclub.com/vocabulary/adjective-preposition.php"}], "cards": [
+        {"id": "ap-at-001", "adj": "amazed", "prep": "at", "collocation": "amazed at", "ja": "〜に驚いて", "difficulty": 2, "steps": [1,2,3], "note": "amazed at / by はほぼ同じ意味でどちらも使える。amazing と違い、驚く「人」の側の形。", "examples": [
+          {"id":"ap-at-001-1","scene":"daily","en":"I was amazed at how fast he learned Japanese.","ja":"彼の日本語の上達の速さに驚いた。","also":["by"]},
+          {"id":"ap-at-001-2","scene":"lab","en":"We were amazed at the accuracy of the new sensor.","ja":"新しいセンサの精度に驚いた。","also":["by"]},
+          {"id":"ap-at-001-3","scene":"conference","en":"The audience was amazed at the live demo.","ja":"聴衆はライブデモに驚いていた。","also":["by"]}
+        ]},
+        {"id": "ap-at-002", "adj": "angry", "prep": "at", "collocation": "angry at", "ja": "〈人〉に腹を立てて", "difficulty": 2, "steps": [1,2,3], "note": "人に対する怒りは at / with。米語では at が多い。", "examples": [
+          {"id":"ap-at-002-1","scene":"daily","en":"She was angry at her brother for breaking her phone.","ja":"彼女は電話を壊した弟に腹を立てていた。","also":["with"]},
+          {"id":"ap-at-002-2","scene":"lab","en":"Don't be angry at yourself; everyone makes mistakes in the lab.","ja":"自分を責めないで。研究室では誰でもミスをするよ。","also":["with"]},
+          {"id":"ap-at-002-3","scene":"meeting","en":"He wasn't angry at us, just tired.","ja":"彼は私たちに怒っていたのではなく、疲れていただけだった。","also":["with"]}
+        ]},
+        {"id": "ap-at-003", "adj": "annoyed", "prep": "at", "collocation": "annoyed at", "ja": "〈人・事柄〉にいらいらして", "difficulty": 2, "steps": [1,2,3], "note": "人にも事柄にも使う。with / by / about と重なることが多い。", "examples": [
+          {"id":"ap-at-003-1","scene":"daily","en":"I was annoyed at myself for forgetting my umbrella.","ja":"傘を忘れた自分にいらいらした。","also":["with"]},
+          {"id":"ap-at-003-2","scene":"lab","en":"He was annoyed at the slow computer.","ja":"彼は遅いパソコンにいらいらしていた。","also":["about","by","with"]},
+          {"id":"ap-at-003-3","scene":"meeting","en":"She seemed annoyed at the interruption.","ja":"彼女は話をさえぎられていらだっているようだった。","also":["about","by","with"]}
+        ]},
+        {"id": "ap-at-004", "adj": "bad", "prep": "at", "collocation": "bad at", "ja": "〜が苦手で・下手で", "difficulty": 1, "steps": [1,2,3], "note": "能力が低いことは bad at。bad for は「〜に悪い（害がある）」で意味が違う。", "examples": [
+          {"id":"ap-at-004-1","scene":"daily","en":"I'm bad at remembering people's names.","ja":"人の名前を覚えるのが苦手だ。 |"},
+          {"id":"ap-at-004-2","scene":"lab","en":"I'm bad at writing long emails in English.","ja":"英語で長いメールを書くのが苦手だ。 |"},
+          {"id":"ap-at-004-3","scene":"conference","en":"He says he's bad at speaking in public, but his talk was great.","ja":"彼は人前で話すのが苦手だと言うが、発表はすばらしかった。 |"}
+        ]},
+        {"id": "ap-at-005", "adj": "brilliant", "prep": "at", "collocation": "brilliant at", "ja": "〜がとても上手で", "difficulty": 2, "steps": [1,2,3], "note": "主にイギリス英語のくだけた言い方。米語では great at が近い。", "examples": [
+          {"id":"ap-at-005-1","scene":"daily","en":"My sister is brilliant at cooking.","ja":"姉は料理がとても上手だ。 |"},
+          {"id":"ap-at-005-2","scene":"lab","en":"He's brilliant at explaining difficult ideas simply.","ja":"彼は難しい考えを簡単に説明するのがとてもうまい。 |"},
+          {"id":"ap-at-005-3","scene":"meeting","en":"She's brilliant at finding bugs in code.","ja":"彼女はコードのバグを見つけるのがとてもうまい。 |"}
+        ]},
+        {"id": "ap-at-006", "adj": "disappointed", "prep": "at", "collocation": "disappointed at", "ja": "〈出来事・結果〉にがっかりして", "difficulty": 3, "steps": [1,2,3], "note": "at は出来事や結果に。with / by / about も同じように使える。期待していた人に失望するのは disappointed in。", "examples": [
+          {"id":"ap-at-006-1","scene":"daily","en":"He was disappointed at the low score.","ja":"彼は低い点数にがっかりした。","also":["with","by","about","in"]},
+          {"id":"ap-at-006-2","scene":"meeting","en":"We were disappointed at the results of the first trial.","ja":"最初の試行の結果に私たちはがっかりした。","also":["with","by","about","in"]},
+          {"id":"ap-at-006-3","scene":"conference","en":"I was disappointed at the small number of people at the poster session.","ja":"ポスター発表に来た人が少なくてがっかりした。","also":["with","by","about"]}
+        ]},
+        {"id": "ap-at-007", "adj": "excellent", "prep": "at", "collocation": "excellent at", "ja": "〜が非常に得意で", "difficulty": 2, "steps": [1,2,3], "note": "good at の強い言い方。分野には in も使う。", "examples": [
+          {"id":"ap-at-007-1","scene":"daily","en":"She's excellent at tennis.","ja":"彼女はテニスがとても得意だ。 |"},
+          {"id":"ap-at-007-2","scene":"lab","en":"He's excellent at statistics, so I often ask him for help.","ja":"彼は統計がとても得意なので、よく助けてもらう。","also":["in"]},
+          {"id":"ap-at-007-3","scene":"meeting","en":"Our new member is excellent at organizing data.","ja":"新しいメンバーはデータの整理がとても得意だ。 |"}
+        ]},
+        {"id": "ap-at-008", "adj": "good", "prep": "at", "collocation": "good at", "ja": "〜が得意で", "difficulty": 1, "steps": [1,2,3], "note": "good at ＋名詞・動名詞で「〜が得意」。good for は「〜のためになる」、good with は「〜の扱いがうまい」。", "examples": [
+          {"id":"ap-at-008-1","scene":"daily","en":"I'm not very good at cooking.","ja":"私は料理があまり得意ではない。 |"},
+          {"id":"ap-at-008-2","scene":"lab","en":"She's good at programming in Python.","ja":"彼女はPythonでのプログラミングが得意だ。 |"},
+          {"id":"ap-at-008-3","scene":"conference","en":"You need to be good at explaining your work in a few sentences.","ja":"研究を数文で説明するのが上手であることが必要だ。 |"}
+        ]},
+        {"id": "ap-at-009", "adj": "hopeless", "prep": "at", "collocation": "hopeless at", "ja": "〜がまったくだめで", "difficulty": 3, "steps": [1,2,3], "note": "くだけた言い方で、主にイギリス英語。自分のことを冗談めかして言うときによく使う。", "examples": [
+          {"id":"ap-at-009-1","scene":"daily","en":"I'm hopeless at drawing.","ja":"絵を描くのはまったくだめだ。 |"},
+          {"id":"ap-at-009-2","scene":"lab","en":"I'm hopeless at fixing hardware problems.","ja":"ハードウェアの故障を直すのはまったくだめだ。 |"},
+          {"id":"ap-at-009-3","scene":"meeting","en":"He's hopeless at keeping to the time limit.","ja":"彼は持ち時間を守るのがまったくだめだ。 |"}
+        ]},
+        {"id": "ap-at-010", "adj": "shocked", "prep": "at", "collocation": "shocked at", "ja": "〜にショックを受けて", "difficulty": 2, "steps": [1,2,3], "note": "shocked at / by はほぼ同じ意味でどちらも使える。", "examples": [
+          {"id":"ap-at-010-1","scene":"daily","en":"I was shocked at the price of the hotel.","ja":"ホテルの値段にショックを受けた。","also":["by"]},
+          {"id":"ap-at-010-2","scene":"lab","en":"We were shocked at how much the data had changed.","ja":"データがこれほど変わっていたことにショックを受けた。","also":["by"]},
+          {"id":"ap-at-010-3","scene":"conference","en":"Some people were shocked at the result.","ja":"その結果に衝撃を受けた人もいた。","also":["by"]}
+        ]},
+        {"id": "ap-at-011", "adj": "skilled", "prep": "at", "collocation": "skilled at", "ja": "〜が上手で（技能として）", "difficulty": 2, "steps": [1,2,3], "note": "skilled at / in はほぼ同じ意味。at は具体的な作業、in は分野に使われやすい。", "examples": [
+          {"id":"ap-at-011-1","scene":"daily","en":"My father is skilled at repairing bicycles.","ja":"父は自転車の修理が上手だ。","also":["in"]},
+          {"id":"ap-at-011-2","scene":"lab","en":"She's skilled at designing user studies.","ja":"彼女はユーザー調査の設計がうまい。","also":["in"]},
+          {"id":"ap-at-011-3","scene":"meeting","en":"We need someone skilled at data analysis.","ja":"データ分析がうまい人が必要だ。","also":["in"]}
+        ]},
+        {"id": "ap-at-012", "adj": "surprised", "prep": "at", "collocation": "surprised at", "ja": "〜に驚いて", "difficulty": 1, "steps": [1,2,3], "note": "surprised at / by はほぼ同じ意味でどちらも使える。", "examples": [
+          {"id":"ap-at-012-1","scene":"daily","en":"I was surprised at how cold it was.","ja":"寒さに驚いた。","also":["by"]},
+          {"id":"ap-at-012-2","scene":"meeting","en":"We were surprised at the high accuracy.","ja":"精度が高くて驚いた。","also":["by"]},
+          {"id":"ap-at-012-3","scene":"conference","en":"I was surprised at the number of questions.","ja":"質問の多さに驚いた。","also":["by"]}
+        ]}
+    ]},
+    {"id": "ap-by", "title": "形容詞 + by", "prep": "by", "note": "感情を引き起こした原因（〜によって）", "refs": [{"name":"EnglishClub: Adjective + Preposition","url":"https://www.englishclub.com/vocabulary/adjective-preposition.php"}], "cards": [
+        {"id": "ap-by-001", "adj": "amazed", "prep": "by", "collocation": "amazed by", "ja": "〜に驚いて", "difficulty": 2, "steps": [1,2,3], "note": "amazed at とほぼ同じ。by は「〜に驚かされた」と原因を示す感じ。", "examples": [
+          {"id":"ap-by-001-1","scene":"daily","en":"We were amazed by the view from the mountain.","ja":"山からの景色に驚いた。","also":["at"]},
+          {"id":"ap-by-001-2","scene":"lab","en":"I'm always amazed by how much she reads.","ja":"彼女の読書量にはいつも驚かされる。","also":["at"]},
+          {"id":"ap-by-001-3","scene":"conference","en":"Many people were amazed by the demo.","ja":"多くの人がデモに驚いていた。","also":["at"]}
+        ]},
+        {"id": "ap-by-002", "adj": "bored", "prep": "by", "collocation": "bored by", "ja": "〜に退屈して", "difficulty": 2, "steps": [1,2,3], "note": "bored by / with は同じように使える。bored of はくだけた言い方。", "examples": [
+          {"id":"ap-by-002-1","scene":"daily","en":"The children were bored by the long speech.","ja":"子どもたちは長いスピーチに退屈していた。","also":["with","of"]},
+          {"id":"ap-by-002-2","scene":"meeting","en":"Nobody wants to be bored by long slides full of text.","ja":"文字だらけの長いスライドで退屈したい人はいない。","also":["with","of"]},
+          {"id":"ap-by-002-3","scene":"conference","en":"Some listeners looked bored by the technical details.","ja":"技術的な細部に退屈している聴衆もいた。","also":["with","of"]}
+        ]},
+        {"id": "ap-by-003", "adj": "confused", "prep": "by", "collocation": "confused by", "ja": "〜に混乱して", "difficulty": 2, "steps": [1,2,3], "note": "by は混乱の原因、about は「何について」混乱しているか。", "examples": [
+          {"id":"ap-by-003-1","scene":"lab","en":"I was confused by the instructions for the new software.","ja":"新しいソフトの説明がわかりにくくて混乱した。","also":["about"]},
+          {"id":"ap-by-003-2","scene":"meeting","en":"Several people were confused by this figure.","ja":"この図で混乱した人が何人かいた。","also":["about"]},
+          {"id":"ap-by-003-3","scene":"conference","en":"I was confused by his question at first.","ja":"最初、彼の質問の意味がわからず混乱した。","also":["about"]}
+        ]},
+        {"id": "ap-by-004", "adj": "delighted", "prep": "by", "collocation": "delighted by", "ja": "〜に大喜びして", "difficulty": 3, "steps": [1,2,3], "note": "delighted by / with / at は重なる部分が多い。happy よりずっと強い喜び。", "examples": [
+          {"id":"ap-by-004-1","scene":"daily","en":"She was delighted by the surprise party.","ja":"彼女はサプライズパーティーに大喜びした。","also":["with","at"]},
+          {"id":"ap-by-004-2","scene":"lab","en":"We were delighted by the positive reviews.","ja":"好意的な査読コメントに大喜びした。","also":["with","at","about"]},
+          {"id":"ap-by-004-3","scene":"conference","en":"I was delighted by the interest in our poster.","ja":"ポスターに関心を持ってもらえてとても嬉しかった。","also":["with","at"]}
+        ]},
+        {"id": "ap-by-005", "adj": "impressed", "prep": "by", "collocation": "impressed by", "ja": "〜に感心して", "difficulty": 1, "steps": [1,2,3], "note": "impressed by / with はどちらも使える。", "examples": [
+          {"id":"ap-by-005-1","scene":"daily","en":"I was impressed by her English.","ja":"彼女の英語に感心した。","also":["with"]},
+          {"id":"ap-by-005-2","scene":"lab","en":"The professor was impressed by your presentation.","ja":"教授はあなたの発表に感心していた。","also":["with"]},
+          {"id":"ap-by-005-3","scene":"conference","en":"We were impressed by the quality of the dataset.","ja":"データセットの質に感心した。","also":["with"]}
+        ]},
+        {"id": "ap-by-006", "adj": "inspired", "prep": "by", "collocation": "inspired by", "ja": "〜に刺激・着想を受けて", "difficulty": 2, "steps": [1,2,3], "note": "着想のもとになったものには by。研究の動機を話すときに便利。", "examples": [
+          {"id":"ap-by-006-1","scene":"daily","en":"She was inspired by her grandmother to become a doctor.","ja":"彼女は祖母に影響されて医者を目指した。 |"},
+          {"id":"ap-by-006-2","scene":"lab","en":"This project was inspired by a paper I read last year.","ja":"このプロジェクトは昨年読んだ論文から着想を得た。 |"},
+          {"id":"ap-by-006-3","scene":"conference","en":"I was inspired by the keynote speech.","ja":"基調講演に刺激を受けた。 |"}
+        ]},
+        {"id": "ap-by-007", "adj": "shocked", "prep": "by", "collocation": "shocked by", "ja": "〜にショックを受けて", "difficulty": 2, "steps": [1,2,3], "note": "shocked at とほぼ同じ意味。", "examples": [
+          {"id":"ap-by-007-1","scene":"daily","en":"We were shocked by the news of the accident.","ja":"事故のニュースにショックを受けた。","also":["at"]},
+          {"id":"ap-by-007-2","scene":"lab","en":"I was shocked by how slow the old code was.","ja":"古いコードの遅さに驚いた。","also":["at"]},
+          {"id":"ap-by-007-3","scene":"meeting","en":"The team was shocked by the sudden budget cut.","ja":"突然の予算削減にチームは衝撃を受けた。","also":["at"]}
+        ]},
+        {"id": "ap-by-008", "adj": "surprised", "prep": "by", "collocation": "surprised by", "ja": "〜に驚いて", "difficulty": 1, "steps": [1,2,3], "note": "surprised at とほぼ同じ。by は「予想外のことに驚かされた」感じがやや強い。", "examples": [
+          {"id":"ap-by-008-1","scene":"daily","en":"I was surprised by his answer.","ja":"彼の答えに驚いた。","also":["at"]},
+          {"id":"ap-by-008-2","scene":"meeting","en":"We were surprised by how well the simple model worked.","ja":"単純なモデルがこんなによく動くことに驚いた。","also":["at"]},
+          {"id":"ap-by-008-3","scene":"conference","en":"Were you surprised by these results?","ja":"この結果に驚きましたか。","also":["at"]}
+        ]}
+    ]},
+    {"id": "ap-for", "title": "形容詞 + for", "prep": "for", "note": "理由・目的・向けられた相手（〜のために・〜で）", "refs": [{"name":"EnglishClub: Adjective + Preposition","url":"https://www.englishclub.com/vocabulary/adjective-preposition.php"}], "cards": [
+        {"id": "ap-for-001", "adj": "famous", "prep": "for", "collocation": "famous for", "ja": "〜で有名な", "difficulty": 1, "steps": [1,2,3], "note": "有名な理由には for。famous as は「〜として有名」。", "examples": [
+          {"id":"ap-for-001-1","scene":"daily","en":"Kyoto is famous for its old temples.","ja":"京都は古い寺で有名だ。 |"},
+          {"id":"ap-for-001-2","scene":"lab","en":"This lab is famous for its work on robots.","ja":"この研究室はロボットの研究で有名だ。 |"},
+          {"id":"ap-for-001-3","scene":"conference","en":"The city is famous for its food, so let's go out after the session.","ja":"この街は食べ物で有名なので、セッションの後に食べに行こう。 |"}
+        ]},
+        {"id": "ap-for-002", "adj": "grateful", "prep": "for", "collocation": "grateful for", "ja": "〜に感謝して", "difficulty": 1, "steps": [1,2,3], "note": "感謝の「内容」には for、感謝する「相手」には to（grateful to you for ...）。", "examples": [
+          {"id":"ap-for-002-1","scene":"daily","en":"I'm grateful for your help with the move.","ja":"引っ越しを手伝ってくれて感謝しています。 |"},
+          {"id":"ap-for-002-2","scene":"lab","en":"We are grateful for the funding from the foundation.","ja":"財団からの研究資金に感謝しています。 |"},
+          {"id":"ap-for-002-3","scene":"conference","en":"I'm grateful for all the helpful comments.","ja":"有益なコメントをたくさんいただき感謝しています。 |"}
+        ]},
+        {"id": "ap-for-003", "adj": "late", "prep": "for", "collocation": "late for", "ja": "〜に遅れて", "difficulty": 1, "steps": [1,2,3], "note": "予定や行事に遅れるのは late for。米語では late to も使う。", "examples": [
+          {"id":"ap-for-003-1","scene":"daily","en":"Sorry, I'm late for dinner.","ja":"ごめん、夕食に遅れた。","also":["to"]},
+          {"id":"ap-for-003-2","scene":"lab","en":"Don't be late for the lab meeting tomorrow.","ja":"明日の研究室ミーティングに遅れないでね。","also":["to"]},
+          {"id":"ap-for-003-3","scene":"conference","en":"I was almost late for my own session.","ja":"自分の発表セッションに遅れそうになった。","also":["to"]}
+        ]},
+        {"id": "ap-for-004", "adj": "ready", "prep": "for", "collocation": "ready for", "ja": "〜の準備ができて", "difficulty": 1, "steps": [1,2,3], "note": "ready for ＋名詞、ready to ＋動詞の原形。", "examples": [
+          {"id":"ap-for-004-1","scene":"daily","en":"Are you ready for the trip?","ja":"旅行の準備はできた？ |"},
+          {"id":"ap-for-004-2","scene":"meeting","en":"Is everyone ready for the next experiment?","ja":"次の実験の準備はみんなできていますか。 |"},
+          {"id":"ap-for-004-3","scene":"conference","en":"I think I'm ready for questions now.","ja":"もう質問を受ける準備ができたと思います。 |"}
+        ]},
+        {"id": "ap-for-005", "adj": "responsible", "prep": "for", "collocation": "responsible for", "ja": "〜を担当して・〜に責任があって", "difficulty": 1, "steps": [1,2,3], "note": "担当・責任の内容には for。報告する相手は responsible to。", "examples": [
+          {"id":"ap-for-005-1","scene":"daily","en":"Who is responsible for cleaning the kitchen this week?","ja":"今週の台所掃除の担当は誰？ |"},
+          {"id":"ap-for-005-2","scene":"lab","en":"I'm responsible for managing the lab's servers.","ja":"私は研究室のサーバー管理を担当している。 |"},
+          {"id":"ap-for-005-3","scene":"meeting","en":"Each member is responsible for one part of the system.","ja":"各メンバーがシステムの一部を担当している。 |"}
+        ]},
+        {"id": "ap-for-006", "adj": "sorry", "prep": "for", "collocation": "sorry for", "ja": "〈人〉を気の毒に思って・〜を謝って", "difficulty": 2, "steps": [1,2,3], "note": "feel sorry for ＋人 は「〜を気の毒に思う」で for だけ。謝る内容には for / about のどちらも使える。", "examples": [
+          {"id":"ap-for-006-1","scene":"daily","en":"I feel sorry for people who have to work on holidays.","ja":"休日に働かなければならない人を気の毒に思う。 |"},
+          {"id":"ap-for-006-2","scene":"meeting","en":"Sorry for the late reply.","ja":"返信が遅くなってすみません。","also":["about"]},
+          {"id":"ap-for-006-3","scene":"conference","en":"I'm sorry for taking so much time on this question.","ja":"この質問に時間を使いすぎてすみません。","also":["about"]}
+        ]},
+        {"id": "ap-for-007", "adj": "suitable", "prep": "for", "collocation": "suitable for", "ja": "〜に適して", "difficulty": 2, "steps": [1,2,3], "note": "用途や対象に向いているかどうか。Q&A で手法の適用範囲を話すときに便利。", "examples": [
+          {"id":"ap-for-007-1","scene":"daily","en":"This movie is not suitable for young children.","ja":"この映画は小さな子ども向けではない。 |"},
+          {"id":"ap-for-007-2","scene":"lab","en":"Is this sensor suitable for outdoor use?","ja":"このセンサは屋外での使用に向いていますか。 |"},
+          {"id":"ap-for-007-3","scene":"conference","en":"This method is not suitable for real-time systems.","ja":"この手法はリアルタイムシステムには向いていない。 |"}
+        ]}
+    ]},
+    {"id": "ap-from", "title": "形容詞 + from", "prep": "from", "note": "分離・起点（〜から離れて）", "refs": [{"name":"EnglishClub: Adjective + Preposition","url":"https://www.englishclub.com/vocabulary/adjective-preposition.php"}], "cards": [
+        {"id": "ap-from-001", "adj": "absent", "prep": "from", "collocation": "absent from", "ja": "〜を欠席して・〜に欠けて", "difficulty": 2, "steps": [1,2,3], "note": "「その場にいない・含まれていない」こと。", "examples": [
+          {"id":"ap-from-001-1","scene":"daily","en":"He was absent from school yesterday.","ja":"彼は昨日学校を休んだ。 |"},
+          {"id":"ap-from-001-2","scene":"lab","en":"Three students were absent from the seminar today.","ja":"今日のゼミは学生が3人欠席した。 |"},
+          {"id":"ap-from-001-3","scene":"meeting","en":"This variable is absent from the final model.","ja":"この変数は最終モデルには入っていない。 |"}
+        ]},
+        {"id": "ap-from-002", "adj": "different", "prep": "from", "collocation": "different from", "ja": "〜と違って", "difficulty": 1, "steps": [1,2,3], "note": "最も一般的なのは different from。英国では different to、米国では different than も使う。", "examples": [
+          {"id":"ap-from-002-1","scene":"daily","en":"Life in Tokyo is very different from life in my hometown.","ja":"東京の生活は故郷の生活とずいぶん違う。","also":["to","than"]},
+          {"id":"ap-from-002-2","scene":"meeting","en":"Our approach is different from previous work in two ways.","ja":"私たちのアプローチは先行研究と2つの点で異なる。","also":["to","than"]},
+          {"id":"ap-from-002-3","scene":"conference","en":"How is your method different from the baseline?","ja":"あなたの手法はベースラインとどう違うのですか。","also":["to","than"]}
+        ]},
+        {"id": "ap-from-003", "adj": "divorced", "prep": "from", "collocation": "divorced from", "ja": "〜と離婚して・〜からかけ離れて", "difficulty": 3, "steps": [1,2,3], "note": "「〜と離婚している」のほか、比喩的に「〜からかけ離れた」の意味で硬い文章でも使う。", "examples": [
+          {"id":"ap-from-003-1","scene":"daily","en":"She has been divorced from her husband for five years.","ja":"彼女は夫と離婚して5年になる。 |"},
+          {"id":"ap-from-003-2","scene":"lab","en":"Some theories are completely divorced from real life.","ja":"現実とまったくかけ離れた理論もある。 |"},
+          {"id":"ap-from-003-3","scene":"conference","en":"The evaluation should not be divorced from real user needs.","ja":"評価は実際のユーザーのニーズからかけ離れていてはいけない。 |"}
+        ]},
+        {"id": "ap-from-004", "adj": "far", "prep": "from", "collocation": "far from", "ja": "〜から遠い", "difficulty": 1, "steps": [1,2,3], "note": "距離のほか、far from ＋形容詞・名詞で「まったく〜ではない」。", "examples": [
+          {"id":"ap-from-004-1","scene":"daily","en":"My apartment is not far from the station.","ja":"私のアパートは駅から遠くない。 |"},
+          {"id":"ap-from-004-2","scene":"lab","en":"The lab is far from the main campus.","ja":"研究室はメインキャンパスから遠い。 |"},
+          {"id":"ap-from-004-3","scene":"conference","en":"This problem is far from solved.","ja":"この問題はまだまったく解決されていない。 |"}
+        ]},
+        {"id": "ap-from-005", "adj": "safe", "prep": "from", "collocation": "safe from", "ja": "〜から守られて", "difficulty": 2, "steps": [1,2,3], "note": "危険から守られている状態。", "examples": [
+          {"id":"ap-from-005-1","scene":"daily","en":"The cat is safe from the rain under the roof.","ja":"猫は屋根の下で雨にぬれずにすんでいる。 |"},
+          {"id":"ap-from-005-2","scene":"lab","en":"Keep the samples safe from direct sunlight.","ja":"サンプルを直射日光から守っておいてください。 |"},
+          {"id":"ap-from-005-3","scene":"meeting","en":"Our system keeps personal data safe from attacks.","ja":"私たちのシステムは個人データを攻撃から守る。 |"}
+        ]}
+    ]},
+    {"id": "ap-in", "title": "形容詞 + in", "prep": "in", "note": "分野・活動の内側（〜において）", "refs": [{"name":"EnglishClub: Adjective + Preposition","url":"https://www.englishclub.com/vocabulary/adjective-preposition.php"}], "cards": [
+        {"id": "ap-in-001", "adj": "disappointed", "prep": "in", "collocation": "disappointed in", "ja": "〈人〉に失望して", "difficulty": 2, "steps": [1,2,3], "note": "期待していた人に失望するときは in がよく使われる。物事には with / at も使う。", "examples": [
+          {"id":"ap-in-001-1","scene":"daily","en":"I'm disappointed in myself for giving up so easily.","ja":"こんなに簡単にあきらめた自分にがっかりしている。","also":["with"]},
+          {"id":"ap-in-001-2","scene":"lab","en":"Don't worry, nobody is disappointed in you.","ja":"心配しないで。誰もあなたに失望なんかしていないよ。","also":["with"]},
+          {"id":"ap-in-001-3","scene":"meeting","en":"The manager was disappointed in the team's progress.","ja":"マネージャーはチームの進み具合に失望していた。","also":["with","at","by"]}
+        ]},
+        {"id": "ap-in-002", "adj": "interested", "prep": "in", "collocation": "interested in", "ja": "〜に興味がある", "difficulty": 1, "steps": [1,2,3], "note": "興味の対象には in。人が主語なら interested、物が主語なら interesting。", "examples": [
+          {"id":"ap-in-002-1","scene":"daily","en":"I'm interested in Japanese history.","ja":"日本の歴史に興味がある。 |"},
+          {"id":"ap-in-002-2","scene":"lab","en":"She's interested in machine learning for healthcare.","ja":"彼女は医療のための機械学習に興味がある。 |"},
+          {"id":"ap-in-002-3","scene":"conference","en":"Are you interested in working together on this?","ja":"この件で一緒に研究することに興味はありますか。 |"}
+        ]},
+        {"id": "ap-in-003", "adj": "involved", "prep": "in", "collocation": "involved in", "ja": "〜に関わって", "difficulty": 2, "steps": [1,2,3], "note": "活動や計画に関わるのは in。人と関わる（親しい）のは involved with。", "examples": [
+          {"id":"ap-in-003-1","scene":"daily","en":"He's involved in a volunteer group.","ja":"彼はボランティア団体に参加している。","also":["with"]},
+          {"id":"ap-in-003-2","scene":"lab","en":"How many people were involved in this project?","ja":"このプロジェクトには何人が関わっていましたか。","also":["with"]},
+          {"id":"ap-in-003-3","scene":"meeting","en":"I wasn't involved in the data collection.","ja":"私はデータ収集には関わっていません。 |"}
+        ]},
+        {"id": "ap-in-004", "adj": "rich", "prep": "in", "collocation": "rich in", "ja": "〜が豊富で", "difficulty": 2, "steps": [1,2,3], "note": "中身として多く含んでいること。", "examples": [
+          {"id":"ap-in-004-1","scene":"daily","en":"This fruit is rich in vitamin C.","ja":"この果物はビタミンCが豊富だ。 |"},
+          {"id":"ap-in-004-2","scene":"lab","en":"The dataset is rich in detail but small in size.","ja":"そのデータセットは細部は豊富だが規模は小さい。 |"},
+          {"id":"ap-in-004-3","scene":"conference","en":"Your paper is rich in examples, which made it easy to follow.","ja":"あなたの論文は例が豊富で、わかりやすかった。 |"}
+        ]},
+        {"id": "ap-in-005", "adj": "skilled", "prep": "in", "collocation": "skilled in", "ja": "〜に熟達して", "difficulty": 2, "steps": [1,2,3], "note": "skilled at とほぼ同じ。in は分野や技術全体に使われやすい。", "examples": [
+          {"id":"ap-in-005-1","scene":"lab","en":"We are looking for students skilled in signal processing.","ja":"信号処理に熟達した学生を探している。","also":["at"]},
+          {"id":"ap-in-005-2","scene":"meeting","en":"She is skilled in several programming languages.","ja":"彼女はいくつかのプログラミング言語に通じている。","also":["at"]},
+          {"id":"ap-in-005-3","scene":"conference","en":"The speaker was skilled in handling difficult questions.","ja":"講演者は難しい質問への対応に長けていた。","also":["at"]}
+        ]},
+        {"id": "ap-in-006", "adj": "successful", "prep": "in", "collocation": "successful in", "ja": "〜に成功して", "difficulty": 2, "steps": [1,2,3], "note": "successful in ＋動名詞で「〜に成功した」。at も使える。", "examples": [
+          {"id":"ap-in-006-1","scene":"daily","en":"She was successful in finding a new job.","ja":"彼女は新しい仕事を見つけることに成功した。","also":["at"]},
+          {"id":"ap-in-006-2","scene":"lab","en":"We were finally successful in reproducing the result.","ja":"ついに結果の再現に成功した。","also":["at"]},
+          {"id":"ap-in-006-3","scene":"conference","en":"The method was successful in most of the test cases.","ja":"その手法はほとんどのテストケースでうまくいった。 |"}
+        ]}
+    ]},
+    {"id": "ap-of", "title": "形容詞 + of", "prep": "of", "note": "感情の対象・中身（〜を・〜で）", "refs": [{"name":"EnglishClub: Adjective + Preposition","url":"https://www.englishclub.com/vocabulary/adjective-preposition.php"}], "cards": [
+        {"id": "ap-of-001", "adj": "afraid", "prep": "of", "collocation": "afraid of", "ja": "〜をこわがって", "difficulty": 1, "steps": [1,2,3], "note": "後ろは名詞か動名詞（-ing）。", "examples": [
+          {"id":"ap-of-001-1","scene":"daily","en":"My son is afraid of the dark.","ja":"息子は暗闇をこわがっている。 |"},
+          {"id":"ap-of-001-2","scene":"lab","en":"Don't be afraid of making mistakes.","ja":"間違えることをこわがらないで。 |"},
+          {"id":"ap-of-001-3","scene":"conference","en":"I used to be afraid of questions from the audience.","ja":"以前は聴衆からの質問がこわかった。 |"}
+        ]},
+        {"id": "ap-of-002", "adj": "ashamed", "prep": "of", "collocation": "ashamed of", "ja": "〜を恥じて", "difficulty": 2, "steps": [1,2,3], "note": "自分の行いや状態を恥ずかしく思うこと。about も使える。", "examples": [
+          {"id":"ap-of-002-1","scene":"daily","en":"I'm ashamed of my messy room.","ja":"散らかった部屋が恥ずかしい。","also":["about"]},
+          {"id":"ap-of-002-2","scene":"lab","en":"There's nothing to be ashamed of; your first draft is always rough.","ja":"恥ずかしがることはないよ。最初の原稿はいつも粗いものだ。 |"},
+          {"id":"ap-of-002-3","scene":"meeting","en":"He was ashamed of his mistake in the calculation.","ja":"彼は計算のミスを恥じていた。","also":["about"]}
+        ]},
+        {"id": "ap-of-003", "adj": "aware", "prep": "of", "collocation": "aware of", "ja": "〜に気づいて・〜を知って", "difficulty": 1, "steps": [1,2,3], "note": "aware of ＋名詞、aware that ＋文。Q&Aで限界を認めるときによく使う。", "examples": [
+          {"id":"ap-of-003-1","scene":"daily","en":"Are you aware of the new rules?","ja":"新しいルールを知っていますか。 |"},
+          {"id":"ap-of-003-2","scene":"meeting","en":"We are aware of this limitation.","ja":"この限界は認識しています。 |"},
+          {"id":"ap-of-003-3","scene":"conference","en":"Are you aware of any similar work?","ja":"似た研究をご存じですか。 |"}
+        ]},
+        {"id": "ap-of-004", "adj": "capable", "prep": "of", "collocation": "capable of", "ja": "〜ができる能力がある", "difficulty": 2, "steps": [1,2,3], "note": "capable of ＋名詞・動名詞。to 不定詞は使わない（able to とは形が違う）。", "examples": [
+          {"id":"ap-of-004-1","scene":"daily","en":"He's capable of running a marathon.","ja":"彼はマラソンを走れる力がある。 |"},
+          {"id":"ap-of-004-2","scene":"lab","en":"This computer is capable of training large models.","ja":"このコンピュータは大きなモデルを学習できる性能がある。 |"},
+          {"id":"ap-of-004-3","scene":"conference","en":"Our system is capable of working without the internet.","ja":"私たちのシステムはインターネットなしでも動作できる。 |"}
+        ]},
+        {"id": "ap-of-005", "adj": "fond", "prep": "of", "collocation": "fond of", "ja": "〜が好きで", "difficulty": 2, "steps": [1,2,3], "note": "like より少し柔らかく、長く好んでいる感じ。", "examples": [
+          {"id":"ap-of-005-1","scene":"daily","en":"I'm fond of old movies.","ja":"古い映画が好きだ。 |"},
+          {"id":"ap-of-005-2","scene":"lab","en":"My advisor is fond of simple explanations.","ja":"指導教員はシンプルな説明を好む。 |"},
+          {"id":"ap-of-005-3","scene":"meeting","en":"She's fond of drawing diagrams on the whiteboard.","ja":"彼女はホワイトボードに図を描くのが好きだ。 |"}
+        ]},
+        {"id": "ap-of-006", "adj": "full", "prep": "of", "collocation": "full of", "ja": "〜でいっぱいで", "difficulty": 1, "steps": [1,2,3], "note": "full of で「〜でいっぱい」。filled with も同じ意味。", "examples": [
+          {"id":"ap-of-006-1","scene":"daily","en":"The train was full of tourists.","ja":"電車は観光客でいっぱいだった。 |"},
+          {"id":"ap-of-006-2","scene":"lab","en":"The lab fridge is full of samples.","ja":"研究室の冷蔵庫はサンプルでいっぱいだ。 |"},
+          {"id":"ap-of-006-3","scene":"conference","en":"The room was full of people for the keynote.","ja":"基調講演の会場は人でいっぱいだった。 |"}
+        ]},
+        {"id": "ap-of-007", "adj": "guilty", "prep": "of", "collocation": "guilty of", "ja": "〜の罪がある・〜をやってしまっている", "difficulty": 3, "steps": [1,2,3], "note": "本来は「〜の罪で有罪の」。くだけて「（よくないことを）やってしまっている」の意味でも使う。", "examples": [
+          {"id":"ap-of-007-1","scene":"daily","en":"He was found guilty of stealing a bicycle.","ja":"彼は自転車を盗んだ罪で有罪になった。 |"},
+          {"id":"ap-of-007-2","scene":"lab","en":"I'm guilty of leaving my cup in the sink.","ja":"流しにカップを置きっぱなしにしているのは私です。 |"},
+          {"id":"ap-of-007-3","scene":"conference","en":"Many papers are guilty of using too much jargon.","ja":"専門用語を使いすぎている論文は多い。 |"}
+        ]},
+        {"id": "ap-of-008", "adj": "jealous", "prep": "of", "collocation": "jealous of", "ja": "〜をうらやんで・ねたんで", "difficulty": 2, "steps": [1,2,3], "note": "うらやむ対象には of。", "examples": [
+          {"id":"ap-of-008-1","scene":"daily","en":"He's a little jealous of his brother's success.","ja":"彼は兄の成功を少しうらやましく思っている。 |"},
+          {"id":"ap-of-008-2","scene":"lab","en":"I'm jealous of your fast computer.","ja":"あなたの速いパソコンがうらやましい。 |"},
+          {"id":"ap-of-008-3","scene":"conference","en":"Everyone is jealous of their large dataset.","ja":"みんな彼らの大きなデータセットをうらやましがっている。 |"}
+        ]},
+        {"id": "ap-of-009", "adj": "proud", "prep": "of", "collocation": "proud of", "ja": "〜を誇りに思って", "difficulty": 1, "steps": [1,2,3], "note": "誇りに思う対象には of。", "examples": [
+          {"id":"ap-of-009-1","scene":"daily","en":"My parents are proud of my sister.","ja":"両親は姉を誇りに思っている。 |"},
+          {"id":"ap-of-009-2","scene":"lab","en":"I'm proud of what our team has done this year.","ja":"今年チームが成し遂げたことを誇りに思う。 |"},
+          {"id":"ap-of-009-3","scene":"conference","en":"We're proud of this result, but there is more work to do.","ja":"この結果を誇りに思っていますが、まだやることがあります。 |"}
+        ]},
+        {"id": "ap-of-010", "adj": "scared", "prep": "of", "collocation": "scared of", "ja": "〜をこわがって", "difficulty": 1, "steps": [1,2,3], "note": "afraid of とほぼ同じで、少しくだけた言い方。", "examples": [
+          {"id":"ap-of-010-1","scene":"daily","en":"I'm scared of big dogs.","ja":"大きい犬がこわい。 |"},
+          {"id":"ap-of-010-2","scene":"lab","en":"Many students are scared of statistics.","ja":"統計をこわがる学生は多い。 |"},
+          {"id":"ap-of-010-3","scene":"conference","en":"Don't be scared of saying \"I don't know.\"","ja":"「わかりません」と言うのをこわがらないで。 |"}
+        ]},
+        {"id": "ap-of-011", "adj": "short", "prep": "of", "collocation": "short of", "ja": "〜が足りなくて", "difficulty": 2, "steps": [1,2,3], "note": "不足しているものには of。", "examples": [
+          {"id":"ap-of-011-1","scene":"daily","en":"I'm a bit short of money this month.","ja":"今月は少しお金が足りない。 |"},
+          {"id":"ap-of-011-2","scene":"lab","en":"We're short of storage on the server.","ja":"サーバーの容量が足りない。 |"},
+          {"id":"ap-of-011-3","scene":"meeting","en":"We're short of time, so let's skip this slide.","ja":"時間が足りないので、このスライドは飛ばしましょう。 |"}
+        ]},
+        {"id": "ap-of-012", "adj": "sick", "prep": "of", "collocation": "sick of", "ja": "〜にうんざりして", "difficulty": 2, "steps": [1,2,3], "note": "くだけた言い方。sick with は「（病気）にかかっている」で意味が違う。", "examples": [
+          {"id":"ap-of-012-1","scene":"daily","en":"I'm sick of this rainy weather.","ja":"この雨続きの天気にうんざりしている。 |"},
+          {"id":"ap-of-012-2","scene":"lab","en":"I'm sick of fixing the same bug again and again.","ja":"同じバグを何度も直すのにうんざりしている。 |"},
+          {"id":"ap-of-012-3","scene":"meeting","en":"Everyone is sick of long meetings.","ja":"みんな長い会議にうんざりしている。 |"}
+        ]},
+        {"id": "ap-of-013", "adj": "tired", "prep": "of", "collocation": "tired of", "ja": "〜に飽きて・うんざりして", "difficulty": 1, "steps": [1,2,3], "note": "tired of は「〜に飽きた・うんざり」。tired from は「〜で（体が）疲れた」で意味が違う。", "examples": [
+          {"id":"ap-of-013-1","scene":"daily","en":"I'm tired of eating the same lunch every day.","ja":"毎日同じ昼食を食べるのに飽きた。 |"},
+          {"id":"ap-of-013-2","scene":"lab","en":"She was tired of hearing the same advice.","ja":"彼女は同じ助言を聞くのにうんざりしていた。 |"},
+          {"id":"ap-of-013-3","scene":"meeting","en":"Aren't you tired of this topic yet?","ja":"この話題にもう飽きていませんか。 |"}
+        ]}
+    ]},
+    {"id": "ap-to", "title": "形容詞 + to", "prep": "to", "note": "向かう相手・到達点（〜に対して・〜に）", "refs": [{"name":"EnglishClub: Adjective + Preposition","url":"https://www.englishclub.com/vocabulary/adjective-preposition.php"}], "cards": [
+        {"id": "ap-to-001", "adj": "accustomed", "prep": "to", "collocation": "accustomed to", "ja": "〜に慣れて", "difficulty": 3, "steps": [1,2,3], "note": "used to より硬い。後ろは名詞か動名詞（-ing）。", "examples": [
+          {"id":"ap-to-001-1","scene":"daily","en":"I'm not accustomed to cold winters.","ja":"寒い冬に慣れていない。 |"},
+          {"id":"ap-to-001-2","scene":"lab","en":"She soon became accustomed to the lab's routine.","ja":"彼女はすぐに研究室の日課に慣れた。 |"},
+          {"id":"ap-to-001-3","scene":"conference","en":"I'm still not accustomed to speaking English in front of many people.","ja":"大勢の前で英語を話すことにまだ慣れていない。 |"}
+        ]},
+        {"id": "ap-to-002", "adj": "addicted", "prep": "to", "collocation": "addicted to", "ja": "〜に依存して・夢中で", "difficulty": 2, "steps": [1,2,3], "note": "本来は「中毒の」。くだけて「〜がやめられない」の意味でも使う。後ろは名詞か動名詞。", "examples": [
+          {"id":"ap-to-002-1","scene":"daily","en":"He's addicted to coffee.","ja":"彼はコーヒー中毒だ。 |"},
+          {"id":"ap-to-002-2","scene":"lab","en":"I'm a little addicted to checking my email.","ja":"メールをチェックするのが少し癖になっている。 |"},
+          {"id":"ap-to-002-3","scene":"meeting","en":"Many users are addicted to their smartphones.","ja":"多くのユーザーはスマートフォンに依存している。 |"}
+        ]},
+        {"id": "ap-to-003", "adj": "allergic", "prep": "to", "collocation": "allergic to", "ja": "〜にアレルギーがある", "difficulty": 2, "steps": [1,2,3], "note": "比喩的に「〜が大嫌い」の意味でも使う。", "examples": [
+          {"id":"ap-to-003-1","scene":"daily","en":"I'm allergic to cats.","ja":"私は猫アレルギーだ。 |"},
+          {"id":"ap-to-003-2","scene":"lab","en":"One of our participants was allergic to the gel for the sensors.","ja":"参加者の一人はセンサ用のジェルにアレルギーがあった。 |"},
+          {"id":"ap-to-003-3","scene":"meeting","en":"Our advisor is allergic to vague claims.","ja":"指導教員はあいまいな主張が大嫌いだ。 |"}
+        ]},
+        {"id": "ap-to-004", "adj": "close", "prep": "to", "collocation": "close to", "ja": "〜に近い", "difficulty": 1, "steps": [1,2,3], "note": "距離や数値が近いときは close to。", "examples": [
+          {"id":"ap-to-004-1","scene":"daily","en":"My house is close to the park.","ja":"家は公園の近くだ。 |"},
+          {"id":"ap-to-004-2","scene":"lab","en":"The accuracy is close to 90 percent.","ja":"精度は90％近い。 |"},
+          {"id":"ap-to-004-3","scene":"conference","en":"Our result is close to the theoretical limit.","ja":"私たちの結果は理論上の限界に近い。 |"}
+        ]},
+        {"id": "ap-to-005", "adj": "committed", "prep": "to", "collocation": "committed to", "ja": "〜に力を注いで・〜を約束して", "difficulty": 2, "steps": [1,2,3], "note": "後ろは名詞か動名詞（-ing）。to の後に動詞の原形は来ない。", "examples": [
+          {"id":"ap-to-005-1","scene":"daily","en":"She's committed to running every morning.","ja":"彼女は毎朝走ることを決めて続けている。 |"},
+          {"id":"ap-to-005-2","scene":"lab","en":"Our lab is committed to open science.","ja":"私たちの研究室はオープンサイエンスに力を入れている。 |"},
+          {"id":"ap-to-005-3","scene":"conference","en":"We are committed to releasing the dataset next year.","ja":"来年データセットを公開することを約束します。 |"}
+        ]},
+        {"id": "ap-to-006", "adj": "dedicated", "prep": "to", "collocation": "dedicated to", "ja": "〜に打ち込んで・〜専用の", "difficulty": 2, "steps": [1,2,3], "note": "人なら「〜に打ち込んでいる」、物なら「〜専用の・〜にあてられた」。", "examples": [
+          {"id":"ap-to-006-1","scene":"daily","en":"He's dedicated to his family.","ja":"彼は家族を大切にしている。 |"},
+          {"id":"ap-to-006-2","scene":"lab","en":"This room is dedicated to the motion capture system.","ja":"この部屋はモーションキャプチャ専用だ。 |"},
+          {"id":"ap-to-006-3","scene":"conference","en":"This session is dedicated to wearable computing.","ja":"このセッションはウェアラブルコンピューティングを扱う。 |"}
+        ]},
+        {"id": "ap-to-007", "adj": "devoted", "prep": "to", "collocation": "devoted to", "ja": "〜に献身的で・〜にあてられて", "difficulty": 3, "steps": [1,2,3], "note": "dedicated to とほぼ同じで、愛情や献身の感じが強い。", "examples": [
+          {"id":"ap-to-007-1","scene":"daily","en":"She is devoted to her dog.","ja":"彼女は犬をとてもかわいがっている。 |"},
+          {"id":"ap-to-007-2","scene":"lab","en":"He is devoted to his research.","ja":"彼は研究に打ち込んでいる。 |"},
+          {"id":"ap-to-007-3","scene":"conference","en":"The second half of the talk is devoted to the evaluation.","ja":"発表の後半は評価にあてられている。 |"}
+        ]},
+        {"id": "ap-to-008", "adj": "engaged", "prep": "to", "collocation": "engaged to", "ja": "〜と婚約して", "difficulty": 2, "steps": [1,2,3], "note": "married to と同じく相手には to を使う。with は使わない。", "examples": [
+          {"id":"ap-to-008-1","scene":"daily","en":"My cousin is engaged to a doctor.","ja":"いとこは医者と婚約している。 |"},
+          {"id":"ap-to-008-2","scene":"daily","en":"She has been engaged to him for a year.","ja":"彼女は彼と婚約して1年になる。 |"},
+          {"id":"ap-to-008-3","scene":"lab","en":"Did you hear that our senior is engaged to someone from the lab next door?","ja":"先輩が隣の研究室の人と婚約したって聞いた？ |"}
+        ]},
+        {"id": "ap-to-009", "adj": "equal", "prep": "to", "collocation": "equal to", "ja": "〜に等しい", "difficulty": 2, "steps": [1,2,3], "note": "equal to で「〜に等しい」。be equal to the task（〜をこなす力がある）という使い方もある。", "examples": [
+          {"id":"ap-to-009-1","scene":"daily","en":"One mile is roughly equal to 1.6 kilometers.","ja":"1マイルはおよそ1.6キロメートルに等しい。 |"},
+          {"id":"ap-to-009-2","scene":"lab","en":"Set the threshold equal to the mean value.","ja":"しきい値を平均値と同じにしてください。 |"},
+          {"id":"ap-to-009-3","scene":"conference","en":"Our accuracy was almost equal to the human level.","ja":"精度は人間のレベルにほぼ等しかった。 |"}
+        ]},
+        {"id": "ap-to-010", "adj": "friendly", "prep": "to", "collocation": "friendly to", "ja": "〜に親切で・やさしい", "difficulty": 2, "steps": [1,2,3], "note": "friendly to / toward は「〜に親切」。friendly with は「〜と仲がよい」。", "examples": [
+          {"id":"ap-to-010-1","scene":"daily","en":"The hotel staff were very friendly to us.","ja":"ホテルのスタッフはとても親切だった。","also":["with","toward","towards"]},
+          {"id":"ap-to-010-2","scene":"lab","en":"Everyone in the lab is friendly to new students.","ja":"研究室のみんなは新入生に親切だ。","also":["with","toward","towards"]},
+          {"id":"ap-to-010-3","scene":"conference","en":"This interface is friendly to beginners.","ja":"このインターフェースは初心者にやさしい。","also":["for"]}
+        ]},
+        {"id": "ap-to-011", "adj": "kind", "prep": "to", "collocation": "kind to", "ja": "〈人〉にやさしい", "difficulty": 1, "steps": [1,2,3], "note": "kind to ＋人 は「〜にやさしい」。It's kind of you to ... は別の形。", "examples": [
+          {"id":"ap-to-011-1","scene":"daily","en":"Be kind to your little brother.","ja":"弟にやさしくしなさい。 |"},
+          {"id":"ap-to-011-2","scene":"lab","en":"The senior students were very kind to me when I joined.","ja":"入ったとき、先輩たちはとても親切だった。 |"},
+          {"id":"ap-to-011-3","scene":"conference","en":"The reviewers were kind to us this time.","ja":"今回は査読者がやさしかった。 |"}
+        ]},
+        {"id": "ap-to-012", "adj": "married", "prep": "to", "collocation": "married to", "ja": "〜と結婚して", "difficulty": 1, "steps": [1,2,3], "note": "married to ＋人。married with は使わない（married with children は「子どもがいる」）。", "examples": [
+          {"id":"ap-to-012-1","scene":"daily","en":"He's married to a nurse.","ja":"彼は看護師と結婚している。 |"},
+          {"id":"ap-to-012-2","scene":"daily","en":"How long have you been married to her?","ja":"彼女と結婚してどれくらい？ |"},
+          {"id":"ap-to-012-3","scene":"lab","en":"My advisor is married to a researcher in physics.","ja":"指導教員の配偶者は物理学の研究者だ。 |"}
+        ]},
+        {"id": "ap-to-013", "adj": "nice", "prep": "to", "collocation": "nice to", "ja": "〈人〉に親切で", "difficulty": 1, "steps": [1,2,3], "note": "人への態度には to。", "examples": [
+          {"id":"ap-to-013-1","scene":"daily","en":"She's always nice to everyone.","ja":"彼女はいつも誰にでも親切だ。 |"},
+          {"id":"ap-to-013-2","scene":"lab","en":"Be nice to the new students.","ja":"新入生にはやさしくしてね。 |"},
+          {"id":"ap-to-013-3","scene":"conference","en":"The session chair was nice to me when I got nervous.","ja":"緊張したとき、座長がやさしくしてくれた。 |"}
+        ]},
+        {"id": "ap-to-014", "adj": "opposed", "prep": "to", "collocation": "opposed to", "ja": "〜に反対して", "difficulty": 3, "steps": [1,2,3], "note": "硬めの表現。後ろは名詞か動名詞（-ing）。", "examples": [
+          {"id":"ap-to-014-1","scene":"daily","en":"My parents were opposed to my moving abroad.","ja":"両親は私が海外に移ることに反対だった。 |"},
+          {"id":"ap-to-014-2","scene":"meeting","en":"Some members are opposed to changing the plan.","ja":"計画の変更に反対しているメンバーもいる。 |"},
+          {"id":"ap-to-014-3","scene":"conference","en":"I'm not opposed to that idea, but we need more data.","ja":"その考えに反対ではないが、もっとデータが必要だ。 |"}
+        ]},
+        {"id": "ap-to-015", "adj": "polite", "prep": "to", "collocation": "polite to", "ja": "〈人〉に礼儀正しい", "difficulty": 2, "steps": [1,2,3], "note": "人への態度には to。", "examples": [
+          {"id":"ap-to-015-1","scene":"daily","en":"Be polite to the guests.","ja":"お客さんには礼儀正しくね。 |"},
+          {"id":"ap-to-015-2","scene":"meeting","en":"Please be polite to people who disagree with you.","ja":"意見の違う人にも礼儀正しくしてください。 |"},
+          {"id":"ap-to-015-3","scene":"conference","en":"The audience was polite to every speaker.","ja":"聴衆はどの発表者にも礼儀正しかった。 |"}
+        ]},
+        {"id": "ap-to-016", "adj": "related", "prep": "to", "collocation": "related to", "ja": "〜と関係がある", "difficulty": 1, "steps": [1,2,3], "note": "関係の相手には to。Q&Aで質問とスライドをつなぐときに便利。", "examples": [
+          {"id":"ap-to-016-1","scene":"lab","en":"Is this error related to the update?","ja":"このエラーはアップデートと関係がありますか。 |"},
+          {"id":"ap-to-016-2","scene":"meeting","en":"This question is related to my next slide.","ja":"この質問は次のスライドに関係しています。 |"},
+          {"id":"ap-to-016-3","scene":"conference","en":"Our work is closely related to recent studies on sleep.","ja":"私たちの研究は睡眠に関する最近の研究と密接に関係している。 |"}
+        ]},
+        {"id": "ap-to-017", "adj": "rude", "prep": "to", "collocation": "rude to", "ja": "〈人〉に失礼な", "difficulty": 1, "steps": [1,2,3], "note": "人への態度には to。", "examples": [
+          {"id":"ap-to-017-1","scene":"daily","en":"He was rude to the waiter.","ja":"彼はウェイターに失礼な態度をとった。 |"},
+          {"id":"ap-to-017-2","scene":"lab","en":"I didn't mean to be rude to you.","ja":"失礼なことをするつもりはなかったんです。 |"},
+          {"id":"ap-to-017-3","scene":"conference","en":"Don't be rude to people who ask simple questions.","ja":"簡単な質問をする人に失礼な態度をとらないで。 |"}
+        ]},
+        {"id": "ap-to-018", "adj": "similar", "prep": "to", "collocation": "similar to", "ja": "〜に似て", "difficulty": 1, "steps": [1,2,3], "note": "similar with は誤り。to を使う。", "examples": [
+          {"id":"ap-to-018-1","scene":"daily","en":"My bag is similar to yours.","ja":"私のかばんはあなたのに似ている。 |"},
+          {"id":"ap-to-018-2","scene":"meeting","en":"This result is similar to what we saw last month.","ja":"この結果は先月見たものと似ている。 |"},
+          {"id":"ap-to-018-3","scene":"conference","en":"Your idea is similar to ours.","ja":"あなたのアイデアは私たちのものと似ている。 |"}
+        ]},
+        {"id": "ap-to-019", "adj": "used", "prep": "to", "collocation": "used to", "ja": "〜に慣れて", "difficulty": 2, "steps": [1,2,3], "note": "be used to ＋名詞・動名詞（-ing）で「〜に慣れている」。used to ＋動詞の原形（以前は〜した）とは別物。", "examples": [
+          {"id":"ap-to-019-1","scene":"daily","en":"I'm used to getting up early.","ja":"早起きには慣れている。 |"},
+          {"id":"ap-to-019-2","scene":"lab","en":"She's used to working late in the lab.","ja":"彼女は研究室で遅くまで作業することに慣れている。 |"},
+          {"id":"ap-to-019-3","scene":"conference","en":"I'm not used to answering questions in English yet.","ja":"英語で質問に答えることにまだ慣れていない。 |"}
+        ]}
+    ]},
+    {"id": "ap-with", "title": "形容詞 + with", "prep": "with", "note": "一緒にある相手・満足や不満の対象（〜に）", "refs": [{"name":"EnglishClub: Adjective + Preposition","url":"https://www.englishclub.com/vocabulary/adjective-preposition.php"}], "cards": [
+        {"id": "ap-with-001", "adj": "angry", "prep": "with", "collocation": "angry with", "ja": "〈人〉に腹を立てて", "difficulty": 2, "steps": [1,2,3], "note": "人に対する怒りは with / at。英国では with が多い。", "examples": [
+          {"id":"ap-with-001-1","scene":"daily","en":"My mother was angry with me for coming home late.","ja":"母は私が遅く帰ったことで怒っていた。","also":["at"]},
+          {"id":"ap-with-001-2","scene":"lab","en":"Are you angry with me?","ja":"私に怒ってる？","also":["at"]},
+          {"id":"ap-with-001-3","scene":"meeting","en":"He was angry with himself for missing the bug.","ja":"彼はバグを見逃した自分に腹を立てていた。","also":["at"]}
+        ]},
+        {"id": "ap-with-002", "adj": "annoyed", "prep": "with", "collocation": "annoyed with", "ja": "〈人〉にいらいらして", "difficulty": 2, "steps": [1,2,3], "note": "人に対しては with / at。", "examples": [
+          {"id":"ap-with-002-1","scene":"daily","en":"She was annoyed with her roommate for being noisy.","ja":"彼女はうるさいルームメイトにいらいらしていた。","also":["at"]},
+          {"id":"ap-with-002-2","scene":"lab","en":"I'm annoyed with myself for deleting the file.","ja":"ファイルを消してしまった自分にいらいらしている。","also":["at"]},
+          {"id":"ap-with-002-3","scene":"meeting","en":"Nobody is annoyed with you; it was a simple mistake.","ja":"誰もあなたにいらいらしていないよ。単純なミスだったんだから。","also":["at"]}
+        ]},
+        {"id": "ap-with-003", "adj": "bored", "prep": "with", "collocation": "bored with", "ja": "〜に飽きて・退屈して", "difficulty": 2, "steps": [1,2,3], "note": "bored by とほぼ同じ。bored of はくだけた言い方。", "examples": [
+          {"id":"ap-with-003-1","scene":"daily","en":"I'm bored with my usual routine.","ja":"いつもの日課に飽き飽きしている。","also":["by","of"]},
+          {"id":"ap-with-003-2","scene":"lab","en":"He got bored with the project after a month.","ja":"彼は1か月でそのプロジェクトに飽きてしまった。","also":["by","of"]},
+          {"id":"ap-with-003-3","scene":"conference","en":"Are you bored with my explanation?","ja":"私の説明に退屈していませんか。","also":["by","of"]}
+        ]},
+        {"id": "ap-with-004", "adj": "busy", "prep": "with", "collocation": "busy with", "ja": "〜で忙しい", "difficulty": 1, "steps": [1,2,3], "note": "busy with ＋名詞。busy ＋ -ing（busy writing）も使う。", "examples": [
+          {"id":"ap-with-004-1","scene":"daily","en":"I'm busy with housework this weekend.","ja":"今週末は家事で忙しい。 |"},
+          {"id":"ap-with-004-2","scene":"lab","en":"She's busy with her experiments until Friday.","ja":"彼女は金曜日まで実験で忙しい。 |"},
+          {"id":"ap-with-004-3","scene":"meeting","en":"Sorry, I've been busy with the paper deadline.","ja":"すみません、論文の締め切りで忙しくしていました。 |"}
+        ]},
+        {"id": "ap-with-005", "adj": "content", "prep": "with", "collocation": "content with", "ja": "〜に満足して", "difficulty": 3, "steps": [1,2,3], "note": "satisfied with より「これで十分」という落ち着いた満足。発音は［kənˈtent］。", "examples": [
+          {"id":"ap-with-005-1","scene":"daily","en":"He's content with a simple life.","ja":"彼は質素な生活に満足している。 |"},
+          {"id":"ap-with-005-2","scene":"lab","en":"Don't be content with the first result you get.","ja":"最初に出た結果で満足しないで。 |"},
+          {"id":"ap-with-005-3","scene":"conference","en":"We are not content with this accuracy yet.","ja":"この精度にはまだ満足していません。 |"}
+        ]},
+        {"id": "ap-with-006", "adj": "crowded", "prep": "with", "collocation": "crowded with", "ja": "〜で混雑して", "difficulty": 2, "steps": [1,2,3], "note": "混雑のもとになっている人や物には with。", "examples": [
+          {"id":"ap-with-006-1","scene":"daily","en":"The beach was crowded with families.","ja":"浜辺は家族連れで混雑していた。 |"},
+          {"id":"ap-with-006-2","scene":"lab","en":"The lab is crowded with equipment.","ja":"研究室は機材でいっぱいだ。 |"},
+          {"id":"ap-with-006-3","scene":"conference","en":"The poster hall was crowded with people.","ja":"ポスター会場は人で混雑していた。 |"}
+        ]},
+        {"id": "ap-with-007", "adj": "delighted", "prep": "with", "collocation": "delighted with", "ja": "〜に大喜びして", "difficulty": 2, "steps": [1,2,3], "note": "手に入ったものや結果に大喜びしていること。by / at も使える。", "examples": [
+          {"id":"ap-with-007-1","scene":"daily","en":"She was delighted with her birthday present.","ja":"彼女は誕生日プレゼントに大喜びした。","also":["by","at"]},
+          {"id":"ap-with-007-2","scene":"lab","en":"We're delighted with the new equipment.","ja":"新しい機材にとても満足している。","also":["by"]},
+          {"id":"ap-with-007-3","scene":"conference","en":"I was delighted with the feedback from the audience.","ja":"聴衆からのフィードバックがとても嬉しかった。","also":["by","at"]}
+        ]},
+        {"id": "ap-with-008", "adj": "disappointed", "prep": "with", "collocation": "disappointed with", "ja": "〈物事・人〉にがっかりして", "difficulty": 2, "steps": [1,2,3], "note": "物事にも人にも使う。by / in / at と重なる部分が多い。", "examples": [
+          {"id":"ap-with-008-1","scene":"daily","en":"I was disappointed with the hotel room.","ja":"ホテルの部屋にがっかりした。","also":["by","in","at"]},
+          {"id":"ap-with-008-2","scene":"meeting","en":"Are you disappointed with these results?","ja":"この結果にがっかりしていますか。","also":["by","in","at"]},
+          {"id":"ap-with-008-3","scene":"conference","en":"Some reviewers were disappointed with the small dataset.","ja":"小さなデータセットに不満を持つ査読者もいた。","also":["by","in","at"]}
+        ]},
+        {"id": "ap-with-009", "adj": "familiar", "prep": "with", "collocation": "familiar with", "ja": "〜をよく知って", "difficulty": 1, "steps": [1,2,3], "note": "人が主語なら familiar with（〜をよく知っている）。物が主語なら familiar to（〜によく知られている）。", "examples": [
+          {"id":"ap-with-009-1","scene":"daily","en":"Are you familiar with this area?","ja":"このあたりには詳しいですか。 |"},
+          {"id":"ap-with-009-2","scene":"lab","en":"I'm not familiar with this software.","ja":"このソフトには詳しくありません。 |"},
+          {"id":"ap-with-009-3","scene":"conference","en":"Are you familiar with the work of this group?","ja":"このグループの研究をご存じですか。 |"}
+        ]},
+        {"id": "ap-with-010", "adj": "fed up", "prep": "with", "collocation": "fed up with", "ja": "〜にうんざりして", "difficulty": 2, "steps": [1,2,3], "note": "くだけた言い方。英国では fed up of も使う。", "examples": [
+          {"id":"ap-with-010-1","scene":"daily","en":"I'm fed up with the noise from the construction site.","ja":"工事現場の騒音にうんざりしている。","also":["of"]},
+          {"id":"ap-with-010-2","scene":"lab","en":"I'm fed up with this old laptop.","ja":"この古いノートパソコンにはうんざりだ。","also":["of"]},
+          {"id":"ap-with-010-3","scene":"meeting","en":"Everyone is fed up with the slow review process.","ja":"みんな査読の遅さにうんざりしている。","also":["of"]}
+        ]},
+        {"id": "ap-with-011", "adj": "happy", "prep": "with", "collocation": "happy with", "ja": "〜に満足して", "difficulty": 1, "steps": [1,2,3], "note": "happy with は出来や内容に満足していること。happy about は出来事を喜ぶこと。", "examples": [
+          {"id":"ap-with-011-1","scene":"daily","en":"Are you happy with your new apartment?","ja":"新しいアパートに満足している？","also":["about"]},
+          {"id":"ap-with-011-2","scene":"lab","en":"I'm happy with the way the experiment went.","ja":"実験の進み方に満足している。","also":["about"]},
+          {"id":"ap-with-011-3","scene":"meeting","en":"Are you happy with this version of the slides?","ja":"このバージョンのスライドでいいですか。","also":["about"]}
+        ]},
+        {"id": "ap-with-012", "adj": "pleased", "prep": "with", "collocation": "pleased with", "ja": "〜に満足して", "difficulty": 1, "steps": [1,2,3], "note": "出来や内容への満足には with。about と重なる部分も多い。", "examples": [
+          {"id":"ap-with-012-1","scene":"daily","en":"My parents were pleased with my grades.","ja":"両親は私の成績に満足していた。","also":["about","by"]},
+          {"id":"ap-with-012-2","scene":"lab","en":"The professor seemed pleased with my draft.","ja":"教授は私の原稿に満足しているようだった。","also":["by"]},
+          {"id":"ap-with-012-3","scene":"conference","en":"We're pleased with the response to our demo.","ja":"デモへの反応に満足している。","also":["by","about"]}
+        ]},
+        {"id": "ap-with-013", "adj": "popular", "prep": "with", "collocation": "popular with", "ja": "〜に人気がある", "difficulty": 2, "steps": [1,2,3], "note": "popular with / among ＋人。人気の理由は popular for。", "examples": [
+          {"id":"ap-with-013-1","scene":"daily","en":"This café is popular with students.","ja":"このカフェは学生に人気がある。","also":["among"]},
+          {"id":"ap-with-013-2","scene":"lab","en":"Python is popular with researchers in many fields.","ja":"Pythonは多くの分野の研究者に人気がある。","also":["among"]},
+          {"id":"ap-with-013-3","scene":"conference","en":"Wearable sensors are popular with people who want to track their sleep.","ja":"睡眠を記録したい人の間でウェアラブルセンサは人気がある。","also":["among"]}
+        ]},
+        {"id": "ap-with-014", "adj": "satisfied", "prep": "with", "collocation": "satisfied with", "ja": "〜に満足して", "difficulty": 1, "steps": [1,2,3], "note": "満足の対象には with。by は使わない。", "examples": [
+          {"id":"ap-with-014-1","scene":"daily","en":"I'm satisfied with my new phone.","ja":"新しい電話に満足している。 |"},
+          {"id":"ap-with-014-2","scene":"meeting","en":"Are you satisfied with this result?","ja":"この結果に満足していますか。 |"},
+          {"id":"ap-with-014-3","scene":"conference","en":"We are not fully satisfied with the current accuracy.","ja":"現在の精度には十分満足していません。 |"}
+        ]}
+    ]}
+  ]
+}

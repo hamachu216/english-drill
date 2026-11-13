@@ -8,15 +8,16 @@ export const addDays = (day, n) => {
   return d.toISOString().slice(0, 10);
 };
 
-// Research-English sentence frames and research Q&A: same deck shape as a level file, tagged with a `kind`.
-export const DRILLS = ['data/patterns.json', 'data/qa.json'];
+// Research-English sentence frames, research Q&A and adjective + preposition pairs: same deck shape as a level file, tagged with a `kind`.
+export const DRILLS = ['data/patterns.json', 'data/qa.json', 'data/collocations.json'];
 
 // Every card of every file, tagged with what the rest needs: its kind, its topic (deck id), the deck itself,
-// and whether it is held back for the weekly first-sight check (the last HOLD cards of each deck).
+// and whether it is held back for the weekly first-sight check (the last HOLD cards of each deck; none for collocations,
+// which are each practiced in several sentences instead).
 const HOLD = 2;
 export const catalog = (files) =>
   files.flatMap((f) => f.decks.flatMap((d) => d.cards.map((c, nth) => ({
-    ...c, kind: f.kind ?? (f.level <= 2 ? 'grammar' : 'phrase'), level: f.level, topic: d.id, deck: d, nth, held: nth >= d.cards.length - HOLD,
+    ...c, kind: f.kind ?? (f.level <= 2 ? 'grammar' : 'phrase'), level: f.level, topic: d.id, deck: d, nth, held: f.kind !== 'colloc' && nth >= d.cards.length - HOLD,
   }))));
 
 // Saved state → current shape. This is also the migration: v1 stored only {log, settings}, so whatever is
