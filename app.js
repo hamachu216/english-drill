@@ -1,5 +1,5 @@
 import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish, slots, literal } from './core.js';
-import { MISS, HINT, SLOW, SOLO, review, graded, quick, byNeed, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
+import { MISS, HINT, OK, GRADE, review, byNeed, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
 import { PREPS, STEPS, stepOf, example, accepted, blank, heard, practise, hints as pairHints, siblings, progress } from './colloc.js';
 
 const KEY = 'eng:v1';
@@ -62,8 +62,7 @@ const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, [icon, name]]
 
 const pairCount = cards.filter((c) => c.kind === 'colloc').length, replyCount = cards.filter((c) => c.kind === 'reply').length;
 const stepLine = ([, recall, say, done]) => `思い出す ${recall} ・ 文で言う ${say} ・ 定着 ${done}`;
-const tenths = ([n = 0, slow = 0, solo = 0] = []) => (n < 5 ? '—' : `${Math.round(((slow + solo) / n) * 10)}割`);
-const mean = ([sum, n] = []) => (n ? `${Math.round(sum / n)}秒` : '—');
+const tenths = ([n = 0, said = 0] = []) => (n < 5 ? '—' : `${Math.round((said / n) * 10)}割`);
 const pair = (k, v) => [el('dt', { textContent: k }), el('dd', { textContent: v })];
 
 function renderHome() {
@@ -103,12 +102,11 @@ function renderHome() {
     const [, m, dd] = w.from.split('-').map(Number), qa = w.kinds.qa;
     const notes = [
       w.weak.length && `苦手: ${w.weak.map((t) => topicTitle[t]).join('・')}`,
-      w.start && `Q&Aの話し始め: 平均${mean(w.start)}`,
       w.why && `Q&Aのつまずき: 内容 ${w.why[0]}・英文 ${w.why[1]}`,
     ].filter(Boolean);
     return [
-      el('tr', {}, ...[`${m}/${dd}〜`, tenths(w.kinds.grammar), tenths(w.kinds.colloc), tenths(w.kinds.pattern), qa ? `${qa[1] + qa[2]}問` : '—', mean(w.time), w.check ? `${w.check[1]}/${w.check[0]}` : '—'].map((t) => el('td', { textContent: t }))),
-      ...(notes.length ? [el('tr', { className: 'weak' }, el('td', { colSpan: 7, textContent: notes.join(' ／ ') }))] : []),
+      el('tr', {}, ...[`${m}/${dd}〜`, tenths(w.kinds.grammar), tenths(w.kinds.colloc), tenths(w.kinds.pattern), qa ? `${qa[1]}問` : '—', w.check ? `${w.check[1]}/${w.check[0]}` : '—'].map((t) => el('td', { textContent: t }))),
+      ...(notes.length ? [el('tr', { className: 'weak' }, el('td', { colSpan: 6, textContent: notes.join(' ／ ') }))] : []),
     ];
   }));
 
@@ -155,10 +153,7 @@ const show = (view) => { for (const v of VIEWS) $(v).hidden = v !== view; scroll
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const pop = (node) => calm || node.animate([{ opacity: 0, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
 const persist = () => run.free || save({ session: run });
-const elapsed = () => (Date.now() - now.at) / 1000;
 const isTalk = () => now.cur.kind === 'qa'; // a research question, answered in your own words (a Q&A reply is a fixed phrase, said like a sentence)
-// Advanced questions start with a "start speaking" tap, which is what measures the time to start answering.
-const mustStart = () => isTalk() && now.step.level === 2 && !now.step.retry;
 const hintRow = ([label, text]) => pair(label, text);
 const setReveal = (text) => $('reveal').replaceChildren(text, el('kbd', { textContent: 'Enter' }));
 
@@ -189,7 +184,7 @@ function showStep() {
   // An adjective + preposition pair is asked at its own step (recall the preposition, or say the sentence), in a sentence it hasn't just had.
   const pairStep = cur.kind === 'colloc' ? stepOf(rec) : 0, ex = pairStep ? example(cur, rec) : null;
   const { shown, hints } = pairStep ? { shown: [], hints: pairHints(cur, pairStep, ex) } : scaffold(cur, step);
-  now = { step, cur, ask: cur.deck.follow?.[step.follow] ?? cur, pending: [...hints], hinted: false, late: false, at: Date.now(), took: 0, spoke: null, model: '', said: '', pairStep, ex };
+  now = { step, cur, ask: cur.deck.follow?.[step.follow] ?? cur, pending: [...hints], hinted: false, model: '', said: '', pairStep, ex };
   const talk = isTalk(), [icon, name] = PHASE[step.phase] ?? [];
   // Free practice keeps its timer setting; an Intermediate question gets a gentle 45s bar that never cuts you off.
   const sec = run.free && !pairStep ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
@@ -202,7 +197,7 @@ function showStep() {
   ].filter(Boolean).join(' · ');
   $('count').textContent = `${run.idx + 1} / ${run.queue.length}${sec ? ` · ⏱${sec}秒` : ''}`;
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
-  $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= SLOW ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
+  $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
   $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : pairStep ? (pairStep === 2 ? blank(cur, ex) : ex.ja) : cur.ja;
   $('sub').textContent = step.intro ? `${cur.deck.ja}　例文を聞いて、まねして声に出そう`
@@ -223,7 +218,7 @@ function showStep() {
   $('input').value = '';
   $('hint').disabled = !hints.length;
   $('playback').hidden = true;
-  setReveal(step.intro ? 'まねして言えた、次へ →' : mustStart() ? '🎙 話し始める' : '✓ 回答した');
+  setReveal(step.intro ? 'まねして言えた、次へ →' : '✓ 回答した');
   $('answer').hidden = true;
   $('reveal').hidden = false;
   startTimer(sec, run.free && !pairStep);
@@ -249,17 +244,9 @@ function hint() {
   $('hint').disabled = !now.pending.length;
 }
 
-// First sign of speaking on a question that measures it: the tap, the mic, or a keystroke.
-function started() {
-  if (!mustStart() || now.spoke != null) return false;
-  now.spoke = elapsed();
-  setReveal('✓ 回答した');
-  return true;
-}
-
 const LABEL = {
   miss: '✕ 言えなかった', content: '✕ 内容が浮かばなかった', english: '✕ 英文にできなかった', hint: '💡 ヒントで言えた',
-  ok: ['言えた', '答えられた'],
+  ok: ['○ 言えた', '○ 答えられた'],
 };
 
 // The phrases to learn, highlighted in the sentence: an adjective + preposition pair, or what fills a frame.
@@ -274,8 +261,6 @@ function reveal(timedOut = false) {
   stopMic();
   $('timer').style.animationPlayState = 'paused'; // freeze: shows time left
   const { cur, ask, step } = now, talk = isTalk(), typed = $('input').value.trim();
-  now.late ||= timedOut;
-  now.took ||= now.keyAt ?? elapsed(); // typed: the clock stopped at the first keystroke. "Answer again" keeps the first attempt's time, hint use and so its choices
   now.said = typed || now.said;
   now.model = now.pairStep ? now.ex.en : talk && step.level === 2 && !step.retry && ask.more ? `${ask.en} ${ask.more}` : ask.en;
   // Steps 1–2 check the preposition (a choice, or the one typed or heard); step 3 and an unclear answer are self-judged.
@@ -305,14 +290,11 @@ function reveal(timedOut = false) {
   } else $('caveat').textContent = talk ? 'まず伝わることが大事。自分の研究の内容で1文でも言えればOKで、文法の細かい正しさは気にしなくて大丈夫です。'
     : `${compare ? '緑＝あなたの回答にもあった語（文字起こしは不正確なこともあります）。' : ''}模範解答と違う言い方でも、意味と文法が合っていれば正解です。`;
   $('card-refs').replaceChildren(...(cur.deck.refs?.length ? ['参考: ', ...cur.deck.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)]))] : []));
-  // "Said it" shows the time it took and whether that counts as quick, so the clock's verdict is never a surprise.
-  // "I don't know" is a miss, with nothing to judge.
-  const secs = now.late ? Infinity : now.took, limit = quick(now.model, talk), fast = graded('ok', secs, now.model, talk) === SOLO;
-  const label = (key) => key !== 'ok' ? LABEL[key] : `${fast ? '◎' : '△'} ${LABEL.ok[+talk]}（${now.late ? '時間切れ' : `${Math.round(secs)}秒`}${fast ? '' : ` · 目安${limit}秒`}）`;
+  // "I don't know" is a miss, with nothing to judge. "Answer again" keeps the first attempt's hint use and so its choices.
   const verdict = now.gaveUp && !talk ? '✕ わからなかった — 次へ' : right == null ? null : right ? '○ 正解 — 次へ' : '✕ 不正解 — 次へ';
-  const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : right == null ? choices(talk, now.hinted) : [right ? (now.hinted ? 'hint' : 'solo') : 'miss'];
+  const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : right == null ? choices(talk, now.hinted) : [right ? (now.hinted ? 'hint' : 'ok') : 'miss'];
   $('judge').replaceChildren(...keys.map((key, i) =>
-    el('button', { className: key === 'ok' ? (fast ? 'solo' : 'slow') : key, onclick: () => grade(key) }, verdict ?? label(key), el('kbd', { textContent: i + 1 }))));
+    el('button', { className: key, onclick: () => grade(key) }, verdict ?? (key === 'ok' ? LABEL.ok[+talk] : LABEL[key]), el('kbd', { textContent: i + 1 }))));
   $('judge-label').hidden = verdict != null;
   $('again').hidden = !talk;
   $('answer').hidden = false;
@@ -323,7 +305,7 @@ function reveal(timedOut = false) {
 }
 
 function grade(key) {
-  const d = today(), { cur, step, said } = now, talk = isTalk(), g = graded(key, now.late ? Infinity : now.took, now.model, talk), before = state.hist[cur.id];
+  const d = today(), { cur, step, said } = now, talk = isTalk(), g = GRADE[key], before = state.hist[cur.id];
   const after = (cur.kind === 'colloc' ? practise : review)(before, { grade: g, hint: now.hinted }, d);
   if (cur.kind === 'colloc' && stepOf(after) > stepOf(before)) run.ups = [...(run.ups ?? []), `${cur.collocation} → ${STEPS[after.step]}`];
   save({
@@ -331,7 +313,7 @@ function grade(key) {
     // A follow-up question is practice only; a retry updates the card (it can't raise it) but isn't counted again.
     hist: step.follow == null ? { ...state.hist, [cur.id]: after } : state.hist,
     days: step.retry ? state.days : { ...state.days, [d]: tally(state.days[d], cur, {
-      grade: g, why: key, check: step.check, secs: talk ? undefined : now.took, start: now.hinted ? undefined : now.spoke ?? undefined }) },
+      grade: g, why: key, check: step.check }) },
     answers: talk && step.follow == null && hasEnglish(said) ? { ...state.answers, [cur.id]: said } : state.answers,
   });
   answered++;
@@ -360,15 +342,15 @@ function confetti() {
 
 function showResult() {
   const firsts = run.queue.map((s, i) => [s, run.grades[i]]).filter(([s, g]) => g != null && !s.retry);
-  const n = firsts.length, count = (g) => firsts.filter(([, x]) => x === g).length, ok = count(SLOW) + count(SOLO), rate = n ? ok / n : 1;
-  run.missed = [...new Set(firsts.filter(([, g]) => g < SLOW).map(([s]) => byId.get(s.id)))];
+  const n = firsts.length, count = (g) => firsts.filter(([, x]) => x === g).length, ok = firsts.filter(([, g]) => g >= OK).length, rate = n ? ok / n : 1;
+  run.missed = [...new Set(firsts.filter(([, g]) => g === MISS).map(([s]) => byId.get(s.id)))];
   const wrong = run.missed.length;
   show('result');
   $('result-emoji').textContent = !wrong ? '🎉' : rate >= 0.7 ? '👍' : '💪';
   $('result-score').textContent = `${ok}/${n}`;
   $('result-ring').style.setProperty('--p', rate * 100);
   $('result-title').textContent = run.free ? (!wrong ? (run.retry ? '全部言えた！' : 'パーフェクト！') : rate >= 0.7 ? 'いい調子！' : 'ここから伸びる！') : '今日の練習、完了！';
-  $('result-sub').textContent = `◎ すぐ言えた ${count(SOLO)} ・ △ 時間はかかった ${count(SLOW)} ・ 💡 ヒント ${count(HINT)} ・ ✕ 言えなかった ${count(MISS)}`;
+  $('result-sub').textContent = `○ 言えた ${ok} ・ 💡 ヒントで言えた ${count(HINT)} ・ ✕ 言えなかった ${count(MISS)}`;
   $('result-next').textContent = run.free ? (wrong ? `言えなかった${wrong}問を、言えるまで繰り返そう` : `次の${ROUND}問に進もう`)
     : wrong ? '言えなかった問題は、明日のメニューの最初にもう一度出ます。' : '明日は今日の結果をもとに、新しいメニューが用意されます。';
   $('miss-head').textContent = run.free ? 'もう一度チャレンジする問題' : '明日もう一度出る問題';
@@ -399,11 +381,9 @@ $('next-round').onclick = () => (run.free ? playFree(run.missed) : more());
 $('cd-start').onclick = () => { if (freeList !== pairCards) { freeList = pairCards; pool = []; } playFree(); };
 $('quit').onclick = $('home-btn').onclick = finish;
 $('hint').onclick = hint;
-$('input').oninput = () => { now.keyAt ??= elapsed(); started(); }; // the first keystroke (a transcript fills it without one)
 $('unknown').onclick = () => { now.gaveUp = true; reveal(); };
 $('reveal').onclick = () => {
   if (now.step.intro) advance();
-  else if (started()) { if (!$('mic').hidden && !$('mic').classList.contains('on')) $('mic').click(); }
   else reveal();
 };
 // Say it once more after seeing the example. The self-evaluation still describes the first attempt.
@@ -481,7 +461,6 @@ async function record() {
 $('mic').onclick = async () => {
   if ($('mic').classList.contains('on')) return stopMic();
   $('mic').classList.add('on');
-  started();
   try { await (Recognition ? transcribe() : record()); } catch { micOff(); }
 };
 

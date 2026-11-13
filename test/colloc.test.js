@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded } from '../core.js';
-import { MISS, HINT, SLOW, SOLO, planSession, requeue, byNeed } from '../plan.js';
+import { MISS, HINT, OK, planSession, requeue, byNeed } from '../plan.js';
 import { example, blank, heard, practise, hints, siblings, progress, stepOf } from '../colloc.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
@@ -41,14 +41,14 @@ test('heard: the preposition after the adjective, else the only one said; otherw
   assert.equal(heard('えーと', c), null);
 });
 
-test('practise: two right answers on two different days move a pair up a step; one wrong answer resets the count', () => {
-  let r = practise(undefined, { grade: SOLO }, T);
-  assert.deepEqual([r.step, r.wins, r.box, r.due], [2, 1, 1, addDays(T, 1)]);
-  const again = practise(r, { grade: SOLO }, T);
+test('practise: two right answers, three days apart, move a pair up a step; one wrong answer resets the count', () => {
+  let r = practise(undefined, { grade: OK }, T);
+  assert.deepEqual([r.step, r.wins, r.box, r.due], [2, 1, 1, addDays(T, 3)]);
+  const again = practise(r, { grade: OK }, T);
   assert.deepEqual([again.step, again.wins, again.due], [2, 1, r.due], 'answering again the same day does not count');
   const miss = practise(r, { grade: MISS }, r.due);
   assert.deepEqual([miss.step, miss.wins, miss.box, miss.due], [2, 0, 0, addDays(r.due, 1)], 'a miss: back tomorrow, count reset');
-  r = practise(r, { grade: SOLO }, r.due);
+  r = practise(r, { grade: OK }, r.due);
   assert.deepEqual([r.step, r.wins], [3, 0], 'saying the sentence after two days');
   assert.equal(practise(undefined, { grade: HINT, hint: true }, T).wins, 0, 'a hint is not a win');
 });
@@ -56,19 +56,19 @@ test('practise: two right answers on two different days move a pair up a step; o
 test('practise at step 3: saying the sentence well stretches the interval; failing brings it back tomorrow', () => {
   let r = { box: 1, n: 4, last: T, due: addDays(T, 1), step: 3, wins: 0 };
   const day = r.due;
-  r = practise(r, { grade: SOLO }, day);
+  r = practise(r, { grade: OK }, day);
   assert.deepEqual([r.step, r.due], [3, addDays(day, 7)]);
-  const later = practise(r, { grade: SOLO }, r.due);
+  const later = practise(r, { grade: OK }, r.due);
   assert.equal(later.due, addDays(r.due, 14));
   const fail = practise(later, { grade: MISS }, later.due);
   assert.deepEqual([fail.step, fail.box, fail.due], [3, 0, addDays(later.due, 1)]);
-  assert.equal(practise(r, { grade: SOLO }, day).due, r.due, 'same-day repeat does not stretch it');
+  assert.equal(practise(r, { grade: OK }, day).due, r.due, 'same-day repeat does not stretch it');
 });
 
 test('a pair reaches step 3 only after being right in different sentences on different days', () => {
   let rec, day = T;
   const used = [];
-  while (stepOf(rec) < 3) { used.push(example(pair('satisfied with'), rec).id); rec = practise(rec, { grade: SOLO }, day); day = rec.due; }
+  while (stepOf(rec) < 3) { used.push(example(pair('satisfied with'), rec).id); rec = practise(rec, { grade: OK }, day); day = rec.due; }
   assert.equal(used.length, 2);
   assert.equal(new Set(used).size, 2, 'two different sentences');
 });
@@ -85,19 +85,20 @@ test('siblings: the other prepositions the same adjective takes', () => {
   assert.deepEqual(siblings(pair('interested in'), items), []);
 });
 
-test('daily session: five pairs, new ones easy first and from different prepositions, missed ones reviewed first next day', () => {
+test('daily session: five pairs, new ones easy first and from different prepositions, missed ones reviewed first next day, right ones in three days', () => {
   const queue = planSession({ items, hist: {}, days: {}, day: T, minutes: 30, rand: seeded(T) });
   const steps = queue.filter((s) => s.phase === 'colloc'), chosen = steps.map((s) => items.find((c) => c.id === s.id));
   assert.equal(steps.length, 5);
   assert.ok(chosen.every((c) => c.difficulty === 1));
   assert.ok(new Set(chosen.map((c) => c.prep)).size >= 4, 'interleaved across prepositions');
-  const hist = Object.fromEntries(chosen.map((c, i) => [c.id, practise(undefined, { grade: i ? SOLO : MISS }, T)]));
+  const hist = Object.fromEntries(chosen.map((c, i) => [c.id, practise(undefined, { grade: i ? OK : MISS }, T)]));
   const next = planSession({ items, hist, days: {}, day: addDays(T, 1), minutes: 30, rand: seeded('n') });
   assert.equal(next[0].id, chosen[0].id, 'the missed pair opens the next session');
   assert.equal(next[0].phase, 'review');
   const again = next.filter((s) => s.phase === 'colloc').map((s) => s.id);
-  assert.ok(chosen.slice(1).filter((c) => again.includes(c.id)).length >= 2, 'pairs still being recalled come back the next day');
-  assert.equal(again.filter((id) => !hist[id]).length, 2, 'and room is kept for two new pairs');
+  assert.ok(chosen.slice(1).every((c) => !again.includes(c.id)), 'pairs recalled right are not back the next day');
+  const later = planSession({ items, hist, days: {}, day: addDays(T, 3), minutes: 30, rand: seeded('l') }).map((s) => s.id);
+  assert.ok(chosen.slice(1).filter((c) => later.includes(c.id)).length >= 2, 'but three days later, for the second recall');
   assert.equal(requeue(queue, queue.indexOf(steps[0]), MISS, 'colloc').filter((s) => s.id === steps[0].id).length, 2, 'a miss is retried later in the session');
 });
 
@@ -106,7 +107,7 @@ test('a month of practice moves pairs through the steps without dropping the oth
   for (let i = 0; i < 30; i++) {
     const day = addDays(T, i), q = planSession({ items, hist, days: {}, day, minutes: 30, rand: seeded(day) });
     assert.ok(q.some((s) => s.phase === 'pattern') && q.some((s) => s.phase === 'qa'));
-    for (const s of q.filter((s) => items.find((c) => c.id === s.id).kind === 'colloc')) hist = { ...hist, [s.id]: practise(hist[s.id], { grade: SOLO }, day) };
+    for (const s of q.filter((s) => items.find((c) => c.id === s.id).kind === 'colloc')) hist = { ...hist, [s.id]: practise(hist[s.id], { grade: OK }, day) };
   }
   const p = progress(items, hist).all;
   assert.equal(p.reduce((a, b) => a + b), pairs.length);
@@ -118,8 +119,8 @@ test('drill: every pair — wrong last time, then due, then new ones (easy first
   const a = pair('afraid of'), b = pair('good at'), c = pair('bored with');
   const hist = {
     [a.id]: practise(undefined, { grade: MISS }, addDays(T, -2)),
-    [b.id]: practise(undefined, { grade: SOLO }, T),
-    [c.id]: practise(undefined, { grade: SOLO }, addDays(T, -3)),
+    [b.id]: practise(undefined, { grade: OK }, T),
+    [c.id]: practise(undefined, { grade: OK }, addDays(T, -3)),
   };
   const today = byNeed(pairs, hist, T), wrongToday = byNeed(pairs, { ...hist, [b.id]: practise(hist[b.id], { grade: MISS }, T) }, T);
   assert.deepEqual(today.slice(0, 2).map((x) => x.id), [a.id, c.id], 'wrong last time first, then due');

@@ -2,21 +2,14 @@
 //
 // Data it works on:
 //   hist[cardId] = { box, n, last, due, grade, hint }   one record per card ever answered
-//   days[date]   = { [topicId]: [answers, slow, solo],  counters per day (first attempts only), plus
-//                    '#time:<kind>': [seconds, n], '#start': [seconds, n], '#check': [n, ok], '#why': [content, english] }
+//   days[date]   = { [topicId]: [answers, said],  counters per day (first attempts only), plus
+//                    '#check': [n, said], '#why': [content, english] }
 //   queue        = [{ id, phase, level?, intro?, follow?, check?, retry? }]   one step per screen
 import { addDays, shuffle, skeleton, opening, mask, slots } from './core.js';
 
-export const MISS = 0, HINT = 1, SLOW = 2, SOLO = 3;
-export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, slow: SLOW, solo: SOLO };
-
-// "Said it" is split by the clock, not by the learner: the time it took to say the answer (app.js stops the clock at the
-// first keystroke when it was typed, so typing speed doesn't count), against the time to start plus the time to say the
-// example (half a second a word). Within it is solo, slower is slow (a free-practice timeout passes Infinity).
-// A question allows more time to think.
-const START = { sentence: 6, question: 15 };
-export const quick = (model, talk) => Math.round(START[talk ? 'question' : 'sentence'] + 0.5 * model.split(/\s+/).length);
-export const graded = (key, secs, model, talk) => (key === 'ok' ? (secs <= quick(model, talk) ? SOLO : SLOW) : GRADE[key]);
+// Saved records from before may hold 3 (said quickly) — anything from OK up counts as said.
+export const MISS = 0, HINT = 1, OK = 2;
+export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, ok: OK };
 
 const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
 const KINDS = ['grammar', 'colloc', 'pattern', 'reply', 'qa'];
@@ -25,50 +18,48 @@ const SECONDS = { grammar: 35, colloc: 30, pattern: 45, reply: 30, qa: 90 }; // 
 const EVERY = { colloc: 6, reply: 5 };
 const NEUTRAL = 0.65; // fluency at which the split is the default 15 : 10 : 5 minutes
 const BLOCK = 4; // sentences drilled on the day a frame is introduced, after the one to listen to and repeat
-const UNLOCK = 6; // questions answered without hesitation on a second day or later, before impromptu Q&A starts
+const UNLOCK = 6; // questions answered without a hint on a second day or later, before impromptu Q&A starts
 const CHECK = { grammar: 3, pattern: 2, reply: 1, qa: 1 }; // weekly first-sight check
 const WEEK = 7;
-const SLOW_BOX = 2; // slow answers alone get a card this far
-const KNOWN = 3; // grammar answers, all quick, after which a topic counts as known and its new cards wait
+const HINT_BOX = 2; // answers with a hint alone get a card this far (7 days)
+const KNOWN = 3; // grammar answers, all said, after which a topic counts as known and its new cards wait
 
 // One answer → the card's new record. A box is only climbed on a day the card was due (or new):
 // answering again the same day, or early, can lower the box but never raise it or push the due date.
-// miss/hint → tomorrow; solo → one box up (3, 7, 14, 30, 60 days); slow → one box up but never past 7 days.
+// miss → tomorrow; said → one box up (3, 7, 14, 30, 60 days); said with a hint → one box up but never past 7 days.
 export function review(rec, { grade, hint = false }, day) {
   const { box = 0, n = 0, due } = rec ?? {};
-  const onTime = !due || day >= due, ok = grade >= SLOW;
-  const next = !ok ? 0 : !onTime ? box : grade === SOLO ? Math.min(box + 1, INTERVAL.length - 1) : Math.max(box, Math.min(box + 1, SLOW_BOX));
-  return { box: next, n: n + 1, last: day, due: ok && !onTime ? due : addDays(day, ok ? INTERVAL[next] : 1), grade, hint };
+  const onTime = !due || day >= due, ok = grade > MISS;
+  const next = !ok ? 0 : !onTime ? box : grade >= OK ? Math.min(box + 1, INTERVAL.length - 1) : Math.max(box, Math.min(box + 1, HINT_BOX));
+  return { box: next, n: n + 1, last: day, due: ok && !onTime ? due : addDays(day, INTERVAL[next]), grade, hint };
 }
 
 // Counters are maps of number arrays, so adding two days (or one answer to a day) is the same operation.
 const plus = (a = [], b = []) => Array.from({ length: Math.max(a.length, b.length) }, (_, i) => (a[i] ?? 0) + (b[i] ?? 0));
 const merge = (a, b) => Object.keys(b).reduce((out, k) => ({ ...out, [k]: plus(a[k], b[k]) }), a);
 
-// One first-attempt answer folded into its day. Seconds are capped so a card left open doesn't skew the average.
-export const tally = (day = {}, card, { grade, secs, start, why, check }) => merge(day, {
-  [card.topic]: [1, +(grade === SLOW), +(grade === SOLO)],
-  ...(check && { '#check': [1, +(grade >= SLOW)] }),
-  ...(secs != null && grade >= SLOW && { ['#time:' + card.kind]: [Math.round(Math.min(secs, 60)), 1] }),
-  ...(start != null && { '#start': [Math.round(Math.min(start, 60)), 1] }),
+// One first-attempt answer folded into its day.
+export const tally = (day = {}, card, { grade, why, check }) => merge(day, {
+  [card.topic]: [1, +(grade >= OK)],
+  ...(check && { '#check': [1, +(grade >= OK)] }),
   ...((why === 'content' || why === 'english') && { '#why': [+(why === 'content'), +(why === 'english')] }),
 });
 
 // Counters summed over the days in [from, to].
 export const span = (days, from, to) => Object.keys(days).filter((d) => d >= from && d <= to).reduce((sum, d) => merge(sum, days[d]), {});
 
-// Topic counters → [answers, slow, solo] per kind.
+// Topic counters → [answers, said] per kind.
 export function byKind(counters, items) {
   const kindOf = Object.fromEntries(items.map((c) => [c.topic, c.kind])), out = {};
   for (const [topic, v] of Object.entries(counters)) if (kindOf[topic]) out[kindOf[topic]] = plus(out[kindOf[topic]], v);
   return out;
 }
 
-// Share of the session per kind. Fluency = solo counts fully, slow half; too little data counts as NEUTRAL.
+// Share of the session per kind. Fluency = the share said without a hint; too little data counts as NEUTRAL.
 // Weak grammar pulls time toward grammar (never above 65%); solid grammar frees it for research English
 // (grammar never below 30%); and the better the frames go, the more of the research part is Q&A.
 const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
-const fluency = ([n, slow, solo] = [0]) => (n < 8 ? NEUTRAL : (solo + slow / 2) / n);
+const fluency = ([n, said] = [0]) => (n < 8 ? NEUTRAL : said / n);
 export function shares(recent) {
   const grammar = clamp(0.5 + (NEUTRAL - fluency(recent.grammar)) * 0.6, 0.3, 0.65);
   const talk = clamp(1 / 3 + (fluency(recent.pattern) - NEUTRAL) * 0.8, 0.25, 0.6);
@@ -77,7 +68,7 @@ export function shares(recent) {
 // Today's split, from the last two weeks of answers.
 export const mix = (days, items, day) => shares(byKind(span(days, addDays(day, -2 * WEEK + 1), day), items));
 
-// Topics with at least two cards that were last answered with a hint or not at all, worst first.
+// Topics with at least two cards that were last not said, worst first.
 export function weakTopics(items, hist) {
   const n = {};
   for (const c of items) if (hist[c.id]?.box === 0) n[c.topic] = (n[c.topic] ?? 0) + 1;
@@ -96,12 +87,12 @@ export function stageOf(items, hist) {
 // so every topic is tried early and topics are mixed.
 export const easyFirst = (a, b) => (a.difficulty ?? 0) - (b.difficulty ?? 0) || a.nth - b.nth;
 
-// Grammar topics already known: at least KNOWN cards answered, each said quickly last time and none missed.
+// Grammar topics already known: at least KNOWN cards answered, each said without a hint last time and none missed.
 // Their new cards go after everyone else's, so the time goes where it is needed. One miss and the topic is back.
 export function knownTopics(items, hist) {
   const said = {};
   for (const c of items) if (c.kind === 'grammar' && hist[c.id]) (said[c.topic] ??= []).push(hist[c.id]);
-  return new Set(Object.keys(said).filter((t) => said[t].length >= KNOWN && said[t].every((r) => r.grade === SOLO && r.box >= 1)));
+  return new Set(Object.keys(said).filter((t) => said[t].length >= KNOWN && said[t].every((r) => r.grade >= OK && r.box >= 1)));
 }
 const newFirst = (known) => (a, b) => known.has(a.topic) - known.has(b.topic) || easyFirst(a, b);
 
@@ -118,8 +109,8 @@ export function byNeed(pool, hist, day) {
   ])];
 }
 
-// Questions that can be answered without hesitation, not just once: what unlocks impromptu Q&A.
-const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id]?.box >= 2 && hist[c.id].grade === SOLO).length;
+// Questions answered without a hint, not just once: what unlocks impromptu Q&A.
+const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id]?.box >= 2 && hist[c.id].grade >= OK).length;
 
 // Today's session. Per kind: reviews that are due (weakest first), then unseen cards from the weakest topic that has any,
 // then new cards, then — when nothing is left — the cards practiced longest ago. Unless the review pile is
@@ -189,10 +180,10 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   ];
 }
 
-// A failed card comes back once in the same session with full support: a research question right away, others a few cards later.
+// A missed card comes back once in the same session with full support: a research question right away, others a few cards later.
 export function requeue(queue, i, grade, kind) {
   const s = queue[i];
-  if (grade >= SLOW || s.retry || s.check || s.follow != null) return queue;
+  if (grade > MISS || s.retry || s.check || s.follow != null) return queue;
   const at = Math.min(queue.length, i + (kind === 'qa' ? 1 : 4));
   return [...queue.slice(0, at), { ...s, retry: true }, ...queue.slice(at)];
 }
@@ -212,7 +203,7 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
   return check ? { shown: [], hints: [] } : { shown: ladder.slice(0, shown), hints: ladder.slice(shown) };
 }
 
-// The self-evaluation buttons on offer: couldn't say it, said it with a hint, or said it (the clock decides how fast).
+// The self-evaluation buttons on offer: couldn't say it, said it with a hint, or said it.
 // For a question, "couldn't say it" is split by where it broke down: no content, or content but no English.
 export const choices = (talk, hinted) => [...(talk ? ['content', 'english'] : ['miss']), hinted ? 'hint' : 'ok'];
 
@@ -231,14 +222,14 @@ export function overview(items, hist, day) {
   };
 }
 
-// The last `weeks` Sunday-aligned weeks, newest first: counters per kind, the grammar topics that went worst, timings, check.
+// The last `weeks` Sunday-aligned weeks, newest first: counters per kind, the grammar topics that went worst, the check.
 export function weekly(days, items, day, weeks = 4) {
   const sunday = addDays(day, -new Date(day + 'T00:00:00Z').getUTCDay());
   const grammar = new Set(items.filter((c) => c.kind === 'grammar').map((c) => c.topic));
-  const fails = ([n, slow, solo]) => n - slow - solo;
+  const fails = ([n, said]) => n - said;
   return Array.from({ length: weeks }, (_, i) => {
     const from = addDays(sunday, -WEEK * i), sum = span(days, from, addDays(from, WEEK - 1));
     const weak = Object.keys(sum).filter((t) => grammar.has(t) && fails(sum[t]) >= 2).sort((a, b) => fails(sum[b]) - fails(sum[a])).slice(0, 2);
-    return { from, kinds: byKind(sum, items), weak, time: sum['#time:grammar'], start: sum['#start'], check: sum['#check'], why: sum['#why'] };
+    return { from, kinds: byKind(sum, items), weak, check: sum['#check'], why: sum['#why'] };
   });
 }

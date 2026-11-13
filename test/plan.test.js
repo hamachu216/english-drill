@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded, restore } from '../core.js';
-import { MISS, HINT, SLOW, SOLO, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, quick, graded, overview, weekly, knownTopics, byNeed } from '../plan.js';
+import { MISS, HINT, OK, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, overview, weekly, knownTopics, byNeed } from '../plan.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const byId = new Map(items.map((c) => [c.id, c]));
@@ -27,32 +27,31 @@ function practice(n, grade, from = T) {
   return { hist, days, sessions, next: addDays(from, n) };
 }
 
-test('review: miss and hint come back tomorrow, solo in 3 days, repeated solo in 7 and more', () => {
+test('review: a miss comes back tomorrow, said in 3 days, said again in 7 and more', () => {
   assert.deepEqual(review(undefined, { grade: MISS }, T), { box: 0, n: 1, last: T, due: addDays(T, 1), grade: MISS, hint: false });
-  assert.equal(review(undefined, { grade: HINT, hint: true }, T).due, addDays(T, 1));
-  const once = review(undefined, { grade: SOLO }, T);
+  const once = review(undefined, { grade: OK }, T);
   assert.equal(once.due, addDays(T, 3));
-  const twice = review(once, { grade: SOLO }, once.due);
+  const twice = review(once, { grade: OK }, once.due);
   assert.equal(twice.due, addDays(once.due, 7));
-  assert.ok(review(twice, { grade: SOLO }, twice.due).due > addDays(twice.due, 7));
+  assert.ok(review(twice, { grade: OK }, twice.due).due > addDays(twice.due, 7));
 });
 
-test('review: slow answers alone never get past the 7-day box; a miss resets a well-known card', () => {
-  const slow = review(undefined, { grade: SLOW }, T);
-  assert.deepEqual([slow.box, slow.due], [1, addDays(T, 3)]);
-  let rec = slow;
-  for (let i = 0; i < 4; i++) rec = review(rec, { grade: SLOW }, rec.due);
+test('review: answers with a hint wait 3 days but never get past the 7-day box; a miss resets a well-known card', () => {
+  const hinted = review(undefined, { grade: HINT, hint: true }, T);
+  assert.deepEqual([hinted.box, hinted.due], [1, addDays(T, 3)]);
+  let rec = hinted;
+  for (let i = 0; i < 4; i++) rec = review(rec, { grade: HINT }, rec.due);
   assert.deepEqual([rec.box, rec.due], [2, addDays(rec.last, 7)]);
   const known = { box: 4, n: 6, last: T, due: addDays(T, 30) };
-  assert.deepEqual([review(known, { grade: SLOW }, known.due).box, review(known, { grade: MISS }, known.due).box], [4, 0]);
+  assert.deepEqual([review(known, { grade: HINT }, known.due).box, review(known, { grade: MISS }, known.due).box], [4, 0]);
 });
 
 test('review: answering again the same day never moves the due date forward or raises the box', () => {
-  const first = review(undefined, { grade: SOLO }, T);
+  const first = review(undefined, { grade: OK }, T);
   let again = first;
-  for (let i = 0; i < 5; i++) again = review(again, { grade: SOLO }, T);
+  for (let i = 0; i < 5; i++) again = review(again, { grade: OK }, T);
   assert.deepEqual([again.box, again.due, again.n], [first.box, first.due, 6]);
-  const missed = review(undefined, { grade: MISS }, T), retried = review(missed, { grade: SOLO }, T);
+  const missed = review(undefined, { grade: MISS }, T), retried = review(missed, { grade: OK }, T);
   assert.deepEqual([retried.box, retried.due], [0, addDays(T, 1)], 'a miss still comes back tomorrow after a successful retry');
   assert.equal(review(first, { grade: MISS }, T).due, addDays(T, 1), 'but a same-day miss does pull it back');
 });
@@ -85,17 +84,17 @@ test('the 10-minute session is shorter and still has both grammar and research E
 test('shares: 15/10/5 by default; weak grammar gets more time, solid grammar gives it to research English', () => {
   const base = shares({}), near = (a, b) => Math.abs(a - b) < 1e-9;
   assert.ok(near(base.grammar, 15 / 30) && near(base.pattern, 10 / 30) && near(base.qa, 5 / 30));
-  const weak = shares({ grammar: [40, 4, 4] }), solid = shares({ grammar: [40, 4, 34] });
+  const weak = shares({ grammar: [40, 6] }), solid = shares({ grammar: [40, 36] });
   assert.ok(weak.grammar > base.grammar && solid.grammar < base.grammar);
   assert.ok(solid.pattern > base.pattern && solid.qa > base.qa);
-  assert.ok(shares({ grammar: [40, 0, 0] }).grammar <= 0.65 && shares({ grammar: [40, 0, 40] }).grammar >= 0.3, 'bounded both ways');
-  assert.ok(shares({ pattern: [20, 2, 18] }).qa > base.qa, 'frames going well → more Q&A');
+  assert.ok(shares({ grammar: [40, 0] }).grammar <= 0.65 && shares({ grammar: [40, 40] }).grammar >= 0.3, 'bounded both ways');
+  assert.ok(shares({ pattern: [20, 19] }).qa > base.qa, 'frames going well → more Q&A');
   for (const s of [weak, solid]) assert.ok(near(s.grammar + s.pattern + s.qa, 1));
 });
 
 test('a learner who struggles with grammar gets more grammar; one who improves gets more research English', () => {
-  const grammarOnly = (g) => (c) => (c.kind === 'grammar' ? g : SLOW);
-  const weak = practice(3, grammarOnly(MISS)), solid = practice(3, grammarOnly(SOLO));
+  const grammarOnly = (g) => (c) => (c.kind === 'grammar' ? g : OK);
+  const weak = practice(3, grammarOnly(MISS)), solid = practice(3, grammarOnly(OK));
   const first = kinds(plan()), w = kinds(plan(weak.hist, weak.days, weak.next)), s = kinds(plan(solid.hist, solid.days, solid.next));
   assert.ok(w.grammar > first.grammar, `${w.grammar} > ${first.grammar}`);
   assert.ok(s.grammar < first.grammar && s.pattern + s.qa > first.pattern + first.qa, JSON.stringify([first, s]));
@@ -104,7 +103,7 @@ test('a learner who struggles with grammar gets more grammar; one who improves g
 
 test('cards that were missed stay in review on the following days, and open the session', () => {
   const missed = (id) => id === 'b-be-001' || id === 'b-neg-001';
-  const { hist, days, next } = practice(1, (c) => (missed(c.id) ? MISS : SOLO));
+  const { hist, days, next } = practice(1, (c) => (missed(c.id) ? MISS : OK));
   const queue = plan(hist, days, next);
   assert.deepEqual(queue.slice(0, 2).map((s) => [s.id, s.phase]).sort(), [['b-be-001', 'review'], ['b-neg-001', 'review']]);
   const later = plan(hist, days, addDays(next, 5));
@@ -112,7 +111,7 @@ test('cards that were missed stay in review on the following days, and open the 
 });
 
 test('no card twice in a session, and cards answered well do not come back the next day', () => {
-  const { hist, days, sessions, next } = practice(4, () => SOLO);
+  const { hist, days, sessions, next } = practice(4, () => OK);
   for (const q of [...sessions, plan(hist, days, next)]) {
     const ids = q.filter((s) => !s.intro && s.follow == null).map((s) => s.id);
     assert.equal(new Set(ids).size, ids.length);
@@ -122,7 +121,7 @@ test('no card twice in a session, and cards answered well do not come back the n
 });
 
 test('a weak grammar topic is named and gets extra cards', () => {
-  const { hist, days, next } = practice(2, (c) => (c.topic === 'b-neg' ? MISS : SOLO));
+  const { hist, days, next } = practice(2, (c) => (c.topic === 'b-neg' ? MISS : OK));
   assert.equal(weakTopics(items, hist)[0], 'b-neg');
   assert.deepEqual(overview(items, hist, next).weak, ['b-neg']);
   const queue = plan(hist, days, next), negs = queue.filter((s) => byId.get(s.id).topic === 'b-neg');
@@ -132,26 +131,26 @@ test('a weak grammar topic is named and gets extra cards', () => {
 
 test('a weak topic with no unseen sentences left gets only its misses back; the rest goes to other topics', () => {
   const be = items.filter((c) => c.topic === 'b-be' && !c.held), day = '2026-11-13', next = '2026-11-14';
-  const hist = Object.fromEntries(be.map((c, i) => [c.id, review(undefined, { grade: i % 2 ? SOLO : MISS }, day)]));
+  const hist = Object.fromEntries(be.map((c, i) => [c.id, review(undefined, { grade: i % 2 ? OK : MISS }, day)]));
   const queue = plan(hist, {}, next), bes = queue.filter((s) => byId.get(s.id).topic === 'b-be');
   assert.deepEqual(bes.map((s) => s.id).sort(), be.filter((_, i) => !(i % 2)).map((c) => c.id).sort(), 'only the misses');
   assert.ok(new Set(queue.filter((s) => s.phase === 'grammar').map((s) => byId.get(s.id).topic)).size >= 10);
 });
 
-test('a grammar topic said quickly three times is known: its new cards wait, and one miss brings it back', () => {
+test('a grammar topic said without a hint three times is known: its new cards wait, and one miss brings it back', () => {
   const day = '2026-11-13', next = '2026-11-14', said = (g) => (id) => [id, review(undefined, { grade: g }, day)];
-  const hist = Object.fromEntries(['b-be-001', 'b-be-002', 'b-be-003', 'b-neg-001', 'b-neg-002'].map(said(SOLO)));
-  assert.deepEqual([...knownTopics(items, hist)], ['b-be'], 'two quick answers are not enough');
+  const hist = Object.fromEntries(['b-be-001', 'b-be-002', 'b-be-003', 'b-neg-001', 'b-neg-002'].map(said(OK)));
+  assert.deepEqual([...knownTopics(items, hist)], ['b-be'], 'two answers are not enough');
   const fresh = plan(hist, {}, next).filter((s) => s.phase === 'grammar' && !hist[s.id]).map((s) => byId.get(s.id).topic);
   assert.ok(fresh.length && !fresh.includes('b-be'), 'its new cards wait while the others go on');
   assert.deepEqual(overview(items, hist, next).known, ['b-be']);
   assert.equal(knownTopics(items, { ...hist, 'b-be-002': review(hist['b-be-002'], { grade: MISS }, next) }).size, 0, 'a miss and it is back');
-  assert.equal(knownTopics(items, { ...hist, 'b-be-002': review(undefined, { grade: SLOW }, day) }).size, 0, 'slow is not known');
+  assert.equal(knownTopics(items, { ...hist, 'b-be-002': review(undefined, { grade: HINT }, day) }).size, 0, 'said with a hint is not known');
 });
 
 test('free practice of grammar: Lv1 and Lv2 together, wrong first, then due, then new as in the daily session', () => {
   const grammar = items.filter((c) => c.kind === 'grammar'), day = '2026-11-13';
-  const hist = { 'b-be-001': review(undefined, { grade: MISS }, day), ...Object.fromEntries(['b-neg-001', 'b-neg-002', 'b-neg-003'].map((id) => [id, review(undefined, { grade: SOLO }, day)])) };
+  const hist = { 'b-be-001': review(undefined, { grade: MISS }, day), ...Object.fromEntries(['b-neg-001', 'b-neg-002', 'b-neg-003'].map((id) => [id, review(undefined, { grade: OK }, day)])) };
   const order = byNeed(grammar, hist, '2026-11-14');
   assert.equal(order[0].id, 'b-be-001');
   assert.deepEqual(new Set(order.slice(1, 26).map((c) => c.level)), new Set([1, 2]), 'both levels, mixed');
@@ -170,7 +169,7 @@ test('sentence frames fade their support: frame shown → half hidden → none',
   assert.deepEqual(scaffold(frame, { level: 0 }).hints[0], ['語句', 'we have limited data'], 'the first hint is the phrase that fills the frame');
   assert.deepEqual(scaffold(frame, { level: 2, retry: true }).shown.map(([label]) => label), ['型', '語句'], 'a retry shows both');
   // The level follows the learner: said with the frame today → half hidden next time → no frame after that.
-  const { hist, days, sessions, next } = practice(8, () => SOLO);
+  const { hist, days, sessions, next } = practice(8, () => OK);
   const topic = byId.get(sessions[0].find((s) => s.intro).id).topic;
   const levels = sessions.flatMap((q) => q.filter((s) => !s.intro && byId.get(s.id).topic === topic && !s.check).map((s) => s.level));
   assert.deepEqual([...new Set(levels)], [0, 1, 2]);
@@ -178,19 +177,10 @@ test('sentence frames fade their support: frame shown → half hidden → none',
   assert.ok(plan(hist, days, next).length > 0);
 });
 
-test('"said it" is split by the clock: quick for the length of the example is solo, slower is slow', () => {
-  const en = 'We chose this method because we have limited data.'; // 9 words: 6 + 4.5 seconds spoken; a question gets 15 + 4.5
-  assert.equal(quick(en, false), 11);
-  assert.equal(quick(en, true), 20);
-  assert.deepEqual([graded('ok', 10, en, false), graded('ok', 13, en, false), graded('ok', 18, en, true)], [SOLO, SLOW, SOLO]);
-  assert.equal(graded('ok', Infinity, en, true), SLOW, 'a timeout is never quick');
-  assert.deepEqual(['miss', 'hint', 'content', 'english'].map((k) => graded(k, 1, en, false)), [MISS, HINT, MISS, MISS]);
-});
-
 test('a new frame waits until every started frame has been said at least once', () => {
-  const stuck = practice(3, (c) => (c.kind === 'pattern' ? MISS : SOLO));
+  const stuck = practice(3, (c) => (c.kind === 'pattern' ? MISS : OK));
   assert.equal(new Set(stuck.sessions.flat().filter((s) => s.intro).map((s) => byId.get(s.id).topic)).size, 2, 'only the first day introduces frames');
-  const moving = practice(3, () => SLOW);
+  const moving = practice(3, () => OK);
   assert.ok(new Set(moving.sessions.flat().filter((s) => s.intro).map((s) => byId.get(s.id).topic)).size > 2);
 });
 
@@ -218,14 +208,15 @@ test('Q&A: a hint is always available, and a failed question is asked again righ
   assert.deepEqual(again[1], { id: q.id, phase: 'qa', level: 2, retry: true });
   assert.ok(scaffold(q, again[1]).shown.some(([, text]) => text === q.frame));
   assert.equal(requeue(again, 1, MISS, 'qa'), again, 'only one retry');
-  assert.equal(requeue(queue, 0, SOLO, 'qa'), queue);
+  assert.equal(requeue(queue, 0, OK, 'qa'), queue);
   const grammar = Array.from({ length: 8 }, (_, i) => ({ id: `g${i}`, phase: 'grammar' }));
-  assert.equal(requeue(grammar, 0, HINT, 'grammar').findIndex((s) => s.retry), 4, 'other cards come back a few cards later');
+  assert.equal(requeue(grammar, 0, MISS, 'grammar').findIndex((s) => s.retry), 4, 'other cards come back a few cards later');
+  assert.equal(requeue(grammar, 0, HINT, 'grammar'), grammar, 'said with a hint: not repeated');
   assert.equal(requeue(grammar, 6, MISS, 'grammar').at(-1).retry, true);
 });
 
 test('Q&A levels rise with the learner, then impromptu questions with a follow-up begin', () => {
-  const early = practice(2, () => SOLO), late = practice(12, () => SOLO);
+  const early = practice(2, () => OK), late = practice(12, () => OK);
   assert.ok(overview(items, early.hist, early.next).unlock > 0);
   assert.ok(early.sessions.flat().every((s) => s.phase !== 'impromptu'));
   const o = overview(items, late.hist, late.next);
@@ -237,12 +228,12 @@ test('Q&A levels rise with the learner, then impromptu questions with a follow-u
   assert.deepEqual(scaffold(byId.get(main.id), main).shown, [], 'English question only');
   assert.ok(byId.get(follow.id).deck.follow[follow.follow].q);
   assert.ok(scaffold(byId.get(follow.id), follow).hints.length > 0);
-  const slowOnly = practice(12, () => SLOW);
-  assert.ok(overview(items, slowOnly.hist, slowOnly.next).unlock > 0, 'not unlocked by slow answers alone');
+  const hinted = practice(12, () => HINT);
+  assert.ok(overview(items, hinted.hist, hinted.next).unlock > 0, 'not unlocked by answers with a hint alone');
 });
 
 test('weekly check: after a week, a few never-seen cards from every kind, with no support and no hints', () => {
-  const { hist, days, sessions, next } = practice(7, () => SOLO);
+  const { hist, days, sessions, next } = practice(7, () => OK);
   assert.ok(sessions.flat().every((s) => !s.check), 'not in the first week');
   const queue = plan(hist, days, next), check = queue.filter((s) => s.check);
   assert.deepEqual(kinds(check), { grammar: 3, pattern: 2, reply: 1, qa: 1 });
@@ -250,29 +241,29 @@ test('weekly check: after a week, a few never-seen cards from every kind, with n
   assert.deepEqual(queue.slice(-check.length), check, 'at the end of the session');
   assert.deepEqual(scaffold(byId.get(check[0].id), check[0]), { shown: [], hints: [] });
   assert.equal(requeue(check, 0, MISS, 'grammar'), check, 'and no second try');
-  const c = byId.get(check[0].id), done = { ...days, [next]: tally(days[next], c, { grade: SOLO, check: true }) };
+  const c = byId.get(check[0].id), done = { ...days, [next]: tally(days[next], c, { grade: OK, check: true }) };
   assert.ok(plan(hist, done, addDays(next, 1)).every((s) => !s.check), 'once a week');
   assert.ok(plan(hist, done, addDays(next, 7)).some((s) => s.check));
 });
 
-test('tally and weekly: per-week unaided counts, weak grammar topics, timings and the check', () => {
+test('tally and weekly: per-week counts said without a hint, weak grammar topics and the check', () => {
   const g = byId.get('b-passive-001'), q = byId.get('q-goal-001');
   let day = {};
-  for (const grade of [MISS, HINT, SLOW, SOLO]) day = tally(day, g, { grade, secs: 100 });
-  day = tally(day, q, { grade: MISS, why: 'english', start: 4 });
-  day = tally(day, q, { grade: SOLO, check: true, start: 6 });
-  assert.deepEqual(day, { 'b-passive': [4, 1, 1], '#time:grammar': [120, 2], 'q-goal': [2, 0, 1], '#why': [0, 1], '#start': [10, 2], '#check': [1, 1] });
-  const [thisWeek, lastWeek] = weekly({ [T]: day, [addDays(T, -7)]: tally({}, g, { grade: SOLO }) }, items, addDays(T, 2));
+  for (const grade of [MISS, HINT, OK, OK]) day = tally(day, g, { grade });
+  day = tally(day, q, { grade: MISS, why: 'english' });
+  day = tally(day, q, { grade: OK, check: true });
+  assert.deepEqual(day, { 'b-passive': [4, 2], 'q-goal': [2, 1], '#why': [0, 1], '#check': [1, 1] });
+  const [thisWeek, lastWeek] = weekly({ [T]: day, [addDays(T, -7)]: tally({}, g, { grade: OK }) }, items, addDays(T, 2));
   assert.equal(thisWeek.from, addDays(T, -1), 'weeks start on Sunday');
-  assert.deepEqual(thisWeek.kinds, { grammar: [4, 1, 1], qa: [2, 0, 1] });
-  assert.deepEqual([thisWeek.weak, thisWeek.time, thisWeek.start, thisWeek.check, thisWeek.why], [['b-passive'], [120, 2], [10, 2], [1, 1], [0, 1]]);
-  assert.deepEqual([lastWeek.kinds, lastWeek.weak], [{ grammar: [1, 0, 1] }, []]);
+  assert.deepEqual(thisWeek.kinds, { grammar: [4, 2], qa: [2, 1] });
+  assert.deepEqual([thisWeek.weak, thisWeek.check, thisWeek.why], [['b-passive'], [1, 1], [0, 1]]);
+  assert.deepEqual([lastWeek.kinds, lastWeek.weak], [{ grammar: [1, 1] }, []]);
 });
 
 test('state survives a reload: history and an unfinished session round-trip through JSON', async () => {
   const { restore } = await import('../core.js');
-  const { hist, days, next } = practice(2, (c) => (c.nth % 3 ? SOLO : MISS));
-  const session = { day: next, queue: plan(hist, days, next), idx: 7, grades: [SOLO, MISS, null] };
+  const { hist, days, next } = practice(2, (c) => (c.nth % 3 ? OK : MISS));
+  const session = { day: next, queue: plan(hist, days, next), idx: 7, grades: [OK, MISS, null] };
   const saved = JSON.parse(JSON.stringify({ log: { [T]: 40 }, hist, days, answers: { 'q-goal-001': 'My goal is to ...' }, session, settings: {} }));
   const state = restore(saved);
   assert.deepEqual([state.hist, state.days, state.answers], [hist, days, { 'q-goal-001': 'My goal is to ...' }]);
@@ -295,5 +286,12 @@ test('odd values in a restored backup are dropped, and do not stop the planner',
     assert.ok(Array.isArray(planSession({ items, hist: s.hist, days: s.days, day, minutes: 30, rand: seeded(day) })), JSON.stringify(w));
     overview(items, s.hist, day); weekly(s.days, items, day); byNeed(items, s.hist, day);
   }
-  assert.deepEqual(restore({ log: { a: 'x', b: 3 }, days: { d: { t: [1, 'x'], u: [1, 0, 1] } } }), { ...restore({}), log: { b: 3 }, days: { d: { u: [1, 0, 1] } } });
+  assert.deepEqual(restore({ log: { a: 'x', b: 3 }, days: { d: { t: [1, 'x'], u: [1, 1] } } }), { ...restore({}), log: { b: 3 }, days: { d: { u: [1, 1] } } });
+});
+
+test('restore: counters saved while answers were timed become [answers, said], and the timings go', () => {
+  const old = { d: { 'b-be': [5, 2, 1], '#time:grammar': [40, 3], '#start': [9, 1], '#check': [2, 1], '#why': [1, 0] } };
+  const now = { d: { 'b-be': [5, 3], '#check': [2, 1], '#why': [1, 0] } };
+  assert.deepEqual(restore({ days: old }).days, now);
+  assert.deepEqual(restore({ days: now }).days, now, 'idempotent');
 });

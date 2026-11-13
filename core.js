@@ -29,10 +29,14 @@ const plain = (x) => x != null && typeof x === 'object' && !Array.isArray(x);
 const only = (o, ok) => Object.fromEntries(Object.entries(plain(o) ? o : {}).filter(([, v]) => ok(v)));
 const counters = (v) => Array.isArray(v) && v.every(Number.isFinite);
 const card = (v) => plain(v) && Number.isInteger(v.box) && typeof v.due === 'string' && typeof v.last === 'string';
+// A day's counters. Before the clock was dropped a topic counted [answers, slow, solo] and timings were kept:
+// now a topic counts [answers, said] and the timings are gone.
+const counted = (c) => Object.fromEntries(Object.entries(only(c, counters)).filter(([k]) => !/^#(time|start)/.test(k))
+  .map(([k, v]) => [k, k[0] !== '#' && v.length === 3 ? [v[0], v[1] + v[2]] : v]));
 export const restore = (s) => ({
   log: only(s?.log, Number.isFinite),
   hist: only(s?.hist, card),
-  days: Object.fromEntries(Object.entries(only(s?.days, plain)).map(([d, c]) => [d, only(c, counters)])),
+  days: Object.fromEntries(Object.entries(only(s?.days, plain)).map(([d, c]) => [d, counted(c)])),
   answers: only(s?.answers, (v) => typeof v === 'string'),
   session: plain(s?.session) && Array.isArray(s.session.queue) && s.session.queue.every(plain) ? s.session : null,
   settings: Object.fromEntries(Object.entries(DEFAULT).map(([k, v]) => [k, s?.settings?.[k] ?? v])),
