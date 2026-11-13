@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { FILES, DRILLS } from '../core.js';
+import { FILES, DRILLS, slots } from '../core.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)));
 const levels = FILES.map(read), [patterns, qa, colloc, replies] = DRILLS.map(read), files = [...levels, patterns, qa, colloc, replies];
@@ -32,7 +32,7 @@ test('sentence frames: every card reuses its frame with different content', () =
   for (const d of patterns.decks) {
     assert.ok(d.frame.includes('...') && d.ja && d.note, d.id);
     assert.ok(d.cards.length >= 6, `${d.id}: enough sentences to practice and to hold two back for the weekly check`);
-    for (const c of d.cards) assert.ok(c.en.startsWith(d.frame.split('...')[0].trim()), c.id);
+    for (const c of d.cards) assert.ok(c.en.startsWith(d.frame.split('...')[0].trim()) && slots(d.frame, c.en).every(Boolean) && slots(d.frame, c.en).length, `${c.id}: fits its frame, so its phrases can be shown`);
     assert.equal(new Set(d.cards.map((c) => c.en)).size, d.cards.length, d.id);
   }
 });

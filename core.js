@@ -50,6 +50,10 @@ export function seeded(text) {
 export const skeleton = (en) => en.replace(/[A-Za-z][A-Za-z']*/g, (w) => w[0] + '_'.repeat(w.length - 1));
 export const opening = (en) => en.split(/\s+/).slice(0, 2).join(' ') + ' …';
 export const mask = (frame) => { let i = 0; return frame.replace(/[A-Za-z']+/g, (w) => (i++ % 2 ? '_'.repeat(w.length) : w)); };
+// slots: what a sentence puts into its frame's "..." — the phrases to learn
+// ("We used ... to ...", "We used an accelerometer to measure movement." → ["an accelerometer", "measure movement"]).
+export const literal = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+export const slots = (frame, en) => en.match(new RegExp(`^${frame.split('...').map(literal).join('(.+?)')}[.?!]?$`, 'i'))?.slice(1).map((s) => s.trim()) ?? [];
 
 export const ROUND = 10;
 

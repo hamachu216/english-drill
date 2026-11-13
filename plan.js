@@ -5,10 +5,15 @@
 //   days[date]   = { [topicId]: [answers, slow, solo],  counters per day (first attempts only), plus
 //                    '#time:<kind>': [seconds, n], '#start': [seconds, n], '#check': [n, ok], '#why': [content, english] }
 //   queue        = [{ id, phase, level?, intro?, follow?, check?, retry? }]   one step per screen
-import { addDays, shuffle, skeleton, opening, mask } from './core.js';
+import { addDays, shuffle, skeleton, opening, mask, slots } from './core.js';
 
 export const MISS = 0, HINT = 1, SLOW = 2, SOLO = 3;
 export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, slow: SLOW, solo: SOLO };
+
+// "Said it" is split by the clock, not by the learner: within a few seconds plus half a second per word of the
+// example it was solo, slower was slow (a free-practice timeout passes Infinity). A question allows time to think.
+export const quick = (model, talk) => Math.round((talk ? 10 : 4) + 0.5 * model.split(/\s+/).length);
+export const graded = (key, secs, model, talk) => (key === 'ok' ? (secs <= quick(model, talk) ? SOLO : SLOW) : GRADE[key]);
 
 const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
 const KINDS = ['grammar', 'colloc', 'pattern', 'reply', 'qa'];
@@ -16,7 +21,7 @@ const SECONDS = { grammar: 35, colloc: 30, pattern: 45, reply: 30, qa: 90 }; // 
 // Short kinds outside the split, one card per this many minutes: 5 adjective + preposition pairs and 6 Q&A replies in 30 minutes.
 const EVERY = { colloc: 6, reply: 5 };
 const NEUTRAL = 0.65; // fluency at which the split is the default 15 : 10 : 5 minutes
-const BLOCK = 4; // sentences drilled on the day a frame is introduced
+const BLOCK = 4; // sentences drilled on the day a frame is introduced, after the one to listen to and repeat
 const UNLOCK = 6; // questions answered without hesitation on a second day or later, before impromptu Q&A starts
 const CHECK = { grammar: 3, pattern: 2, reply: 1, qa: 1 }; // weekly first-sight check
 const WEEK = 7;
@@ -83,7 +88,8 @@ export function stageOf(items, hist) {
   return stage;
 }
 
-// New cards one topic at a time in turn, easy ones first (questions have no difficulty: just in turn).
+// New cards one topic at a time in turn, easy ones first (grammar and questions have no difficulty: just in turn),
+// so every topic is tried early and topics are mixed.
 export const easyFirst = (a, b) => (a.difficulty ?? 0) - (b.difficulty ?? 0) || a.nth - b.nth;
 
 // Questions that can be answered without hesitation, not just once: what unlocks impromptu Q&A.
@@ -114,13 +120,13 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     const worst = weak.find((t) => pool.some((c) => c.topic === t));
     const focus = [...fresh, ...rested].filter((c) => c.topic === worst).slice(0, Math.ceil(n / 5));
     // New frames: more sentences for frames already started, then (once every started frame has been said
-    // at least once) one or two new frames, BLOCK sentences each. New questions: one per topic in turn.
+    // at least once) one or two new frames, one sentence to repeat and BLOCK to say. New questions: one per topic in turn.
     const open = fresh.filter((c) => c.topic in stage);
     const ready = pool.every((c) => !(c.topic in stage) || stage[c.topic] >= 1) && n - reviews.length - focus.length - open.length >= 2;
     const untouched = [...new Set(fresh.filter((c) => !(c.topic in stage)).map((c) => c.topic))].slice(0, n > 6 ? 2 : 1);
     const added = {
-      grammar: fresh,
-      pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, BLOCK)) : [])],
+      grammar: [...fresh].sort(easyFirst),
+      pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, 1 + BLOCK)) : [])],
       qa: [...fresh].sort(easyFirst),
       reply: [...fresh].sort(easyFirst),
       colloc: [...fresh].sort(easyFirst),
@@ -146,7 +152,8 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     ...[...old('grammar'), ...added('grammar')].map(step('grammar')),
     ...[...old('colloc'), ...added('colloc')].map(step('colloc')),
     ...old('pattern').map(step('pattern')),
-    ...added('pattern').flatMap((c, i, a) => [...(c.topic in stage || a[i - 1]?.topic === c.topic ? [] : [{ id: c.id, phase: 'pattern', intro: true }]), step('pattern')(c)]),
+    // A new frame opens with its first sentence to listen to and repeat; that sentence is recalled on a later day.
+    ...added('pattern').map((c, i, a) => (c.topic in stage || a[i - 1]?.topic === c.topic ? step('pattern')(c) : { id: c.id, phase: 'pattern', intro: true })),
     ...[...old('reply'), ...added('reply')].map(step('reply')),
     ...talk.flatMap((c) => (wild.includes(c)
       ? [{ id: c.id, phase: 'impromptu', level: 2 }, { id: c.id, phase: 'impromptu', level: 2, follow: Math.floor(rand() * c.deck.follow.length) }]
@@ -164,7 +171,7 @@ export function requeue(queue, i, grade, kind) {
 }
 
 // What a step shows up front and what the hint button reveals, in order. Support fades with the level:
-//   frame card   0: frame shown · 1: frame half hidden · 2: nothing
+//   frame card   0: frame shown · 1: frame half hidden · 2: nothing; the hints then give the phrases that fill it
 //   question     0 (Beginner): keywords + answer frame · 1 (Intermediate): keywords · 2 (Advanced): nothing
 // A retry shows everything; the weekly check shows nothing and has no hints.
 export function scaffold(c, { level = 2, retry, check, follow }) {
@@ -172,14 +179,14 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
   const [ladder, shown] =
     f ? [[['答え方の型', f.frame], ['質問の意味', f.ja]], 0]
     : c.q ? [[['キーワード', c.keys.join(' / ')], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
-    : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['頭文字', skeleton(c.en)]], retry || level < 2 ? 1 : 0]
+    : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['語句', slots(c.deck.frame, c.en).join(' / ')], ['頭文字', skeleton(c.en)]], retry ? 2 : level < 2 ? 1 : 0]
     : [[['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], 0];
   return check ? { shown: [], hints: [] } : { shown: ladder.slice(0, shown), hints: ladder.slice(shown) };
 }
 
-// The self-evaluation buttons on offer. A hint rules out "unaided"; a timeout rules out "solo".
+// The self-evaluation buttons on offer: couldn't say it, said it with a hint, or said it (the clock decides how fast).
 // For a question, "couldn't say it" is split by where it broke down: no content, or content but no English.
-export const choices = (talk, hinted, late) => [...(talk ? ['content', 'english'] : ['miss']), ...(hinted ? ['hint'] : late ? ['slow'] : ['slow', 'solo'])];
+export const choices = (talk, hinted) => [...(talk ? ['content', 'english'] : ['miss']), hinted ? 'hint' : 'ok'];
 
 // Where things stand, for the home screen. Deliberately coarse: counts, not scores.
 export function overview(items, hist, day) {

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded } from '../core.js';
-import { MISS, HINT, SLOW, SOLO, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, overview, weekly } from '../plan.js';
+import { MISS, HINT, SLOW, SOLO, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, quick, graded, overview, weekly } from '../plan.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const byId = new Map(items.map((c) => [c.id, c]));
@@ -62,10 +62,14 @@ test('first use: about 30 minutes with grammar, 5 adjective + preposition pairs,
   assert.ok(n.grammar >= 20 && n.pattern >= 6 && n.qa >= 3 && n.colloc === 5 && n.reply === 6, JSON.stringify(n));
   assert.ok(n.grammar > n.pattern && n.pattern > n.qa);
   assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'colloc', 'pattern', 'reply', 'qa'], 'no review, impromptu or check on day one');
-  assert.ok(queue.filter((s) => byId.get(s.id).kind === 'grammar').every((s) => byId.get(s.id).level === 1), 'grammar starts at Lv1');
+  const grammar = queue.filter((s) => byId.get(s.id).kind === 'grammar').map((s) => byId.get(s.id));
+  assert.ok(grammar.every((c) => c.nth === 0), 'new grammar: the first card of each topic in turn, not one topic at a time');
+  assert.ok(grammar.slice(0, 15).every((c) => c.level === 1), 'Lv1 topics first in each round');
   const frames = queue.filter((s) => s.phase === 'pattern');
-  assert.ok(frames[0].intro, 'a frame is explained before it is used');
-  assert.equal(frames.filter((s) => !s.intro && s.id.startsWith(byId.get(frames[0].id).topic)).length, 4, 'then reused in several sentences');
+  assert.ok(frames[0].intro, 'a frame is explained, with its first sentence to repeat, before it is used');
+  const first = frames.filter((s) => byId.get(s.id).topic === byId.get(frames[0].id).topic);
+  assert.equal(first.filter((s) => !s.intro).length, 4, 'then reused in several other sentences');
+  assert.ok(!first.some((s) => !s.intro && s.id === frames[0].id), 'the repeated sentence is not recalled the same day');
   assert.ok(frames.filter((s) => !s.intro).every((s) => s.level === 0));
   assert.ok(queue.filter((s) => s.phase === 'qa').every((s) => s.level === 0), 'questions start at Beginner');
   assert.equal(new Set(queue.filter((s) => s.phase === 'qa').map((s) => byId.get(s.id).topic)).size, n.qa, 'one question per topic');
@@ -99,10 +103,10 @@ test('a learner who struggles with grammar gets more grammar; one who improves g
 });
 
 test('cards that were missed stay in review on the following days, and open the session', () => {
-  const missed = (id) => id === 'b-be-001' || id === 'b-be-002';
+  const missed = (id) => id === 'b-be-001' || id === 'b-neg-001';
   const { hist, days, next } = practice(1, (c) => (missed(c.id) ? MISS : SOLO));
   const queue = plan(hist, days, next);
-  assert.deepEqual(queue.slice(0, 2).map((s) => [s.id, s.phase]).sort(), [['b-be-001', 'review'], ['b-be-002', 'review']]);
+  assert.deepEqual(queue.slice(0, 2).map((s) => [s.id, s.phase]).sort(), [['b-be-001', 'review'], ['b-neg-001', 'review']]);
   const later = plan(hist, days, addDays(next, 5));
   assert.ok(later.some((s) => s.id === 'b-be-001' && s.phase === 'review'), 'still due if a day is skipped');
 });
@@ -113,7 +117,7 @@ test('no card twice in a session, and cards answered well do not come back the n
     const ids = q.filter((s) => !s.intro && s.follow == null).map((s) => s.id);
     assert.equal(new Set(ids).size, ids.length);
   }
-  const seen = (q) => new Set(q.map((s) => s.id));
+  const seen = (q) => new Set(q.filter((s) => !s.intro).map((s) => s.id)); // a sentence only repeated is said on a later day
   assert.equal([...seen(sessions[1])].filter((id) => seen(sessions[0]).has(id)).length, 0);
 });
 
@@ -132,6 +136,8 @@ test('sentence frames fade their support: frame shown → half hidden → none',
   assert.ok(half.shown[0][1].includes('_') && half.shown[0][1] !== text);
   assert.equal(half.hints[0][1], text, 'the full frame is one hint away');
   assert.deepEqual(scaffold(frame, { level: 2 }).shown, []);
+  assert.deepEqual(scaffold(frame, { level: 0 }).hints[0], ['語句', 'we have limited data'], 'the first hint is the phrase that fills the frame');
+  assert.deepEqual(scaffold(frame, { level: 2, retry: true }).shown.map(([label]) => label), ['型', '語句'], 'a retry shows both');
   // The level follows the learner: said with the frame today → half hidden next time → no frame after that.
   const { hist, days, sessions, next } = practice(8, () => SOLO);
   const topic = byId.get(sessions[0].find((s) => s.intro).id).topic;
@@ -139,6 +145,15 @@ test('sentence frames fade their support: frame shown → half hidden → none',
   assert.deepEqual([...new Set(levels)], [0, 1, 2]);
   assert.ok(overview(items, hist, next).frames[2] >= 1);
   assert.ok(plan(hist, days, next).length > 0);
+});
+
+test('"said it" is split by the clock: quick for the length of the example is solo, slower is slow', () => {
+  const en = 'We chose this method because we have limited data.'; // 9 words → 9 seconds; a question gets 6 more
+  assert.equal(quick(en, false), 9);
+  assert.equal(quick(en, true), 15);
+  assert.deepEqual([graded('ok', 8, en, false), graded('ok', 13, en, false), graded('ok', 13, en, true)], [SOLO, SLOW, SOLO]);
+  assert.equal(graded('ok', Infinity, en, true), SLOW, 'a timeout is never quick');
+  assert.deepEqual(['miss', 'hint', 'content', 'english'].map((k) => graded(k, 1, en, false)), [MISS, HINT, MISS, MISS]);
 });
 
 test('a new frame waits until every started frame has been said at least once', () => {
@@ -155,9 +170,8 @@ test('Q&A: a hint is always available, and a failed question is asked again righ
   assert.deepEqual(scaffold(q, { level: 1 }).shown.map(([label]) => label), ['キーワード'], 'Intermediate');
   assert.deepEqual(scaffold(q, { level: 2 }).shown, [], 'Advanced');
   assert.deepEqual(scaffold(q, { level: 2 }).hints.at(1), ['答え方の型', q.frame]);
-  assert.deepEqual(choices(true, true, false), ['content', 'english', 'hint'], 'after a hint it cannot count as unaided');
-  assert.deepEqual(choices(false, false, false), ['miss', 'slow', 'solo']);
-  assert.deepEqual(choices(false, false, true), ['miss', 'slow']);
+  assert.deepEqual(choices(true, true), ['content', 'english', 'hint'], 'after a hint it cannot count as unaided');
+  assert.deepEqual(choices(false, false), ['miss', 'ok']);
   const queue = [{ id: q.id, phase: 'qa', level: 2 }, { id: 'x', phase: 'qa' }];
   const again = requeue(queue, 0, MISS, 'qa');
   assert.deepEqual(again[1], { id: q.id, phase: 'qa', level: 2, retry: true });
