@@ -45,18 +45,18 @@ test('questions: an English question with its meaning, an answer frame, keywords
   }
 });
 
-// The stock phrases of the Wordvice handout on research Q&A (typos fixed: rationale, identify). Each is the answer
+// The stock phrases of the Wordvice handout on research Q&A (typos fixed: rationale, identify; where the handout is
+// blunt — "Please speak slowly and clearly.", "I'd rather discuss …" — the cards use politer wording). Each is the answer
 // (or the question) of a card that is not held back, so every one of them comes up in the daily practice.
 const HANDOUT = [
-  'I will now answer any questions you have about this research. Please speak slowly and clearly.',
-  "Sorry, I didn't catch all of that.", 'Could you repeat your question, please?', "I'm afraid I don't understand.",
+  "I didn't catch all of that.", 'repeat your question', "I'm afraid I don't understand.",
   'Could you please rephrase the question?', "I don't quite understand.", 'Are you asking about', 'Are you referring to', 'Do you mean',
-  'Could you be more specific?', "I'm sorry. I still don't understand your question.", 'Could I come back to you later?',
+  'more specific', "I'm sorry. I still don't understand your question.", 'Could I come back to you later?',
   'Could you please talk to me after the session?', "That's a great question. Thank you for asking.",
   'I appreciate your question and am happy to answer it.', "What a thoughtful question! I'm glad you asked.",
   "What an interesting question! I'll do my best to answer.", "I'm sorry. I'm afraid I don't know the answer to that question.",
   'I will look into that and follow up with you.', "I can't answer now, but I will try to find out more about this.",
-  "I'm sorry—could we discuss this issue after the session?", "I'd rather discuss this issue privately, please.",
+  "I'm sorry—could we discuss this issue after the session?", 'discuss this issue privately',
   "We aren't aware of any details at this time.", "We don't have information about this yet.", 'We are awaiting further research on this.',
   'We are awaiting further research on this issue.', 'We need to do more studies to answer this.',
   'Please give me a moment to think about this question.', 'Just one moment—I need to consider my answer.', 'Just so I understand',

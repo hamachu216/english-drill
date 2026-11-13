@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { FILES, DRILLS, catalog, addDays, seeded, restore } from '../core.js';
+import { FILES, DRILLS, catalog, addDays, seeded, restore, skeleton } from '../core.js';
 import { MISS, HINT, OK, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, overview, weekly, knownTopics, byNeed } from '../plan.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
@@ -207,11 +207,11 @@ test('a grammar card retried in the session shows its grammar and its opening up
   assert.deepEqual(scaffold(c, {}).shown, []);
 });
 
-test('Q&A reply: said like a sentence from its Japanese, with the question shown and the answer frame as the first hint', () => {
+test('Q&A reply: dictation — nothing shown up front, the meaning then the first letters as hints', () => {
   const r = items.find((c) => c.id === 'r-hear-001'), queue = plan();
-  assert.deepEqual(scaffold(r, {}).shown, [['相手の質問', r.q]]);
-  assert.deepEqual(scaffold(r, {}).hints.map(([label]) => label), ['答え方の型', '頭文字']);
-  assert.deepEqual(scaffold(r, { retry: true }).shown.map(([label]) => label), ['相手の質問', '答え方の型'], 'a retry shows the frame');
+  assert.deepEqual(scaffold(r, {}).shown, []);
+  assert.deepEqual(scaffold(r, {}).hints, [['意味', r.ja], ['頭文字', skeleton(r.en)]]);
+  assert.deepEqual(scaffold(r, { retry: true }).shown.map(([label]) => label), ['意味'], 'a retry shows the meaning');
   assert.ok(queue.filter((s) => s.phase === 'reply').every((s) => s.level === undefined), 'no Beginner / Advanced ladder');
   const i = queue.findIndex((s) => s.phase === 'reply');
   assert.equal(requeue(queue, i, MISS, 'reply').findIndex((s, j) => j > i && s.retry), i + 4, 'a missed phrase comes back a few cards later, not straight away');

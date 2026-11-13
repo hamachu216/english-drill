@@ -8,7 +8,7 @@
       "title": "質問を受ける・お礼を言う",
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
-        {"id":"r-start-001","scene":"発表が終わり、これから質疑応答に入る","q":"Thank you for your talk. Are there any questions from the audience?","ja":"これからこの研究についてのご質問にお答えします。ゆっくり、はっきり話してください。","frame":"I will now answer any ... Please speak ...","en":"I will now answer any questions you have about this research. Please speak slowly and clearly."},
+        {"id":"r-start-001","scene":"発表が終わり、これから質疑応答に入る","q":"Thank you for your talk. Are there any questions from the audience?","ja":"ご質問があればお受けします。ゆっくり話していただけますか。","frame":"I'd be happy to take any questions ... Could you please ...?","en":"I'd be happy to take any questions now. Could you please speak slowly?"},
         {"id":"r-start-002","scene":"良い質問をもらった。まずお礼を言う","q":"Why did you choose a smartwatch rather than a phone?","ja":"素晴らしい質問です。ご質問ありがとうございます。","frame":"That's a great ... Thank you for ...","en":"That's a great question. Thank you for asking."},
         {"id":"r-start-003","scene":"答えにくい質問を、丁寧に受け止めてから答える","q":"Have you thought about privacy?","ja":"ご質問に感謝します。喜んでお答えします。","frame":"I appreciate your question and am ...","en":"I appreciate your question and am happy to answer it."},
         {"id":"r-start-004","scene":"よく考えられた質問をもらった","q":"Could your method also help older adults who live alone?","ja":"よく考えられた質問ですね。聞いていただけてうれしいです。","frame":"What a thoughtful ...! I'm glad ...","en":"What a thoughtful question! I'm glad you asked."},
@@ -22,16 +22,16 @@
       "title": "聞き取れない・分からないとき",
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
-        {"id":"r-hear-001","scene":"質問が速くて、よく聞き取れなかった","q":"Have you checked how much battery the app uses when it runs all day on older phones?","ja":"すみません、全部は聞き取れませんでした。質問をもう一度言っていただけますか。","frame":"Sorry, I didn't ... Could you ..., please?","en":"Sorry, I didn't catch all of that. Could you repeat your question, please?"},
+        {"id":"r-hear-001","scene":"質問が速くて、よく聞き取れなかった","q":"Have you checked how much battery the app uses when it runs all day on older phones?","ja":"すみません、全部は聞き取れませんでした。質問をもう一度言っていただけますか。","frame":"I'm sorry, I didn't ... Could you please ...?","en":"I'm sorry, I didn't catch all of that. Could you please repeat your question?"},
         {"id":"r-hear-002","scene":"聞き取れたが、何を聞かれているのか分からない","q":"How does your work fit into the bigger picture of context in computing?","ja":"すみませんが、よく分かりません。質問を言い換えていただけますか。","frame":"I'm afraid I don't ... Could you please ...?","en":"I'm afraid I don't understand. Could you please rephrase the question?"},
         {"id":"r-hear-003","scene":"どの研究のことを聞かれているのか、はっきりしない","q":"How is this different from the earlier study?","ja":"よく分からないのですが、歩数計測についての以前の研究のことをお聞きですか。","frame":"I don't quite ... Are you asking about ...?","en":"I don't quite understand. Are you asking about the earlier study on step counting?"},
         {"id":"r-hear-004","scene":"どの数値のことか、はっきりしない","q":"Is that number the same for all the groups?","ja":"図3の精度のことをおっしゃっていますか。","frame":"Are you referring to ...?","en":"Are you referring to the accuracy in Figure 3?"},
         {"id":"r-hear-005","scene":"どの参加者のことか、はっきりしない","q":"Did those people also wear the watch at night?","ja":"対照群の参加者のことですか。","frame":"Do you mean ...?","en":"Do you mean the participants in the control group?"},
-        {"id":"r-hear-006","scene":"質問が漠然としていて、何から答えればいいか分からない","q":"What about the real world?","ja":"もう少し具体的に言っていただけますか。","frame":"Could you be ...?","en":"Could you be more specific?"},
+        {"id":"r-hear-006","scene":"質問が漠然としていて、何から答えればいいか分からない","q":"What about the real world?","ja":"もう少し具体的に言っていただけますか。","frame":"Could you be a little more ..., please?","en":"Could you be a little more specific, please?"},
         {"id":"r-hear-007","scene":"言い換えてもらっても、まだ分からない","q":"No, I mean the other part. How does it connect to the whole thing?","ja":"すみません、まだ質問が分かりません。後でお答えしてもいいですか。","frame":"I'm sorry. I still don't ... Could I ...?","en":"I'm sorry. I still don't understand your question. Could I come back to you later?"},
-        {"id":"r-hear-008","scene":"やはり分からないので、セッションの後で話したい","q":"Do you see what I mean about the two parts?","ja":"すみません、まだ分かりません。セッションの後でお話しいただけますか。","frame":"Could you please talk to me ...?","en":"I'm sorry, not yet. Could you please talk to me after the session?"},
-        {"id":"r-hear-009","scene":"最後の部分だけ聞き取れなかった","q":"And how many of them used the app every day after the study ended?","ja":"すみません、最後の部分を聞き逃しました。もう一度言っていただけますか。","frame":"Sorry, I missed ... Could you say ...?","en":"Sorry, I missed the last part. Could you say that again?"},
-        {"id":"r-hear-010","scene":"もう少しゆっくり言ってほしい","q":"Have you thought about combining the motion data with location data from the phone?","ja":"もう一度、もう少しゆっくり言っていただけますか。","frame":"Could you say that ..., a little more ...?","en":"Could you say that one more time, a little more slowly?"}
+        {"id":"r-hear-008","scene":"やはり分からないので、セッションの後で話したい","q":"Do you see what I mean about the two parts?","ja":"すみません、まだよく分かりません。セッションの後でお話しいただけますか。","frame":"I'm sorry, I still don't ... Could you please talk to me ...?","en":"I'm sorry, I still don't follow. Could you please talk to me after the session?"},
+        {"id":"r-hear-009","scene":"最後の部分だけ聞き取れなかった","q":"And how many of them used the app every day after the study ended?","ja":"すみません、最後の部分を聞き逃しました。もう一度言っていただけますか。","frame":"I'm sorry, I missed ... Could you please say ...?","en":"I'm sorry, I missed the last part. Could you please say that again?"},
+        {"id":"r-hear-010","scene":"もう少しゆっくり言ってほしい","q":"Have you thought about combining the motion data with location data from the phone?","ja":"もう一度、もう少しゆっくり言っていただけますか。","frame":"Could you please say that ..., a little more ...?","en":"Could you please say that once more, a little more slowly?"}
       ]
     },
     {
@@ -45,8 +45,8 @@
         {"id":"r-check-004","scene":"どの研究と比べているのか確かめる","q":"How do your results compare with the study from last year?","ja":"2025年のフィールド調査のことですか。","frame":"Do you mean ...?","en":"Do you mean the field study from 2025?"},
         {"id":"r-check-005","scene":"何の情報のことか分からない","q":"Where does that information come from?","ja":"具体的にどの情報のことをおっしゃっていますか。","frame":"What information are you ... exactly?","en":"What information are you referring to exactly?"},
         {"id":"r-check-006","scene":"質問の一部を繰り返して、どのデータのことか確かめる","q":"What about the data collected between 2019 and 2021?","ja":"2019年から2021年に集めたデータですか？ 具体的にどのデータのことでしょうか。","frame":"...? Which data are you ... exactly?","en":"The data collected between 2019 and 2021? Which data are you referring to exactly?"},
-        {"id":"r-check-007","scene":"質問を自分の言葉で言い直して確かめる","q":"Does it still work when people do two things at once?","ja":"つまり、2つの活動を同時に検出できるかというご質問ですね？","frame":"So your question is ..., right?","en":"So your question is whether it can detect two activities at the same time, right?"},
-        {"id":"r-check-008","scene":"少し考える時間がほしい","q":"What would you change if you had ten times more data?","ja":"少し考えさせてください。","frame":"Let me think about that for ...","en":"Let me think about that for a second."}
+        {"id":"r-check-007","scene":"質問を自分の言葉で言い直して確かめる","q":"Does it still work when people do two things at once?","ja":"つまり、2つの活動を同時に検出できるかというご質問ですね？","frame":"So your question is ... Is that right?","en":"So your question is whether it can detect two activities at the same time. Is that right?"},
+        {"id":"r-check-008","scene":"少し考える時間がほしい","q":"What would you change if you had ten times more data?","ja":"少し考えさせてください。","frame":"Let me think about that for ...","en":"Let me think about that for a moment."}
       ]
     },
     {
@@ -58,12 +58,12 @@
         {"id":"r-unsure-002","scene":"今は分からないが、調べて後で連絡する","q":"Does the same thing happen with other brands of watches?","ja":"それについて調べて、後でご連絡します。","frame":"I will look into ... and follow up ...","en":"I will look into that and follow up with you."},
         {"id":"r-unsure-003","scene":"今は答えられないが、調べてみる","q":"How much would it cost to use this in a whole hospital?","ja":"今はお答えできませんが、これについてもっと調べてみます。","frame":"I can't answer now, but I will ...","en":"I can't answer now, but I will try to find out more about this."},
         {"id":"r-unsure-004","scene":"この場では答えたくない（セッションの後で話したい）","q":"Is your lab planning to sell this system?","ja":"すみません、この件はセッションの後で話し合えますか。","frame":"I'm sorry—could we discuss ... after ...?","en":"I'm sorry—could we discuss this issue after the session?"},
-        {"id":"r-unsure-005","scene":"この場では答えたくない（個別に話したい）","q":"When is the latest version of this study going to be published?","ja":"この件は、できれば個別にお話ししたいです。","frame":"I'd rather discuss ... privately, ...","en":"I'd rather discuss this issue privately, please."},
+        {"id":"r-unsure-005","scene":"この場では答えたくない（個別に話したい）","q":"When is the latest version of this study going to be published?","ja":"差し支えなければ、この件は個別にお話しできますか。","frame":"If you don't mind, could we discuss ... privately?","en":"If you don't mind, could we discuss this issue privately?"},
         {"id":"r-unsure-006","scene":"答えるための情報が手元にない","q":"Has anyone reported skin problems from wearing the sensor for weeks?","ja":"現時点では、詳しいことは把握していません。","frame":"We aren't aware of ... at this time.","en":"We aren't aware of any details at this time."},
         {"id":"r-unsure-007","scene":"答えるための情報がまだない","q":"What are the findings of other research groups on this issue?","ja":"これについてはまだ情報がありません。さらなる研究を待っているところです。","frame":"We don't have ... yet. We are awaiting ...","en":"We don't have information about this yet. We are awaiting further research on this."},
         {"id":"r-unsure-008","scene":"答えるには、自分たちの追加の研究が必要","q":"Does this also work for children?","ja":"これに答えるには、もっと研究が必要です。","frame":"We need to do ... to answer this.","en":"We need to do more studies to answer this."},
         {"id":"r-unsure-009","scene":"答えるには、他の研究の結果を待つ必要がある","q":"Is it safe to wear the sensor every night for a year?","ja":"この問題については、さらなる研究を待っているところです。","frame":"We are awaiting ... on this issue.","en":"We are awaiting further research on this issue."},
-        {"id":"r-unsure-010","scene":"自分の専門の外の質問","q":"How would this work under European privacy law?","ja":"それは私の専門外なので、よく分かりません。","frame":"That's outside ..., so I ...","en":"That's outside my area, so I'm not sure."},
+        {"id":"r-unsure-010","scene":"自分の専門の外の質問","q":"How would this work under European privacy law?","ja":"あいにくそれは私の専門外なので、よく分かりません。","frame":"I'm afraid that's outside ..., so I ...","en":"I'm afraid that's outside my area, so I'm not sure."},
         {"id":"r-unsure-011","scene":"確かではないので、推測だと断って答える","q":"Would it work with a cheaper sensor?","ja":"確かではありませんが、少し精度は下がるものの使えると思います。","frame":"I'm not sure, but I think ...","en":"I'm not sure, but I think it would work with slightly lower accuracy."}
       ]
     },

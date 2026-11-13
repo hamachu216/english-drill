@@ -90,7 +90,7 @@ function renderHome() {
     ...pair('苦手な文法', o.weak.length ? o.weak.slice(0, 3).map((t) => topicTitle[t]).join('・') : 'なし'),
     ...pair('得意な文法', o.known.length ? o.known.map((t) => topicTitle[t]).join('・') : 'なし'),
     ...pair('構文', `言える ${o.frames[2]} ・ 練習中 ${o.frames[0] + o.frames[1]} ／ ${o.framesTotal}`),
-    ...pair('切り返し', `言える ${o.reply[2]} ・ 練習中 ${o.reply[0] + o.reply[1]} ／ ${replyCount}`),
+    ...pair('切り返し', `書き取れる ${o.reply[2]} ・ 練習中 ${o.reply[0] + o.reply[1]} ／ ${replyCount}`),
     ...pair('Q&A', QA_LEVEL.map((name, i) => `${name} ${o.qa[i]}`).join(' ・ ')),
     ...pair('即興Q&A', o.unlock ? `あと${o.unlock}問で解放` : '出題中'),
     ...pair('前置詞', `${stepLine(pr.all)} ／ ${pairCount}`));
@@ -153,7 +153,8 @@ const show = (view) => { for (const v of VIEWS) $(v).hidden = v !== view; scroll
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const pop = (node) => calm || node.animate([{ opacity: 0, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
 const persist = () => run.free || save({ session: run });
-const isTalk = () => now.cur.kind === 'qa'; // a research question, answered in your own words (a Q&A reply is a fixed phrase, said like a sentence)
+const isTalk = () => now.cur.kind === 'qa'; // a research question, answered in your own words
+const SAY = $('input').placeholder;
 const hintRow = ([label, text]) => pair(label, text);
 
 function begin(r) {
@@ -183,7 +184,9 @@ function showStep() {
   // An adjective + preposition pair is said in an example sentence it hasn't just had (`ex` is set for pairs only).
   const ex = cur.kind === 'colloc' ? example(cur, rec) : null;
   const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
-  now = { step, cur, ask: cur.deck.follow?.[step.follow] ?? cur, pending: [...hints], hinted: false, model: '', said: '', ex };
+  // A Q&A reply is dictation: the stock phrase is read aloud and written down, with the asker's question as the prompt.
+  const dictate = cur.kind === 'reply', ask = cur.deck.follow?.[step.follow] ?? cur;
+  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : ask.q }; // audio: what 🔊 reads
   const talk = isTalk(), [icon, name] = PHASE[step.phase] ?? [];
   // Free practice keeps its timer setting (not the Collocation Drill: composing a sentence takes its time);
   // an Intermediate question gets a gentle 45s bar that never cuts you off.
@@ -199,10 +202,10 @@ function showStep() {
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
-  $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : (ex ?? cur).ja;
+  $('prompt').textContent = step.intro ? cur.deck.frame : talk || dictate ? now.ask.q : (ex ?? cur).ja;
   $('sub').textContent = step.intro ? `${cur.deck.ja}　例文を聞いて、まねして声に出そう`
     : ex ? '形容詞＋前置詞を使って、英文全体を声に出そう'
-    : now.ask.scene ? `場面：${now.ask.scene}　この返事を英語で言おう` // a Q&A reply: the situation, then the phrase it calls for
+    : dictate ? `場面：${cur.scene}　🔊 流れる返事を聞いて、書き取ろう`
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'
@@ -211,9 +214,10 @@ function showStep() {
   $('hints').replaceChildren(...(step.intro
     ? [...pair('ポイント', cur.deck.note), el('dt', { textContent: '例文' }), el('dd', { className: 'en' }, ...mark(cur.en, phrases(cur))), ...pair('意味', cur.ja)]
     : shown.flatMap(hintRow)));
-  $('listen').hidden = !canSpeak || !(now.ask.q || step.intro);
+  $('listen').hidden = !canSpeak || !now.audio;
   $('input').hidden = $('hint').hidden = !!step.intro;
-  $('mic').hidden = !!step.intro || !canHear;
+  $('mic').hidden = !!step.intro || dictate || !canHear;
+  $('input').placeholder = dictate ? '聞こえた英文を入力しよう' : SAY;
   $('unknown').hidden = !!step.intro;
   $('input').value = '';
   $('hint').disabled = !hints.length;
@@ -222,7 +226,7 @@ function showStep() {
   $('answer').hidden = true;
   $('reveal').hidden = false;
   startTimer(sec, run.free && !ex);
-  if ((now.ask.q || step.intro) && state.settings.listen) speak(step.intro ? cur.en : now.ask.q);
+  if (now.audio && (dictate || state.settings.listen)) speak(now.audio);
 }
 
 // The bar drains via a CSS animation (turning red near the end); in free practice one timeout reveals the answer.
@@ -241,6 +245,7 @@ const LABEL = {
   miss: '✕ 言えなかった', content: '✕ 内容が浮かばなかった', english: '✕ 英文にできなかった', hint: '💡 ヒントで言えた',
   ok: ['○ 言えた', '○ 答えられた'],
 };
+const WROTE = { miss: '✕ 書き取れなかった', hint: '💡 ヒントで書き取れた', ok: '○ 書き取れた' }; // the same choices, for dictation
 
 // The phrases to learn, highlighted in the sentence: an adjective + preposition pair, or what fills a frame.
 const mark = (en, parts) => parts.reduce((nodes, p) => nodes.flatMap((n) => {
@@ -264,7 +269,7 @@ function reveal(timedOut = false) {
   $('en').replaceChildren(...(compare ? wordDiff(typed, now.model).flatMap(({ w, ok }) => [el('span', { className: ok ? 'hit' : 'miss', textContent: w }), ' ']) : mark(now.model, phrases(cur))));
   $('en').className = compare ? 'en diff' : 'en';
   $('note').textContent = talk ? '' : cur.note ?? '';
-  $('tip').textContent = talk ? `答え方の型：${ask.frame}` : cur.deck.note ? `${cur.deck.frame ?? cur.deck.title}：${cur.deck.note}` : '';
+  $('tip').textContent = ask.frame ? `答え方の型：${ask.frame}` : cur.deck.note ? `${cur.deck.frame ?? cur.deck.title}：${cur.deck.note}` : '';
   $('mine').textContent = talk && step.follow == null && state.answers[cur.id] ? `前回のあなたの回答：${state.answers[cur.id]}` : '';
   if (ex) {
     $('note').textContent = `${cur.collocation} ＝ ${cur.ja}`;
@@ -274,14 +279,15 @@ function reveal(timedOut = false) {
   $('caveat').textContent = talk ? 'まず伝わることが大事。自分の研究の内容で1文でも言えればOKで、文法の細かい正しさは気にしなくて大丈夫です。' : [
     ex?.also && `この文では ${ex.also.join(' / ')} も使えます。`,
     sibs.length && `同じ形容詞の別の組み合わせ：${sibs.map((s) => `${s.collocation}（${s.ja}）`).join(' ／ ')}`,
-    `${compare ? '緑＝あなたの回答にもあった語（文字起こしは不正確なこともあります）。' : ''}模範解答と違う言い方でも、意味と文法が合っていれば正解です。`,
+    now.dictate ? `${compare ? '緑＝書き取れた語。' : ''}黒い語は聞き取れなかったところ。🔊 でもう一度聞いてみよう。`
+      : `${compare ? '緑＝あなたの回答にもあった語（文字起こしは不正確なこともあります）。' : ''}模範解答と違う言い方でも、意味と文法が合っていれば正解です。`,
   ].filter(Boolean).join('\n');
   $('card-refs').replaceChildren(...(cur.deck.refs?.length ? ['参考: ', ...cur.deck.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)]))] : []));
   // "I don't know" is a miss, with nothing to judge. "Answer again" keeps the first attempt's hint use and so its choices.
   const verdict = now.gaveUp && !talk ? '✕ わからなかった — 次へ' : null;
   const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : choices(talk, now.hinted);
   $('judge').replaceChildren(...keys.map((key) =>
-    el('button', { className: key, onclick: () => grade(key), textContent: verdict ?? (key === 'ok' ? LABEL.ok[+talk] : LABEL[key]) })));
+    el('button', { className: key, onclick: () => grade(key), textContent: verdict ?? (now.dictate ? WROTE[key] : key === 'ok' ? LABEL.ok[+talk] : LABEL[key]) })));
   $('judge-label').hidden = verdict != null;
   $('again').hidden = !talk;
   $('answer').hidden = false;
@@ -400,7 +406,7 @@ function renderVoices() {
 }
 if (canSpeak) {
   $('speak').onclick = () => speak(now.model);
-  $('listen').onclick = () => speak(now.step.intro ? now.cur.en : now.ask.q);
+  $('listen').onclick = () => speak(now.audio);
   $('voice').onchange = () => { setSettings({ voice: $('voice').value }); speak('Thank you for your question. That is a great point.'); };
   speechSynthesis.onvoiceschanged = renderVoices;
   renderVoices();

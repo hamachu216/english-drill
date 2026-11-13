@@ -200,7 +200,7 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
   const f = c.deck.follow?.[follow];
   const [ladder, shown] =
     f ? [[['答え方の型', f.frame], ['質問の意味', f.ja]], 0]
-    : c.kind === 'reply' ? [[['相手の質問', c.q], ['答え方の型', c.frame], ['頭文字', skeleton(c.en)]], retry ? 2 : 1]
+    : c.kind === 'reply' ? [[['意味', c.ja], ['頭文字', skeleton(c.en)]], retry ? 1 : 0] // dictation: the reply is heard, the question is the prompt
     : c.q ? [[['キーワード', c.keys.join(' / ')], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
     : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['語句', slots(c.deck.frame, c.en).join(' / ')], ['頭文字', skeleton(c.en)]], retry ? 2 : level < 2 ? 1 : 0]
     : [[...(retry ? [['文法', c.deck.note]] : []), ['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], retry ? 2 : 0];
