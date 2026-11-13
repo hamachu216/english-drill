@@ -91,7 +91,7 @@ function renderHome() {
     ...pair('苦手な文法', o.weak.length ? o.weak.slice(0, 3).map((t) => topicTitle[t]).join('・') : 'いまはありません'),
     ...pair('得意な文法', o.known.length ? `${o.known.map((t) => topicTitle[t]).join('・')}（新しい問題は後回し）` : 'まだありません（1トピック3問続けてすぐ言えたら、そのトピックの新しい問題は後回し）'),
     ...pair('研究英語の構文', `型なしで言える ${o.frames[2]} ・ 練習中 ${o.frames[0] + o.frames[1]} ／ 全${o.framesTotal}`),
-    ...pair('質疑応答の切り返し', `${QA_LEVEL.map((name, i) => `${name} ${o.reply[i]}`).join(' ・ ')} ／ 全${replyCount}`),
+    ...pair('質疑応答の切り返し', `すぐ言える ${o.reply[2]} ・ 練習中 ${o.reply[0] + o.reply[1]} ／ 全${replyCount}`),
     ...pair('Research Q&A', QA_LEVEL.map((name, i) => `${name} ${o.qa[i]}`).join(' ・ ')),
     ...pair('即興 Q&A', o.unlock ? `別の日にもすぐ答えられた質問が、あと${o.unlock}問たまると始まります` : '毎日のメニューに入っています'),
     ...pair('形容詞＋前置詞', `${stepLine(pr.all)} ／ 全${pairCount}`));
@@ -156,7 +156,7 @@ const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const pop = (node) => calm || node.animate([{ opacity: 0, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
 const persist = () => run.free || save({ session: run });
 const elapsed = () => (Date.now() - now.at) / 1000;
-const isTalk = () => now.cur.q != null; // a question to answer: research Q&A or a Q&A reply
+const isTalk = () => now.cur.kind === 'qa'; // a research question, answered in your own words (a Q&A reply is a fixed phrase, said like a sentence)
 // Advanced questions start with a "start speaking" tap, which is what measures the time to start answering.
 const mustStart = () => isTalk() && now.step.level === 2 && !now.step.retry;
 const hintRow = ([label, text]) => pair(label, text);
@@ -193,7 +193,7 @@ function showStep() {
   const talk = isTalk(), [icon, name] = PHASE[step.phase] ?? [];
   // Free practice keeps its timer setting; an Intermediate question gets a gentle 45s bar that never cuts you off.
   const sec = run.free && !pairStep ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
-  $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (talk ? 4 : pairStep ? 5 : 3)})`);
+  $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q ? 4 : pairStep ? 5 : 3)})`);
   $('track').textContent = [
     step.retry && '🔁 もう一度',
     run.free ? `${run.retry ? '🔁 復習 · ' : ''}${pairStep ? 'Collocation Drill' : `Lv${cur.level}`}` : `${icon} ${name}`,
@@ -207,7 +207,7 @@ function showStep() {
   $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : pairStep ? (pairStep === 2 ? blank(cur, ex) : ex.ja) : cur.ja;
   $('sub').textContent = step.intro ? `${cur.deck.ja}　例文を聞いて、まねして声に出そう`
     : pairStep ? (pairStep === 2 ? `${ex.ja}　空所の前置詞を入力するか、声に出そう` : '形容詞＋前置詞を使って、英文全体を声に出そう')
-    : now.ask.scene ? `場面：${now.ask.scene}` // a Q&A-handling question: the right answer depends on the situation
+    : now.ask.scene ? `場面：${now.ask.scene}　この返事を英語で言おう` // a Q&A reply: the situation, then the phrase it calls for
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'
@@ -216,7 +216,7 @@ function showStep() {
   $('hints').replaceChildren(...(step.intro
     ? [...pair('ポイント', cur.deck.note), el('dt', { textContent: '例文' }), el('dd', { className: 'en' }, ...mark(cur.en, phrases(cur))), ...pair('意味', cur.ja)]
     : shown.flatMap(hintRow)));
-  $('listen').hidden = !canSpeak || !(talk || step.intro);
+  $('listen').hidden = !canSpeak || !(now.ask.q || step.intro);
   $('input').hidden = $('hint').hidden = !!step.intro;
   $('mic').hidden = !!step.intro || !canHear;
   $('unknown').hidden = !!step.intro;
@@ -227,7 +227,7 @@ function showStep() {
   $('answer').hidden = true;
   $('reveal').hidden = false;
   startTimer(sec, run.free && !pairStep);
-  if ((talk || step.intro) && state.settings.listen) speak(step.intro ? cur.en : now.ask.q);
+  if ((now.ask.q || step.intro) && state.settings.listen) speak(step.intro ? cur.en : now.ask.q);
 }
 
 // The bar drains via a CSS animation (turning red near the end); in free practice one timeout reveals the answer.
@@ -377,7 +377,7 @@ function showResult() {
   pop($('result'));
   if (!wrong || !run.free) confetti();
   $('result-list').replaceChildren(...run.missed.map((c) =>
-    el('li', { className: 'card' }, el('p', { className: 'muted', textContent: c.ja ?? '' }), el('p', { className: 'en', textContent: c.q ?? c.en ?? c.collocation }))));
+    el('li', { className: 'card' }, el('p', { className: 'muted', textContent: c.ja ?? '' }), el('p', { className: 'en', textContent: (c.kind === 'qa' ? c.q : c.en) ?? c.collocation }))));
   $('result-ups').textContent = run.ups?.length ? `段階が上がった表現：${run.ups.join('、')}` : '';
   $('next-round').textContent = !run.free ? '＋ もう少し続ける（約5分）' : wrong ? `🔁 言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
 }
@@ -447,7 +447,7 @@ function renderVoices() {
 }
 if (canSpeak) {
   $('speak').onclick = () => speak(now.model);
-  $('listen').onclick = () => speak(now.step.intro ? now.cur.en : $('prompt').textContent);
+  $('listen').onclick = () => speak(now.step.intro ? now.cur.en : now.ask.q);
   $('voice').onchange = () => { setSettings({ voice: $('voice').value }); speak('Thank you for your question. That is a great point.'); };
   speechSynthesis.onvoiceschanged = renderVoices;
   renderVoices();

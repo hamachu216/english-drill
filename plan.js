@@ -162,7 +162,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
 
   const chosen = Object.fromEntries(KINDS.map((k) => [k, pick(k)]));
   const old = (k) => shuffle(chosen[k].filter((c) => rec(c) && !sore(c)), rand), added = (k) => chosen[k].filter((c) => !rec(c));
-  const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : c.q ? Math.min(2, rec(c)?.box ?? 0) : undefined);
+  const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : c.kind === 'qa' ? Math.min(2, rec(c)?.box ?? 0) : undefined);
   const step = (phase) => (c) => ({ id: c.id, phase, level: level(c) });
 
   const talk = [...old('qa'), ...added('qa')];
@@ -188,11 +188,11 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   ];
 }
 
-// A failed card comes back once in the same session with full support: a question right away, others a few cards later.
+// A failed card comes back once in the same session with full support: a research question right away, others a few cards later.
 export function requeue(queue, i, grade, kind) {
   const s = queue[i];
   if (grade >= SLOW || s.retry || s.check || s.follow != null) return queue;
-  const at = Math.min(queue.length, i + (kind === 'qa' || kind === 'reply' ? 1 : 4));
+  const at = Math.min(queue.length, i + (kind === 'qa' ? 1 : 4));
   return [...queue.slice(0, at), { ...s, retry: true }, ...queue.slice(at)];
 }
 
@@ -204,6 +204,7 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
   const f = c.deck.follow?.[follow];
   const [ladder, shown] =
     f ? [[['答え方の型', f.frame], ['質問の意味', f.ja]], 0]
+    : c.kind === 'reply' ? [[['相手の質問', c.q], ['答え方の型', c.frame], ['頭文字', skeleton(c.en)]], retry ? 2 : 1]
     : c.q ? [[['キーワード', c.keys.join(' / ')], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
     : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['語句', slots(c.deck.frame, c.en).join(' / ')], ['頭文字', skeleton(c.en)]], retry ? 2 : level < 2 ? 1 : 0]
     : [[['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], 0];

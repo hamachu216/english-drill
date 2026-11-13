@@ -85,7 +85,7 @@ test('Q&A handling: every phrase of the handout is practiced, each question with
   const handling = replies.decks;
   for (const d of handling) {
     assert.ok(d.refs.some((r) => r.url.includes('wordvice')) && d.cards.length >= 6, d.id);
-    for (const c of d.cards) assert.ok(c.scene?.trim() && c.q.endsWith('?') && c.frame.includes('...') && c.keys.length >= 2 && c.more?.trim(), c.id);
+    for (const c of d.cards) assert.ok(c.scene?.trim() && c.q.endsWith('?') && c.frame.includes('...') && /[。？]$/.test(c.ja), c.id);
   }
   const asked = handling.flatMap((d) => d.cards.slice(0, -2)).flatMap((c) => [c.q, c.en]);
   for (const p of HANDOUT) assert.ok(asked.some((t) => t.includes(p)), p);

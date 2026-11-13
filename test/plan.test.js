@@ -195,6 +195,16 @@ test('a new frame waits until every started frame has been said at least once', 
   assert.ok(new Set(moving.sessions.flat().filter((s) => s.intro).map((s) => byId.get(s.id).topic)).size > 2);
 });
 
+test('Q&A reply: said like a sentence from its Japanese, with the question shown and the answer frame as the first hint', () => {
+  const r = items.find((c) => c.id === 'r-hear-001'), queue = plan();
+  assert.deepEqual(scaffold(r, {}).shown, [['相手の質問', r.q]]);
+  assert.deepEqual(scaffold(r, {}).hints.map(([label]) => label), ['答え方の型', '頭文字']);
+  assert.deepEqual(scaffold(r, { retry: true }).shown.map(([label]) => label), ['相手の質問', '答え方の型'], 'a retry shows the frame');
+  assert.ok(queue.filter((s) => s.phase === 'reply').every((s) => s.level === undefined), 'no Beginner / Advanced ladder');
+  const i = queue.findIndex((s) => s.phase === 'reply');
+  assert.equal(requeue(queue, i, MISS, 'reply').findIndex((s, j) => j > i && s.retry), i + 4, 'a missed phrase comes back a few cards later, not straight away');
+});
+
 test('Q&A: a hint is always available, and a failed question is asked again right away with its answer frame', () => {
   const q = items.find((c) => c.id === 'q-method-001');
   for (const level of [0, 1, 2]) assert.ok(scaffold(q, { level }).hints.length > 0, `level ${level}`);
