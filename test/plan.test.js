@@ -20,7 +20,7 @@ function practice(n, grade, from = T) {
     for (const s of queue) {
       if (s.intro) continue;
       const c = byId.get(s.id), g = grade(c, s);
-      if (s.follow == null) hist = { ...hist, [c.id]: review(hist[c.id], { grade: g }, day) };
+      if (s.follow == null) hist = { ...hist, [c.id]: review(hist[c.id], g, day) };
       days = { ...days, [day]: tally(days[day], c, { grade: g, check: s.check }) };
     }
   }
@@ -28,32 +28,32 @@ function practice(n, grade, from = T) {
 }
 
 test('review: a miss comes back tomorrow, said in 3 days, said again in 7 and more', () => {
-  assert.deepEqual(review(undefined, { grade: MISS }, T), { box: 0, n: 1, last: T, due: addDays(T, 1), grade: MISS, hint: false });
-  const once = review(undefined, { grade: OK }, T);
+  assert.deepEqual(review(undefined, MISS, T), { box: 0, n: 1, last: T, due: addDays(T, 1), grade: MISS });
+  const once = review(undefined, OK, T);
   assert.equal(once.due, addDays(T, 3));
-  const twice = review(once, { grade: OK }, once.due);
+  const twice = review(once, OK, once.due);
   assert.equal(twice.due, addDays(once.due, 7));
-  assert.ok(review(twice, { grade: OK }, twice.due).due > addDays(twice.due, 7));
+  assert.ok(review(twice, OK, twice.due).due > addDays(twice.due, 7));
 });
 
 test('review: answers with a hint wait 3 days but never get past the 7-day box; a miss resets a well-known card', () => {
-  const hinted = review(undefined, { grade: HINT, hint: true }, T);
+  const hinted = review(undefined, HINT, T);
   assert.deepEqual([hinted.box, hinted.due], [1, addDays(T, 3)]);
   let rec = hinted;
-  for (let i = 0; i < 4; i++) rec = review(rec, { grade: HINT }, rec.due);
+  for (let i = 0; i < 4; i++) rec = review(rec, HINT, rec.due);
   assert.deepEqual([rec.box, rec.due], [2, addDays(rec.last, 7)]);
   const known = { box: 4, n: 6, last: T, due: addDays(T, 30) };
-  assert.deepEqual([review(known, { grade: HINT }, known.due).box, review(known, { grade: MISS }, known.due).box], [4, 0]);
+  assert.deepEqual([review(known, HINT, known.due).box, review(known, MISS, known.due).box], [4, 0]);
 });
 
 test('review: answering again the same day never moves the due date forward or raises the box', () => {
-  const first = review(undefined, { grade: OK }, T);
+  const first = review(undefined, OK, T);
   let again = first;
-  for (let i = 0; i < 5; i++) again = review(again, { grade: OK }, T);
+  for (let i = 0; i < 5; i++) again = review(again, OK, T);
   assert.deepEqual([again.box, again.due, again.n], [first.box, first.due, 6]);
-  const missed = review(undefined, { grade: MISS }, T), retried = review(missed, { grade: OK }, T);
+  const missed = review(undefined, MISS, T), retried = review(missed, OK, T);
   assert.deepEqual([retried.box, retried.due], [0, addDays(T, 1)], 'a miss still comes back tomorrow after a successful retry');
-  assert.equal(review(first, { grade: MISS }, T).due, addDays(T, 1), 'but a same-day miss does pull it back');
+  assert.equal(review(first, MISS, T).due, addDays(T, 1), 'but a same-day miss does pull it back');
 });
 
 test('first use: about 30 minutes with grammar, 5 adjective + preposition pairs, new sentence frames and Beginner Q&A, in that order', () => {
@@ -131,26 +131,26 @@ test('a weak grammar topic is named and gets extra cards', () => {
 
 test('a weak topic with no unseen sentences left gets only its misses back; the rest goes to other topics', () => {
   const be = items.filter((c) => c.topic === 'b-be' && !c.held), day = '2026-11-13', next = '2026-11-14';
-  const hist = Object.fromEntries(be.map((c, i) => [c.id, review(undefined, { grade: i % 2 ? OK : MISS }, day)]));
+  const hist = Object.fromEntries(be.map((c, i) => [c.id, review(undefined, i % 2 ? OK : MISS, day)]));
   const queue = plan(hist, {}, next), bes = queue.filter((s) => byId.get(s.id).topic === 'b-be');
   assert.deepEqual(bes.map((s) => s.id).sort(), be.filter((_, i) => !(i % 2)).map((c) => c.id).sort(), 'only the misses');
   assert.ok(new Set(queue.filter((s) => s.phase === 'grammar').map((s) => byId.get(s.id).topic)).size >= 10);
 });
 
 test('a grammar topic said without a hint three times is known: its new cards wait, and one miss brings it back', () => {
-  const day = '2026-11-13', next = '2026-11-14', said = (g) => (id) => [id, review(undefined, { grade: g }, day)];
+  const day = '2026-11-13', next = '2026-11-14', said = (g) => (id) => [id, review(undefined, g, day)];
   const hist = Object.fromEntries(['b-be-001', 'b-be-002', 'b-be-003', 'b-neg-001', 'b-neg-002'].map(said(OK)));
   assert.deepEqual([...knownTopics(items, hist)], ['b-be'], 'two answers are not enough');
   const fresh = plan(hist, {}, next).filter((s) => s.phase === 'grammar' && !hist[s.id]).map((s) => byId.get(s.id).topic);
   assert.ok(fresh.length && !fresh.includes('b-be'), 'its new cards wait while the others go on');
   assert.deepEqual(overview(items, hist, next).known, ['b-be']);
-  assert.equal(knownTopics(items, { ...hist, 'b-be-002': review(hist['b-be-002'], { grade: MISS }, next) }).size, 0, 'a miss and it is back');
-  assert.equal(knownTopics(items, { ...hist, 'b-be-002': review(undefined, { grade: HINT }, day) }).size, 0, 'said with a hint is not known');
+  assert.equal(knownTopics(items, { ...hist, 'b-be-002': review(hist['b-be-002'], MISS, next) }).size, 0, 'a miss and it is back');
+  assert.equal(knownTopics(items, { ...hist, 'b-be-002': review(undefined, HINT, day) }).size, 0, 'said with a hint is not known');
 });
 
 test('free practice of grammar: Lv1 and Lv2 together, wrong first, then due, then new as in the daily session', () => {
   const grammar = items.filter((c) => c.kind === 'grammar'), day = '2026-11-13';
-  const hist = { 'b-be-001': review(undefined, { grade: MISS }, day), ...Object.fromEntries(['b-neg-001', 'b-neg-002', 'b-neg-003'].map((id) => [id, review(undefined, { grade: OK }, day)])) };
+  const hist = { 'b-be-001': review(undefined, MISS, day), ...Object.fromEntries(['b-neg-001', 'b-neg-002', 'b-neg-003'].map((id) => [id, review(undefined, OK, day)])) };
   const order = byNeed(grammar, hist, '2026-11-14');
   assert.equal(order[0].id, 'b-be-001');
   assert.deepEqual(new Set(order.slice(1, 26).map((c) => c.level)), new Set([1, 2]), 'both levels, mixed');
@@ -289,9 +289,11 @@ test('odd values in a restored backup are dropped, and do not stop the planner',
   assert.deepEqual(restore({ log: { a: 'x', b: 3 }, days: { d: { t: [1, 'x'], u: [1, 1] } } }), { ...restore({}), log: { b: 3 }, days: { d: { u: [1, 1] } } });
 });
 
-test('restore: counters saved while answers were timed become [answers, said], and the timings go', () => {
+test('restore: records saved while answers were timed — grades 2 and 3 become said, counters [answers, said], timings gone', () => {
   const old = { d: { 'b-be': [5, 2, 1], '#time:grammar': [40, 3], '#start': [9, 1], '#check': [2, 1], '#why': [1, 0] } };
   const now = { d: { 'b-be': [5, 3], '#check': [2, 1], '#why': [1, 0] } };
   assert.deepEqual(restore({ days: old }).days, now);
   assert.deepEqual(restore({ days: now }).days, now, 'idempotent');
+  const card = { box: 1, n: 1, last: T, due: T };
+  assert.deepEqual([3, 2, 1].map((grade) => restore({ hist: { x: { ...card, grade } } }).hist.x.grade), [2, 2, 1], 'said quickly or slowly: said');
 });

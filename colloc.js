@@ -2,16 +2,16 @@
 // one answer moves a pair along its steps. The pair is what is learned, not a sentence: every time it comes
 // up it is asked in a different example sentence.
 //
-//   step 2 (recall)  type or say the preposition: two right answers, GAP days apart, in two different sentences
+//   step 2 (recall)  type or say the preposition: two right answers, on two due days, in two different sentences
 //   step 3 (say)     say the whole sentence from Japanese → the usual review boxes (7, 14, 30, 60 days)
 // A wrong answer at any step brings the pair back tomorrow. There is no step 1 any more: choosing from four was
 // too easy (the pairs were recognized; recalling them is the work), so records saved at step 1 count as step 2.
-import { addDays, skeleton } from './core.js';
+import { skeleton } from './core.js';
 import { OK, review } from './plan.js';
 
 export const PREPS = ['about', 'at', 'by', 'for', 'from', 'in', 'of', 'to', 'with'];
 export const STEPS = { 2: '思い出す', 3: '文で言う' };
-const WINS = 2, GAP = 3;
+const WINS = 2;
 
 export const stepOf = (rec) => Math.max(2, rec?.step ?? 2);
 // A different sentence each time the pair comes up (the answer count rotates through them).
@@ -30,16 +30,14 @@ export function heard(text, c) {
   return said.length === 1 ? said[0] : null;
 }
 
-// One answer → the pair's new record: the review record plus {step, wins}. As with review(), only an answer on a
-// day the pair is due counts toward moving up; a same-day retry can't. Right: back in GAP days for the second; wrong: tomorrow.
-export function practise(rec, { grade, hint = false }, day) {
+// One answer → the pair's new record: the review record plus {step, wins}. At step 2 the review box stops at 1, so a
+// pair said (with or without a hint) is back in 3 days and a miss tomorrow. Only a right answer without a hint on a
+// day the pair is due is a win; a same-day retry can't be.
+export function practise(rec, grade, day) {
   const step = stepOf(rec), wins = rec?.wins ?? 0;
-  if (step === 3) return { ...review(rec, { grade, hint }, day), step, wins: 0 };
-  const onTime = !rec?.due || day >= rec.due, ok = grade >= OK, w = !ok ? 0 : onTime ? wins + 1 : wins, up = w >= WINS;
-  return {
-    box: !ok ? 0 : onTime ? 1 : rec.box, n: (rec?.n ?? 0) + 1, last: day, due: ok && !onTime ? rec.due : addDays(day, ok ? GAP : 1),
-    grade, hint, step: step + up, wins: up ? 0 : w,
-  };
+  if (step === 3) return { ...review(rec, grade, day), step, wins: 0 };
+  const onTime = !rec?.due || day >= rec.due, w = grade !== OK ? 0 : onTime ? wins + 1 : wins, up = w >= WINS;
+  return { ...review(rec, grade, day, 1), step: step + up, wins: up ? 0 : w };
 }
 
 // What the hint button reveals, one at a time (nothing is shown up front).

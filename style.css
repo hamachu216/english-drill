@@ -163,8 +163,7 @@ textarea {
   width: 100%; min-height: 64px; margin: 14px 0 0; padding: 12px 14px; resize: vertical;
   border-radius: 14px; border: 1px solid var(--line); background: var(--bg);
 }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.actions { margin-top: 12px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .actions .primary { flex: 1 1 12rem; min-height: 50px; }
 .actions button { white-space: nowrap; padding: 0 12px; }
 .actions button:not(.primary) { flex: 1 0 auto; }

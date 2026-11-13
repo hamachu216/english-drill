@@ -236,13 +236,6 @@ function startTimer(sec, forced) {
   if (forced) timer = setTimeout(() => reveal(true), sec * 1000);
 }
 
-function hint() {
-  if (!now.pending.length || !$('answer').hidden) return;
-  now.hinted = true;
-  $('hints').append(...hintRow(now.pending.shift()));
-  $('hint').disabled = !now.pending.length;
-}
-
 const LABEL = {
   miss: '✕ 言えなかった', content: '✕ 内容が浮かばなかった', english: '✕ 英文にできなかった', hint: '💡 ヒントで言えた',
   ok: ['○ 言えた', '○ 答えられた'],
@@ -262,7 +255,7 @@ function reveal(timedOut = false) {
   const { cur, ask, step } = now, talk = isTalk(), typed = $('input').value.trim();
   now.said = typed || now.said;
   now.model = now.pairStep ? now.ex.en : talk && step.level === 2 && !step.retry && ask.more ? `${ask.en} ${ask.more}` : ask.en;
-  // Steps 1–2 check the preposition (a choice, or the one typed or heard); step 3 and an unclear answer are self-judged.
+  // Step 2 checks the preposition typed or heard; step 3 and an unclear answer are self-judged.
   const { pairStep, ex } = now, said = pairStep === 2 ? heard(typed, cur) : null;
   const right = said == null ? null : accepted(cur, ex).includes(said);
   $('timeout').hidden = !timedOut;
@@ -305,14 +298,13 @@ function reveal(timedOut = false) {
 
 function grade(key) {
   const d = today(), { cur, step, said } = now, talk = isTalk(), g = GRADE[key], before = state.hist[cur.id];
-  const after = (cur.kind === 'colloc' ? practise : review)(before, { grade: g, hint: now.hinted }, d);
+  const after = (cur.kind === 'colloc' ? practise : review)(before, g, d);
   if (cur.kind === 'colloc' && stepOf(after) > stepOf(before)) run.ups = [...(run.ups ?? []), `${cur.collocation} → ${STEPS[after.step]}`];
   save({
     log: { ...state.log, [d]: (state.log[d] || 0) + 1 },
     // A follow-up question is practice only; a retry updates the card (it can't raise it) but isn't counted again.
     hist: step.follow == null ? { ...state.hist, [cur.id]: after } : state.hist,
-    days: step.retry ? state.days : { ...state.days, [d]: tally(state.days[d], cur, {
-      grade: g, why: key, check: step.check }) },
+    days: step.retry ? state.days : { ...state.days, [d]: tally(state.days[d], cur, { grade: g, why: key, check: step.check }) },
     answers: talk && step.follow == null && hasEnglish(said) ? { ...state.answers, [cur.id]: said } : state.answers,
   });
   answered++;
@@ -349,7 +341,7 @@ function showResult() {
   $('result-score').textContent = `${ok}/${n}`;
   $('result-ring').style.setProperty('--p', rate * 100);
   $('result-title').textContent = run.free ? (!wrong ? (run.retry ? '全部言えた！' : 'パーフェクト！') : rate >= 0.7 ? 'いい調子！' : 'ここから伸びる！') : '今日の練習、完了！';
-  $('result-sub').textContent = `○ 言えた ${ok} ・ 💡 ヒントで言えた ${count(HINT)} ・ ✕ 言えなかった ${count(MISS)}`;
+  $('result-sub').textContent = `${LABEL.ok[0]} ${ok} ・ ${LABEL.hint} ${count(HINT)} ・ ${LABEL.miss} ${count(MISS)}`;
   $('result-next').textContent = run.free ? (wrong ? `言えなかった${wrong}問を、言えるまで繰り返そう` : `次の${ROUND}問に進もう`)
     : wrong ? '言えなかった問題は、明日のメニューの最初にもう一度出ます。' : '明日は今日の結果をもとに、新しいメニューが用意されます。';
   $('miss-head').textContent = run.free ? 'もう一度チャレンジする問題' : '明日もう一度出る問題';
@@ -379,12 +371,15 @@ $('free').onclick = () => { if (freeList !== levelCards) { freeList = levelCards
 $('next-round').onclick = () => (run.free ? playFree(run.missed) : more());
 $('cd-start').onclick = () => { if (freeList !== pairCards) { freeList = pairCards; pool = []; } playFree(); };
 $('quit').onclick = $('home-btn').onclick = finish;
-$('hint').onclick = hint;
-$('unknown').onclick = () => { now.gaveUp = true; reveal(); };
-$('reveal').onclick = () => {
-  if (now.step.intro) advance();
-  else reveal();
+// The hint button stays enabled while hints are left; it does nothing once the answer is out.
+$('hint').onclick = () => {
+  if (!$('answer').hidden) return;
+  now.hinted = true;
+  $('hints').append(...hintRow(now.pending.shift()));
+  $('hint').disabled = !now.pending.length;
 };
+$('unknown').onclick = () => { now.gaveUp = true; reveal(); };
+$('reveal').onclick = () => (now.step.intro ? advance() : reveal());
 // Say it once more after seeing the example. The self-evaluation still describes the first attempt.
 $('again').onclick = () => {
   $('answer').hidden = true;

@@ -42,33 +42,34 @@ test('heard: the preposition after the adjective, else the only one said; otherw
 });
 
 test('practise: two right answers, three days apart, move a pair up a step; one wrong answer resets the count', () => {
-  let r = practise(undefined, { grade: OK }, T);
+  let r = practise(undefined, OK, T);
   assert.deepEqual([r.step, r.wins, r.box, r.due], [2, 1, 1, addDays(T, 3)]);
-  const again = practise(r, { grade: OK }, T);
+  const again = practise(r, OK, T);
   assert.deepEqual([again.step, again.wins, again.due], [2, 1, r.due], 'answering again the same day does not count');
-  const miss = practise(r, { grade: MISS }, r.due);
+  const miss = practise(r, MISS, r.due);
   assert.deepEqual([miss.step, miss.wins, miss.box, miss.due], [2, 0, 0, addDays(r.due, 1)], 'a miss: back tomorrow, count reset');
-  r = practise(r, { grade: OK }, r.due);
+  r = practise(r, OK, r.due);
   assert.deepEqual([r.step, r.wins], [3, 0], 'saying the sentence after two days');
-  assert.equal(practise(undefined, { grade: HINT, hint: true }, T).wins, 0, 'a hint is not a win');
+  const hinted = practise(undefined, HINT, T);
+  assert.deepEqual([hinted.wins, hinted.box, hinted.due], [0, 1, addDays(T, 3)], 'a hint is not a win, but not a miss either: back in 3 days');
 });
 
 test('practise at step 3: saying the sentence well stretches the interval; failing brings it back tomorrow', () => {
   let r = { box: 1, n: 4, last: T, due: addDays(T, 1), step: 3, wins: 0 };
   const day = r.due;
-  r = practise(r, { grade: OK }, day);
+  r = practise(r, OK, day);
   assert.deepEqual([r.step, r.due], [3, addDays(day, 7)]);
-  const later = practise(r, { grade: OK }, r.due);
+  const later = practise(r, OK, r.due);
   assert.equal(later.due, addDays(r.due, 14));
-  const fail = practise(later, { grade: MISS }, later.due);
+  const fail = practise(later, MISS, later.due);
   assert.deepEqual([fail.step, fail.box, fail.due], [3, 0, addDays(later.due, 1)]);
-  assert.equal(practise(r, { grade: OK }, day).due, r.due, 'same-day repeat does not stretch it');
+  assert.equal(practise(r, OK, day).due, r.due, 'same-day repeat does not stretch it');
 });
 
 test('a pair reaches step 3 only after being right in different sentences on different days', () => {
   let rec, day = T;
   const used = [];
-  while (stepOf(rec) < 3) { used.push(example(pair('satisfied with'), rec).id); rec = practise(rec, { grade: OK }, day); day = rec.due; }
+  while (stepOf(rec) < 3) { used.push(example(pair('satisfied with'), rec).id); rec = practise(rec, OK, day); day = rec.due; }
   assert.equal(used.length, 2);
   assert.equal(new Set(used).size, 2, 'two different sentences');
 });
@@ -91,7 +92,7 @@ test('daily session: five pairs, new ones easy first and from different preposit
   assert.equal(steps.length, 5);
   assert.ok(chosen.every((c) => c.difficulty === 1));
   assert.ok(new Set(chosen.map((c) => c.prep)).size >= 4, 'interleaved across prepositions');
-  const hist = Object.fromEntries(chosen.map((c, i) => [c.id, practise(undefined, { grade: i ? OK : MISS }, T)]));
+  const hist = Object.fromEntries(chosen.map((c, i) => [c.id, practise(undefined, i ? OK : MISS, T)]));
   const next = planSession({ items, hist, days: {}, day: addDays(T, 1), minutes: 30, rand: seeded('n') });
   assert.equal(next[0].id, chosen[0].id, 'the missed pair opens the next session');
   assert.equal(next[0].phase, 'review');
@@ -107,7 +108,7 @@ test('a month of practice moves pairs through the steps without dropping the oth
   for (let i = 0; i < 30; i++) {
     const day = addDays(T, i), q = planSession({ items, hist, days: {}, day, minutes: 30, rand: seeded(day) });
     assert.ok(q.some((s) => s.phase === 'pattern') && q.some((s) => s.phase === 'qa'));
-    for (const s of q.filter((s) => items.find((c) => c.id === s.id).kind === 'colloc')) hist = { ...hist, [s.id]: practise(hist[s.id], { grade: OK }, day) };
+    for (const s of q.filter((s) => items.find((c) => c.id === s.id).kind === 'colloc')) hist = { ...hist, [s.id]: practise(hist[s.id], OK, day) };
   }
   const p = progress(items, hist).all;
   assert.equal(p.reduce((a, b) => a + b), pairs.length);
@@ -118,11 +119,11 @@ test('a month of practice moves pairs through the steps without dropping the oth
 test('drill: every pair — wrong last time, then due, then new ones (easy first), then the rest', () => {
   const a = pair('afraid of'), b = pair('good at'), c = pair('bored with');
   const hist = {
-    [a.id]: practise(undefined, { grade: MISS }, addDays(T, -2)),
-    [b.id]: practise(undefined, { grade: OK }, T),
-    [c.id]: practise(undefined, { grade: OK }, addDays(T, -3)),
+    [a.id]: practise(undefined, MISS, addDays(T, -2)),
+    [b.id]: practise(undefined, OK, T),
+    [c.id]: practise(undefined, OK, addDays(T, -3)),
   };
-  const today = byNeed(pairs, hist, T), wrongToday = byNeed(pairs, { ...hist, [b.id]: practise(hist[b.id], { grade: MISS }, T) }, T);
+  const today = byNeed(pairs, hist, T), wrongToday = byNeed(pairs, { ...hist, [b.id]: practise(hist[b.id], MISS, T) }, T);
   assert.deepEqual(today.slice(0, 2).map((x) => x.id), [a.id, c.id], 'wrong last time first, then due');
   assert.equal(wrongToday[1].id, b.id, 'a pair missed a moment ago is up front for the next sitting too');
   assert.equal(today.length, pairs.length);

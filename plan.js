@@ -1,13 +1,12 @@
 // The learning algorithm as pure functions: history in, today's session out. No DOM, no storage, no clock.
 //
 // Data it works on:
-//   hist[cardId] = { box, n, last, due, grade, hint }   one record per card ever answered
+//   hist[cardId] = { box, n, last, due, grade }   one record per card ever answered
 //   days[date]   = { [topicId]: [answers, said],  counters per day (first attempts only), plus
 //                    '#check': [n, said], '#why': [content, english] }
 //   queue        = [{ id, phase, level?, intro?, follow?, check?, retry? }]   one step per screen
 import { addDays, shuffle, skeleton, opening, mask, slots } from './core.js';
 
-// Saved records from before may hold 3 (said quickly) — anything from OK up counts as said.
 export const MISS = 0, HINT = 1, OK = 2;
 export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, ok: OK };
 
@@ -26,12 +25,13 @@ const KNOWN = 3; // grammar answers, all said, after which a topic counts as kno
 
 // One answer → the card's new record. A box is only climbed on a day the card was due (or new):
 // answering again the same day, or early, can lower the box but never raise it or push the due date.
-// miss → tomorrow; said → one box up (3, 7, 14, 30, 60 days); said with a hint → one box up but never past 7 days.
-export function review(rec, { grade, hint = false }, day) {
+// miss → tomorrow; said → one box up (3, 7, 14, 30, 60 days) to `top`, which for a hint is the 7-day box.
+const TOP = [0, HINT_BOX, INTERVAL.length - 1];
+export function review(rec, grade, day, top = TOP[grade]) {
   const { box = 0, n = 0, due } = rec ?? {};
-  const onTime = !due || day >= due, ok = grade > MISS;
-  const next = !ok ? 0 : !onTime ? box : grade >= OK ? Math.min(box + 1, INTERVAL.length - 1) : Math.max(box, Math.min(box + 1, HINT_BOX));
-  return { box: next, n: n + 1, last: day, due: ok && !onTime ? due : addDays(day, INTERVAL[next]), grade, hint };
+  const onTime = !due || day >= due, said = grade > MISS;
+  const next = !said ? 0 : !onTime ? box : Math.max(box, Math.min(box + 1, top));
+  return { box: next, n: n + 1, last: day, due: said && !onTime ? due : addDays(day, INTERVAL[next]), grade };
 }
 
 // Counters are maps of number arrays, so adding two days (or one answer to a day) is the same operation.
@@ -39,9 +39,9 @@ const plus = (a = [], b = []) => Array.from({ length: Math.max(a.length, b.lengt
 const merge = (a, b) => Object.keys(b).reduce((out, k) => ({ ...out, [k]: plus(a[k], b[k]) }), a);
 
 // One first-attempt answer folded into its day.
-export const tally = (day = {}, card, { grade, why, check }) => merge(day, {
-  [card.topic]: [1, +(grade >= OK)],
-  ...(check && { '#check': [1, +(grade >= OK)] }),
+export const tally = (day = {}, card, { grade, why, check }, said = +(grade === OK)) => merge(day, {
+  [card.topic]: [1, said],
+  ...(check && { '#check': [1, said] }),
   ...((why === 'content' || why === 'english') && { '#why': [+(why === 'content'), +(why === 'english')] }),
 });
 
@@ -68,7 +68,7 @@ export function shares(recent) {
 // Today's split, from the last two weeks of answers.
 export const mix = (days, items, day) => shares(byKind(span(days, addDays(day, -2 * WEEK + 1), day), items));
 
-// Topics with at least two cards that were last not said, worst first.
+// Topics with at least two cards missed last time (back tomorrow), worst first.
 export function weakTopics(items, hist) {
   const n = {};
   for (const c of items) if (hist[c.id]?.box === 0) n[c.topic] = (n[c.topic] ?? 0) + 1;
@@ -92,7 +92,7 @@ export const easyFirst = (a, b) => (a.difficulty ?? 0) - (b.difficulty ?? 0) || 
 export function knownTopics(items, hist) {
   const said = {};
   for (const c of items) if (c.kind === 'grammar' && hist[c.id]) (said[c.topic] ??= []).push(hist[c.id]);
-  return new Set(Object.keys(said).filter((t) => said[t].length >= KNOWN && said[t].every((r) => r.grade >= OK && r.box >= 1)));
+  return new Set(Object.keys(said).filter((t) => said[t].length >= KNOWN && said[t].every((r) => r.grade === OK && r.box >= 1)));
 }
 const newFirst = (known) => (a, b) => known.has(a.topic) - known.has(b.topic) || easyFirst(a, b);
 
@@ -110,7 +110,7 @@ export function byNeed(pool, hist, day) {
 }
 
 // Questions answered without a hint, not just once: what unlocks impromptu Q&A.
-const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id]?.box >= 2 && hist[c.id].grade >= OK).length;
+const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id]?.box >= 2 && hist[c.id].grade === OK).length;
 
 // Today's session. Per kind: reviews that are due (weakest first), then unseen cards from the weakest topic that has any,
 // then new cards, then — when nothing is left — the cards practiced longest ago. Unless the review pile is
