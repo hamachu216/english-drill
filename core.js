@@ -22,16 +22,25 @@ export const catalog = (files) =>
   }))));
 
 // Saved state → current shape. This is also the migration: v1 stored only {log, settings}, so whatever is
-// missing gets its default and settings that no longer exist are dropped. Idempotent.
+// missing gets its default and settings that no longer exist are dropped. It is also the one gate for a backup
+// file from outside: entries of the wrong type are dropped, so nothing downstream has to defend itself. Idempotent.
 export const DEFAULT = { theme: 'system', level: 1, limit: 10, voice: '', minutes: 30, listen: true };
+const plain = (x) => x != null && typeof x === 'object' && !Array.isArray(x);
+const only = (o, ok) => Object.fromEntries(Object.entries(plain(o) ? o : {}).filter(([, v]) => ok(v)));
+const counters = (v) => Array.isArray(v) && v.every(Number.isFinite);
+const card = (v) => plain(v) && Number.isInteger(v.box) && typeof v.due === 'string' && typeof v.last === 'string';
 export const restore = (s) => ({
-  log: s?.log ?? {}, hist: s?.hist ?? {}, days: s?.days ?? {}, answers: s?.answers ?? {}, session: s?.session ?? null,
+  log: only(s?.log, Number.isFinite),
+  hist: only(s?.hist, card),
+  days: Object.fromEntries(Object.entries(only(s?.days, plain)).map(([d, c]) => [d, only(c, counters)])),
+  answers: only(s?.answers, (v) => typeof v === 'string'),
+  session: plain(s?.session) && Array.isArray(s.session.queue) && s.session.queue.every(plain) ? s.session : null,
   settings: Object.fromEntries(Object.entries(DEFAULT).map(([k, v]) => [k, s?.settings?.[k] ?? v])),
 });
 
 // A backup file is saved state: an object whose records, where present, are plain objects, with a log or a history.
-const record = (x) => x == null || (typeof x === 'object' && !Array.isArray(x));
-export const isBackup = (s) => record(s) && s != null && (s.log != null || s.hist != null) && ['log', 'hist', 'days', 'answers', 'settings'].every((k) => record(s[k]));
+const record = (x) => x == null || plain(x);
+export const isBackup = (s) => plain(s) && (s.log != null || s.hist != null) && ['log', 'hist', 'days', 'answers', 'settings'].every((k) => record(s[k]));
 
 // Deterministic random numbers from a string (FNV-1a seed → mulberry32): the same day plans the same session.
 export function seeded(text) {

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { FILES, DRILLS, catalog, addDays, seeded } from '../core.js';
+import { FILES, DRILLS, catalog, addDays, seeded, restore } from '../core.js';
 import { MISS, HINT, SLOW, SOLO, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, quick, graded, overview, weekly, knownTopics, byNeed } from '../plan.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
@@ -277,4 +277,14 @@ test('when everything has been seen and nothing is due, the cards practiced long
   const queue = plan(hist, {});
   assert.ok(queue.length > 20);
   assert.ok(queue.every((s) => hist[s.id].last === addDays(T, -5)));
+});
+
+test('odd values in a restored backup are dropped, and do not stop the planner', () => {
+  const day = '2026-11-14';
+  for (const w of [5, null, 'x', [], {}, { box: 'a', due: 7, last: null }]) {
+    const s = restore({ log: { [day]: w }, hist: { 'b-be-001': w, 'ap-about-001': w }, days: { [day]: { 'b-be': w, '#time:grammar': w }, other: w }, session: { queue: w } });
+    assert.ok(Array.isArray(planSession({ items, hist: s.hist, days: s.days, day, minutes: 30, rand: seeded(day) })), JSON.stringify(w));
+    overview(items, s.hist, day); weekly(s.days, items, day); byNeed(items, s.hist, day);
+  }
+  assert.deepEqual(restore({ log: { a: 'x', b: 3 }, days: { d: { t: [1, 'x'], u: [1, 0, 1] } } }), { ...restore({}), log: { b: 3 }, days: { d: { u: [1, 0, 1] } } });
 });
