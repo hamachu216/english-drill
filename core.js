@@ -8,9 +8,42 @@ export const addDays = (day, n) => {
   return d.toISOString().slice(0, 10);
 };
 
-// Level files → flat card list; each card knows its level, deck title and refs.
-export const flattenCards = (files) =>
-  files.flatMap((f) => f.decks.flatMap((d) => d.cards.map((c) => ({ ...c, level: f.level, deckTitle: d.title, refs: d.refs }))));
+// Research-English sentence frames and research Q&A: same deck shape as a level file, tagged with a `kind`.
+export const DRILLS = ['data/patterns.json', 'data/qa.json'];
+
+// Every card of every file, tagged with what the rest needs: its kind, its topic (deck id), the deck itself,
+// and whether it is held back for the weekly first-sight check (the last HOLD cards of each deck).
+const HOLD = 2;
+export const catalog = (files) =>
+  files.flatMap((f) => f.decks.flatMap((d) => d.cards.map((c, nth) => ({
+    ...c, kind: f.kind ?? (f.level <= 2 ? 'grammar' : 'phrase'), level: f.level, topic: d.id, deck: d, nth, held: nth >= d.cards.length - HOLD,
+  }))));
+
+// Saved state → current shape. This is also the migration: v1 stored only {log, settings}, so whatever is
+// missing gets its default and settings that no longer exist are dropped. Idempotent.
+export const DEFAULT = { theme: 'system', level: 1, limit: 10, voice: '', minutes: 30, listen: true };
+export const restore = (s) => ({
+  log: s?.log ?? {}, hist: s?.hist ?? {}, days: s?.days ?? {}, answers: s?.answers ?? {}, session: s?.session ?? null,
+  settings: Object.fromEntries(Object.entries(DEFAULT).map(([k, v]) => [k, s?.settings?.[k] ?? v])),
+});
+
+// Deterministic random numbers from a string (FNV-1a seed → mulberry32): the same day plans the same session.
+export function seeded(text) {
+  let a = [...text].reduce((h, ch) => Math.imul(h ^ ch.charCodeAt(0), 16777619), 2166136261);
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// Hints that cue a sentence without giving it away.
+// skeleton: first letters only ("I am a student." → "I a_ a s______."); opening: the first two words;
+// mask: every second word of a frame blanked ("We chose this method because ..." → "We _____ this ______ because ...").
+export const skeleton = (en) => en.replace(/[A-Za-z][A-Za-z']*/g, (w) => w[0] + '_'.repeat(w.length - 1));
+export const opening = (en) => en.split(/\s+/).slice(0, 2).join(' ') + ' …';
+export const mask = (frame) => { let i = 0; return frame.replace(/[A-Za-z']+/g, (w) => (i++ % 2 ? '_'.repeat(w.length) : w)); };
 
 export const ROUND = 10;
 
