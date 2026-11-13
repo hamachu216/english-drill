@@ -69,8 +69,8 @@ button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-
 .goal-label { margin: 0; font-size: .85rem; font-weight: 700; color: var(--accent); }
 .cal-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
 .cal-head b { font-size: .9rem; }
-#heatmap { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; grid-auto-columns: minmax(0, 20px); gap: 4px; }
-#heatmap i { aspect-ratio: 1; border-radius: 5px; background: var(--cell); }
+#heatmap { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; grid-auto-columns: 14px; gap: 3px; }
+#heatmap i { aspect-ratio: 1; border-radius: 3px; background: var(--cell); }
 #heatmap i[data-l="1"] { background: color-mix(in srgb, var(--accent) 35%, var(--cell)); }
 #heatmap i[data-l="2"] { background: color-mix(in srgb, var(--accent) 65%, var(--cell)); }
 #heatmap i[data-l="3"] { background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
@@ -194,7 +194,6 @@ kbd { font: .7rem ui-monospace, monospace; opacity: .6; margin-left: 4px; }
   #home { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "today status" "records status" "panels extra"; gap: 0 40px; align-items: start; }
   .today { grid-area: today; } .status { grid-area: status; } .records { grid-area: records; } .panels { grid-area: panels; } .extra { grid-area: extra; }
   .status > :first-child { margin-top: 4px; }
-  #heatmap { grid-auto-columns: minmax(0, 32px); justify-content: space-between; }
   #qcard { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: repeat(6, auto) 1fr; column-gap: 40px; padding: 28px; }
   #qcard > * { grid-column: 1; }
   #qcard > .tag { justify-self: start; }
