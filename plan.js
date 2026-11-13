@@ -12,7 +12,7 @@ export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, ok:
 
 const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
 const KINDS = ['grammar', 'colloc', 'pattern', 'reply', 'qa'];
-const SECONDS = { grammar: 35, colloc: 30, pattern: 45, reply: 30, qa: 90 }; // rough cost of one card: turns minutes into card counts
+const SECONDS = { grammar: 35, colloc: 35, pattern: 45, reply: 30, qa: 90 }; // rough cost of one card: turns minutes into card counts
 // Short kinds outside the split, one card per this many minutes: 5 adjective + preposition pairs and 6 Q&A replies in 30 minutes.
 const EVERY = { colloc: 6, reply: 5 };
 const NEUTRAL = 0.65; // fluency at which the split is the default 15 : 10 : 5 minutes
@@ -25,12 +25,12 @@ const KNOWN = 3; // grammar answers, all said, after which a topic counts as kno
 
 // One answer → the card's new record. A box is only climbed on a day the card was due (or new):
 // answering again the same day, or early, can lower the box but never raise it or push the due date.
-// miss → tomorrow; said → one box up (3, 7, 14, 30, 60 days) to `top`, which for a hint is the 7-day box.
+// miss → tomorrow; said → one box up (3, 7, 14, 30, 60 days); said with a hint → the same, but never past 7 days.
 const TOP = [0, HINT_BOX, INTERVAL.length - 1];
-export function review(rec, grade, day, top = TOP[grade]) {
+export function review(rec, grade, day) {
   const { box = 0, n = 0, due } = rec ?? {};
   const onTime = !due || day >= due, said = grade > MISS;
-  const next = !said ? 0 : !onTime ? box : Math.max(box, Math.min(box + 1, top));
+  const next = !said ? 0 : !onTime ? box : Math.max(box, Math.min(box + 1, TOP[grade]));
   return { box: next, n: n + 1, last: day, due: said && !onTime ? due : addDays(day, INTERVAL[next]), grade };
 }
 

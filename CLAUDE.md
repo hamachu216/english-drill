@@ -74,7 +74,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
              └──────────────▶ queue [{id, phase, level?, intro?, follow?, check?, retry?}] ◀┘
                               │  1ステップ＝1画面
                        showStep → reveal → grade
-                              │  review / practise（カードの記録）・tally（日次集計）
+                              │  review（カードの記録）・tally（日次集計）
                               ▼
                      state を保存 → 次のステップ
 ```
@@ -90,7 +90,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 | `theme.js` | `<head>` で同期読み込み。描画前にテーマを当ててちらつきを防ぐ |
 | `core.js` | 汎用の純粋関数: `catalog`、`restore`/`isBackup`、`seeded`、`shuffle`、`nextRound`、ヒント文字列（`skeleton`/`opening`/`mask`/`slots`）、`streak`/`calendar`、`englishVoices`、`wordDiff`、`timeLimit` |
 | `plan.js` | 学習アルゴリズム: `review`、`tally`、`shares`/`mix`、`planSession`、`requeue`、`scaffold`、`choices`、`knownTopics`、`byNeed`、`overview`/`weekly`。定数（間隔・配分・1枚の目安秒数・解放条件）はファイル先頭 |
-| `colloc.js` | 形容詞＋前置詞: `practise`、`stepOf`、`example`、`blank`、`accepted`、`heard`、`hints`、`siblings`、`progress` |
+| `colloc.js` | 形容詞＋前置詞: `example`、`hints`、`siblings`、`progress` |
 | `app.js` | DOM と状態のすべて。`<script type="module">` 1つで、トップレベル `await` で全データを fetch する。DOM は `el(tag, props, ...kids)` で組み立て、HTML 文字列は使わない |
 | `sw.js` | Service Worker（ネットワーク優先。下の「ハマりどころ」参照） |
 | `manifest.webmanifest`、`icon*` | ホーム画面に追加したときのアプリ情報 |
@@ -107,11 +107,11 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 | `patterns.json` | `pattern` | 24の型・192文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
 | `replies.json` | `reply` | 7場面・63問 | `{id, scene, q, ja, frame, en}`。決まった返し方を日本語（`ja`）から言う。`scene` は場面、`q` は相手の質問で、どちらも出題時に表示する（答えるのは質問の中身ではなく `en` のひと言） | 今日の練習 |
 | `qa.json` | `qa` | 10話題・70問 | `{id, q, ja, frame, keys, en, more}`（英語の質問・意味・答え方の型・キーワード・1文の回答例・続き）。デッキの `follow:[{q, ja, frame, en}]` は即興Q&Aの追加質問 | 今日の練習 |
-| `collocations.json` | `colloc` | 96組・例文288 | `{id, adj, prep, collocation, ja, difficulty, steps, note, examples:[{id, scene, en, ja, also?}]}`。デッキ＝前置詞 | 今日の練習・Collocation Drill |
+| `collocations.json` | `colloc` | 96組・例文288 | `{id, adj, prep, collocation, ja, difficulty, note, examples:[{id, scene, en, ja, also?}]}`。デッキ＝前置詞（デッキ名が答えなので出題中は表示しない） | 今日の練習・Collocation Drill |
 
 - **ID**: カードIDは `<deckId>-NNN` で全ファイルを通じて一意（テストで検証）。学習履歴のキーなので、既存カードのIDは変えないこと。
 - **取り置き**: 各デッキの最後の2枚は週1回の初見チェック用（`catalog` の `held`。形容詞＋前置詞は対象外）。カードを足すときは途中に入れるか、末尾2枚が初見用になることを踏まえる。
-- **形容詞＋前置詞の例文**: `en` には「形容詞 前置詞」がこの綴りのまま隣り合って入る（空欄を作るため。テストで検証）。`also` はその文でほかにも自然に使える前置詞で、答えれば正解にする。組み合わせの選定は EnglishClub の一覧を参考にしたが、例文・訳・解説はオリジナル。
+- **形容詞＋前置詞の例文**: `en` には「形容詞 前置詞」がこの綴りのまま隣り合って入る（回答例で強調するため。テストで検証）。`also` はその文でほかにも自然に使える前置詞で、回答例の下に「この文では … も使えます」と出す。組み合わせの選定は EnglishClub の一覧を参考にしたが、例文・訳・解説はオリジナル。
 - **切り返しの定型句**: Wordvice の資料「研究発表の質疑応答対処法」の英文（定型句と質問例）は利用者の指定で必須として収録している。`test/data.test.js` の `HANDOUT` が、どれも取り置きでないカードに入っていることを検証する（綴りの誤り rational / identity は直した）。場面・具体的な中身・訳はオリジナル。
 
 ### 今日の練習（`planSession`）
@@ -119,7 +119,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 | kind | 枠の決め方 | 1枚の目安 | 新しいカードの順 | 支援（`scaffold`） | 記録の進め方 |
 |---|---|---|---|---|---|
 | `grammar` | 配分の中 | 35秒 | 各トピックの1枚目 → 2枚目 …。得意なトピックは後回し | ヒント: 出だし → 頭文字 | `review` |
-| `colloc` | 6分に1組（30分なら5組） | 30秒 | 易しい順に各前置詞を順番に | ヒント: 意味 → 頭文字（思い出す）／形容詞 → 表現 → 頭文字（文で言う） | `practise` |
+| `colloc` | 6分に1組（30分なら5組） | 35秒 | 易しい順に各前置詞を順番に | 日本語の例文から英文全体を言う（英作文）。ヒント: 形容詞 → 表現 → 頭文字 | `review` |
 | `pattern` | 配分の中 | 45秒 | 始めた型の続き → 全部の型を1回言えたら新しい型を1〜2個 | 型の表示 → 半分隠す → なし。ヒント: 型 → 語句 → 頭文字 | `review` |
 | `reply` | 5分に1問（30分なら6問） | 30秒 | 各場面の1枚目 → 2枚目 … | 相手の質問を表示。ヒント: 型 → 頭文字 | `review` |
 | `qa` | 配分の中 | 90秒 | 各話題の1枚目 → 2枚目 … | Beginner（キーワード＋型）→ Intermediate（キーワード、45秒のゆるいバー）→ Advanced（質問のみ） | `review` |
@@ -136,17 +136,14 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 
 ### 記録の進め方
 
-- **`review`**（形容詞＋前置詞以外）: 言えなかった → 翌日（箱0）。言えた → 箱+1（3・7・14・30・60日）。ヒントで言えた → 箱+1 だが7日止まり（初回なら3日後）。翌日に戻るのは言えなかったカードだけ。箱が上がるのは期限が来た日（か初回）だけで、同じ日に何度正解しても進まない。
-- **`practise`**（形容詞＋前置詞）: 覚える単位は文ではなく組み合わせで、出るたびに別の例文を使う。段階は2つ。番号は保存データとの互換のため step 2・3 で、表示は名前だけ。
-  - 思い出す（step 2）: 空所の前置詞を入力か音声で答え、`heard` が読み取って自動で判定する。読み取れなければ自己判定。記録は `review` の箱を1で止めたもので、言えたら（ヒントありでも）3日後、間違えたら翌日。期限の来た日にヒントなしで正解2回（別の日・別の例文）で次へ。
-  - 文で言う（step 3）: 日本語から文全体を言う（自己評価）。以後は `review` と同じ箱（7・14・30・60日）。
-  - 以前あった4択（step 1）は簡単すぎたので廃止した。step 1 の記録は step 2 として扱う（`stepOf`）。
+- **`review`**（全種類）: 言えなかった → 翌日（箱0）。言えた → 箱+1（3・7・14・30・60日）。ヒントで言えた → 箱+1 だが7日止まり（初回なら3日後）。翌日に戻るのは言えなかったカードだけ。箱が上がるのは期限が来た日（か初回）だけで、同じ日に何度正解しても進まない。
+- **形容詞＋前置詞**: 覚える単位は文ではなく組み合わせで、出るたびに別の例文（`example`）を日本語から英文全体で言う。以前は空所に前置詞だけを入れる段階があったが、前置詞だけでは身につかないので廃止した。その頃の記録に残る `step`・`wins` は読まない。
 - **`tally`**: その日の集計を足す。最初の回答だけを数える。
 
 ### 回答と判定
 
 - **流れ**: 出題 → 声に出す（入力・🎤は任意）→「回答した」→ 回答例 → 自己評価。「わからない」を押すと答えを表示し、「言えなかった」として記録する。
-- **自己評価**（`choices`）: 言えなかった / ヒントで言えた / 言えた の3つ。ヒントを使ったら「言えた」は出ない。Q&A では「言えなかった」が「内容が浮かばなかった」「英文にできなかった」に分かれる。形容詞＋前置詞の「思い出す」は、答えから前置詞を読み取れたら正誤を自動判定し、ボタンは1つ（正解 / 不正解 — 次へ）になる。
+- **自己評価**（`choices`）: 言えなかった / ヒントで言えた / 言えた の3つ。ヒントを使ったら「言えた」は出ない。Q&A では「言えなかった」が「内容が浮かばなかった」「英文にできなかった」に分かれる。
 - **秒数は測らない**: 以前は回答までの秒数で「自力 / 時間はかかった」を分けていたが、ややこしく意味も薄かったので廃止した。保存済みの記録の grade 3（自力）は `restore` が 2（言えた）に直す。
 - **流暢さ優先**: 音声認識の結果は表示するだけで判定には使わない。Q&A では回答と模範の差分も出さない。
 
@@ -159,7 +156,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 localStorage のキー `eng:v1` 1つに次を入れる。形は `restore` が決める。旧版の `{log, settings}` だけのデータもそのまま読め、無くなった設定は捨てる。
 
 - `log: {"YYYY-MM-DD": その日の回答数}` — 連続日数とヒートマップ用。
-- `hist: {cardId: {box, n, last, due, grade, step?, wins?}}`（grade: 0 言えなかった・1 ヒント・2 言えた） — カードごとの記録（`step`・`wins` は形容詞＋前置詞だけ）。
+- `hist: {cardId: {box, n, last, due, grade}}`（grade: 0 言えなかった・1 ヒント・2 言えた） — カードごとの記録。
 - `days: {"YYYY-MM-DD": {topicId: [回答数, ヒントなしで言えた], "#check": [出題, 言えた], "#why": [内容, 英文]}}` — 1回目の回答だけを数えた日次カウンタ。値がすべて数値配列なので、日の合算も週の合算も同じ足し算。秒数を測っていたころの `[回答数, 時間はかかった, 自力]` と `#time:*`・`#start` は `restore` が変換・削除する。
 - `session: {day, queue, idx, grades}` — 今日のセッション。1問ごとに保存するので、中断・再読み込み後に続きから再開できる。日付が変わると無視される。
 - `answers: {cardId: 最後に自分が答えた文}` — Q&A で入力・文字起こしした自分の回答（次回「前回のあなたの回答」として出す）。

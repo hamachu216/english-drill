@@ -99,12 +99,13 @@ test('adjective + preposition: every pair has its fields and at least two senten
   assert.equal(new Set(pairs.map((c) => c.collocation)).size, pairs.length, 'each pair once');
   for (const d of colloc.decks) assert.ok(d.note && d.refs.some((r) => r.url.includes('englishclub.com')), d.id);
   for (const c of pairs) {
-    assert.ok(c.adj && c.ja && c.note && [1, 2, 3].includes(c.difficulty) && c.steps.length, c.id);
+    assert.ok(c.adj && c.ja && c.note && [1, 2, 3].includes(c.difficulty), c.id);
     assert.equal(c.collocation, `${c.adj} ${c.prep}`, c.id);
     assert.ok(c.examples.length >= 2 && new Set(c.examples.map((e) => e.scene)).size >= 2, `${c.id}: several contexts`);
     for (const e of c.examples) {
       assert.ok(e.id.startsWith(c.id + '-') && e.ja && ['daily', 'lab', 'meeting', 'conference'].includes(e.scene), e.id);
-      assert.match(e.en, new RegExp(`\\b${c.adj} ${c.prep}\\b`, 'i'), `${e.id}: the pair appears as written, so it can be blanked`);
+      assert.ok(!e.ja.includes('|'), `${e.id}: the Japanese is the prompt, with no stray marks`);
+      assert.match(e.en, new RegExp(`\\b${c.adj} ${c.prep}\\b`, 'i'), `${e.id}: the pair appears as written, so it can be highlighted`);
       assert.ok(!(e.also ?? []).includes(c.prep), e.id);
     }
   }

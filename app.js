@@ -1,6 +1,6 @@
 import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish, slots, literal } from './core.js';
 import { MISS, HINT, OK, GRADE, review, byNeed, tally, requeue, scaffold, choices, planSession, mix, overview, weekly } from './plan.js';
-import { PREPS, STEPS, stepOf, example, accepted, blank, heard, practise, hints as pairHints, siblings, progress } from './colloc.js';
+import { PREPS, example, hints as pairHints, siblings, progress } from './colloc.js';
 
 const KEY = 'eng:v1';
 const $ = (id) => document.getElementById(id);
@@ -61,7 +61,7 @@ const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, [icon, name]]
 });
 
 const pairCount = cards.filter((c) => c.kind === 'colloc').length, replyCount = cards.filter((c) => c.kind === 'reply').length;
-const stepLine = ([, recall, say, done]) => `思い出す ${recall} ・ 文で言う ${say} ・ 定着 ${done}`;
+const stepLine = ([, practising, settled]) => `練習中 ${practising} ・ 定着 ${settled}`;
 const tenths = ([n = 0, said = 0] = []) => (n < 5 ? '—' : `${Math.round((said / n) * 10)}割`);
 const pair = (k, v) => [el('dt', { textContent: k }), el('dd', { textContent: v })];
 
@@ -180,27 +180,27 @@ function playFree(missed = []) {
 const TALK_GUIDE = ['まずは1文で。時間は気にしなくてOK', 'キーワードを使って、1〜2文で', 'ヒントなしで、2〜3文で'];
 function showStep() {
   const step = run.queue[run.idx], cur = byId.get(step.id), rec = state.hist[cur.id];
-  // An adjective + preposition pair is asked at its own step (recall the preposition, or say the sentence), in a sentence it hasn't just had.
-  const pairStep = cur.kind === 'colloc' ? stepOf(rec) : 0, ex = pairStep ? example(cur, rec) : null;
-  const { shown, hints } = pairStep ? { shown: [], hints: pairHints(cur, pairStep, ex) } : scaffold(cur, step);
-  now = { step, cur, ask: cur.deck.follow?.[step.follow] ?? cur, pending: [...hints], hinted: false, model: '', said: '', pairStep, ex };
+  // An adjective + preposition pair is said in an example sentence it hasn't just had (`ex` is set for pairs only).
+  const ex = cur.kind === 'colloc' ? example(cur, rec) : null;
+  const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
+  now = { step, cur, ask: cur.deck.follow?.[step.follow] ?? cur, pending: [...hints], hinted: false, model: '', said: '', ex };
   const talk = isTalk(), [icon, name] = PHASE[step.phase] ?? [];
   // Free practice keeps its timer setting; an Intermediate question gets a gentle 45s bar that never cuts you off.
-  const sec = run.free && !pairStep ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
-  $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q ? 4 : pairStep ? 5 : 3)})`);
+  const sec = run.free ? timeLimit((ex ?? cur).en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
+  $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q ? 4 : ex ? 5 : 3)})`);
   $('track').textContent = [
     step.retry && '🔁 もう一度',
-    run.free ? `${run.retry ? '🔁 復習 · ' : ''}${pairStep ? 'Collocation Drill' : `Lv${cur.level}`}` : `${icon} ${name}`,
-    cur.deck.title,
-    pairStep ? STEPS[pairStep] : step.follow != null ? '追加質問' : step.intro ? '新しい型' : talk && !step.check && step.phase !== 'impromptu' && QA_LEVEL[step.retry ? 0 : step.level],
+    run.free ? `${run.retry ? '🔁 復習 · ' : ''}${ex ? 'Collocation Drill' : `Lv${cur.level}`}` : `${icon} ${name}`,
+    !ex && cur.deck.title, // a pair's deck is its preposition: the answer
+    step.follow != null ? '追加質問' : step.intro ? '新しい型' : talk && !step.check && step.phase !== 'impromptu' && QA_LEVEL[step.retry ? 0 : step.level],
   ].filter(Boolean).join(' · ');
   $('count').textContent = `${run.idx + 1} / ${run.queue.length}${sec ? ` · ⏱${sec}秒` : ''}`;
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
-  $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : pairStep ? (pairStep === 2 ? blank(cur, ex) : ex.ja) : cur.ja;
+  $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : (ex ?? cur).ja;
   $('sub').textContent = step.intro ? `${cur.deck.ja}　例文を聞いて、まねして声に出そう`
-    : pairStep ? (pairStep === 2 ? `${ex.ja}　空所の前置詞を入力するか、声に出そう` : '形容詞＋前置詞を使って、英文全体を声に出そう')
+    : ex ? '形容詞＋前置詞を使って、英文全体を声に出そう'
     : now.ask.scene ? `場面：${now.ask.scene}　この返事を英語で言おう` // a Q&A reply: the situation, then the phrase it calls for
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
@@ -220,7 +220,7 @@ function showStep() {
   $('reveal').textContent = step.intro ? 'まねして言えた、次へ →' : '✓ 回答した';
   $('answer').hidden = true;
   $('reveal').hidden = false;
-  startTimer(sec, run.free && !pairStep);
+  startTimer(sec, run.free);
   if ((now.ask.q || step.intro) && state.settings.listen) speak(step.intro ? cur.en : now.ask.q);
 }
 
@@ -254,37 +254,31 @@ function reveal(timedOut = false) {
   $('timer').style.animationPlayState = 'paused'; // freeze: shows time left
   const { cur, ask, step } = now, talk = isTalk(), typed = $('input').value.trim();
   now.said = typed || now.said;
-  now.model = now.pairStep ? now.ex.en : talk && step.level === 2 && !step.retry && ask.more ? `${ask.en} ${ask.more}` : ask.en;
-  // Step 2 checks the preposition typed or heard; step 3 and an unclear answer are self-judged.
-  const { pairStep, ex } = now, said = pairStep === 2 ? heard(typed, cur) : null;
-  const right = said == null ? null : accepted(cur, ex).includes(said);
+  const { ex } = now;
+  now.model = ex ? ex.en : talk && step.level === 2 && !step.retry && ask.more ? `${ask.en} ${ask.more}` : ask.en;
   $('timeout').hidden = !timedOut;
   $('model-label').textContent = talk ? '回答例（あくまで一例）' : '';
   // Accuracy practice compares your words with the model; fluency practice (Q&A) never marks your English.
-  const compare = typed && !talk && !pairStep;
+  const compare = typed && !talk;
   $('en').replaceChildren(...(compare ? wordDiff(typed, now.model).flatMap(({ w, ok }) => [el('span', { className: ok ? 'hit' : 'miss', textContent: w }), ' ']) : mark(now.model, phrases(cur))));
   $('en').className = compare ? 'en diff' : 'en';
   $('note').textContent = talk ? '' : cur.note ?? '';
   $('tip').textContent = talk ? `答え方の型：${ask.frame}` : cur.deck.note ? `${cur.deck.frame ?? cur.deck.title}：${cur.deck.note}` : '';
   $('mine').textContent = talk && step.follow == null && state.answers[cur.id] ? `前回のあなたの回答：${state.answers[cur.id]}` : '';
-  if (pairStep) {
-    const sibs = siblings(cur, cards);
+  if (ex) {
     $('note').textContent = `${cur.collocation} ＝ ${cur.ja}`;
     $('tip').textContent = cur.note;
-    $('mine').textContent = said ? `あなたの答え：${said} ${right ? '✓' : '✕'}`
-      : pairStep === 3 && typed ? `あなたの回答：${typed}${typed.toLowerCase().includes(cur.collocation) ? `（「${cur.collocation}」が入っています）` : ''}` : '';
-    $('caveat').textContent = [
-      ex.also && `この文では ${ex.also.join(' / ')} も使えます。`,
-      sibs.length && `同じ形容詞の別の組み合わせ：${sibs.map((s) => `${s.collocation}（${s.ja}）`).join(' ／ ')}`,
-      pairStep === 2 && typed && said == null && '入力・文字起こしから前置詞を読み取れなかったので、自分で判定してください。',
-      pairStep === 3 && '模範と違う言い方でも、意味と文法が合っていれば正解です。',
-    ].filter(Boolean).join('\n');
-  } else $('caveat').textContent = talk ? 'まず伝わることが大事。自分の研究の内容で1文でも言えればOKで、文法の細かい正しさは気にしなくて大丈夫です。'
-    : `${compare ? '緑＝あなたの回答にもあった語（文字起こしは不正確なこともあります）。' : ''}模範解答と違う言い方でも、意味と文法が合っていれば正解です。`;
+  }
+  const sibs = ex ? siblings(cur, cards) : [];
+  $('caveat').textContent = talk ? 'まず伝わることが大事。自分の研究の内容で1文でも言えればOKで、文法の細かい正しさは気にしなくて大丈夫です。' : [
+    ex?.also && `この文では ${ex.also.join(' / ')} も使えます。`,
+    sibs.length && `同じ形容詞の別の組み合わせ：${sibs.map((s) => `${s.collocation}（${s.ja}）`).join(' ／ ')}`,
+    `${compare ? '緑＝あなたの回答にもあった語（文字起こしは不正確なこともあります）。' : ''}模範解答と違う言い方でも、意味と文法が合っていれば正解です。`,
+  ].filter(Boolean).join('\n');
   $('card-refs').replaceChildren(...(cur.deck.refs?.length ? ['参考: ', ...cur.deck.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)]))] : []));
   // "I don't know" is a miss, with nothing to judge. "Answer again" keeps the first attempt's hint use and so its choices.
-  const verdict = now.gaveUp && !talk ? '✕ わからなかった — 次へ' : right == null ? null : right ? '○ 正解 — 次へ' : '✕ 不正解 — 次へ';
-  const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : right == null ? choices(talk, now.hinted) : [right ? (now.hinted ? 'hint' : 'ok') : 'miss'];
+  const verdict = now.gaveUp && !talk ? '✕ わからなかった — 次へ' : null;
+  const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : choices(talk, now.hinted);
   $('judge').replaceChildren(...keys.map((key) =>
     el('button', { className: key, onclick: () => grade(key), textContent: verdict ?? (key === 'ok' ? LABEL.ok[+talk] : LABEL[key]) })));
   $('judge-label').hidden = verdict != null;
@@ -298,8 +292,7 @@ function reveal(timedOut = false) {
 
 function grade(key) {
   const d = today(), { cur, step, said } = now, talk = isTalk(), g = GRADE[key], before = state.hist[cur.id];
-  const after = (cur.kind === 'colloc' ? practise : review)(before, g, d);
-  if (cur.kind === 'colloc' && stepOf(after) > stepOf(before)) run.ups = [...(run.ups ?? []), `${cur.collocation} → ${STEPS[after.step]}`];
+  const after = review(before, g, d);
   save({
     log: { ...state.log, [d]: (state.log[d] || 0) + 1 },
     // A follow-up question is practice only; a retry updates the card (it can't raise it) but isn't counted again.
@@ -350,7 +343,6 @@ function showResult() {
   if (!wrong || !run.free) confetti();
   $('result-list').replaceChildren(...run.missed.map((c) =>
     el('li', { className: 'card' }, el('p', { className: 'muted', textContent: c.ja ?? '' }), el('p', { className: 'en', textContent: (c.kind === 'qa' ? c.q : c.en) ?? c.collocation }))));
-  $('result-ups').textContent = run.ups?.length ? `段階が上がった表現：${run.ups.join('、')}` : '';
   $('next-round').textContent = !run.free ? '＋ もう少し続ける（約5分）' : wrong ? `🔁 言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
 }
 
