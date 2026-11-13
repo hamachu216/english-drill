@@ -183,7 +183,6 @@ test('"said it" is split by the clock: quick for the length of the example is so
   assert.equal(quick(en, false), 11);
   assert.equal(quick(en, true), 20);
   assert.deepEqual([graded('ok', 10, en, false), graded('ok', 13, en, false), graded('ok', 18, en, true)], [SOLO, SLOW, SOLO]);
-  assert.deepEqual([quick(en, false, en.length), graded('ok', 20, en, false, en.length), graded('ok', 24, en, false, en.length)], [21, SOLO, SLOW], 'typed: time to type it instead of to say it');
   assert.equal(graded('ok', Infinity, en, true), SLOW, 'a timeout is never quick');
   assert.deepEqual(['miss', 'hint', 'content', 'english'].map((k) => graded(k, 1, en, false)), [MISS, HINT, MISS, MISS]);
 });

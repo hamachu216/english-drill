@@ -275,7 +275,7 @@ function reveal(timedOut = false) {
   $('timer').style.animationPlayState = 'paused'; // freeze: shows time left
   const { cur, ask, step } = now, talk = isTalk(), typed = $('input').value.trim();
   now.late ||= timedOut;
-  now.took ||= elapsed(); // "answer again" keeps the first attempt's time, hint use and so its choices
+  now.took ||= now.keyAt ?? elapsed(); // typed: the clock stopped at the first keystroke. "Answer again" keeps the first attempt's time, hint use and so its choices
   now.said = typed || now.said;
   now.model = now.pairStep ? now.ex.en : talk && step.level === 2 && !step.retry && ask.more ? `${ask.en} ${ask.more}` : ask.en;
   // Steps 1–2 check the preposition (a choice, or the one typed or heard); step 3 and an unclear answer are self-judged.
@@ -307,8 +307,7 @@ function reveal(timedOut = false) {
   $('card-refs').replaceChildren(...(cur.deck.refs?.length ? ['参考: ', ...cur.deck.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)]))] : []));
   // "Said it" shows the time it took and whether that counts as quick, so the clock's verdict is never a surprise.
   // "I don't know" is a miss, with nothing to judge.
-  now.chars ??= now.keyed ? typed.length : 0; // typed with the keyboard: the allowance is for typing, not speaking
-  const secs = now.late ? Infinity : now.took, limit = quick(now.model, talk, now.chars), fast = graded('ok', secs, now.model, talk, now.chars) === SOLO;
+  const secs = now.late ? Infinity : now.took, limit = quick(now.model, talk), fast = graded('ok', secs, now.model, talk) === SOLO;
   const label = (key) => key !== 'ok' ? LABEL[key] : `${fast ? '◎' : '△'} ${LABEL.ok[+talk]}（${now.late ? '時間切れ' : `${Math.round(secs)}秒`}${fast ? '' : ` · 目安${limit}秒`}）`;
   const verdict = now.gaveUp && !talk ? '✕ わからなかった — 次へ' : right == null ? null : right ? '○ 正解 — 次へ' : '✕ 不正解 — 次へ';
   const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : right == null ? choices(talk, now.hinted) : [right ? (now.hinted ? 'hint' : 'solo') : 'miss'];
@@ -324,7 +323,7 @@ function reveal(timedOut = false) {
 }
 
 function grade(key) {
-  const d = today(), { cur, step, said } = now, talk = isTalk(), g = graded(key, now.late ? Infinity : now.took, now.model, talk, now.chars), before = state.hist[cur.id];
+  const d = today(), { cur, step, said } = now, talk = isTalk(), g = graded(key, now.late ? Infinity : now.took, now.model, talk), before = state.hist[cur.id];
   const after = (cur.kind === 'colloc' ? practise : review)(before, { grade: g, hint: now.hinted }, d);
   if (cur.kind === 'colloc' && stepOf(after) > stepOf(before)) run.ups = [...(run.ups ?? []), `${cur.collocation} → ${STEPS[after.step]}`];
   save({
@@ -400,7 +399,7 @@ $('next-round').onclick = () => (run.free ? playFree(run.missed) : more());
 $('cd-start').onclick = () => { if (freeList !== pairCards) { freeList = pairCards; pool = []; } playFree(); };
 $('quit').onclick = $('home-btn').onclick = finish;
 $('hint').onclick = hint;
-$('input').oninput = () => { now.keyed = true; started(); }; // a keystroke (a transcript fills it without one)
+$('input').oninput = () => { now.keyAt ??= elapsed(); started(); }; // the first keystroke (a transcript fills it without one)
 $('unknown').onclick = () => { now.gaveUp = true; reveal(); };
 $('reveal').onclick = () => {
   if (now.step.intro) advance();
