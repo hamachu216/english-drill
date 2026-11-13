@@ -67,7 +67,7 @@ localStorage のキー `eng:v1` 1つに次を入れる（`restore` が形を決�
 
 ### 画面
 
-画面は3つの `<section>`（`home`、`study`、`result`）を `hidden` で切り替える。多くの要素が `display` を指定しているため、グローバルの `[hidden]{display:none!important}` が必要。幅 960px 以上（PC）では最大 90rem まで横に広げ、ホームは `.today`（今日のメニューと開始ボタン）・`.status`（いまの状況と週ごとの変化）・`.more`（記録・自由練習・設定）をグリッドに配置し、出題画面は `#qcard` を「問題・回答 | 回答例・自己評価」の2列にする。スマホ幅では HTML の順に縦に並ぶ。
+画面は3つの `<section>`（`home`、`study`、`result`）を `hidden` で切り替える。多くの要素が `display` を指定しているため、グローバルの `[hidden]{display:none!important}` が必要。幅 960px 以上（PC）では最大 90rem まで横に広げ、ホームは `.today`（今日のメニューと開始ボタン）・`.status`（Collocation Drill・いまの状況・週ごとの変化）・`.more`（記録・自由練習・設定）をグリッドに配置し、出題画面は `#qcard` を「問題・回答 | 回答例・自己評価」の2列にする。スマホ幅では HTML の順に縦に並ぶ。
 
 ## ハマりどころ
 
