@@ -56,11 +56,12 @@ test('review: answering again the same day never moves the due date forward or r
   assert.equal(review(first, MISS, T).due, addDays(T, 1), 'but a same-day miss does pull it back');
 });
 
-test('first use: about 30 minutes with grammar, 5 adjective + preposition pairs, new sentence frames and Beginner Q&A, in that order', () => {
+test('first use: about 30 minutes with grammar, new sentence frames, Q&A replies and Beginner Q&A, in that order', () => {
   const queue = plan(), n = kinds(queue);
-  assert.ok(n.grammar >= 20 && n.pattern >= 6 && n.qa >= 3 && n.colloc === 5 && n.reply === 6, JSON.stringify(n));
+  assert.ok(n.grammar >= 12 && n.pattern >= 5 && n.qa >= 2 && n.reply === 5 && !n.colloc, JSON.stringify(n));
+  assert.ok(queue.length <= 30, `about one card a minute: ${queue.length}`);
   assert.ok(n.grammar > n.pattern && n.pattern > n.qa);
-  assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'colloc', 'pattern', 'reply', 'qa'], 'no review, impromptu or check on day one');
+  assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'pattern', 'reply', 'qa'], 'no review, impromptu or check on day one');
   const grammar = queue.filter((s) => byId.get(s.id).kind === 'grammar').map((s) => byId.get(s.id));
   assert.ok(grammar.every((c) => c.nth === 0), 'new grammar: the first card of each topic in turn, not one topic at a time');
   assert.ok(grammar.slice(0, 15).every((c) => c.level === 1), 'Lv1 topics first in each round');
@@ -78,7 +79,7 @@ test('first use: about 30 minutes with grammar, 5 adjective + preposition pairs,
 
 test('the 10-minute session is shorter and still has both grammar and research English', () => {
   const short = kinds(plan({}, {}, T, 10)), full = kinds(plan());
-  assert.ok(short.grammar < full.grammar && short.grammar >= 5 && short.pattern >= 2 && short.qa >= 1 && short.colloc >= 1 && short.reply >= 1, JSON.stringify(short));
+  assert.ok(short.grammar < full.grammar && short.grammar >= 4 && short.pattern >= 1 && short.qa >= 1 && short.reply >= 1, JSON.stringify(short));
 });
 
 test('shares: 15/10/5 by default; weak grammar gets more time, solid grammar gives it to research English', () => {
@@ -121,7 +122,7 @@ test('no card twice in a session, and cards answered well do not come back the n
 });
 
 test('a weak grammar topic is named and gets extra cards', () => {
-  const { hist, days, next } = practice(2, (c) => (c.topic === 'b-neg' ? MISS : OK));
+  const { hist, days, next } = practice(4, (c) => (c.topic === 'b-neg' ? MISS : OK));
   assert.equal(weakTopics(items, hist)[0], 'b-neg');
   assert.deepEqual(overview(items, hist, next).weak, ['b-neg']);
   const queue = plan(hist, days, next), negs = queue.filter((s) => byId.get(s.id).topic === 'b-neg');
@@ -134,7 +135,7 @@ test('a weak topic with no unseen sentences left gets only its misses back; the 
   const hist = Object.fromEntries(be.map((c, i) => [c.id, review(undefined, i % 2 ? OK : MISS, day)]));
   const queue = plan(hist, {}, next), bes = queue.filter((s) => byId.get(s.id).topic === 'b-be');
   assert.deepEqual(bes.map((s) => s.id).sort(), be.filter((_, i) => !(i % 2)).map((c) => c.id).sort(), 'only the misses');
-  assert.ok(new Set(queue.filter((s) => s.phase === 'grammar').map((s) => byId.get(s.id).topic)).size >= 10);
+  assert.ok(new Set(queue.filter((s) => s.phase === 'grammar').map((s) => byId.get(s.id).topic)).size >= 4, 'the room left goes to new cards of other topics');
 });
 
 test('a grammar topic said without a hint three times is known: its new cards wait, and one miss brings it back', () => {

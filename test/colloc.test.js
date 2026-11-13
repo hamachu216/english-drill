@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded } from '../core.js';
-import { MISS, OK, review, planSession, requeue, byNeed } from '../plan.js';
+import { MISS, OK, review, planSession, byNeed } from '../plan.js';
 import { example, hints, siblings, progress } from '../colloc.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
@@ -29,34 +29,9 @@ test('siblings: the other prepositions the same adjective takes', () => {
   assert.deepEqual(siblings(pair('interested in'), items), []);
 });
 
-test('daily session: five pairs, new ones easy first and from different prepositions, missed ones reviewed first next day, right ones in three days', () => {
-  const queue = planSession({ items, hist: {}, days: {}, day: T, minutes: 30, rand: seeded(T) });
-  const steps = queue.filter((s) => s.phase === 'colloc'), chosen = steps.map((s) => items.find((c) => c.id === s.id));
-  assert.equal(steps.length, 5);
-  assert.ok(chosen.every((c) => c.difficulty === 1));
-  assert.ok(new Set(chosen.map((c) => c.prep)).size >= 4, 'interleaved across prepositions');
-  const hist = Object.fromEntries(chosen.map((c, i) => [c.id, review(undefined, i ? OK : MISS, T)]));
-  const next = planSession({ items, hist, days: {}, day: addDays(T, 1), minutes: 30, rand: seeded('n') });
-  assert.equal(next[0].id, chosen[0].id, 'the missed pair opens the next session');
-  assert.equal(next[0].phase, 'review');
-  const again = next.filter((s) => s.phase === 'colloc').map((s) => s.id);
-  assert.ok(chosen.slice(1).every((c) => !again.includes(c.id)), 'pairs said are not back the next day');
-  const later = planSession({ items, hist, days: {}, day: addDays(T, 3), minutes: 30, rand: seeded('l') }).map((s) => s.id);
-  assert.ok(chosen.slice(1).filter((c) => later.includes(c.id)).length >= 2, 'but three days later');
-  assert.equal(requeue(queue, queue.indexOf(steps[0]), MISS, 'colloc').filter((s) => s.id === steps[0].id).length, 2, 'a miss is retried later in the session');
-});
-
-test('a month of practice settles pairs without dropping the other kinds', () => {
-  let hist = {};
-  for (let i = 0; i < 30; i++) {
-    const day = addDays(T, i), q = planSession({ items, hist, days: {}, day, minutes: 30, rand: seeded(day) });
-    assert.ok(q.some((s) => s.phase === 'pattern') && q.some((s) => s.phase === 'qa'));
-    for (const s of q.filter((s) => items.find((c) => c.id === s.id).kind === 'colloc')) hist = { ...hist, [s.id]: review(hist[s.id], OK, day) };
-  }
-  const p = progress(items, hist).all;
-  assert.equal(p.reduce((a, b) => a + b), pairs.length);
-  assert.ok(p[2] >= 10, `pairs settled after a month: ${p}`);
-  assert.ok(pairs.length - p[0] >= 30, `and new ones keep coming: ${p}`);
+test('pairs belong to the Collocation Drill alone: never in the daily session, not even when missed', () => {
+  const missed = Object.fromEntries(pairs.slice(0, 10).map((c) => [c.id, review(undefined, MISS, addDays(T, -1))]));
+  for (const hist of [{}, missed]) assert.ok(planSession({ items, hist, days: {}, day: T, minutes: 30, rand: seeded(T) }).every((s) => !s.id.startsWith('ap-')));
 });
 
 test('drill: every pair — wrong last time, then due, then new ones (easy first), then the rest', () => {

@@ -65,8 +65,8 @@
         { "id": "a-participle-002", "ja": "どうすればよいかわからなかったので、先輩に相談した。", "en": "Not knowing what to do, I asked a senior student for advice.", "note": "否定の not は分詞の前" },
         { "id": "a-participle-003", "ja": "やさしい英語で書かれているので、この本は留学生にも読みやすい。", "en": "Written in plain English, this book is easy for international students to read." },
         { "id": "a-participle-004", "ja": "実験を終えて、私たちは研究室を片付けた。", "en": "Having finished the experiment, we cleaned up the lab.", "note": "完了分詞構文 (主節より前の出来事)" },
-        { "id": "a-participle-005", "ja": "遠くから見ると、その建物は城のように見える。", "en": "Seen from a distance, the building looks like a castle." },
-        { "id": "a-participle-006", "ja": "天気がよかったので、私たちは外で昼食をとった。", "en": "The weather being nice, we had lunch outside.", "note": "独立分詞構文 (主語が異なる)" },
+        { "id": "a-participle-005", "ja": "遠くから見ると、その建物は城のように見える。", "en": "Seen from a distance, the building looks like a castle.", "rare": true },
+        { "id": "a-participle-006", "ja": "天気がよかったので、私たちは外で昼食をとった。", "en": "The weather being nice, we had lunch outside.", "note": "独立分詞構文 (主語が異なる)", "rare": true },
         { "id": "a-participle-007", "ja": "一般的に言って、日本人は人前で話すのが苦手だ。", "en": "Generally speaking, Japanese people aren't comfortable speaking in public." },
         { "id": "a-participle-008", "ja": "彼は腕を組んで座っていた。", "en": "He was sitting with his arms folded.", "note": "with + O + 分詞" },
         { "id": "a-participle-009", "ja": "その論文を読んでいるうちに、新しいアイデアが浮かんだ。", "en": "Reading the paper, I came up with a new idea." },
@@ -74,7 +74,7 @@
         { "id": "a-participle-011", "ja": "サンプルを顕微鏡で調べたところ、小さなひびが見つかった。", "en": "Examining the sample under a microscope, we found a small crack." },
         { "id": "a-participle-012", "ja": "エンジンをかけたまま、彼は車を降りた。", "en": "He got out of the car with the engine running." },
         { "id": "a-participle-013", "ja": "結果から判断すると、その手法はうまくいっているようだ。", "en": "Judging from the results, the method seems to work." },
-        { "id": "a-participle-014", "ja": "疲れ果てて、彼女はソファで眠り込んでしまった。", "en": "Exhausted, she fell asleep on the sofa.", "note": "Being の省略" },
+        { "id": "a-participle-014", "ja": "疲れ果てて、彼女はソファで眠り込んでしまった。", "en": "Exhausted, she fell asleep on the sofa.", "note": "Being の省略", "rare": true },
         { "id": "a-participle-015", "ja": "すべてを考慮すると、計画は延期したほうがいい。", "en": "All things considered, we should postpone the plan." }
       ]
     },
@@ -113,19 +113,19 @@
       "cards": [
         { "id": "a-emphasis-001", "ja": "その問題を最初に指摘したのは田中さんだった。", "en": "It was Ms. Tanaka who first pointed out the problem.", "note": "It is ~ who/that の強調構文" },
         { "id": "a-emphasis-002", "ja": "私が興味を持っているのは、データそのものではなく、その解釈だ。", "en": "What I'm interested in is not the data itself but how to interpret it." },
-        { "id": "a-emphasis-003", "ja": "こんなに美しい景色は一度も見たことがない。", "en": "Never have I seen such a beautiful view.", "note": "否定語が文頭 → 倒置" },
-        { "id": "a-emphasis-004", "ja": "発表が終わってはじめて、そのミスに気づいた。", "en": "Only after the presentation did I notice the mistake." },
-        { "id": "a-emphasis-005", "ja": "彼女が部屋に入るやいなや、電話が鳴った。", "en": "No sooner had she entered the room than the phone rang." },
+        { "id": "a-emphasis-003", "ja": "こんなに美しい景色は一度も見たことがない。", "en": "Never have I seen such a beautiful view.", "note": "否定語が文頭 → 倒置", "rare": true },
+        { "id": "a-emphasis-004", "ja": "発表が終わってはじめて、そのミスに気づいた。", "en": "Only after the presentation did I notice the mistake.", "rare": true },
+        { "id": "a-emphasis-005", "ja": "彼女が部屋に入るやいなや、電話が鳴った。", "en": "No sooner had she entered the room than the phone rang.", "rare": true },
         { "id": "a-emphasis-006", "ja": "結果がわかったのは昨日になってからだった。", "en": "It wasn't until yesterday that we got the results." },
         { "id": "a-emphasis-007", "ja": "実験を成功させるのに必要なのは忍耐だ。", "en": "What you need for a successful experiment is patience." },
-        { "id": "a-emphasis-008", "ja": "彼は締め切りを守らなかっただけでなく、謝りもしなかった。", "en": "Not only did he miss the deadline, but he didn't apologize either.", "note": "Not only が文頭 → 倒置" },
-        { "id": "a-emphasis-009", "ja": "一体何が起きたんだ？", "en": "What on earth happened?", "note": "on earth で疑問詞を強調" },
+        { "id": "a-emphasis-008", "ja": "彼は締め切りを守らなかっただけでなく、謝りもしなかった。", "en": "Not only did he miss the deadline, but he didn't apologize either.", "note": "Not only が文頭 → 倒置", "rare": true },
+        { "id": "a-emphasis-009", "ja": "一体何が起きたんだ？", "en": "What on earth happened?", "note": "on earth で疑問詞を強調", "rare": true },
         { "id": "a-emphasis-010", "ja": "私は本当にそのプロジェクトに参加したかったのだ。", "en": "I did want to join that project.", "note": "助動詞 do で動詞を強調" },
-        { "id": "a-emphasis-011", "ja": "その問題がこれほど深刻になるとは夢にも思わなかった。", "en": "Little did I imagine that the problem would become so serious." },
+        { "id": "a-emphasis-011", "ja": "その問題がこれほど深刻になるとは夢にも思わなかった。", "en": "Little did I imagine that the problem would become so serious.", "rare": true },
         { "id": "a-emphasis-012", "ja": "会議で議論したのはまさにこの点だった。", "en": "It was exactly this point that we discussed in the meeting." },
         { "id": "a-emphasis-013", "ja": "彼はその結論に納得していないし、私もそうだ。", "en": "He isn't convinced by the conclusion, and neither am I.", "note": "neither + 倒置" },
-        { "id": "a-emphasis-014", "ja": "ドアのところに私の指導教員が立っていた。", "en": "At the door stood my advisor.", "note": "場所の副詞句が文頭 → 倒置" },
-        { "id": "a-emphasis-015", "ja": "どんな状況でも、パスワードを他人に教えてはいけない。", "en": "Under no circumstances should you share your password with anyone." }
+        { "id": "a-emphasis-014", "ja": "ドアのところに私の指導教員が立っていた。", "en": "At the door stood my advisor.", "note": "場所の副詞句が文頭 → 倒置", "rare": true },
+        { "id": "a-emphasis-015", "ja": "どんな状況でも、パスワードを他人に教えてはいけない。", "en": "Under no circumstances should you share your password with anyone.", "rare": true }
       ]
     },
     {
@@ -165,7 +165,7 @@
         { "id": "a-modal-perfect-001", "ja": "彼はもう家に着いたに違いない。", "en": "He must have gotten home by now.", "note": "must have p.p. = したに違いない" },
         { "id": "a-modal-perfect-002", "ja": "彼女がそんなことを言ったはずがない。", "en": "She can't have said something like that.", "note": "can't have p.p. = したはずがない" },
         { "id": "a-modal-perfect-003", "ja": "もっと早く言ってくれればよかったのに。", "en": "You should have told me earlier." },
-        { "id": "a-modal-perfect-004", "ja": "そんなに急ぐ必要はなかったのに。", "en": "You needn't have rushed like that.", "note": "米口語では You didn't have to rush. も自然" },
+        { "id": "a-modal-perfect-004", "ja": "そんなに急ぐ必要はなかったのに。", "en": "You needn't have rushed like that.", "note": "米口語では You didn't have to rush. も自然", "rare": true },
         { "id": "a-modal-perfect-005", "ja": "そのメールは迷惑メールフォルダに入ってしまったのかもしれない。", "en": "The email may have gone to the spam folder." },
         { "id": "a-modal-perfect-006", "ja": "計算を間違えたかもしれない。", "en": "I might have made a mistake in the calculation." },
         { "id": "a-modal-perfect-007", "ja": "ファイルを保存しておくべきだった。", "en": "I should have saved the file." },

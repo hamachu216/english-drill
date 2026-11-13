@@ -1812,13 +1812,15 @@
           "id": "b-conj-018",
           "ja": "急ぎなさい、さもないと電車に乗り遅れますよ。",
           "en": "Hurry up, or you'll miss the train.",
-          "note": "命令文, or …「さもないと…」"
+          "note": "命令文, or …「さもないと…」",
+          "rare": true
         },
         {
           "id": "b-conj-019",
           "ja": "一生懸命勉強しなさい、そうすれば試験に合格できますよ。",
           "en": "Study hard, and you will pass the exam.",
-          "note": "命令文, and …「そうすれば…」"
+          "note": "命令文, and …「そうすれば…」",
+          "rare": true
         },
         {
           "id": "b-conj-020",

@@ -36,7 +36,7 @@ $('theme').onclick = () => {
 const el = (tag, props, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids); return n; };
 const LEVEL_ICONS = ['📘', '🚀', '💬', '🎤', '🎓'];
 const PHASE = {
-  review: ['🔁', '前回の苦手を復習'], grammar: ['📘', '基礎文法'], colloc: ['🔗', '形容詞＋前置詞'], pattern: ['🧩', '研究英語の構文'],
+  review: ['🔁', '前回の苦手を復習'], grammar: ['📘', '基礎文法'], pattern: ['🧩', '研究英語の構文'],
   reply: ['🗣', '質疑応答の切り返し'], qa: ['💬', 'Research Q&A'], impromptu: ['⚡', '即興 Q&A'], check: ['📝', '週1回の初見チェック'],
 };
 const QA_LEVEL = ['Beginner', 'Intermediate', 'Advanced'];

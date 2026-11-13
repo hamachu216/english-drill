@@ -11,10 +11,11 @@ export const MISS = 0, HINT = 1, OK = 2;
 export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, ok: OK };
 
 const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
-const KINDS = ['grammar', 'colloc', 'pattern', 'reply', 'qa'];
-const SECONDS = { grammar: 35, colloc: 35, pattern: 45, reply: 30, qa: 90 }; // rough cost of one card: turns minutes into card counts
-// Short kinds outside the split, one card per this many minutes: 5 adjective + preposition pairs and 6 Q&A replies in 30 minutes.
-const EVERY = { colloc: 6, reply: 5 };
+const KINDS = ['grammar', 'pattern', 'reply', 'qa']; // adjective + preposition pairs are the Collocation Drill's alone
+// Rough time one card takes — saying it, reading the example and its note, judging it: turns minutes into card counts.
+const SECONDS = { grammar: 60, pattern: 75, reply: 60, qa: 120 };
+// Short kinds outside the split, one card per this many minutes: 5 Q&A replies in 30 minutes.
+const EVERY = { reply: 6 };
 const NEUTRAL = 0.65; // fluency at which the split is the default 15 : 10 : 5 minutes
 const BLOCK = 4; // sentences drilled on the day a frame is introduced, after the one to listen to and repeat
 const UNLOCK = 6; // questions answered without a hint on a second day or later, before impromptu Q&A starts
@@ -116,7 +117,7 @@ const fluent = (items, hist) => items.filter((c) => c.kind === 'qa' && hist[c.id
 // then new cards, then — when nothing is left — the cards practiced longest ago. Unless the review pile is
 // more than two sessions deep, a quarter of each kind is kept for new cards, so there is progress every day.
 // Every kind gets at least one card, so research English is touched no matter how grammar is going.
-// Order: cards failed last time → grammar → adjective + preposition → sentence frames → Q&A replies → Q&A → (weekly) first-sight check.
+// Order: cards failed last time → grammar → sentence frames → Q&A replies → Q&A → (weekly) first-sight check.
 export function planSession({ items, hist, days, day, minutes, rand = Math.random }) {
   const rec = (c) => hist[c.id];
   const due = (c) => rec(c)?.due <= day;
@@ -147,7 +148,6 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
       pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, 1 + BLOCK)) : [])],
       qa: [...fresh].sort(easyFirst),
       reply: [...fresh].sort(easyFirst),
-      colloc: [...fresh].sort(easyFirst),
     }[kind];
     return [...new Set([...reviews, ...focus, ...added, ...pile, ...rested])].slice(0, n);
   };
@@ -168,7 +168,6 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   return [
     ...KINDS.flatMap((k) => chosen[k].filter(sore)).map(step('review')),
     ...[...old('grammar'), ...added('grammar')].map(step('grammar')),
-    ...[...old('colloc'), ...added('colloc')].map(step('colloc')),
     ...old('pattern').map(step('pattern')),
     // A new frame opens with its first sentence to listen to and repeat; that sentence is recalled on a later day.
     ...added('pattern').map((c, i, a) => (c.topic in stage || a[i - 1]?.topic === c.topic ? step('pattern')(c) : { id: c.id, phase: 'pattern', intro: true })),
