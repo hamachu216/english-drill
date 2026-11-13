@@ -39,7 +39,7 @@ const PHASE = {
   review: ['🔁', '前回の苦手を復習'], grammar: ['📘', '基礎文法'], colloc: ['🔗', '形容詞＋前置詞'], pattern: ['🧩', '研究英語の構文'],
   reply: ['🗣', '質疑応答の切り返し'], qa: ['💬', 'Research Q&A'], impromptu: ['⚡', '即興 Q&A'], check: ['📝', '週1回の初見チェック'],
 };
-const QA_LEVEL = ['初級', '中級', '上級'];
+const QA_LEVEL = ['Beginner', 'Intermediate', 'Advanced'];
 
 // Today's session if there is one (finished or not). A session from another day, or one whose cards are gone, is ignored.
 const session = () => (state.session?.day === today() && state.session.queue.every((s) => byId.has(s.id)) ? state.session : null);
