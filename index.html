@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Research English Drill</title>
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#f5f4fb" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121220" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f1f3ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1513" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -27,7 +27,7 @@
       <div class="ring" id="ring"><div><b id="today">0</b><span id="goal-of"></span></div></div>
       <div>
         <p class="greet" id="greet"></p>
-        <p class="streak">🔥<b id="streak">0</b>日連続</p>
+        <p class="streak"><b id="streak">0</b>日連続</p>
         <p class="goal-label" id="goal-label"></p>
       </div>
     </div>
@@ -36,18 +36,18 @@
       <ul id="menu"></ul>
       <p class="muted" id="mix"></p>
       <button id="start" class="primary"></button>
-      <button id="short" class="wide">⏱ 時間がない日は10分版</button>
+      <button id="short" class="wide">時間がない日は10分版</button>
       <p id="flash"></p>
     </div>
     <div class="card drill">
       <div class="cal-head"><b>Phrase Drill</b></div>
       <p class="muted" id="cd-summary"></p>
-      <button id="cd-start" class="primary wide">▶ 始める（10問ずつ）</button>
+      <button id="cd-start" class="primary wide">始める（10問ずつ）</button>
     </div>
     <div class="card mock">
       <div class="cal-head"><b>模擬質疑応答</b></div>
       <p class="muted" id="mock-summary"></p>
-      <button id="mock-start" class="primary wide">▶ 始める（5問＋追加質問）</button>
+      <button id="mock-start" class="primary wide">始める（5問＋追加質問）</button>
     </div>
     <div class="card now">
       <div class="cal-head"><b>いまの状況</b></div>
@@ -66,12 +66,12 @@
       <div id="heatmap" aria-label="過去12週間の学習記録"></div>
     </div>
     <details class="card panel free">
-      <summary>📚 自由に練習</summary>
+      <summary>自由に練習</summary>
       <div class="levels" id="levels"></div>
-      <button id="free" class="wide">▶ 選んだものを練習</button>
+      <button id="free" class="wide">選んだものを練習</button>
     </details>
     <details class="card panel settings">
-      <summary>⚙️ 設定</summary>
+      <summary>設定</summary>
       <div class="row"><span>1日の練習時間の目安</span><select id="minutes">
         <option value="15">15分</option><option value="20">20分</option><option value="30">30分</option><option value="45">45分</option><option value="60">60分</option>
       </select></div>
@@ -83,18 +83,18 @@
       <div class="row" id="voice-row"><span>読み上げの声</span><select id="voice"></select></div>
     </details>
     <details class="card panel backup">
-      <summary>💾 記録のバックアップ</summary>
+      <summary>記録のバックアップ</summary>
       <p class="muted">記録はこのブラウザの中にだけ保存されています。ファイルに書き出しておくと、ブラウザのデータを消したときや別の端末に移るときに読み込んで戻せます。</p>
       <p class="muted" id="kept"></p>
       <div class="pair">
-        <button id="export">⬇ 書き出す</button>
-        <button id="import">⬆ 読み込む</button>
+        <button id="export">書き出す</button>
+        <button id="import">読み込む</button>
       </div>
       <input id="import-file" type="file" accept="application/json,.json" hidden>
       <p id="backup-msg" class="muted"></p>
     </details>
     <details class="card panel sources">
-      <summary>🔗 参考サイト</summary>
+      <summary>参考サイト</summary>
       <ul id="refs"></ul>
       <p class="muted">問題は本サイトのオリジナルです。各サイトは分野・文法項目の構成と、収録した形容詞＋前置詞の組み合わせ（EnglishClub: Adjective + Preposition）の参考にしています（例文・訳・解説はオリジナル）。質疑応答の切り返しの定型句だけは、Wordvice の資料「研究発表の質疑応答対処法」の英文を収録しています。</p>
     </details>
@@ -102,29 +102,29 @@
 
   <section id="study" hidden>
     <div class="bar">
-      <button id="quit" class="icon-btn" aria-label="中断してホームへ">✕</button>
+      <button id="quit" class="icon-btn" aria-label="中断してホームへ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       <div class="dots" id="dots"></div>
       <span class="pill" id="count"></span>
     </div>
     <div class="timer" id="timer-track"><i id="timer"></i></div>
     <div class="card" id="qcard">
       <p class="tag" id="track"></p>
-      <div class="row ask"><p class="prompt" id="prompt"></p><button id="listen" class="icon-btn" aria-label="質問を読み上げ">🔊</button></div>
+      <div class="row ask"><p class="prompt" id="prompt"></p><button id="listen" class="icon-btn" aria-label="質問を読み上げ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/></svg></button></div>
       <p class="sub" id="sub"></p>
       <dl class="hints" id="hints"></dl>
       <textarea id="input" placeholder="声に出して答えよう（入力は任意。🎤で文字起こし）" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="actions">
-        <button id="mic" hidden aria-label="音声入力">🎤</button>
-        <button id="hint">💡 ヒント</button>
+        <button id="mic" hidden aria-label="音声入力"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></button>
+        <button id="hint">ヒント</button>
         <button id="unknown">わからない</button>
         <button id="reveal" class="primary"></button>
       </div>
       <div class="answer" id="answer" hidden>
-        <p class="timeout" id="timeout" hidden>⏱ 時間切れ</p>
+        <p class="timeout" id="timeout" hidden>時間切れ</p>
         <p class="mine" id="mine"></p>
         <button id="keep" class="wide" hidden></button>
         <p class="muted" id="model-label"></p>
-        <div class="row"><p class="en" id="en"></p><button id="speak" class="icon-btn" aria-label="読み上げ">🔊</button></div>
+        <div class="row"><p class="en" id="en"></p><button id="speak" class="icon-btn" aria-label="読み上げ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/></svg></button></div>
         <audio id="playback" controls hidden></audio>
         <p class="note" id="note"></p>
         <p class="tip" id="tip"></p>
@@ -132,14 +132,13 @@
         <p class="muted refs" id="card-refs"></p>
         <p class="muted judge-label" id="judge-label">最初に答えたときの出来は？</p>
         <div class="judge" id="judge"></div>
-        <button id="again" class="wide">🔁 同じ質問にもう一度答える</button>
+        <button id="again" class="wide">同じ質問にもう一度答える</button>
       </div>
     </div>
   </section>
 
   <section id="result" hidden>
     <div class="card result-hero">
-      <div class="emoji" id="result-emoji"></div>
       <div class="ring" id="result-ring"><div><b id="result-score"></b><span>ヒントなし</span></div></div>
       <h2 id="result-title"></h2>
       <p class="muted" id="result-sub"></p>

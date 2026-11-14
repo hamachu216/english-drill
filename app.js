@@ -34,10 +34,9 @@ $('theme').onclick = () => {
 // ---- home
 // DOM is only ever built from nodes (never HTML strings), so data can't inject markup.
 const el = (tag, props, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids); return n; };
-const LEVEL_ICONS = ['📘', '🚀', '💬', '🎤', '🎓'];
 const PHASE = {
-  review: ['🔁', '前回の苦手を復習'], grammar: ['📘', '基礎文法'], pattern: ['🧩', '研究英語の構文'],
-  reply: ['🗣', '質疑応答の切り返し'], qa: ['💬', 'Research Q&A'], mock: ['🎤', '模擬質疑応答'], check: ['📝', '週1回の初見チェック'],
+  review: '前回の苦手を復習', grammar: '基礎文法', pattern: '研究英語の構文',
+  reply: '質疑応答の切り返し', qa: 'Research Q&A', mock: '模擬質疑応答', check: '週1回の初見チェック',
 };
 const QA_LEVEL = ['Beginner', 'Intermediate', 'Advanced'];
 
@@ -48,16 +47,15 @@ const left = (s) => s.queue.length - s.idx;
 const plan = (minutes, salt = '') => planSession({ items: cards, hist: state.hist, days: state.days, day: today(), minutes, rand: seeded(today() + salt) });
 const fresh = (minutes, salt) => ({ day: today(), queue: plan(minutes, salt), idx: 0, grades: [] });
 
-const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, [icon, name]]) => {
+const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, name]) => {
   const steps = queue.filter((s) => s.phase === phase), asked = steps.filter((s) => !s.intro && s.follow == null);
   const count = asked.reduce((n, s) => n.set(byId.get(s.id).deck.title, (n.get(byId.get(s.id).deck.title) ?? 0) + 1), new Map());
   const frames = steps.filter((s) => s.intro).map((s) => byId.get(s.id).deck.frame);
   const detail = frames.length ? `新しい型: ${frames.join(' / ')}`
     : phase === 'grammar' || phase === 'pattern' ? [...count].sort((a, b) => b[1] - a[1]).slice(0, 2).map(([t]) => t).join('・') : '';
   return asked.length ? [el('li', {},
-    el('span', { className: 'icon', textContent: icon }),
     el('span', {}, el('b', { textContent: name }), el('span', { className: 'sub', textContent: detail })),
-    el('span', { className: 'pill', textContent: `${asked.length}問` }))] : [];
+    el('span', { className: 'count', textContent: `${asked.length}問` }))] : [];
 });
 
 // The Phrase Drill: adjective + preposition pairs and backchannels, mixed, outside the daily session.
@@ -72,19 +70,19 @@ function renderHome() {
   const d = today(), s = session(), done = s && !left(s), { minutes, level } = state.settings;
   const queue = s ? s.queue : plan(minutes);
   const hour = new Date().getHours();
-  $('greet').textContent = hour < 5 || hour >= 18 ? 'Good evening 🌙' : hour < 11 ? 'Good morning ☀️' : 'Good afternoon 🌤';
+  $('greet').textContent = hour < 5 || hour >= 18 ? 'Good evening' : hour < 11 ? 'Good morning' : 'Good afternoon';
   $('streak').textContent = streak(state.log, d);
   $('today').textContent = s ? s.idx : 0;
   $('goal-of').textContent = `/ ${queue.length}`;
   $('ring').style.setProperty('--p', s && queue.length ? (s.idx / queue.length) * 100 : 0);
-  $('goal-label').textContent = done ? '🎉 今日の練習は完了！' : s ? `あと${left(s)}問で今日は完了` : '';
+  $('goal-label').textContent = done ? '今日の練習は完了！' : s ? `あと${left(s)}問で今日は完了` : '';
   $('menu-time').textContent = done ? '' : s ? `残り${left(s)}問` : `約${minutes}分`;
   $('menu').replaceChildren(...(done
     ? [el('li', { className: 'muted', textContent: '今日のメニューは終わりました。明日は今日の結果をもとに、新しいメニューが自動で用意されます。' })]
     : menuRows(queue.slice(s?.idx ?? 0))));
   const share = mix(state.days, cards, d).grammar;
   $('mix').textContent = done ? '' : share > 0.55 ? '最近の結果から、基礎文法を多めにしています。' : share < 0.45 ? '基礎が安定してきたので、研究英語を多めにしています。' : '';
-  $('start').textContent = done ? '＋ もう少し練習する（約5分）' : s ? '▶ 続きから再開する' : '▶ 今日の練習を始める';
+  $('start').textContent = done ? 'もう少し練習する（約5分）' : s ? '続きから再開する' : '今日の練習を始める';
   $('short').hidden = !!s;
 
   const o = overview(cards, state.hist, d), pr = progress(drillCards, state.hist);
@@ -122,7 +120,7 @@ function renderHome() {
   $('levels').replaceChildren(...sets.map((f) => {
     const label = el('label', { className: 'level' },
       el('input', { type: 'radio', name: 'level', value: f.level, checked: f.level === (level <= 2 ? 1 : level) }),
-      el('span', { className: 'icon', textContent: LEVEL_ICONS[f.level - 1] }),
+      el('span', { className: 'icon', textContent: f.level === 1 ? '1·2' : f.level }),
       el('span', {},
         el('span', { className: 'name', textContent: f.name }),
         el('span', { className: 'sub', textContent: `${f.decks.length}トピック · ${f.decks.reduce((n, d) => n + d.cards.length, 0)}問` })),
@@ -191,18 +189,18 @@ function showStep() {
   // A backchannel answers what someone just said (`cur.said`, shown, not read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = cur.kind === 'reply', back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
   now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : ask.q }; // audio: what 🔊 reads
-  const talk = isTalk(), [icon, name] = PHASE[step.phase] ?? [];
+  const talk = isTalk();
   // Free practice keeps its timer setting (not the Collocation Drill: composing a sentence takes its time);
   // an Intermediate question gets a gentle 45s bar that never cuts you off.
   const sec = run.free && !drill(cur) ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
   $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q || dictate ? 4 : drill(cur) ? 5 : 3)})`);
   $('track').textContent = [
-    step.retry && '🔁 もう一度',
-    run.free ? `${run.retry ? '🔁 復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : `Lv${cur.level}`}` : `${icon} ${name}`,
+    step.retry && 'もう一度',
+    run.free ? `${run.retry ? '復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : `Lv${cur.level}`}` : PHASE[step.phase],
     !drill(cur) && cur.deck.title, // a pair's deck is its preposition, a backchannel's its function: the answer
     step.follow != null ? '追加質問' : step.intro ? '新しい型' : talk && !step.check && step.phase !== 'mock' && QA_LEVEL[step.retry ? 0 : step.level],
   ].filter(Boolean).join(' · ');
-  $('count').textContent = `${run.idx + 1} / ${run.queue.length}${sec ? ` · ⏱${sec}秒` : ''}`;
+  $('count').textContent = `${run.idx + 1} / ${run.queue.length}${sec ? ` · ${sec}秒` : ''}`;
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
@@ -227,7 +225,7 @@ function showStep() {
   $('input').value = '';
   $('hint').disabled = !hints.length;
   $('playback').hidden = true;
-  $('reveal').textContent = step.intro ? 'まねして言えた、次へ →' : '✓ 回答した';
+  $('reveal').textContent = step.intro ? 'まねして言えた、次へ →' : '回答した';
   $('answer').hidden = true;
   $('reveal').hidden = false;
   startTimer(sec, run.free && !drill(cur));
@@ -247,10 +245,10 @@ function startTimer(sec, forced) {
 }
 
 const LABEL = {
-  miss: '✕ 言えなかった', content: '✕ 内容が浮かばなかった', english: '✕ 英文にできなかった', hint: '💡 ヒントで言えた',
+  miss: '✕ 言えなかった', content: '✕ 内容が浮かばなかった', english: '✕ 英文にできなかった', hint: '△ ヒントで言えた',
   ok: ['○ 言えた', '○ 答えられた'],
 };
-const WROTE = { miss: '✕ 書き取れなかった', hint: '💡 ヒントで書き取れた', ok: '○ 書き取れた' }; // the same choices, for dictation
+const WROTE = { miss: '✕ 書き取れなかった', hint: '△ ヒントで書き取れた', ok: '○ 書き取れた' }; // the same choices, for dictation
 
 // The phrases to learn, highlighted in the sentence: an adjective + preposition pair, or what fills a frame.
 const mark = (en, parts) => parts.reduce((nodes, p) => nodes.flatMap((n) => {
@@ -336,7 +334,7 @@ function advance() {
   else showResult();
 }
 
-const CONFETTI = ['--accent', '--accent-2', '--lv1', '--lv2', '--lv3', '--lv5'];
+const CONFETTI = ['--accent', '--hl', '--lv1', '--lv3', '--lv4', '--lv5'];
 function confetti() {
   if (calm) return;
   for (let i = 0; i < 40; i++) {
@@ -353,7 +351,6 @@ function showResult() {
   run.missed = [...new Set(firsts.filter(([, g]) => g === MISS).map(([s]) => byId.get(s.id)))];
   const wrong = run.missed.length;
   show('result');
-  $('result-emoji').textContent = !wrong ? '🎉' : rate >= 0.7 ? '👍' : '💪';
   $('result-score').textContent = `${ok}/${n}`;
   $('result-ring').style.setProperty('--p', rate * 100);
   $('result-title').textContent = run.free ? (!wrong ? (run.retry ? '全部言えた！' : 'パーフェクト！') : rate >= 0.7 ? 'いい調子！' : 'ここから伸びる！')
@@ -368,7 +365,7 @@ function showResult() {
   if (!wrong || !run.free) confetti();
   $('result-list').replaceChildren(...run.missed.map((c) =>
     el('li', { className: 'card' }, el('p', { className: 'muted', textContent: c.ja ?? '' }), el('p', { className: 'en', textContent: (c.kind === 'qa' ? c.q : c.en) ?? c.collocation }))));
-  $('next-round').textContent = run.mock ? '🎤 別の5問でもう一度' : !run.free ? '＋ もう少し続ける（約5分）' : wrong ? `🔁 言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
+  $('next-round').textContent = run.mock ? '別の5問でもう一度' : !run.free ? 'もう少し続ける（約5分）' : wrong ? `言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
 }
 
 function finish() {
