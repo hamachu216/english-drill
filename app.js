@@ -18,7 +18,7 @@ const save = (patch) => { state = { ...state, ...patch }; try { localStorage.set
 const setSettings = (patch) => { save({ settings: { ...state.settings, ...patch } }); renderHome(); };
 
 // ---- theme
-const THEMES = { system: '◐ 自動', light: '☀ ライト', dark: '☾ ダーク' };
+const THEMES = { system: 'テーマ：自動', light: 'テーマ：ライト', dark: 'テーマ：ダーク' };
 function applyTheme() {
   const t = state.settings.theme;
   if (t === 'system') delete document.documentElement.dataset.theme;
@@ -188,7 +188,7 @@ function showStep() {
   // A Q&A reply is dictation: the stock phrase is read aloud and written down, with its meaning as the prompt.
   // A backchannel answers what someone just said (`cur.said`, shown, not read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = cur.kind === 'reply', back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
-  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : ask.q }; // audio: what 🔊 reads
+  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: step.intro || dictate ? cur.en : ask.q }; // audio: what the speaker button reads
   const talk = isTalk();
   // Free practice keeps its timer setting (not the Collocation Drill: composing a sentence takes its time);
   // an Intermediate question gets a gentle 45s bar that never cuts you off.
@@ -207,7 +207,7 @@ function showStep() {
   $('prompt').textContent = step.intro ? cur.deck.frame : talk ? now.ask.q : (ex ?? cur).ja;
   $('sub').textContent = step.intro ? `${cur.deck.ja}　例文を聞いて、まねして声に出そう`
     : ex ? '形容詞＋前置詞を使って、英文全体を声に出そう'
-    : dictate ? `場面：${cur.scene}　🔊 流れる返事を聞いて、書き取ろう`
+    : dictate ? `場面：${cur.scene}　流れる返事を聞いて、書き取ろう`
     : back ? `相手：${cur.said}　→ 相槌＋ひと言で返そう`
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
@@ -267,7 +267,7 @@ function reveal(timedOut = false) {
   const { ex } = now;
   now.model = ex ? ex.en : talk && step.level === 2 && !step.retry && ask.more ? `${ask.en} ${ask.more}` : ask.en;
   $('timeout').hidden = !timedOut;
-  $('model-label').textContent = talk ? '参考（架空の研究の一例）' : '';
+  $('model-label').textContent = talk ? '参考（架空の研究の一例）' : '回答例';
   // Accuracy practice compares your words with the model; fluency practice (Q&A) never marks your English.
   const compare = typed && !talk;
   $('en').replaceChildren(...(compare ? wordDiff(typed, now.model).flatMap(({ w, ok }) => [el('span', { className: ok ? 'hit' : 'miss', textContent: w }), ' ']) : mark(now.model, phrases(cur))));
@@ -284,7 +284,7 @@ function reveal(timedOut = false) {
     ex?.also && `この文では ${ex.also.join(' / ')} も使えます。`,
     cur.deck.basic && '相槌は、上の一覧の言い方ならどれでも正解です。',
     sibs.length && `同じ形容詞の別の組み合わせ：${sibs.map((s) => `${s.collocation}（${s.ja}）`).join(' ／ ')}`,
-    now.dictate ? `${compare ? '緑＝書き取れた語。' : ''}黒い語は聞き取れなかったところ。🔊 でもう一度聞いてみよう。`
+    now.dictate ? `${compare ? '緑＝書き取れた語。' : ''}黒い語は聞き取れなかったところ。読み上げボタンでもう一度聞いてみよう。`
       : `${compare ? '緑＝あなたの回答にもあった語（文字起こしは不正確なこともあります）。' : ''}模範解答と違う言い方でも、意味と文法が合っていれば正解です。`,
   ].filter(Boolean).join('\n');
   $('card-refs').replaceChildren(...(cur.deck.refs?.length ? ['参考: ', ...cur.deck.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)]))] : []));
@@ -334,17 +334,6 @@ function advance() {
   else showResult();
 }
 
-const CONFETTI = ['--accent', '--hl', '--lv1', '--lv3', '--lv4', '--lv5'];
-function confetti() {
-  if (calm) return;
-  for (let i = 0; i < 40; i++) {
-    const c = el('i', { className: 'confetti' });
-    Object.assign(c.style, { left: `${Math.random() * 100}vw`, background: `var(${CONFETTI[i % CONFETTI.length]})`, animationDelay: `${Math.random() * 0.4}s` });
-    document.body.append(c);
-    setTimeout(() => c.remove(), 2200);
-  }
-}
-
 function showResult() {
   const firsts = run.queue.map((s, i) => [s, run.grades[i]]).filter(([s, g]) => g != null && !s.retry);
   const n = firsts.length, count = (g) => firsts.filter(([, x]) => x === g).length, ok = firsts.filter(([, g]) => g >= OK).length, rate = n ? ok / n : 1;
@@ -362,7 +351,6 @@ function showResult() {
   $('miss-head').textContent = run.free ? 'もう一度チャレンジする問題' : run.mock ? '答えられなかった質問' : '明日もう一度出る問題';
   $('miss-head').hidden = !wrong;
   pop($('result'));
-  if (!wrong || !run.free) confetti();
   $('result-list').replaceChildren(...run.missed.map((c) =>
     el('li', { className: 'card' }, el('p', { className: 'muted', textContent: c.ja ?? '' }), el('p', { className: 'en', textContent: (c.kind === 'qa' ? c.q : c.en) ?? c.collocation }))));
   $('next-round').textContent = run.mock ? '別の5問でもう一度' : !run.free ? 'もう少し続ける（約5分）' : wrong ? `言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
