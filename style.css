@@ -57,9 +57,9 @@ button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-
   .primary:hover { background: color-mix(in srgb, var(--text) 84%, var(--bg)); }
 }
 /* Buttons that start something: label on the left, an arrow at the far end. */
-#start, #cd-start, #mock-start, #free { display: flex; align-items: center; justify-content: space-between; text-align: left; padding: 0 20px; }
-#start::after, #cd-start::after, #mock-start::after, #free::after { content: "→"; font: 400 1.25em/1 var(--serif); transition: transform .2s; }
-@media (hover: hover) { #start:hover::after, #cd-start:hover::after, #mock-start:hover::after, #free:hover::after { transform: translateX(4px); } }
+#start, #cd-start, #ld-start, #mock-start, #free { display: flex; align-items: center; justify-content: space-between; text-align: left; padding: 0 20px; }
+#start::after, #cd-start::after, #ld-start::after, #mock-start::after, #free::after { content: "→"; font: 400 1.25em/1 var(--serif); transition: transform .2s; }
+@media (hover: hover) { #start:hover::after, #cd-start:hover::after, #ld-start:hover::after, #mock-start:hover::after, #free:hover::after { transform: translateX(4px); } }
 #theme { min-height: 32px; padding: 0 2px; border: 0; font-size: .78rem; letter-spacing: .04em; background: transparent; color: var(--muted); }
 button svg { width: 22px; height: 22px; display: block; margin: auto; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; stroke-linejoin: miter; }
 /* A sheet: the page being studied. Sections of the home screen and the result are not sheets (below). */
@@ -117,11 +117,12 @@ p:empty, #menu .sub:empty { display: none; }
 .grid .weak td { text-align: left; border-top: 0; padding-top: 0; font-size: .78rem; font-weight: 400; color: var(--muted); }
 .drill { --lv: var(--lv5); }
 .mock { --lv: var(--lv4); }
-.drill, .mock { display: flex; flex-direction: column; }
-.drill .cal-head, .mock .cal-head { margin-bottom: 4px; }
+.listen { --lv: var(--lv4); }
+.drill, .listen, .mock { display: flex; flex-direction: column; }
+.drill .cal-head, .listen .cal-head, .mock .cal-head { margin-bottom: 4px; }
 #cd-summary, #mock-summary { margin: 0; flex: 1; }
-.drill .primary, .mock .primary { margin-top: 14px; background: transparent; color: var(--text); }
-@media (hover: hover) { .drill .primary:hover, .mock .primary:hover { background: var(--text); color: var(--bg); } }
+.drill .primary, .listen .primary, .mock .primary { margin-top: 14px; background: transparent; color: var(--text); }
+@media (hover: hover) { .drill .primary:hover, .listen .primary:hover, .mock .primary:hover { background: var(--text); color: var(--bg); } }
 #mine { margin: 0 0 10px; white-space: pre-line; font: 600 1rem/1.7 var(--serif); }
 #keep { margin: 0 0 14px; }
 .levels { display: grid; border-bottom: 1px solid var(--line); }
@@ -229,8 +230,8 @@ textarea::placeholder { color: var(--muted); opacity: .8; font-family: var(--san
   h1 { font-size: 1.3rem; }
   /* Two columns, one row per pair of sections: the sections of a row start and end together. */
   #home { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 44px 56px;
-    grid-template-areas: "hero drill" "hero mock" "menu now" "history weekly" "free backup" "settings sources"; }
-  .hero { grid-area: hero; } .drill { grid-area: drill; } .mock { grid-area: mock; } .menu { grid-area: menu; } .now { grid-area: now; }
+    grid-template-areas: "hero drill" "hero listen" "hero mock" "menu now" "history weekly" "free backup" "settings sources"; }
+  .hero { grid-area: hero; } .drill { grid-area: drill; } .listen { grid-area: listen; } .mock { grid-area: mock; } .menu { grid-area: menu; } .now { grid-area: now; }
   .history { grid-area: history; } .weekly { grid-area: weekly; }
   .free { grid-area: free; } .settings { grid-area: settings; } .backup { grid-area: backup; } .sources { grid-area: sources; }
   #home > details { align-self: start; } /* opening one panel doesn't stretch its neighbour */

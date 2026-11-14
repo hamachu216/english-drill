@@ -61,6 +61,10 @@ const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, name]) => {
 // The Phrase Drill: adjective + preposition pairs and backchannels, mixed, outside the daily session.
 const drill = (c) => c.kind === 'colloc' || c.kind === 'backchannel';
 const drillCards = cards.filter(drill), replyCount = cards.filter((c) => c.kind === 'reply').length, qaCount = cards.filter((c) => c.kind === 'qa').length;
+// The Listening Drill: a short talk is heard, the one sentence that answers the card's task is written down.
+const listening = (c) => c.kind === 'listening', heardCards = cards.filter(listening), TALKS = 3;
+// Both drills go on until each card is said or written in full, and have a middle grade for "only part of it".
+const inFull = (c) => drill(c) || listening(c);
 const stepLine = ([, practising, settled]) => `練習中 ${practising} ・ 定着 ${settled}`;
 const sum = (...xs) => xs.reduce((a, b = []) => a.map((v, i) => v + (b[i] ?? 0)), [0, 0]);
 const tenths = ([n = 0, said = 0] = []) => (n < 5 ? '—' : `${Math.round((said / n) * 10)}割`);
@@ -96,6 +100,8 @@ function renderHome() {
     ...pair('フレーズ', `${stepLine(pr)} ／ ${drillCards.length}`));
   const wrong = drillCards.filter((c) => state.hist[c.id]?.box === 0).length;
   $('cd-summary').textContent = `未学習 ${pr[0]} ・ ${stepLine(pr)}${wrong ? ` ・ ✕ 前回間違えた ${wrong}（次の「始める」で最初に出ます）` : ''}`;
+  const heard = progress(heardCards, state.hist);
+  $('ld-summary').textContent = `数文の話を聞いて、要の1文を書き取る ・ 未学習 ${heard[0]} ・ ${stepLine(heard)}`;
   $('mock-summary').textContent = `英語の質問だけで、自分の研究について答える ・ 保存した回答例 ${Object.keys(state.answers).length} / ${qaCount}`;
   // This week, plus earlier weeks that have something to show.
   $('weekly').tBodies[0].replaceChildren(...weekly(state.days, cards, d).filter((w, i) => !i || Object.keys(w.kinds).length).flatMap((w) => {
@@ -171,15 +177,15 @@ function begin(r) {
 // Free practice: rounds of ROUND from a set — all the grammar (Lv1–2), Lv3–5, or the Phrase Drill's cards —
 // in the order that helps most (wrong last time, due, new, then the rest).
 const levelCards = () => cards.filter((c) => (state.settings.level <= 2 ? c.kind === 'grammar' : c.level === state.settings.level));
-const phraseCards = () => drillCards;
+const phraseCards = () => drillCards, talkCards = () => heardCards;
 let freeList = levelCards;
 function playFree(missed = [], asked = []) {
-  const r = nextRound(missed, pool, byNeed(freeList(), state.hist, today()));
+  const size = freeList === talkCards ? TALKS : ROUND, r = nextRound(missed, pool, byNeed(freeList(), state.hist, today()), undefined, size);
   pool = r.pool;
   // A retry round has just seen its answers; otherwise the Phrase Drill shows what hasn't been said yet before asking.
   // The same steps again (for a pair: the same sentence), until each is said in full.
   const queue = freeList === phraseCards && !r.retry ? drillSteps(r.cards, state.hist) : r.cards.map((c) => asked.find((s) => s.id === c.id && !s.intro) ?? { id: c.id, phase: 'free' });
-  begin({ free: true, retry: r.retry, queue, idx: 0, grades: [] });
+  begin({ free: true, retry: r.retry, size, queue, idx: 0, grades: [] });
 }
 
 const TALK_GUIDE = ['自分の研究で、まずは1文で。時間は気にしなくてOK', '入れる要素を見ながら、1〜2文で', 'ヒントなしで、2〜3文で'];
@@ -190,17 +196,17 @@ function showStep() {
   const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
   // A Q&A reply is dictation: the stock phrase is read aloud and written down, with its meaning as the prompt.
   // A backchannel answers what someone just said (`cur.said`, shown, not read aloud) with a reaction and one more sentence, said from Japanese.
-  const dictate = cur.kind === 'reply', back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
+  const dictate = cur.kind === 'reply' || listening(cur), back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
   const shows = step.intro ? lesson(cur, rec) : null; // a step to listen to and repeat, not answered
-  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: shows?.en ?? (dictate ? cur.en : ask.q) }; // audio: what the speaker button reads
+  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: shows?.en ?? (dictate ? cur.text ?? cur.en : ask.q) }; // audio: what the speaker button reads
   const talk = isTalk();
   // Free practice keeps its timer setting (not the Collocation Drill: composing a sentence takes its time);
   // an Intermediate question gets a gentle 45s bar that never cuts you off.
-  const sec = run.free && !drill(cur) ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
+  const sec = run.free && !inFull(cur) ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
   $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q || dictate ? 4 : drill(cur) ? 5 : 3)})`);
   $('track').textContent = [
     step.retry && 'もう一度',
-    run.free ? `${run.retry ? '復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : `Lv${cur.level}`}` : PHASE[step.phase],
+    run.free ? `${run.retry ? '復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : listening(cur) ? 'Listening Drill' : `Lv${cur.level}`}` : PHASE[step.phase],
     !drill(cur) && cur.deck.title, // a pair's deck is its preposition, a backchannel's its function: the answer
     step.follow != null ? '追加質問' : step.intro ? (drill(cur) ? '聞いてまねする' : '新しい型') : talk && !step.check && step.phase !== 'mock' && QA_LEVEL[step.retry ? 0 : step.level],
   ].filter(Boolean).join(' · ');
@@ -208,9 +214,10 @@ function showStep() {
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
-  $('prompt').textContent = shows ? shows.head : talk ? now.ask.q : (ex ?? cur).ja;
+  $('prompt').textContent = shows ? shows.head : talk ? now.ask.q : cur.task ?? (ex ?? cur).ja;
   $('sub').textContent = shows ? `${shows.ja}　例文を聞いて、まねして声に出そう${drill(cur) ? '（次に、別の文で言います）' : ''}`
     : ex ? `${cur.adj} ＋ 前置詞を使って、英文全体を声に出そう`
+    : cur.text ? `場面：${cur.scene}　全体を聞いて、答えになる1文を書き取ろう（何度聞いてもよい）`
     : dictate ? `場面：${cur.scene}　流れる返事を聞いて、書き取ろう`
     : back ? `相手：${cur.said}　→ 相槌＋ひと言で返そう`
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
@@ -232,7 +239,7 @@ function showStep() {
   $('reveal').textContent = step.intro ? 'まねして言えた、次へ →' : '回答した';
   $('answer').hidden = true;
   $('reveal').hidden = false;
-  startTimer(sec, run.free && !drill(cur));
+  startTimer(sec, run.free && !inFull(cur));
   if (now.audio && (dictate || state.settings.listen)) speak(now.audio);
 }
 
@@ -253,7 +260,9 @@ const LABEL = {
   ok: ['○ 言えた', '○ 答えられた'],
 };
 const PARTLY = '△ 一部だけ言えた'; // the Phrase Drill's middle: the pair or the reaction, but not the whole sentence unaided
+const partly = (c) => (listening(c) ? WROTE_PARTLY : PARTLY);
 const WROTE = { miss: '✕ 書き取れなかった', hint: '△ ヒントで書き取れた', ok: '○ 書き取れた' }; // the same choices, for dictation
+const WROTE_PARTLY = '△ 一部だけ書き取れた';
 
 // The phrases to learn, highlighted in the sentence: an adjective + preposition pair, or what fills a frame.
 const mark = (en, parts) => parts.reduce((nodes, p) => nodes.flatMap((n) => {
@@ -284,6 +293,10 @@ function reveal(timedOut = false) {
     $('note').textContent = `${cur.collocation} ＝ ${cur.ja}`;
     $('tip').textContent = cur.note;
   }
+  if (cur.text) { // the whole talk, the sentence asked for marked, and what it all means
+    $('note').replaceChildren(...mark(cur.text, [cur.en]));
+    $('tip').textContent = cur.textJa;
+  }
   const sibs = ex ? siblings(cur, cards) : [];
   $('caveat').textContent = talk ? 'まず伝わることが大事。自分の研究の内容で1文でも言えればOKで、文法の細かい正しさは気にしなくて大丈夫です。' : [
     ex?.also && `この文では ${ex.also.join(' / ')} も使えます。`,
@@ -294,11 +307,11 @@ function reveal(timedOut = false) {
   $('card-refs').replaceChildren(...(cur.deck.refs?.length ? ['参考: ', ...cur.deck.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)]))] : []));
   // "I don't know" is a miss, with nothing to judge. "Answer again" keeps the first attempt's hint use and so its choices.
   const verdict = now.gaveUp && !talk ? '✕ わからなかった — 次へ' : null;
-  const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : choices(talk, now.hinted, drill(cur));
+  const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : choices(talk, now.hinted, inFull(cur));
   $('judge').replaceChildren(...keys.map((key) =>
-    el('button', { className: key, onclick: () => grade(key), textContent: verdict ?? (now.dictate ? WROTE[key] : key === 'ok' ? LABEL.ok[+talk] : key === 'hint' && drill(cur) ? PARTLY : LABEL[key]) })));
+    el('button', { className: key, onclick: () => grade(key), textContent: verdict ?? (key === 'hint' && inFull(cur) ? partly(cur) : now.dictate ? WROTE[key] : key === 'ok' ? LABEL.ok[+talk] : LABEL[key]) })));
   // The Phrase Drill judges two things: the pair or the reaction, and the rest of the sentence.
-  $('judge-label').textContent = drill(cur) ? `✕ ${ex ? `${cur.collocation} ` : '相槌'}が出なかった ／ △ 残りが出なかった・ヒントを見た ／ ○ 全文を言えた（回答例と違う言い方でもよい）` : JUDGE;
+  $('judge-label').textContent = listening(cur) ? '✕ ほとんど書き取れなかった ／ △ 語が抜けた・ヒントを見た ／ ○ 意味が変わらない程度に書き取れた' : drill(cur) ? `✕ ${ex ? `${cur.collocation} ` : '相槌'}が出なかった ／ △ 残りが出なかった・ヒントを見た ／ ○ 全文を言えた（回答例と違う言い方でもよい）` : JUDGE;
   $('judge-label').hidden = verdict != null;
   $('again').hidden = !talk;
   $('answer').hidden = false;
@@ -344,15 +357,17 @@ function showResult() {
   const firsts = run.queue.map((s, i) => [s, run.grades[i]]).filter(([s, g]) => g != null && !s.retry);
   const n = firsts.length, count = (g) => firsts.filter(([, x]) => x === g).length, ok = firsts.filter(([, g]) => g >= OK).length, rate = n ? ok / n : 1;
   // To do again: what was missed — and, in the Phrase Drill, what wasn't said in full (the rest of the sentence is learned by saying it).
-  run.missed = [...new Set(firsts.map(([s, g]) => [byId.get(s.id), g]).filter(([c, g]) => g === MISS || (g === HINT && drill(c))).map(([c]) => c))];
+  run.missed = [...new Set(firsts.map(([s, g]) => [byId.get(s.id), g]).filter(([c, g]) => g === MISS || (g === HINT && inFull(c))).map(([c]) => c))];
   const wrong = run.missed.length;
   show('result');
   $('result-score').textContent = `${ok}/${n}`;
   $('result-ring').style.setProperty('--p', rate * 100);
   $('result-title').textContent = run.free ? (!wrong ? (run.retry ? '全部言えた！' : 'パーフェクト！') : rate >= 0.7 ? 'いい調子！' : 'ここから伸びる！')
     : run.mock ? '模擬質疑応答、おつかれさま！' : '今日の練習、完了！';
-  $('result-sub').textContent = `${LABEL.ok[0]} ${ok} ・ ${run.free && freeList === phraseCards ? PARTLY : LABEL.hint} ${count(HINT)} ・ ${LABEL.miss} ${count(MISS)}`;
-  $('result-next').textContent = run.free ? (wrong ? `言えなかった${wrong}問を、言えるまで繰り返そう` : `次の${ROUND}問に進もう`)
+  const heard = run.free && freeList === talkCards, names = heard ? [WROTE.ok, WROTE_PARTLY, WROTE.miss] : [LABEL.ok[0], run.free && freeList === phraseCards ? PARTLY : LABEL.hint, LABEL.miss];
+  $('result-sub').textContent = `${names[0]} ${ok} ・ ${names[1]} ${count(HINT)} ・ ${names[2]} ${count(MISS)}`;
+  const not = heard ? '書き取れなかった' : '言えなかった';
+  $('result-next').textContent = run.free ? (wrong ? `${not}${wrong}問を、${heard ? '書き取れる' : '言える'}まで繰り返そう` : `次の${run.size}問に進もう`)
     : run.mock ? '答えにくかった質問は、回答例を保存しておくと次から手本になります。'
     : wrong ? '言えなかった問題は、明日のメニューの最初にもう一度出ます。' : '明日は今日の結果をもとに、新しいメニューが用意されます。';
   $('miss-head').textContent = run.free ? 'もう一度チャレンジする問題' : run.mock ? '答えられなかった質問' : '明日もう一度出る問題';
@@ -360,7 +375,7 @@ function showResult() {
   pop($('result'));
   $('result-list').replaceChildren(...run.missed.map((c) =>
     el('li', { className: 'card' }, el('p', { className: 'muted', textContent: c.ja ?? '' }), el('p', { className: 'en', textContent: (c.kind === 'qa' ? c.q : c.en) ?? c.collocation }))));
-  $('next-round').textContent = run.mock ? '別の5問でもう一度' : !run.free ? 'もう少し続ける（約5分）' : wrong ? `言えなかった${wrong}問にもう一度挑戦` : `次の${ROUND}問へ →`;
+  $('next-round').textContent = run.mock ? '別の5問でもう一度' : !run.free ? 'もう少し続ける（約5分）' : wrong ? `${not}${wrong}問にもう一度挑戦` : `次の${run.size}問へ →`;
 }
 
 function finish() {
@@ -376,11 +391,13 @@ function finish() {
 const more = () => begin(fresh(5, `+${state.log[today()] || 0}`));
 $('start').onclick = () => { const s = session(); if (!s) begin(fresh(state.settings.minutes)); else if (left(s)) begin(s); else more(); };
 $('short').onclick = () => begin(fresh(10));
-$('free').onclick = () => { if (freeList !== levelCards) { freeList = levelCards; pool = []; } playFree(); };
+$('free').onclick = () => startFree(levelCards)();
 const mock = () => begin({ mock: true, queue: mockSession(cards, state.hist), idx: 0, grades: [] });
 $('next-round').onclick = () => (run.free ? playFree(run.missed, run.queue) : run.mock ? mock() : more());
 $('mock-start').onclick = mock;
-$('cd-start').onclick = () => { if (freeList !== phraseCards) { freeList = phraseCards; pool = []; } playFree(); };
+const startFree = (list) => () => { if (freeList !== list) { freeList = list; pool = []; } playFree(); };
+$('cd-start').onclick = startFree(phraseCards);
+$('ld-start').onclick = startFree(talkCards);
 $('quit').onclick = $('home-btn').onclick = finish;
 // The hint button stays enabled while hints are left; it does nothing once the answer is out.
 // One press goes straight to the first letters, with any hint before them (in the Phrase Drill it stops once on the
@@ -409,7 +426,9 @@ function speak(text) {
   if (!canSpeak) return;
   const v = voices.find((x) => x.name === state.settings.voice) || voices[0];
   speechSynthesis.cancel();
-  speechSynthesis.speak(Object.assign(new SpeechSynthesisUtterance(text.replaceAll('...', ',')), { voice: v ?? null, lang: v?.lang ?? 'en-US', rate: 0.95 }));
+  // One utterance per sentence: some browsers cut a long utterance off part-way.
+  for (const s of text.replaceAll('...', ',').split(/(?<=[.?!])\s+/))
+    speechSynthesis.speak(Object.assign(new SpeechSynthesisUtterance(s), { voice: v ?? null, lang: v?.lang ?? 'en-US', rate: 0.95 }));
 }
 function renderVoices() {
   voices = englishVoices(speechSynthesis.getVoices());

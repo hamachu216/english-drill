@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, slots } from '../core.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)));
-const levels = FILES.map(read), [patterns, qa, colloc, replies, backchannels] = DRILLS.map(read), files = [...levels, patterns, qa, colloc, replies, backchannels];
+const levels = FILES.map(read), [patterns, qa, colloc, replies, backchannels, talks] = DRILLS.map(read), files = [...levels, patterns, qa, colloc, replies, backchannels, talks];
 
 test('levels are 1..N in file order', () => assert.deepEqual(levels.map((f) => f.level), levels.map((_, i) => i + 1)));
 
@@ -82,6 +82,18 @@ test('Q&A handling: every phrase of the handout is practiced, each with the situ
   }
   const asked = handling.flatMap((d) => d.cards.slice(0, -2)).map((c) => c.en);
   for (const p of HANDOUT) assert.ok(asked.some((t) => t.includes(p)), p);
+});
+
+test('listening: a talk of four to six sentences, a task, and the one sentence of the talk that answers it', () => {
+  assert.equal(talks.kind, 'listening');
+  const cards = talks.decks.flatMap((d) => d.cards);
+  for (const c of cards) {
+    const sentences = c.text.split(/(?<=[.?!])\s+/);
+    assert.ok(sentences.length >= 4 && sentences.length <= 6, `${c.id}: ${sentences.length} sentences`);
+    assert.ok(sentences.includes(c.en), `${c.id}: the sentence to write is one of the talk's, as written`);
+    assert.ok(c.scene?.trim() && /[。？]$/.test(c.task) && /[。？]$/.test(c.ja) && c.textJa.includes(c.ja), c.id);
+  }
+  assert.equal(new Set(cards.map((c) => c.text)).size, cards.length, 'no talk twice');
 });
 
 test('backchannels: each function lists its reactions, and every answer opens with one of them', () => {

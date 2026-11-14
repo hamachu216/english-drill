@@ -70,6 +70,11 @@ test('nextRound: ROUND cards from the pool, refilled when empty', () => {
   assert.equal(nextRound([], r3.pool, all).cards.length, ROUND, 'refilled');
 });
 
+test('nextRound: a round can be smaller than ROUND', () => {
+  const r = nextRound([], [], ['a', 'b', 'c', 'd'], undefined, 3);
+  assert.deepEqual([r.cards, r.pool], [['a', 'b', 'c'], ['d']]);
+});
+
 test('nextRound: misses are retried and the pool is kept', () => {
   const r = nextRound(['a', 'b'], ['x', 'y'], ['x', 'y', 'a', 'b']);
   assert.equal(r.retry, true);

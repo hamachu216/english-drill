@@ -8,9 +8,9 @@ export const addDays = (day, n) => {
   return d.toISOString().slice(0, 10);
 };
 
-// Research-English sentence frames, research Q&A, adjective + preposition pairs and the first words of a Q&A reply:
-// same deck shape as a level file, tagged with a `kind`.
-export const DRILLS = ['data/patterns.json', 'data/qa.json', 'data/collocations.json', 'data/replies.json', 'data/backchannels.json'];
+// Research-English sentence frames, research Q&A, adjective + preposition pairs, the first words of a Q&A reply,
+// backchannels and short talks to listen to: same deck shape as a level file, tagged with a `kind`.
+export const DRILLS = ['data/patterns.json', 'data/qa.json', 'data/collocations.json', 'data/replies.json', 'data/backchannels.json', 'data/listening.json'];
 
 // Every card of every file, tagged with what the rest needs: its kind, its topic (deck id), the deck itself,
 // and whether it is held back for the weekly first-sight check (the last HOLD cards of each deck; none for collocations,
@@ -83,12 +83,12 @@ export function shuffle(xs, rand = Math.random) {
   return a;
 }
 
-// Misses are retried (reshuffled) until none remain; otherwise the next ROUND cards from the pool,
+// Misses are retried (reshuffled) until none remain; otherwise the next `size` cards from the pool,
 // which is refilled from `all` (already in the order to practice) once used up.
-export function nextRound(misses, pool, all, rand) {
+export function nextRound(misses, pool, all, rand, size = ROUND) {
   if (misses.length) return { cards: shuffle(misses, rand), pool, retry: true };
   const p = pool.length ? pool : all;
-  return { cards: p.slice(0, ROUND), pool: p.slice(ROUND), retry: false };
+  return { cards: p.slice(0, size), pool: p.slice(size), retry: false };
 }
 
 // An answer counts as attempted only once it has English letters: no peeking at the answer without trying.
