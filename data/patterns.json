@@ -72,6 +72,23 @@
       ]
     },
     {
+      "id": "p-wonder",
+      "title": "控えめに尋ねる・頼む",
+      "frame": "I was wondering if ...",
+      "ja": "〜でしょうか。／〜していただけないでしょうか。",
+      "note": "if の後は「主語＋動詞」で、疑問文の語順にしない。頼むときは if you could ＋動詞の原形。I wonder より I was wondering のほうが丁寧。",
+      "cards": [
+        {"id":"p-wonder-001","ja":"データセットを共有していただけないでしょうか。","en":"I was wondering if you could share your dataset."},
+        {"id":"p-wonder-002","ja":"この手法はノイズの多いデータでも動くのでしょうか。","en":"I was wondering if this method works with noisy data."},
+        {"id":"p-wonder-003","ja":"より大きなモデルは試されたのでしょうか。","en":"I was wondering if you tried a larger model."},
+        {"id":"p-wonder-004","ja":"2つ目の図をもう一度説明していただけないでしょうか。","en":"I was wondering if you could explain the second figure again."},
+        {"id":"p-wonder-005","ja":"セッションの後で少しお話しできないでしょうか。","en":"I was wondering if we could talk after the session."},
+        {"id":"p-wonder-006","ja":"もっと単純な手法とは比較されたのでしょうか。","en":"I was wondering if you compared your method with a simpler baseline."},
+        {"id":"p-wonder-007","ja":"コードを公開する予定はあるのでしょうか。","en":"I was wondering if you have any plans to release the code."},
+        {"id":"p-wonder-008","ja":"もう1つ質問してもよろしいでしょうか。","en":"I was wondering if I could ask one more question."}
+      ]
+    },
+    {
       "id": "p-propose",
       "title": "提案を述べる",
       "frame": "We propose a method to ...",

@@ -105,7 +105,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 |---|---|---|---|---|
 | `1-basic.json`・`2-advanced.json` | `grammar` | 25トピック・453問 | `{id, ja, en, note?}`。デッキに文法の1行解説 `note`（必須）。研究の場ではまず使わない形（if only・倒置・文学的な分詞構文など）は入れない | 今日の練習・自由練習 |
 | `3-discussion.json`〜`5-defense.json` | `phrase` | 30トピック・360問 | 同上 | 自由練習のみ |
-| `patterns.json` | `pattern` | 24の型・192文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
+| `patterns.json` | `pattern` | 25の型・200文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
 | `replies.json` | `reply` | 7場面・69問 | `{id, scene, ja, frame, en}`。決まった返し方（`en`）を読み上げで聞いて書き取る（ディクテーション）。`ja`（意味）を問題文に、`scene`（場面）をその下に表示する。ヒントは英文の頭文字と語の長さ（`skeleton`）だけ。`frame` は答えの後に「答え方の型」として出す | 今日の練習 |
 | `qa.json` | `qa` | 10話題・70問 | `{id, q, ja, points, frame, en, more}`（英語の質問・意味・答えに入れる要素・答え方の型・1文の回答例・続き）。自分の研究について答える問題で、`points` はどの研究にも当てはまる言い方にする（架空の研究の中身を書くと、その答えを再現する問題になってしまう）。`en`・`more` は架空の研究にもとづく参考。デッキの `follow:[{q, ja, points, frame, en}]` は模擬質疑応答の追加質問で、同じ話題のどの質問の後でも通じる言い方にする | 今日の練習・模擬質疑応答 |
 | `collocations.json` | `colloc` | 96組・例文288 | `{id, adj, prep, collocation, ja, difficulty, note, examples:[{id, scene, en, ja, also?}]}`。デッキ＝前置詞（デッキ名が答えなので出題中は表示しない） | Phrase Drill のみ |
