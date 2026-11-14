@@ -226,6 +226,8 @@ test('Q&A: a hint is always available, and a failed question is asked again righ
   assert.deepEqual(scaffold(q, { level: 2 }).hints.at(1), ['答え方の型', q.frame]);
   assert.deepEqual(choices(true, true), ['content', 'english', 'hint'], 'after a hint it cannot count as unaided');
   assert.deepEqual(choices(false, false), ['miss', 'ok']);
+  assert.deepEqual(choices(false, false, true), ['miss', 'hint', 'ok'], 'the Phrase Drill: the target came, the rest of the sentence did not');
+  assert.deepEqual(choices(false, true, true), ['miss', 'hint']);
   const queue = [{ id: q.id, phase: 'qa', level: 2 }, { id: 'x', phase: 'qa' }];
   const again = requeue(queue, 0, MISS, 'qa');
   assert.deepEqual(again[1], { id: q.id, phase: 'qa', level: 2, retry: true });

@@ -5,8 +5,8 @@
 //   days[date]   = { [topicId]: [answers, said],  counters per day (first attempts only), plus
 //                    '#check': [n, said], '#why': [content, english] }
 //   queue        = [{ id, phase, level?, intro?, follow?, check?, retry? }]   one step per screen
-import { addDays, shuffle, skeleton, opening, mask, slots } from './core.js';
-import { previous } from './colloc.js';
+import { addDays, shuffle, skeleton, opening, mask, slots, reactions } from './core.js';
+import { example, previous } from './colloc.js';
 
 export const MISS = 0, HINT = 1, OK = 2;
 export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, ok: OK };
@@ -119,11 +119,13 @@ export function byNeed(pool, hist, day) {
 }
 
 // The Phrase Drill shows before it asks: a pair not said yet (new, or missed last time), and the first backchannel of
-// a function none of whose cards has been said, get a step to listen to and repeat first.
+// a function none of whose cards has been said, get a step to listen to and repeat first. A pair's step names the
+// sentence it is asked in (`nth`), so that a round repeating what wasn't said in full asks the same sentence again.
 export function drillSteps(cards, hist) {
   const said = (id) => hist[id]?.box > 0, functions = new Set(Object.keys(hist).filter(said).map((id) => id.replace(/-\d+$/, '')));
   const unsaid = (c, i) => (c.kind === 'colloc' ? !said(c.id) : !functions.has(c.topic) && cards.findIndex((x) => x.topic === c.topic) === i);
-  return cards.flatMap((c, i) => [...(unsaid(c, i) ? [{ id: c.id, phase: 'free', intro: true }] : []), { id: c.id, phase: 'free' }]);
+  const ask = (c) => ({ id: c.id, phase: 'free', ...(c.examples && { nth: c.examples.indexOf(example(c, hist[c.id])) }) });
+  return cards.flatMap((c, i) => [...(unsaid(c, i) ? [{ ...ask(c), intro: true }] : []), ask(c)]);
 }
 
 // What a step to listen to and repeat shows: the thing to learn, its meaning and note, and one sentence that uses it.
@@ -224,12 +226,13 @@ export function requeue(queue, i, grade, kind) {
 //   question     0 (Beginner): what to include + answer frame · 1 (Intermediate): what to include · 2 (Advanced): nothing
 // A retry shows everything (for a grammar card: its grammar in one line and the opening); the weekly check shows
 // nothing and has no hints.
+const afterReaction = (c) => `＿＿＿ ${c.en.slice(reactions(c.deck).filter((p) => c.en.startsWith(p)).reduce((n, p) => Math.max(n, p.length), 0)).trim()}`;
 export function scaffold(c, { level = 2, retry, check, follow }) {
   const f = c.deck.follow?.[follow];
   const [ladder, shown] =
     f ? [[['入れる要素', f.points], ['答え方の型', f.frame], ['質問の意味', f.ja]], 0]
     : c.kind === 'reply' ? [[['頭文字', skeleton(c.en)]], retry ? 1 : 0] // dictation: the reply is heard, its meaning is the prompt
-    : c.kind === 'backchannel' ? [[['相手の言葉の意味', c.saidJa], ['使う相槌', c.deck.basic.join(' / ')], ['頭文字', skeleton(c.en)]], 0]
+    : c.kind === 'backchannel' ? [[['相手の言葉の意味', c.saidJa], ['残りの英文', afterReaction(c)], ['使う相槌', c.deck.basic.join(' / ')], ['頭文字', skeleton(c.en)]], 0]
     : c.q ? [[['入れる要素', c.points], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
     : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['語句', slots(c.deck.frame, c.en).join(' / ')], ['頭文字', skeleton(c.en)]], retry ? 2 : level < 2 ? 1 : 0]
     : [[...(retry ? [['文法', c.deck.note]] : []), ['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], retry ? 2 : 0];
@@ -238,7 +241,8 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
 
 // The self-evaluation buttons on offer: couldn't say it, said it with a hint, or said it.
 // For a question, "couldn't say it" is split by where it broke down: no content, or content but no English.
-export const choices = (talk, hinted) => [...(talk ? ['content', 'english'] : ['miss']), hinted ? 'hint' : 'ok'];
+// In the Phrase Drill (`partly`) there is always a middle: the pair or the reaction came, the rest of the sentence didn't.
+export const choices = (talk, hinted, partly) => [...(talk ? ['content', 'english'] : ['miss']), ...(hinted || partly ? ['hint'] : []), ...(hinted ? [] : ['ok'])];
 
 // Where things stand, for the home screen. Deliberately coarse: counts, not scores.
 export function overview(items, hist, day) {

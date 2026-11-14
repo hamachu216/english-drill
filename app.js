@@ -1,6 +1,6 @@
-import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish, slots, literal } from './core.js';
+import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish, slots, literal, reactions } from './core.js';
 import { MISS, HINT, OK, GRADE, review, byNeed, progress, mockSession, tally, requeue, scaffold, choices, planSession, mix, overview, weekly, drillSteps, lesson } from './plan.js';
-import { example, hints as pairHints, siblings } from './colloc.js';
+import { hints as pairHints, siblings } from './colloc.js';
 
 const KEY = 'eng:v1';
 const $ = (id) => document.getElementById(id);
@@ -173,20 +173,21 @@ function begin(r) {
 const levelCards = () => cards.filter((c) => (state.settings.level <= 2 ? c.kind === 'grammar' : c.level === state.settings.level));
 const phraseCards = () => drillCards;
 let freeList = levelCards;
-function playFree(missed = []) {
+function playFree(missed = [], asked = []) {
   const r = nextRound(missed, pool, byNeed(freeList(), state.hist, today()));
   pool = r.pool;
   // A retry round has just seen its answers; otherwise the Phrase Drill shows what hasn't been said yet before asking.
-  const queue = freeList === phraseCards && !r.retry ? drillSteps(r.cards, state.hist) : r.cards.map((c) => ({ id: c.id, phase: 'free' }));
+  // The same steps again (for a pair: the same sentence), until each is said in full.
+  const queue = freeList === phraseCards && !r.retry ? drillSteps(r.cards, state.hist) : r.cards.map((c) => asked.find((s) => s.id === c.id && !s.intro) ?? { id: c.id, phase: 'free' });
   begin({ free: true, retry: r.retry, queue, idx: 0, grades: [] });
 }
 
 const TALK_GUIDE = ['自分の研究で、まずは1文で。時間は気にしなくてOK', '入れる要素を見ながら、1〜2文で', 'ヒントなしで、2〜3文で'];
 function showStep() {
   const step = run.queue[run.idx], cur = byId.get(step.id), rec = state.hist[cur.id];
-  // An adjective + preposition pair is said in an example sentence it hasn't just had (`ex` is set for pairs only).
-  const ex = cur.kind === 'colloc' ? example(cur, rec) : null;
-  const { shown, hints } = ex ? { shown: [], hints: pairHints(ex) } : scaffold(cur, step);
+  // An adjective + preposition pair is said in the example sentence its step names (`ex` is set for pairs only).
+  const ex = cur.examples?.[step.nth] ?? null;
+  const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
   // A Q&A reply is dictation: the stock phrase is read aloud and written down, with its meaning as the prompt.
   // A backchannel answers what someone just said (`cur.said`, shown, not read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = cur.kind === 'reply', back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
@@ -251,6 +252,7 @@ const LABEL = {
   miss: '✕ 言えなかった', content: '✕ 内容が浮かばなかった', english: '✕ 英文にできなかった', hint: '△ ヒントで言えた',
   ok: ['○ 言えた', '○ 答えられた'],
 };
+const PARTLY = '△ 一部だけ言えた'; // the Phrase Drill's middle: the pair or the reaction, but not the whole sentence unaided
 const WROTE = { miss: '✕ 書き取れなかった', hint: '△ ヒントで書き取れた', ok: '○ 書き取れた' }; // the same choices, for dictation
 
 // The phrases to learn, highlighted in the sentence: an adjective + preposition pair, or what fills a frame.
@@ -259,7 +261,7 @@ const mark = (en, parts) => parts.reduce((nodes, p) => nodes.flatMap((n) => {
   return m ? [n.slice(0, m.index), el('mark', { textContent: m[0] }), n.slice(m.index + m[0].length)] : [n];
 }), [en]);
 const phrases = (c) => (c.kind === 'colloc' ? [c.collocation] : c.kind === 'pattern' ? slots(c.deck.frame, c.en)
-  : c.kind === 'backchannel' ? [...c.deck.basic, ...c.deck.more].map((p) => p.replace('...', '').trim()) : []);
+  : c.kind === 'backchannel' ? reactions(c.deck) : []);
 
 function reveal(timedOut = false) {
   clearTimeout(timer);
@@ -292,12 +294,11 @@ function reveal(timedOut = false) {
   $('card-refs').replaceChildren(...(cur.deck.refs?.length ? ['参考: ', ...cur.deck.refs.flatMap((r, i) => (i ? [' / ', refLink(r)] : [refLink(r)]))] : []));
   // "I don't know" is a miss, with nothing to judge. "Answer again" keeps the first attempt's hint use and so its choices.
   const verdict = now.gaveUp && !talk ? '✕ わからなかった — 次へ' : null;
-  const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : choices(talk, now.hinted);
+  const keys = now.gaveUp ? (talk ? ['content', 'english'] : ['miss']) : choices(talk, now.hinted, drill(cur));
   $('judge').replaceChildren(...keys.map((key) =>
-    el('button', { className: key, onclick: () => grade(key), textContent: verdict ?? (now.dictate ? WROTE[key] : key === 'ok' ? LABEL.ok[+talk] : LABEL[key]) })));
-  // What "said" means: for the Phrase Drill the pair or the reaction, not the rest of the sentence.
-  $('judge-label').textContent = ex ? `${cur.collocation} を言えた？（残りは違っていてもよい）`
-    : cur.deck.basic ? '一覧の相槌で返せた？（続きは違っていてもよい）' : JUDGE;
+    el('button', { className: key, onclick: () => grade(key), textContent: verdict ?? (now.dictate ? WROTE[key] : key === 'ok' ? LABEL.ok[+talk] : key === 'hint' && drill(cur) ? PARTLY : LABEL[key]) })));
+  // The Phrase Drill judges two things: the pair or the reaction, and the rest of the sentence.
+  $('judge-label').textContent = drill(cur) ? `✕ ${ex ? `${cur.collocation} ` : '相槌'}が出なかった ／ △ 残りが出なかった・ヒントを見た ／ ○ 全文を言えた（回答例と違う言い方でもよい）` : JUDGE;
   $('judge-label').hidden = verdict != null;
   $('again').hidden = !talk;
   $('answer').hidden = false;
@@ -342,14 +343,15 @@ function advance() {
 function showResult() {
   const firsts = run.queue.map((s, i) => [s, run.grades[i]]).filter(([s, g]) => g != null && !s.retry);
   const n = firsts.length, count = (g) => firsts.filter(([, x]) => x === g).length, ok = firsts.filter(([, g]) => g >= OK).length, rate = n ? ok / n : 1;
-  run.missed = [...new Set(firsts.filter(([, g]) => g === MISS).map(([s]) => byId.get(s.id)))];
+  // To do again: what was missed — and, in the Phrase Drill, what wasn't said in full (the rest of the sentence is learned by saying it).
+  run.missed = [...new Set(firsts.map(([s, g]) => [byId.get(s.id), g]).filter(([c, g]) => g === MISS || (g === HINT && drill(c))).map(([c]) => c))];
   const wrong = run.missed.length;
   show('result');
   $('result-score').textContent = `${ok}/${n}`;
   $('result-ring').style.setProperty('--p', rate * 100);
   $('result-title').textContent = run.free ? (!wrong ? (run.retry ? '全部言えた！' : 'パーフェクト！') : rate >= 0.7 ? 'いい調子！' : 'ここから伸びる！')
     : run.mock ? '模擬質疑応答、おつかれさま！' : '今日の練習、完了！';
-  $('result-sub').textContent = `${LABEL.ok[0]} ${ok} ・ ${LABEL.hint} ${count(HINT)} ・ ${LABEL.miss} ${count(MISS)}`;
+  $('result-sub').textContent = `${LABEL.ok[0]} ${ok} ・ ${run.free && freeList === phraseCards ? PARTLY : LABEL.hint} ${count(HINT)} ・ ${LABEL.miss} ${count(MISS)}`;
   $('result-next').textContent = run.free ? (wrong ? `言えなかった${wrong}問を、言えるまで繰り返そう` : `次の${ROUND}問に進もう`)
     : run.mock ? '答えにくかった質問は、回答例を保存しておくと次から手本になります。'
     : wrong ? '言えなかった問題は、明日のメニューの最初にもう一度出ます。' : '明日は今日の結果をもとに、新しいメニューが用意されます。';
@@ -376,16 +378,18 @@ $('start').onclick = () => { const s = session(); if (!s) begin(fresh(state.sett
 $('short').onclick = () => begin(fresh(10));
 $('free').onclick = () => { if (freeList !== levelCards) { freeList = levelCards; pool = []; } playFree(); };
 const mock = () => begin({ mock: true, queue: mockSession(cards, state.hist), idx: 0, grades: [] });
-$('next-round').onclick = () => (run.free ? playFree(run.missed) : run.mock ? mock() : more());
+$('next-round').onclick = () => (run.free ? playFree(run.missed, run.queue) : run.mock ? mock() : more());
 $('mock-start').onclick = mock;
 $('cd-start').onclick = () => { if (freeList !== phraseCards) { freeList = phraseCards; pool = []; } playFree(); };
 $('quit').onclick = $('home-btn').onclick = finish;
 // The hint button stays enabled while hints are left; it does nothing once the answer is out.
-// One press goes straight to the first letters, with any hint before them; a ladder without them goes one at a time.
+// One press goes straight to the first letters, with any hint before them (in the Phrase Drill it stops once on the
+// way, at the rest of the sentence); a ladder without them goes one at a time.
+const STOPS = ['残りの英文', '頭文字'];
 $('hint').onclick = () => {
   if (!$('answer').hidden) return;
   now.hinted = true;
-  $('hints').append(...now.pending.splice(0, now.pending.findIndex(([label]) => label === '頭文字') + 1 || 1).flatMap(hintRow));
+  $('hints').append(...now.pending.splice(0, now.pending.findIndex(([label]) => STOPS.includes(label)) + 1 || 1).flatMap(hintRow));
   $('hint').disabled = !now.pending.length;
 };
 $('unknown').onclick = () => { now.gaveUp = true; reveal(); };

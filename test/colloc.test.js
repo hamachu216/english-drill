@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded, skeleton } from '../core.js';
 import { MISS, OK, review, planSession, byNeed, progress, scaffold, drillSteps, lesson } from '../plan.js';
-import { example, previous, hints, siblings } from '../colloc.js';
+import { example, previous, rest, hints, siblings } from '../colloc.js';
+import { reactions } from '../core.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const pairs = items.filter((c) => c.kind === 'colloc');
@@ -18,9 +19,11 @@ test('every pair is in the catalog, none held back, each asked in a different se
   assert.equal(example(c, undefined), c.examples[0]);
 });
 
-test('hints: only the first letters of the sentence, never the pair', () => {
-  const e = pair('satisfied with').examples[0];
-  assert.deepEqual(hints(e), [['頭文字', skeleton(e.en)]]);
+test('hints: the rest of the sentence without the preposition, then the first letters — never the pair', () => {
+  const c = pair('satisfied with'), e = c.examples[0];
+  assert.deepEqual(hints(c, e), [['残りの英文', rest(c, e)], ['頭文字', skeleton(e.en)]]);
+  assert.equal(rest(pair('famous for'), pair('famous for').examples[0]), 'Kyoto is famous ＿ its old temples.');
+  for (const p of pairs) for (const x of p.examples) assert.ok(rest(p, x).includes(' ＿') && !new RegExp(`\\b${p.collocation}\\b`, 'i').test(rest(p, x)), x.id);
 });
 
 test('siblings: the other prepositions the same adjective takes', () => {
@@ -67,15 +70,21 @@ test('the Phrase Drill mixes pairs and backchannels in turn, each in its own ord
 
 test('backchannels: hints are the meaning of what was said, the basic reactions, then the first letters', () => {
   const c = backs[0];
-  assert.deepEqual(scaffold(c, {}).hints.map(([k]) => k), ['相手の言葉の意味', '使う相槌', '頭文字']);
-  assert.equal(scaffold(c, {}).hints[1][1], 'Exactly. / That\'s right. / Absolutely.');
+  assert.deepEqual(scaffold(c, {}).hints.map(([k]) => k), ['相手の言葉の意味', '残りの英文', '使う相槌', '頭文字']);
+  assert.equal(scaffold(c, {}).hints[1][1], '＿＿＿ The accuracy went up by about five percent.');
+  assert.equal(scaffold(c, {}).hints[2][1], 'Exactly. / That\'s right. / Absolutely.');
+  for (const b of backs) {
+    const [, [, after]] = scaffold(b, {}).hints;
+    assert.ok(after.length > 6 && b.en.endsWith(after.slice(4)) && !reactions(b.deck).some((p) => after.slice(4).startsWith(p)), b.id);
+  }
 });
 
 test('the Phrase Drill shows before it asks: pairs not said yet, and the first card of a function not said yet', () => {
   const [a, b] = pairs, [x, y] = backs.filter((c) => c.topic === backs[0].topic), z = backs.find((c) => c.topic !== x.topic);
   const hist = { [a.id]: review(undefined, OK, T), [b.id]: review(undefined, MISS, T), [z.id]: review(undefined, OK, T) };
   const shown = (cards, h) => drillSteps(cards, h).filter((s) => s.intro).map((s) => s.id);
-  assert.deepEqual(drillSteps([a, x], {}), [a, a, x, x].map((c, i) => ({ id: c.id, phase: 'free', ...(i % 2 ? {} : { intro: true }) })), 'shown, then asked');
+  assert.deepEqual(drillSteps([a, x], {}), [{ id: a.id, phase: 'free', nth: 0, intro: true }, { id: a.id, phase: 'free', nth: 0 }, { id: x.id, phase: 'free', intro: true }, { id: x.id, phase: 'free' }], 'shown, then asked');
+  assert.equal(drillSteps([a], hist).at(-1).nth, 1, 'a pair is asked in the next sentence each time');
   assert.deepEqual(shown([a, b, x, y, z], hist), [b.id, x.id], 'a pair said is not shown again, a missed one is; a function once, until one of its cards is said');
   assert.deepEqual(shown([y], { [x.id]: review(undefined, MISS, T) }), [y.id]);
   assert.deepEqual(shown([backs.find((c) => c.topic === z.topic && c !== z)], hist), []);

@@ -65,6 +65,8 @@ export function seeded(text) {
 export const skeleton = (en) => en.replace(/[A-Za-z][A-Za-z']*/g, (w) => w[0] + '_'.repeat(w.length - 1));
 export const opening = (en) => en.split(/\s+/).slice(0, 2).join(' ') + ' …';
 export const mask = (frame) => { let i = 0; return frame.replace(/[A-Za-z']+/g, (w) => (i++ % 2 ? '_'.repeat(w.length) : w)); };
+// reactions: every way a backchannel deck says its function, without the "..." ("That's a good point, but").
+export const reactions = (deck) => [...deck.basic, ...deck.more].map((p) => p.replace('...', '').trim());
 // slots: what a sentence puts into its frame's "..." — the phrases to learn
 // ("We used ... to ...", "We used an accelerometer to measure movement." → ["an accelerometer", "measure movement"]).
 export const literal = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
