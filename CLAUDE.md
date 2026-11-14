@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 英語スピーキング練習用の静的PWA（Research English Drill）。日本の博士課程学生向けで、目標は「国際学会で自分の研究を英語で説明し、質問に簡単な英語で1〜3文で答えられる」こと。
 
 - **今日の練習**: ホームのボタン1つで、学習履歴から組んだ1日分が始まる。順番は 基礎文法 → 研究英語の構文 → 質疑応答の切り返し → Research Q&A。30分でおよそ26問（1問約1分）。
-- **Phrase Drill**: 形容詞＋前置詞（interested in など）の英作文と、相槌（Exactly. That's a good point, but… など）を混ぜて10問ずつ練習する。今日の練習には入らない。
+- **Phrase Drill**: 形容詞＋前置詞（interested in など）の英作文と、相槌（Exactly. That's a good point, but… など）を混ぜて10問ずつ練習する。まだ言えていないものは、先に見せてから別の文で出す。今日の練習には入らない。
 - **模擬質疑応答**: 研究についての英語の質問5問に、追加質問を1つずつ続けて、支援なしで答える。今日の練習には入らない。
 - **自由に練習**: 「基礎文法（Lv1〜2）」「Lv3 研究ディスカッション」「Lv4 国際学会」「Lv5 博士公聴会」から1つ選んで10問ずつ練習する。
 
@@ -90,8 +90,8 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 | `style.css` | 見た目のすべて。色はトークン（`:root` の変数）で定義する |
 | `theme.js` | `<head>` で同期読み込み。描画前にテーマを当ててちらつきを防ぐ |
 | `core.js` | 汎用の純粋関数: `catalog`、`restore`/`isBackup`、`seeded`、`shuffle`、`nextRound`、ヒント文字列（`skeleton`/`opening`/`mask`/`slots`）、`streak`/`calendar`、`englishVoices`、`wordDiff`、`timeLimit` |
-| `plan.js` | 学習アルゴリズム: `review`、`tally`、`shares`/`mix`、`planSession`、`mockSession`、`requeue`、`scaffold`、`choices`、`knownTopics`、`byNeed`、`progress`、`overview`/`weekly`。定数（間隔・配分・1枚の目安秒数・解放条件）はファイル先頭 |
-| `colloc.js` | 形容詞＋前置詞: `example`、`hints`、`siblings` |
+| `plan.js` | 学習アルゴリズム: `review`、`tally`、`shares`/`mix`、`planSession`、`mockSession`、`requeue`、`scaffold`、`choices`、`knownTopics`、`byNeed`、`drillSteps`/`lesson`、`progress`、`overview`/`weekly`。定数（間隔・配分・1枚の目安秒数・解放条件）はファイル先頭 |
+| `colloc.js` | 形容詞＋前置詞: `example`、`previous`、`hints`、`siblings` |
 | `app.js` | DOM と状態のすべて。`<script type="module">` 1つで、トップレベル `await` で全データを fetch する。DOM は `el(tag, props, ...kids)` で組み立て、HTML 文字列は使わない |
 | `sw.js` | Service Worker（ネットワーク優先。下の「ハマりどころ」参照） |
 | `manifest.webmanifest`、`icons/` | ホーム画面に追加したときのアプリ情報 |
@@ -138,7 +138,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 ### 記録の進め方
 
 - **`review`**（全種類）: 言えなかった → 翌日（箱0）。言えた → 箱+1（3・7・14・30・60日）。ヒントで言えた → 箱+1 だが7日止まり（初回なら3日後）。翌日に戻るのは言えなかったカードだけ。箱が上がるのは期限が来た日（か初回）だけで、同じ日に何度正解しても進まない。
-- **形容詞＋前置詞**（Phrase Drill のみ）: 覚える単位は文ではなく組み合わせで、出るたびに別の例文（`example`）を日本語から英文全体で言う。ヒントは頭文字だけ（形容詞や組み合わせを見せると答えになる）。以前は空所に前置詞だけを入れる段階があったが、前置詞だけでは身につかないので廃止した。その頃の記録に残る `step`・`wins` は読まない。
+- **形容詞＋前置詞**（Phrase Drill のみ）: 覚える単位は文ではなく組み合わせで、出るたびに別の例文（`example`）を日本語から英文全体で言う。形容詞は問題文の下に出す（`famous ＋ 前置詞`。日本語だけではどの形容詞を使う問題か決まらず、間違えるのは前置詞のほうなので）。ヒントは頭文字だけ（組み合わせを見せると答えになる）。以前は空所に前置詞だけを入れる段階があったが、前置詞だけでは身につかないので廃止した。その頃の記録に残る `step`・`wins` は読まない。
 - **`tally`**: その日の集計を足す。最初の回答だけを数える。
 
 ### 回答と判定
@@ -152,6 +152,9 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 ### 自由練習と Phrase Drill
 
 選んだ組（基礎文法 = Lv1〜2 まとめて、Lv3〜5、または全組み合わせ）を `byNeed` の順に並べる: 前回間違えた → 期限の来た復習 → 新規（今日の練習と同じ順。初見チェック用の取り置きは使わない）→ 残りを練習が古い順。この順の `pool` から `ROUND`（10）問ずつ出し、言えなかった問題だけを全部言えるまで繰り返す（`nextRound`）。回答はカードの記録と日次集計に反映されるが、ラウンドの進行自体は保存しない。`settings.level` の 1 と 2 はどちらも基礎文法を指す。Phrase Drill は形容詞＋前置詞と相槌を、それぞれ `byNeed` の順のまま交互に出す（`alternate`）。相槌は返す内容（`ja`）を問題文にし、相手のひと言（`said`）を下に表示する（読み上げない）。機能名は答えのヒントになるので出さない。ヒントは相手の言葉の意味 → 基本の相槌 → 頭文字。相槌は同じ機能の言い方ならどれでも正解。答えの後に機能の言い方の一覧と使い分けを出す。
+
+- **先に見せる**（`drillSteps`・`lesson`）: Phrase Drill は、まだ言えていないものを出題の直前に「聞いてまねする」画面（`intro`。採点なし）で見せる。形容詞＋前置詞は、新しい組み合わせと前回言えなかった組み合わせ（記録の箱が0）。相槌は、どのカードもまだ言えていない機能の、そのラウンドで最初の1枚。見せる例文は直後に出す文とは別の文にする（組み合わせは1つ前の例文 `previous`、相槌は同じ機能の別のカードで `basic` の言い方で始まるもの）ので、写すのではなく使う練習になる。言えなかった問題だけを繰り返すラウンドでは見せない（答えを見た直後なので）。以前は見せずに出題していたが、知らない表現は思い出しようがなく、ヒントを見ても言えなかった。
+- **「言えた」の基準**: 自己評価の見出しに、形容詞＋前置詞は「famous for を言えた？（残りは違っていてもよい）」、相槌は「一覧の相槌で返せた？（続きは違っていてもよい）」と出す。覚える対象は組み合わせと相槌で、文の残りではない。
 
 ### 保存
 
