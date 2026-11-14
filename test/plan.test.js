@@ -167,8 +167,12 @@ test('sentence frames fade their support: frame shown → half hidden → none',
   assert.ok(half.shown[0][1].includes('_') && half.shown[0][1] !== text);
   assert.equal(half.hints[0][1], text, 'the full frame is one hint away');
   assert.deepEqual(scaffold(frame, { level: 2 }).shown, []);
-  assert.deepEqual(scaffold(frame, { level: 0 }).hints[0], ['語句', 'we have limited data'], 'the first hint is the phrase that fills the frame');
-  assert.deepEqual(scaffold(frame, { level: 2, retry: true }).shown.map(([label]) => label), ['型', '語句'], 'a retry shows both');
+  assert.deepEqual(scaffold(frame, { level: 0 }).hints.map(([label]) => label), ['頭文字'], 'the one hint is the first letters');
+  assert.deepEqual(scaffold(frame, { level: 2, retry: true }).shown, [['型', text]], 'a retry shows the frame');
+  for (const c of items.filter((x) => x.kind === 'pattern')) for (const step of [{ level: 0 }, { level: 1 }, { level: 2 }, { retry: true }]) {
+    const { shown, hints } = scaffold(c, step);
+    assert.ok(![...shown, ...hints].some(([, v]) => v.includes(c.en.slice(c.deck.frame.indexOf('...')).replace(/[.?!]$/, ''))), `${c.id}: nothing spells out the answer`);
+  }
   // The level follows the learner: said with the frame today → half hidden next time → no frame after that.
   const { hist, days, sessions, next } = practice(8, () => OK);
   const topic = byId.get(sessions[0].find((s) => s.intro).id).topic;

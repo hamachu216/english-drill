@@ -5,7 +5,7 @@
 //   days[date]   = { [topicId]: [answers, said],  counters per day (first attempts only), plus
 //                    '#check': [n, said], '#why': [content, english] }
 //   queue        = [{ id, phase, level?, intro?, follow?, check?, retry? }]   one step per screen
-import { addDays, shuffle, skeleton, opening, mask, slots, reactions } from './core.js';
+import { addDays, shuffle, skeleton, opening, mask, reactions } from './core.js';
 import { example, previous } from './colloc.js';
 
 export const MISS = 0, HINT = 1, OK = 2;
@@ -222,7 +222,7 @@ export function requeue(queue, i, grade, kind) {
 }
 
 // What a step shows up front and what the hint button reveals, in order. Support fades with the level:
-//   frame card   0: frame shown · 1: frame half hidden · 2: nothing; the hints then give the phrases that fill it
+//   frame card   0: frame shown · 1: frame half hidden · 2: nothing; the hints give first letters, never the phrases that fill it (frame + phrases is the whole answer)
 //   question     0 (Beginner): what to include + answer frame · 1 (Intermediate): what to include · 2 (Advanced): nothing
 // A retry shows everything (for a grammar card: its grammar in one line and the opening); the weekly check shows
 // nothing and has no hints.
@@ -234,7 +234,7 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
     : c.kind === 'reply' ? [[['頭文字', skeleton(c.en)]], retry ? 1 : 0] // dictation: the reply is heard, its meaning is the prompt
     : c.kind === 'backchannel' ? [[['相手の言葉の意味', c.saidJa], ['残りの英文', afterReaction(c)], ['使う相槌', c.deck.basic.join(' / ')], ['頭文字', skeleton(c.en)]], 0]
     : c.q ? [[['入れる要素', c.points], ['答え方の型', c.frame], ['質問の意味', c.ja]], retry ? 3 : 2 - level]
-    : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['語句', slots(c.deck.frame, c.en).join(' / ')], ['頭文字', skeleton(c.en)]], retry ? 2 : level < 2 ? 1 : 0]
+    : c.kind === 'pattern' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['頭文字', skeleton(c.en)]], retry || level < 2 ? 1 : 0]
     : [[...(retry ? [['文法', c.deck.note]] : []), ['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], retry ? 2 : 0];
   return check ? { shown: [], hints: [] } : { shown: ladder.slice(0, shown), hints: ladder.slice(shown) };
 }
