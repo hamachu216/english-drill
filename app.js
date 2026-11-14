@@ -36,9 +36,8 @@ $('theme').onclick = () => {
 const el = (tag, props, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids); return n; };
 const PHASE = {
   review: '前回の苦手を復習', grammar: '基礎文法', pattern: '研究英語の構文',
-  reply: '質疑応答の切り返し', qa: 'Research Q&A', mock: '模擬質疑応答', check: '週1回の初見チェック',
+  reply: '質疑応答の切り返し', mock: '模擬質疑応答', check: '週1回の初見チェック',
 };
-const QA_LEVEL = ['Beginner', 'Intermediate', 'Advanced'];
 
 // Today's session if there is one (finished or not). A session from another day, or one whose cards are gone, is ignored.
 const session = () => (state.session?.day === today() && state.session.queue.every((s) => byId.has(s.id)) ? state.session : null);
@@ -85,7 +84,7 @@ function renderHome() {
     ? [el('li', { className: 'muted', textContent: '今日のメニューは終わりました。明日は今日の結果をもとに、新しいメニューが自動で用意されます。' })]
     : menuRows(queue.slice(s?.idx ?? 0))));
   const share = mix(state.days, cards, d).grammar;
-  $('mix').textContent = done ? '' : share > 0.55 ? '最近の結果から、基礎文法を多めにしています。' : share < 0.45 ? '基礎が安定してきたので、研究英語を多めにしています。' : '';
+  $('mix').textContent = done ? '' : share > 0.55 ? '最近の結果から、基礎文法を多めにしています。' : share < 0.45 ? '基礎が安定してきたので、研究英語の構文を多めにしています。' : '';
   $('start').textContent = done ? 'もう少し練習する（約5分）' : s ? '続きから再開する' : '今日の練習を始める';
   $('short').hidden = !!s;
 
@@ -96,13 +95,13 @@ function renderHome() {
     ...pair('得意な文法', o.known.length ? o.known.map((t) => topicTitle[t]).join('・') : 'なし'),
     ...pair('構文', `言える ${o.frames[2]} ・ 練習中 ${o.frames[0] + o.frames[1]} ／ ${o.framesTotal}`),
     ...pair('切り返し', `書き取れる ${o.reply[2]} ・ 練習中 ${o.reply[0] + o.reply[1]} ／ ${replyCount}`),
-    ...pair('Q&A', QA_LEVEL.map((name, i) => `${name} ${o.qa[i]}`).join(' ・ ')),
+    ...pair('Q&A', `答えられる ${o.qa[1] + o.qa[2]} ・ 練習中 ${o.qa[0]} ／ ${qaCount}`),
     ...pair('フレーズ', `${stepLine(pr)} ／ ${drillCards.length}`));
   const wrong = drillCards.filter((c) => state.hist[c.id]?.box === 0).length;
-  $('cd-summary').textContent = `未学習 ${pr[0]} ・ ${stepLine(pr)}${wrong ? ` ・ ✕ 前回間違えた ${wrong}（次の「始める」で最初に出ます）` : ''}`;
+  $('cd-summary').textContent = `形容詞＋前置詞と相槌を10問ずつ ・ 未学習 ${pr[0]} ・ ${stepLine(pr)}${wrong ? ` ・ ✕ 前回間違えた ${wrong}` : ''}`;
   const heard = progress(heardCards, state.hist);
-  $('ld-summary').textContent = `数文の話を聞いて、要の1文を書き取る ・ 未学習 ${heard[0]} ・ ${stepLine(heard)}`;
-  $('mock-summary').textContent = `英語の質問だけで、自分の研究について答える ・ 保存した回答例 ${Object.keys(state.answers).length} / ${qaCount}`;
+  $('ld-summary').textContent = `数文の話を聞いて、要の1文を書き取る。3本ずつ ・ 未学習 ${heard[0]} ・ ${stepLine(heard)}`;
+  $('mock-summary').textContent = `英語の質問5問と追加質問に、自分の研究で答える ・ 保存した回答例 ${Object.keys(state.answers).length} / ${qaCount}`;
   // This week, plus earlier weeks that have something to show.
   $('weekly').tBodies[0].replaceChildren(...weekly(state.days, cards, d).filter((w, i) => !i || Object.keys(w.kinds).length).flatMap((w) => {
     const [, m, dd] = w.from.split('-').map(Number), qa = w.kinds.qa;
@@ -188,7 +187,6 @@ function playFree(missed = [], asked = []) {
   begin({ free: true, retry: r.retry, size, queue, idx: 0, grades: [] });
 }
 
-const TALK_GUIDE = ['自分の研究で、まずは1文で。時間は気にしなくてOK', '入れる要素を見ながら、1〜2文で', 'ヒントなしで、2〜3文で'];
 function showStep() {
   const step = run.queue[run.idx], cur = byId.get(step.id), rec = state.hist[cur.id];
   // An adjective + preposition pair is said in the example sentence its step names (`ex` is set for pairs only).
@@ -200,15 +198,14 @@ function showStep() {
   const shows = step.intro ? lesson(cur, rec) : null; // a step to listen to and repeat, not answered
   now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: shows?.en ?? (dictate ? cur.text ?? cur.en : ask.q) }; // audio: what the speaker button reads
   const talk = isTalk();
-  // Free practice keeps its timer setting (not the Collocation Drill: composing a sentence takes its time);
-  // an Intermediate question gets a gentle 45s bar that never cuts you off.
-  const sec = run.free && !inFull(cur) ? timeLimit(cur.en, state.settings.limit) : talk && step.level === 1 && !step.retry ? 45 : 0;
+  // Free practice keeps its timer setting (not the drills: composing or writing down a sentence takes its time).
+  const sec = run.free && !inFull(cur) ? timeLimit(cur.en, state.settings.limit) : 0;
   $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q || dictate ? 4 : drill(cur) ? 5 : 3)})`);
   $('track').textContent = [
     step.retry && 'もう一度',
     run.free ? `${run.retry ? '復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : listening(cur) ? 'Listening Drill' : `Lv${cur.level}`}` : PHASE[step.phase],
     !drill(cur) && cur.deck.title, // a pair's deck is its preposition, a backchannel's its function: the answer
-    step.follow != null ? '追加質問' : step.intro ? (drill(cur) ? '聞いてまねする' : '新しい型') : talk && !step.check && step.phase !== 'mock' && QA_LEVEL[step.retry ? 0 : step.level],
+    step.follow != null ? '追加質問' : step.intro && (drill(cur) ? '聞いてまねする' : '新しい型'),
   ].filter(Boolean).join(' · ');
   $('count').textContent = `${run.idx + 1} / ${run.queue.length}${sec ? ` · ${sec}秒` : ''}`;
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
@@ -223,8 +220,7 @@ function showStep() {
     : step.check ? '初見チェック：ヒントなしで、どこまで言えるか試そう'
     : !talk ? ''
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'
-    : step.retry ? '型を見ながら、もう一度声に出そう'
-    : step.phase === 'mock' ? '本番のつもりで、自分の研究で答えよう。まず1文、言えたら2〜3文' : TALK_GUIDE[step.level];
+    : '本番のつもりで、自分の研究で答えよう。まず1文、言えたら2〜3文';
   $('hints').replaceChildren(...(shows
     ? [...pair('ポイント', shows.note), ...(shows.said ? pair('相手', shows.said) : []), el('dt', { textContent: '例文' }), el('dd', { className: 'en' }, ...mark(shows.en, phrases(cur))), ...pair('意味', shows.meaning)]
     : shown.flatMap(hintRow)));
@@ -279,7 +275,7 @@ function reveal(timedOut = false) {
   const { cur, ask, step } = now, talk = isTalk(), typed = $('input').value.trim();
   now.said = typed || now.said;
   const { ex } = now;
-  now.model = ex ? ex.en : talk && step.level === 2 && !step.retry && ask.more ? `${ask.en} ${ask.more}` : ask.en;
+  now.model = ex ? ex.en : talk && ask.more ? `${ask.en} ${ask.more}` : ask.en;
   $('timeout').hidden = !timedOut;
   $('model-label').textContent = talk ? '参考（架空の研究の一例）' : '回答例';
   // Accuracy practice compares your words with the model; fluency practice (Q&A) never marks your English.
@@ -342,7 +338,7 @@ function grade(key) {
   });
   answered++;
   run.grades[run.idx] = g;
-  if (run.day) run.queue = requeue(run.queue, run.idx, g, cur.kind);
+  if (run.day) run.queue = requeue(run.queue, run.idx, g);
   advance();
 }
 
