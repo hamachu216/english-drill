@@ -40,6 +40,9 @@
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
         {"id":"r-check-001","scene":"すぐには答えが出ない。質問の一部を繰り返して、考える時間をもらう","ja":"同じコホートで、ですか？ この質問について少し考える時間をください。","frame":"...? Please give me a moment to ...","en":"In the same cohort? Please give me a moment to think about this question."},
+        {"id":"r-check-009","scene":"質問が2つあった。順番に答えると伝えて、考える時間を作る","ja":"ご質問は2つあったと思います。まず1つ目からお答えします。","frame":"I think there were ... Let me start with ...","en":"I think there were two questions. Let me start with the first one."},
+        {"id":"r-check-010","scene":"鋭い指摘を受けた。どの点から答えるかを先に言って、答えを整理する","ja":"とても鋭いご指摘です。まずデータの点からお答えします。","frame":"That's a very ... point. Let me address ... first.","en":"That's a very insightful point. Let me address the data issue first."},
+        {"id":"r-check-011","scene":"答えが長くなりそう。2つに分けて答えると先に伝える","ja":"2つに分けてお答えします。まず手法、次に結果です。","frame":"Let me answer in two parts: first ..., then ...","en":"Let me answer in two parts: first the method, then the results."},
         {"id":"r-check-002","scene":"答える前に少し考えたい","ja":"少しお待ちください。答えを考えさせてください。","frame":"Just one moment—I need to ...","en":"Just one moment—I need to consider my answer."},
         {"id":"r-check-003","scene":"分析のことか実験のことか、確かめてから答える","ja":"確認ですが、分析の方法のことですか、それとも実験のことですか。","frame":"Just so I understand, are you referring to ... or to ...?","en":"Just so I understand, are you referring to the methods of analysis or to the experiment?"},
         {"id":"r-check-004","scene":"どの研究と比べているのか確かめる","ja":"2025年のフィールド調査のことですか。","frame":"Do you mean ...?","en":"Do you mean the field study from 2025?"},
@@ -55,6 +58,9 @@
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
         {"id":"r-unsure-001","scene":"答えが分からない","ja":"すみません。残念ながら、その質問の答えは分かりません。","frame":"I'm sorry. I'm afraid I don't ...","en":"I'm sorry. I'm afraid I don't know the answer to that question."},
+        {"id":"r-unsure-012","scene":"その条件のデータはない。近い条件で言えることを続ける","ja":"その条件ではまだ評価していませんが、似た環境ではうまく動きました。","frame":"We haven't evaluated ... yet, but ...","en":"We haven't evaluated that specific condition yet, but it worked well in a similar setting."},
+        {"id":"r-unsure-013","scene":"まだ試していないことを聞かれた。今後やるつもりだと続ける","ja":"それはまだ試していませんが、今後の研究で取り組む予定です。","frame":"We haven't tried ... yet, but we plan to ...","en":"We haven't tried that yet, but we plan to do it in future work."},
+        {"id":"r-unsure-014","scene":"手元にデータはない。予想だと断って答える","ja":"それについてのデータはありませんが、結果は同じようになると予想しています。","frame":"We don't have data on ..., but we expect ...","en":"We don't have data on that, but we expect the results to be similar."},
         {"id":"r-unsure-002","scene":"今は分からないが、調べて後で連絡する","ja":"それについて調べて、後でご連絡します。","frame":"I will look into ... and follow up ...","en":"I will look into that and follow up with you."},
         {"id":"r-unsure-003","scene":"今は答えられないが、調べてみる","ja":"今はお答えできませんが、これについてもっと調べてみます。","frame":"I can't answer now, but I will ...","en":"I can't answer now, but I will try to find out more about this."},
         {"id":"r-unsure-004","scene":"この場では答えたくない（セッションの後で話したい）","ja":"すみません、この件はセッションの後で話し合えますか。","frame":"I'm sorry—could we discuss ... after ...?","en":"I'm sorry—could we discuss this issue after the session?"},

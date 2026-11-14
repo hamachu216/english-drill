@@ -106,7 +106,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 | `1-basic.json`・`2-advanced.json` | `grammar` | 25トピック・453問 | `{id, ja, en, note?}`。デッキに文法の1行解説 `note`（必須）。研究の場ではまず使わない形（if only・倒置・文学的な分詞構文など）は入れない | 今日の練習・自由練習 |
 | `3-discussion.json`〜`5-defense.json` | `phrase` | 30トピック・360問 | 同上 | 自由練習のみ |
 | `patterns.json` | `pattern` | 24の型・192文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
-| `replies.json` | `reply` | 7場面・63問 | `{id, scene, ja, frame, en}`。決まった返し方（`en`）を読み上げで聞いて書き取る（ディクテーション）。`ja`（意味）を問題文に、`scene`（場面）をその下に表示する。ヒントは英文の頭文字と語の長さ（`skeleton`）だけ。`frame` は答えの後に「答え方の型」として出す | 今日の練習 |
+| `replies.json` | `reply` | 7場面・69問 | `{id, scene, ja, frame, en}`。決まった返し方（`en`）を読み上げで聞いて書き取る（ディクテーション）。`ja`（意味）を問題文に、`scene`（場面）をその下に表示する。ヒントは英文の頭文字と語の長さ（`skeleton`）だけ。`frame` は答えの後に「答え方の型」として出す | 今日の練習 |
 | `qa.json` | `qa` | 10話題・70問 | `{id, q, ja, points, frame, en, more}`（英語の質問・意味・答えに入れる要素・答え方の型・1文の回答例・続き）。自分の研究について答える問題で、`points` はどの研究にも当てはまる言い方にする（架空の研究の中身を書くと、その答えを再現する問題になってしまう）。`en`・`more` は架空の研究にもとづく参考。デッキの `follow:[{q, ja, points, frame, en}]` は模擬質疑応答の追加質問で、同じ話題のどの質問の後でも通じる言い方にする | 今日の練習・模擬質疑応答 |
 | `collocations.json` | `colloc` | 96組・例文288 | `{id, adj, prep, collocation, ja, difficulty, note, examples:[{id, scene, en, ja, also?}]}`。デッキ＝前置詞（デッキ名が答えなので出題中は表示しない） | Phrase Drill のみ |
 | `backchannels.json` | `backchannel` | 7機能・42問 | `{id, said, saidJa, ja, en}`。デッキ＝相槌の機能（同意・一部同意・理解・驚き・つなぎ・反対・否定疑問への答え）で、`basic`（自分から言う言い方）・`more`（聞いて分かればよい言い方）・`note`（硬さや使い分け）を持つ。`said` は相手のひと言（表示するだけで読み上げない。意味は `saidJa`）、`ja` は返す内容（問題文）、`en` はその英語で、相槌＋続きのひと言。どれかの `basic`/`more` で始まる（テストで検証）。返す内容の日本語は機能ごとに書き出しをそろえ（その通りです／良いご指摘ですが／なるほど／えっ、本当ですか／そうですね…／それはどうでしょうか／はい・いいえ）、どの相槌を使うかが分かるようにする | Phrase Drill のみ |
@@ -114,7 +114,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 - **ID**: カードIDは `<deckId>-NNN` で全ファイルを通じて一意（テストで検証）。学習履歴のキーなので、既存カードのIDは変えないこと。
 - **取り置き**: 各デッキの最後の2枚は週1回の初見チェック用（`catalog` の `held`。形容詞＋前置詞は対象外）。カードを足すときは途中に入れるか、末尾2枚が初見用になることを踏まえる。
 - **形容詞＋前置詞の例文**: `en` には「形容詞 前置詞」がこの綴りのまま隣り合って入る（回答例で強調するため。テストで検証）。`also` はその文でほかにも自然に使える前置詞で、回答例の下に「この文では … も使えます」と出す。組み合わせの選定は EnglishClub の一覧を参考にしたが、例文・訳・解説はオリジナル。
-- **切り返しの定型句**: Wordvice の資料「研究発表の質疑応答対処法」の定型句は利用者の指定で必須として収録している（質問例は、書き取りでは表示しないので収録をやめた）。`test/data.test.js` の `HANDOUT` が、どれも取り置きでないカードに入っていることを検証する（綴りの誤り rational / identity は直した。命令調でぶっきらぼうなもの — Please speak slowly and clearly. / I'd rather discuss … — は利用者の指定で丁寧な言い方に変えた）。場面・具体的な中身・訳はオリジナル。
+- **切り返しの定型句**: Wordvice の資料「研究発表の質疑応答対処法」の定型句は利用者の指定で必須として収録している（質問例は、書き取りでは表示しないので収録をやめた）。`test/data.test.js` の `HANDOUT` が、どれも取り置きでないカードに入っていることを検証する（綴りの誤り rational / identity は直した。命令調でぶっきらぼうなもの — Please speak slowly and clearly. / I'd rather discuss … — は利用者の指定で丁寧な言い方に変えた）。場面・具体的な中身・訳はオリジナル。資料にない動きは、利用者の希望でオリジナルの文を足している: 答えを組み立てて時間を作る（`r-check-009`〜`011`。Let me start with the first one. / Let me address … first. / Let me answer in two parts）と、データ外だと伝えて言えることにつなげる（`r-unsure-012`〜`014`。We haven't evaluated … yet, but …）。早く出るよう各場面の2〜4枚目に置いた（ID は並び順と一致しない）。
 
 ### 今日の練習（`planSession`）
 
