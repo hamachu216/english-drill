@@ -1,0 +1,160 @@
+{
+  "kind": "answer",
+  "title": "答え方ドリル",
+  "note": "質疑応答で答えを組み立てる型（結論 → 理由 → 具体例）と、システムの動作を説明する型（能動態・受動態・目的）。例文は汎用の装置・データの言い方で、自分の研究に当てはめ直す練習用。",
+  "decks": [
+    {
+      "id": "p-thisbecause",
+      "title": "根拠を述べる",
+      "frame": "This is because ...",
+      "ja": "これは〜だからです。",
+      "note": "答えの1文目（結論）のあとに、理由を1文で続ける型。because の後は「主語＋動詞」。p-because は手法を選んだ理由、これは直前の主張への根拠。",
+      "cards": [
+        {"id":"p-thisbecause-001","ja":"これは、データのばらつきが大きいためです。","en":"This is because the data vary widely."},
+        {"id":"p-thisbecause-002","ja":"これは、端末ごとに計算能力が違うためです。","en":"This is because the computing power differs across devices."},
+        {"id":"p-thisbecause-003","ja":"これは、ラベル付けに時間がかかるためです。","en":"This is because labeling takes a lot of time."},
+        {"id":"p-thisbecause-004","ja":"これは、センサの位置が人によって違うためです。","en":"This is because the position of the sensor differs from person to person."},
+        {"id":"p-thisbecause-005","ja":"これは、通信のコストを抑える必要があるためです。","en":"This is because we need to keep the communication cost low."},
+        {"id":"p-thisbecause-006","ja":"これは、学習時と実運用で条件が異なるためです。","en":"This is because the conditions in training and in real use are different."},
+        {"id":"p-thisbecause-007","ja":"これは、効く特徴量が対象によって変わるためです。","en":"This is because the useful features change depending on the target."},
+        {"id":"p-thisbecause-008","ja":"これは、モデルが小さすぎて複雑なパターンを捉えられないためです。","en":"This is because the model is too small to capture complex patterns."}
+      ]
+    },
+    {
+      "id": "p-incontext",
+      "title": "用語を定義する",
+      "frame": "In this context, ... means ...",
+      "ja": "この文脈では、〜は〜という意味です。",
+      "note": "答えの1文目で、言葉の意味をこの発表の中での意味に限って言い切る型。同じ言葉でも分野や場面で意味が違うときに、聞き手のずれを防ぐ。",
+      "cards": [
+        {"id":"p-incontext-001","ja":"この文脈では、クライアントは1台の端末のことです。","en":"In this context, a client means a single device."},
+        {"id":"p-incontext-002","ja":"この文脈では、精度は正しく分類できた割合のことです。","en":"In this context, accuracy means the ratio of correctly classified samples."},
+        {"id":"p-incontext-003","ja":"この文脈では、遅延はセンサの測定から結果の表示までの時間のことです。","en":"In this context, delay means the time from sensing to showing the result."},
+        {"id":"p-incontext-004","ja":"この文脈では、個人化はユーザーごとにモデルを調整することです。","en":"In this context, personalization means adjusting the model for each user."},
+        {"id":"p-incontext-005","ja":"この文脈では、ノイズはセンサの測定誤差のことです。","en":"In this context, noise means measurement error of the sensor."},
+        {"id":"p-incontext-006","ja":"この文脈では、一般化は新しいユーザーでもうまく動くことです。","en":"In this context, generalization means working well for new users."},
+        {"id":"p-incontext-007","ja":"この文脈では、ラベルは行動の正解の名前のことです。","en":"In this context, a label means the correct name of an activity."},
+        {"id":"p-incontext-008","ja":"この文脈では、軽量とは端末の上で動かせるほど小さいことです。","en":"In this context, lightweight means small enough to run on a device."}
+      ]
+    },
+    {
+      "id": "p-forinstance",
+      "title": "図表を指して例を挙げる",
+      "frame": "For instance, as shown in ..., ...",
+      "ja": "たとえば、〜に示すように、〜。",
+      "note": "答えの3文目（具体例）で、図・表・スライドを指して数値や傾向を補う型。as shown in の後ろに図表の名前、コンマのあとに言いたい内容。",
+      "cards": [
+        {"id":"p-forinstance-001","ja":"たとえば、図3に示すように、誤認識の多くは座っているときに起きています。","en":"For instance, as shown in Figure 3, most errors occur while the user is sitting."},
+        {"id":"p-forinstance-002","ja":"たとえば、表2に示すように、私たちの手法はベースラインより速いです。","en":"For instance, as shown in Table 2, our method is faster than the baseline."},
+        {"id":"p-forinstance-003","ja":"たとえば、スライド5に示すように、小さいモデルは大きいモデルより層が少ないです。","en":"For instance, as shown in Slide 5, the small model has fewer layers than the large one."},
+        {"id":"p-forinstance-004","ja":"たとえば、このグラフに示すように、ノイズが増えると精度が下がります。","en":"For instance, as shown in the graph, the accuracy drops when the noise increases."},
+        {"id":"p-forinstance-005","ja":"たとえば、左の図に示すように、歩き始めると信号がはっきり変わります。","en":"For instance, as shown in the left figure, the signal changes clearly when the user starts walking."},
+        {"id":"p-forinstance-006","ja":"たとえば、図4に示すように、学習時間は端末の数に比例して増えます。","en":"For instance, as shown in Figure 4, the training time grows linearly with the number of devices."},
+        {"id":"p-forinstance-007","ja":"たとえば、右のパネルに示すように、2つのグループは1週間後に違う動きをします。","en":"For instance, as shown in the right panel, the two groups behave differently after one week."},
+        {"id":"p-forinstance-008","ja":"たとえば、表1に示すように、どの端末も1日に1メガバイト未満しか送りません。","en":"For instance, as shown in Table 1, every device sends less than one megabyte per day."}
+      ]
+    },
+    {
+      "id": "p-collects",
+      "title": "能動態: 主体がデータを集める",
+      "frame": "The ... collects ... at ...",
+      "ja": "〜は〜を〜で収集します。",
+      "note": "モジュールや装置を主語にして、何をどの頻度で集めるかを言う型。主語（主体）→ 動詞 → データの順で、誰が何をするかが明確になる。三単現の s を忘れない。",
+      "cards": [
+        {"id":"p-collects-001","ja":"ウェアラブルセンサは、加速度データを50 Hzで収集します。","en":"The wearable sensor collects acceleration data at 50 Hz."},
+        {"id":"p-collects-002","ja":"スマートフォンは、位置情報を1分間隔で収集します。","en":"The smartphone collects location data at one-minute intervals."},
+        {"id":"p-collects-003","ja":"マイクは、音を16 kHzで収集します。","en":"The microphone collects sound at 16 kHz."},
+        {"id":"p-collects-004","ja":"ゲートウェイは、すべてのセンサのデータを1時間ごとの終わりに収集します。","en":"The gateway collects the data from all sensors at the end of each hour."},
+        {"id":"p-collects-005","ja":"カメラは、画像を毎秒10フレームで収集します。","en":"The camera collects images at 10 frames per second."},
+        {"id":"p-collects-006","ja":"スマートウォッチは、心拍数を5秒間隔で収集します。","en":"The smartwatch collects heart rate at five-second intervals."},
+        {"id":"p-collects-007","ja":"アプリは、利用ログを起動のたびに収集します。","en":"The app collects usage logs at every launch."},
+        {"id":"p-collects-008","ja":"この装置は、温度の値を一定の間隔で収集します。","en":"The device collects temperature readings at a fixed interval."}
+      ]
+    },
+    {
+      "id": "p-extracts",
+      "title": "能動態: 主体がデータから情報を取り出す",
+      "frame": "The ... extracts ... from ...",
+      "ja": "〜は〜から〜を抽出します。",
+      "note": "モジュールが入力から何を取り出すかを言う型。extract A from B ＝ B から A を取り出す。入力（from の後）と出力（extracts の後）を取り違えない。",
+      "cards": [
+        {"id":"p-extracts-001","ja":"ローカルモデルは、生のセンサ信号から時間的な特徴を抽出します。","en":"The local model extracts temporal features from the raw sensor stream."},
+        {"id":"p-extracts-002","ja":"エンコーダは、各画像から小さな表現を抽出します。","en":"The encoder extracts a compact representation from each image."},
+        {"id":"p-extracts-003","ja":"最初の層は、入力信号から単純なパターンを抽出します。","en":"The first layer extracts simple patterns from the input signal."},
+        {"id":"p-extracts-004","ja":"前処理モジュールは、記録から歩行の区間を抽出します。","en":"The preprocessing module extracts walking segments from the recording."},
+        {"id":"p-extracts-005","ja":"このシステムは、ユーザーの発話からキーワードを抽出します。","en":"The system extracts keywords from the user's speech."},
+        {"id":"p-extracts-006","ja":"特徴抽出器は、各時間窓から統計的な特徴を抽出します。","en":"The feature extractor extracts statistical features from each time window."},
+        {"id":"p-extracts-007","ja":"このアルゴリズムは、フィルタ後の信号からピークを抽出します。","en":"The algorithm extracts peaks from the filtered signal."},
+        {"id":"p-extracts-008","ja":"このモデルは、ノイズの多いデータから有用な情報を抽出します。","en":"The model extracts useful information from noisy data."}
+      ]
+    },
+    {
+      "id": "p-transmitted",
+      "title": "受動態: データの行き先を述べる",
+      "frame": "The ... are transmitted to ... via ...",
+      "ja": "〜は〜を経由して〜に送られます。",
+      "note": "データやパラメータを主語にして、どこへどう送られるかを言う型（are ＋ 過去分詞）。誰が送るかより、データの流れる向きを見せたいときに使う。主語が複数形なので are。",
+      "cards": [
+        {"id":"p-transmitted-001","ja":"抽出された特徴は、Bluetooth経由でサーバに送られます。","en":"The extracted features are transmitted to the server via Bluetooth."},
+        {"id":"p-transmitted-002","ja":"センサのデータは、Bluetooth経由でスマートフォンに送られます。","en":"The sensor data are transmitted to the smartphone via Bluetooth."},
+        {"id":"p-transmitted-003","ja":"モデルのパラメータは、安全な接続経由でサーバに送られます。","en":"The model parameters are transmitted to the server via a secure connection."},
+        {"id":"p-transmitted-004","ja":"更新された重みは、Wi-Fi経由で各端末に送られます。","en":"The updated weights are transmitted to each device via Wi-Fi."},
+        {"id":"p-transmitted-005","ja":"生の信号は、ゲートウェイ経由でクラウドに送られます。","en":"The raw signals are transmitted to the cloud via the gateway."},
+        {"id":"p-transmitted-006","ja":"圧縮された特徴は、無線ネットワーク経由でエッジサーバに送られます。","en":"The compressed features are transmitted to the edge server via a wireless network."},
+        {"id":"p-transmitted-007","ja":"結果は、アプリ経由でユーザーのスマートフォンに送られます。","en":"The results are transmitted to the user's smartphone via the app."},
+        {"id":"p-transmitted-008","ja":"暗号化されたログは、HTTPS経由でデータベースに送られます。","en":"The encrypted logs are transmitted to the database via HTTPS."}
+      ]
+    },
+    {
+      "id": "p-updated",
+      "title": "受動態: パラメータの更新方法を述べる",
+      "frame": "The ... are updated using ...",
+      "ja": "〜は〜を使って更新されます。",
+      "note": "パラメータや推定値を主語にして、何を使って更新するかを言う型。更新する主体より更新される対象に注目させる。using の後に手段・データ。",
+      "cards": [
+        {"id":"p-updated-001","ja":"モデルのパラメータは、勾配降下法を使って更新されます。","en":"The model parameters are updated using gradient descent."},
+        {"id":"p-updated-002","ja":"重みは、各バッチの損失を使って更新されます。","en":"The weights are updated using the loss of each batch."},
+        {"id":"p-updated-003","ja":"ローカルモデルは、各端末のデータを使って更新されます。","en":"The local models are updated using the data on each device."},
+        {"id":"p-updated-004","ja":"ユーザーのプロファイルは、最新のフィードバックを使って更新されます。","en":"The user profiles are updated using the latest feedback."},
+        {"id":"p-updated-005","ja":"パラメータは、少量の新しいデータだけを使って更新されます。","en":"The parameters are updated using only a small amount of new data."},
+        {"id":"p-updated-006","ja":"共有パラメータは、すべてのローカルな更新の平均を使って更新されます。","en":"The shared parameters are updated using the average of all local updates."},
+        {"id":"p-updated-007","ja":"推定値は、新しい測定のたびに、その測定値を使って更新されます。","en":"The estimates are updated using each new measurement."},
+        {"id":"p-updated-008","ja":"しきい値は、前の週の結果を使って更新されます。","en":"The thresholds are updated using the results of the previous week."}
+      ]
+    },
+    {
+      "id": "p-inorder",
+      "title": "目的を述べる（手法の理由）",
+      "frame": "We employ ... in order to ...",
+      "ja": "〜するために、〜を用います。",
+      "note": "employ ＝ use のやや硬い言い方。in order to の後は動詞の原形で、目的を表す。手法の名前が先、目的が後。",
+      "cards": [
+        {"id":"p-inorder-001","ja":"通信量を減らすために、モデルの圧縮を用います。","en":"We employ model compression in order to reduce the communication overhead."},
+        {"id":"p-inorder-002","ja":"データが少ない問題に対処するために、データ拡張を用います。","en":"We employ data augmentation in order to cope with the small amount of data."},
+        {"id":"p-inorder-003","ja":"ストリームをリアルタイムで処理するために、スライディングウィンドウを用います。","en":"We employ a sliding window in order to process the stream in real time."},
+        {"id":"p-inorder-004","ja":"高周波のノイズを取り除くために、ローパスフィルタを用います。","en":"We employ a low-pass filter in order to remove high-frequency noise."},
+        {"id":"p-inorder-005","ja":"モデルを公平に評価するために、交差検証を用います。","en":"We employ cross-validation in order to evaluate the model fairly."},
+        {"id":"p-inorder-006","ja":"新しいユーザーにモデルを適応させるために、転移学習を用います。","en":"We employ transfer learning in order to adapt the model to new users."},
+        {"id":"p-inorder-007","ja":"計算コストを低く保つために、単純なしきい値を用います。","en":"We employ a simple threshold in order to keep the computation cost low."},
+        {"id":"p-inorder-008","ja":"検出したイベントを確かめるために、2つ目のセンサを用います。","en":"We employ a second sensor in order to confirm the detected events."}
+      ]
+    },
+    {
+      "id": "p-enables",
+      "title": "結果として可能になることを述べる",
+      "frame": "This enables the system to ...",
+      "ja": "これにより、システムは〜できます。",
+      "note": "前の文の内容（This）が原因で、システムに何ができるようになるかを言う型。enable A to ＋動詞の原形。This が何を指すか、直前の文ではっきりさせておく。",
+      "cards": [
+        {"id":"p-enables-001","ja":"これにより、システムは目立った遅延なく、リアルタイムの対話を処理できます。","en":"This enables the system to process real-time interaction without noticeable delay."},
+        {"id":"p-enables-002","ja":"これにより、システムは各ユーザーに適応できます。","en":"This enables the system to adapt to each user."},
+        {"id":"p-enables-003","ja":"これにより、システムは低消費電力の端末で動作できます。","en":"This enables the system to run on a low-power device."},
+        {"id":"p-enables-004","ja":"これにより、システムはインターネット接続なしで動作できます。","en":"This enables the system to work without an internet connection."},
+        {"id":"p-enables-005","ja":"これにより、システムは転倒を1秒以内に検知できます。","en":"This enables the system to detect falls within one second."},
+        {"id":"p-enables-006","ja":"これにより、システムは異なるセンサを同じやり方で扱えます。","en":"This enables the system to handle different sensors in the same way."},
+        {"id":"p-enables-007","ja":"これにより、システムはユーザーのプライバシーを守れます。","en":"This enables the system to protect the privacy of users."},
+        {"id":"p-enables-008","ja":"これにより、システムは毎日新しいデータから学べます。","en":"This enables the system to learn from new data every day."}
+      ]
+    }
+  ]
+}

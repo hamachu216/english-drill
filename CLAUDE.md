@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **今日の練習**: ホームのボタン1つで、学習履歴から組んだ1日分が始まる。順番は 基礎文法 → 研究英語の構文 → 質疑応答の切り返し。30分でおよそ25問（1問約1分）。自分の研究について答える Q&A は入らない（模擬質疑応答だけ）。
 - **Phrase Drill**: 形容詞＋前置詞（interested in など）の英作文と、相槌（Exactly. That's a good point, but… など）を混ぜて10問ずつ練習する。まだ言えていないものは、先に見せてから別の文で出す。今日の練習には入らない。
+- **Answer Drill**: 質疑応答で答えを組み立てる型（理由 `This is because …`・定義 `In this context, … means …`・具体例 `For instance, as shown in …`）と、システムの動作を説明する型（能動態 `The … collects … at …`・受動態 `The … are transmitted to … via …`・目的 `We employ … in order to …` など）を、日本語から英作文して10問ずつ練習する。9つの型を一度に出さず、始めた型と次の2つだけを開く。今日の練習には入らない。
 - **Listening Drill**: 4〜6文の話（聴衆からの長い質問・座長の案内・発表の一節・ミーティング）を聞いて、問いの答えになる1文を書き取る。3本ずつ。今日の練習には入らない。
 - **模擬質疑応答**: 研究についての英語の質問5問に、追加質問を1つずつ続けて、支援なしで答える。今日の練習には入らない。
 - **自由に練習**: 「基礎文法（Lv1〜2）」「Lv3 研究ディスカッション」「Lv4 国際学会」「Lv5 博士公聴会」から1つ選んで10問ずつ練習する。
@@ -72,7 +73,7 @@ data/*.json ──catalog──▶ cards（全カード。kind・topic・deck・
 localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers, settings}
                               │
              ┌────────────────┴──────────────────┐
-     planSession（今日の練習）            byNeed（自由練習・Phrase Drill）・mockSession（模擬質疑応答）
+     planSession（今日の練習）            byNeed（自由練習・Phrase Drill・Answer Drill）・mockSession（模擬質疑応答）
              └──────────────▶ queue [{id, phase, level?, as?, intro?, follow?, check?, retry?}] ◀┘
                               │  1ステップ＝1画面
                        showStep → reveal → grade
@@ -106,10 +107,11 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 |---|---|---|---|---|
 | `1-basic.json`・`2-advanced.json` | `grammar` | 25トピック・453問 | `{id, ja, en, note?}`。デッキに文法の1行解説 `note`（必須）。研究の場ではまず使わない形（if only・倒置・文学的な分詞構文など）は入れない | 今日の練習・自由練習 |
 | `3-discussion.json`〜`5-defense.json` | `phrase` | 30トピック・360問 | 同上 | 自由練習のみ |
-| `patterns.json` | `pattern` | 39の型・312文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
+| `patterns.json` | `pattern` | 30の型・240文 | `{id, ja, en}`。デッキ＝1つの型（`frame: "We chose this method because ..."`・`ja`・`note`）。`en` は型の書き出しで始まり、`...` に入る語句（`slots`）を取り出せること | 今日の練習 |
 | `replies.json` | `reply` | 9場面・90問 | `{id, scene, ja, frame, en}`。決まった返し方（`en`）を読み上げで聞いて書き取る（ディクテーション）。`ja`（意味）を問題文に、`scene`（場面）をその下に表示する。ヒントは英文の頭文字と語の長さ（`skeleton`）だけ。`frame` は答えの後に「答え方の型」として出す | 今日の練習 |
 | `qa.json` | `qa` | 10話題・70問 | `{id, q, ja, points, frame, en, more}`（英語の質問・意味・答えに入れる要素・答え方の型・1文の回答例・続き）。自分の研究について答える問題で、`points` はどの研究にも当てはまる言い方にする（架空の研究の中身を書くと、その答えを再現する問題になってしまう）。`en`・`more` は架空の研究にもとづく参考。デッキの `follow:[{q, ja, points, frame, en}]` は模擬質疑応答の追加質問で、同じ話題のどの質問の後でも通じる言い方にする | 今日の練習・模擬質疑応答 |
 | `listening.json` | `listening` | 4場面・20本 | `{id, scene, task, text, en, ja, textJa}`。`text` は4〜6文の話（読み上げる）、`task` はどの1文を書き取るかを決める日本語の問い（問題文）、`en` はその1文で `text` の中にそのまま入っている（テストで検証）。`ja` はその意味（ヒント）、`textJa` は全文の訳（答えの後）。場面の構成は British Council LearnEnglish の Listening を参考にしたが、文はオリジナル（あちらのスクリプトと音声は著作物なので写さない） | Listening Drill のみ |
+| `answers.json` | `answer` | 9つの型・72文 | `{id, ja, en}`。構造は `patterns.json` と同じ（デッキ＝1つの型。`frame`・`ja`・`note`。`en` は型の書き出しで始まり、`slots` を取り出せる）だが、`kind` が違うので今日の練習の対象にならない。例文は汎用の装置・データの言い方 | Answer Drill のみ |
 | `collocations.json` | `colloc` | 96組・例文288 | `{id, adj, prep, collocation, ja, difficulty, note, examples:[{id, scene, en, ja, also?}]}`。デッキ＝前置詞（デッキ名が答えなので出題中は表示しない） | Phrase Drill のみ |
 | `backchannels.json` | `backchannel` | 7機能・42問 | `{id, said, saidJa, ja, en}`。デッキ＝相槌の機能（同意・一部同意・理解・驚き・つなぎ・反対・否定疑問への答え）で、`basic`（自分から言う言い方）・`more`（聞いて分かればよい言い方）・`note`（硬さや使い分け）を持つ。`said` は相手のひと言（表示するだけで読み上げない。意味は `saidJa`）、`ja` は返す内容（問題文）、`en` はその英語で、相槌＋続きのひと言。どれかの `basic`/`more` で始まる（テストで検証）。返す内容の日本語は機能ごとに書き出しをそろえ（その通りです／良いご指摘ですが／なるほど／えっ、本当ですか／そうですね…／それはどうでしょうか／はい・いいえ）、どの相槌を使うかが分かるようにする | Phrase Drill のみ |
 
@@ -118,7 +120,7 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 - **形容詞＋前置詞の例文**: `en` には「形容詞 前置詞」がこの綴りのまま隣り合って入る（回答例で強調するため。テストで検証）。`also` はその文でほかにも自然に使える前置詞で、回答例の下に「この文では … も使えます」と出す。組み合わせの選定は EnglishClub の一覧を参考にしたが、例文・訳・解説はオリジナル。
 - **切り返しの定型句**: Wordvice の資料「研究発表の質疑応答対処法」の定型句は利用者の指定で必須として収録している（質問例は、書き取りでは表示しないので収録をやめた）。`test/data.test.js` の `HANDOUT` が、どれも取り置きでないカードに入っていることを検証する（綴りの誤り rational / identity は直した。命令調でぶっきらぼうなもの — Please speak slowly and clearly. / I'd rather discuss … — は利用者の指定で丁寧な言い方に変えた）。場面・具体的な中身・訳はオリジナル。資料にない動きは、利用者の希望でオリジナルの文を足している: 答えを組み立てて時間を作る（`r-check-009`〜`011`。Let me start with the first one. / Let me address … first. / Let me answer in two parts）と、データ外だと伝えて言えることにつなげる（`r-unsure-012`〜`014`。We haven't evaluated … yet, but …）。早く出るよう各場面の2〜4枚目に置いた（ID は並び順と一致しない）。
 - **確かさ・言い直し・答えの締め**（利用者の希望で追加。資料にない動きで、すべてオリジナルの文）: 型 `p-inother`（In other words, …）・`p-precise`（To be more precise, …）・`p-knowledge`（As far as I know, …）・`p-bestknowledge`（To the best of our knowledge, …）・`p-opinion`（In my opinion, …）は `p-propose` の次に並べ、構文が進むと次々に入る。`In my opinion` は硬く強いので、`note` で I think … / I'd say … が口頭では自然だと書いている。切り返しの `r-close`（Does that answer your question? など答えを締める8枚）は資料に由来しないので `refs` を持たない（`test/data.test.js` は `refs` を要求しない）。
-- **質疑応答の防衛フレーズ・PREP・データフローの構文**（利用者の希望で追加。最優先の指定）: 聞き返し・意図確認は既存の `r-hear`・`r-check` の2〜4枚目に足した（Just to make sure I understand your point, are you asking about / whether …? ・ Are you asking how …, or how …? ・ Sorry, I missed the second half. … ・ Could you speak a little slower? …）。PREP（結論 → 理由 → 具体例）は、Point の言い切りを切り返しの新デッキ `r-point`（Yes, exactly. / Not quite. / In this context, … means …）、Reason を型 `p-thisbecause`、Example を型 `p-forinstance`（For instance, as shown in …）、用語の定義を型 `p-incontext` で練習する。データの流れを言う構文は、能動態 `p-collects`・`p-extracts`、受動態 `p-transmitted`・`p-updated`（主語が複数形なので are）、目的 `p-inorder`、結果 `p-enables`。型は `p-opinion` の次に並ぶ。利用者が貼った例文には実際の研究の語が含まれていたため、型と定型句はそのままに、例文はすべて汎用の装置・データの言い方に置き換えている（public リポジトリなので）。
+- **質疑応答の防衛フレーズ・PREP・データフローの構文**（利用者の希望で追加。最優先の指定）: 聞き返し・意図確認の短い定型句は、今日の練習に入る切り返しの `r-hear`・`r-check` の2〜4枚目に足した（Just to make sure I understand your point, are you asking about / whether …? ・ Are you asking how …, or how …? ・ Sorry, I missed the second half. … ・ Could you speak a little slower? …。`r-start-001` などと一部重なるが、利用者の希望で残している）。PREP（結論 → 理由 → 具体例）の Point の言い切りは切り返しの新デッキ `r-point`（Yes, exactly. / Not quite. / In this context, … means …）で、これも今日の練習に入る。Reason・Example・用語の定義と、システムの動作を説明する構文（能動態 `p-collects`・`p-extracts`、受動態 `p-transmitted`・`p-updated`（主語が複数形なので are）、目的 `p-inorder`、結果 `p-enables`）は、量が多く研究発表に特化しているので、利用者の希望で今日の練習の外の独立ドリル（Answer Drill。`data/answers.json`）にした。利用者が貼った例文には実際の研究の語が含まれていたため、型と定型句はそのままに、例文はすべて汎用の装置・データの言い方に置き換えている（public リポジトリなので）。
 
 ### 今日の練習（`planSession`）
 
@@ -160,6 +162,10 @@ localStorage "eng:v1" ─restore─▶ state {log, hist, days, session, answers,
 - **先に見せる**（`drillSteps`・`lesson`）: Phrase Drill は、まだ言えていないものを出題の直前に「聞いてまねする」画面（`intro`。採点なし）で見せる。形容詞＋前置詞は、新しい組み合わせと前回言えなかった組み合わせ（記録の箱が0）。相槌は、どのカードもまだ言えていない機能の、そのラウンドで最初の1枚。見せる例文は直後に出す文とは別の文にする（組み合わせは1つ前の例文 `previous`、相槌は同じ機能の別のカードで `basic` の言い方で始まるもの）ので、写すのではなく使う練習になる。言えなかった問題だけを繰り返すラウンドでは見せない（答えを見た直後なので）。以前は見せずに出題していたが、知らない表現は思い出しようがなく、ヒントを見ても言えなかった。
 - **全文を言えるまで**: Phrase Drill の自己評価は3つで、見出しに基準を出す。✕ 言えなかった＝組み合わせ・相槌が出なかった（翌日）。△ 一部だけ言えた＝組み合わせ・相槌は出たが、文の残り（went up など）が出なかった、またはヒントを見た（記録は「ヒントで言えた」と同じで、3日後、7日止まり）。○ 言えた＝全文を自分で言えた（回答例と違う言い方でもよい）。△ も ✕ と同じく、同じラウンドの中で○になるまで繰り返す。そのとき形容詞＋前置詞も同じ例文をもう一度出す（ステップの `nth` が例文を指す）。答えで見た語句を、少し置いて何も見ずに言うのが、文の残りの語句を自分から出せるようにする練習になる。語句で止まったら、ヒントの1段目「残りの英文」で対象だけ伏せた文を見られる（見たら △）。一時「組み合わせ・相槌が合えば残りは違っても言えた」としたが、利用者の希望（残りの語句も自分から出せるようになりたい）で改めた。語句ごとの記録は取らない（訳つきの語句データが要るため）。
 
+### Answer Drill
+
+Phrase Drill と同じ作りで、別のボタンから始める（`kind: 'answer'`。`app.js` の `drill()` に入っているので、聞いてまねする画面・○になるまで繰り返す・△の中間はそのまま働く）。日本語から、型 `frame` に語句を入れて英文にする。ヒントは型 → 頭文字。自己評価は ✕ 型が出なかった／△ 型は出たが残りが出なかった・ヒントを見た／○ 全文を言えた。9つの型を一度に出すと最初のラウンドが「聞いてまねする」だらけになるので、`openFrames` が「始めた型と、次の2つ」だけを `byNeed` に渡す（新しい型は、始めた型が増えるたびに2つずつ開く）。先に見せる文は、その型の別のカード（`lesson`）で、直後に出す文を写させない。初見チェック用の取り置きはない（`CHECK` にない種類なので全カードを使う）。
+
 ### Listening Drill
 
 今日の練習の外に置いた書き取り（利用者の希望で、Phrase Drill と同じく独立させた）。`byNeed` の順に `TALKS`（3）本ずつ出し、Phrase Drill と同じく ○ になるまで繰り返す（`inFull`）。話の全体を1文ずつ読み上げ（何度でも聞ける）、文字は見せない。問題文は「本題の質問は？」のような問い（`task`）で、その答えになる1文だけを書き取る。全部を書き取らせないのは、5文で1本5〜8分かかり、量のわりに効果が伸びないため。長さが要るのは、実際の質問が「感想 → 前置き → 本題」と続き、本題を聞き分けるのが難しいため。ヒントは書き取る文の意味と頭文字。答えの後に、書き取った文との差分・話の全文（書き取る文を強調）・全文の訳を出す。自己評価は ✕ 書き取れなかった／△ 一部だけ書き取れた（語が抜けた・ヒントを見た）／○ 書き取れた（意味が変わらない程度）。記録は `review` で進む。読み上げは端末の合成音声なので、実際の話者の速さやなまりには慣れない。
@@ -186,7 +192,7 @@ iPhone の Safari は7日間開かないサイトの記録を消すが、ホー�
 
 画面は3つの `<section>`（`home`、`study`、`result`）を `hidden` で切り替える。多くの要素が `display` を指定しているため、グローバルの `[hidden]{display:none!important}` が必要。
 
-- **ホーム**: `#home` の直下にセクション（`.card`）を1つずつ並べたグリッド（間隔はグリッドの `gap` で取り、セクション自身に外側の余白を持たせない）。見出しはセクションの中に置く。スマホ幅では HTML の順に1列: 進捗（`.hero`）・今日のメニュー（`.menu`）・ドリル（`.drills`。今日の練習の外にある Phrase Drill・Listening Drill・模擬質疑応答を、1つのセクションに罫線で区切った行として並べる。行全体がボタンで、名前と1行の要約と矢印だけ。以前は1つずつ別の箱で、3つに増えて冗長になったのでまとめた）・いまの状況（`.now`）・週ごとの変化（`.weekly`）・学習の記録（`.history`）・自由に練習（`.free`）・設定（`.settings`）・記録のバックアップ（`.backup`）・参考サイト（`.sources`）。
+- **ホーム**: `#home` の直下にセクション（`.card`）を1つずつ並べたグリッド（間隔はグリッドの `gap` で取り、セクション自身に外側の余白を持たせない）。見出しはセクションの中に置く。スマホ幅では HTML の順に1列: 進捗（`.hero`）・今日のメニュー（`.menu`）・ドリル（`.drills`。今日の練習の外にある Phrase Drill・Answer Drill・Listening Drill・模擬質疑応答を、1つのセクションに罫線で区切った行として並べる。行全体がボタンで、名前と1行の要約と矢印だけ。以前は1つずつ別の箱で、3つに増えて冗長になったのでまとめた）・いまの状況（`.now`）・週ごとの変化（`.weekly`）・学習の記録（`.history`）・自由に練習（`.free`）・設定（`.settings`）・記録のバックアップ（`.backup`）・参考サイト（`.sources`）。
 - **PC（幅 960px 以上）**: 最大 70rem の版面。ホームは2列で、`grid-template-areas` により1行に2枚ずつ（進捗｜ドリル、メニュー｜いまの状況、学習の記録｜週ごとの変化、自由に練習｜バックアップ、設定｜参考サイト）。同じ行のカードは上端も下端もそろう。開閉する `details` だけは `align-self: start` で、片方を開いても隣は伸びない。
 - **出題画面**: PC では `#qcard` を「問題・回答 | 回答例・自己評価」の2列にする。
 

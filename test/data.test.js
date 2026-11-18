@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, slots } from '../core.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)));
-const levels = FILES.map(read), [patterns, qa, colloc, replies, backchannels, talks] = DRILLS.map(read), files = [...levels, patterns, qa, colloc, replies, backchannels, talks];
+const levels = FILES.map(read), [patterns, qa, colloc, replies, backchannels, talks, answers] = DRILLS.map(read), files = [...levels, patterns, qa, colloc, replies, backchannels, talks, answers];
 
 test('levels are 1..N in file order', () => assert.deepEqual(levels.map((f) => f.level), levels.map((_, i) => i + 1)));
 
@@ -29,7 +29,8 @@ test('the daily grammar decks (Lv1–2) each explain their grammar in one line',
 
 test('sentence frames: every card reuses its frame with different content', () => {
   assert.equal(patterns.kind, 'pattern');
-  for (const d of patterns.decks) {
+  assert.equal(answers.kind, 'answer');
+  for (const d of [...patterns.decks, ...answers.decks]) {
     assert.ok(d.frame.includes('...') && d.ja && d.note, d.id);
     assert.ok(d.cards.length >= 6, `${d.id}: enough sentences to practice and to hold two back for the weekly check`);
     for (const c of d.cards) assert.ok(c.en.startsWith(d.frame.split('...')[0].trim()) && slots(d.frame, c.en).every(Boolean) && slots(d.frame, c.en).length, `${c.id}: fits its frame, so its phrases can be shown`);
@@ -92,10 +93,11 @@ test('Q&A hedges, restatements and answer closings: their frames and stock phras
   for (const p of ['Does that answer your question?', 'Does that make sense?', 'Please let me know if anything is unclear.']) assert.ok(asked.includes(p), p);
 });
 
-// Defence phrases (confirming the question, asking to repeat), the PREP answer (point → reason → example) and the
-// data-flow sentences (active, passive, purpose). Examples use generic systems, never the user's own research.
-test('Q&A defence phrases, PREP answer and data-flow sentences are practiced', () => {
-  const frames = new Map(patterns.decks.map((d) => [d.frame, d]));
+// Defence phrases (confirming the question, asking to repeat) are daily replies; the PREP answer frames (point → reason
+// → example) and the data-flow frames (active, passive, purpose) are the Answer Drill, outside the daily session.
+// Examples use generic systems, never the user's own research.
+test('Q&A defence phrases are daily replies; PREP and data-flow frames are the Answer Drill', () => {
+  const frames = new Map(answers.decks.map((d) => [d.frame, d]));
   for (const f of ['This is because ...', 'In this context, ... means ...', 'For instance, as shown in ..., ...', 'The ... collects ... at ...', 'The ... extracts ... from ...', 'The ... are transmitted to ... via ...', 'The ... are updated using ...', 'We employ ... in order to ...', 'This enables the system to ...']) assert.ok(frames.get(f)?.cards.length >= 8, f);
   const asked = replies.decks.flatMap((d) => d.cards.slice(0, -2)).map((c) => c.en);
   for (const p of ['Just to make sure I understand your point, are you asking about', 'Just to make sure I understand your point, are you asking whether', 'Are you asking how', 'Sorry, I missed the second half.', 'Could you speak a little slower?', 'Yes, exactly.', 'Not quite.', 'In this context,']) assert.ok(asked.some((t) => t.includes(p)), p);
@@ -154,4 +156,21 @@ test('adjective + preposition: the pairs that change meaning with the prepositio
   for (const pair of ['happy about', 'happy with', 'angry about', 'angry at', 'angry with', 'disappointed at', 'disappointed in',
     'disappointed with', 'surprised at', 'surprised by', 'skilled at', 'skilled in', 'interested in', 'good at', 'satisfied with'])
     assert.ok(have.has(pair), pair);
+});
+
+test('the Answer Drill is outside the daily session: no answer card is planned, and the drill orders them like any set', async () => {
+  const { catalog, seeded } = await import('../core.js');
+  const { planSession, byNeed, drillSteps, lesson, scaffold, openFrames } = await import('../plan.js');
+  const items = catalog(files), cards = items.filter((c) => c.kind === 'answer');
+  assert.equal(cards.length, 72);
+  const queue = planSession({ items, hist: {}, days: {}, day: '2026-11-20', minutes: 30, rand: seeded('x') });
+  assert.ok(queue.every((s) => !s.id.startsWith('p-thisbecause') && !cards.some((c) => c.id === s.id)));
+  const round = byNeed(openFrames(cards, {}), {}, '2026-11-20').slice(0, 10), steps = drillSteps(round, {});
+  assert.equal(steps.filter((s) => s.intro).length, 2, 'a frame not said yet is shown first: two frames in a round of ten');
+  assert.equal(new Set(round.map((c) => c.topic)).size, 2);
+  const rec = { box: 1, n: 1, last: '2026-11-20', due: '2026-11-23', grade: 2 }, started = Object.fromEntries(round.map((c) => [c.id, rec]));
+  assert.equal(new Set(openFrames(cards, started).map((c) => c.topic)).size, 4, 'two more frames open once the first two are started');
+  const [first] = round, shown = lesson(first, undefined);
+  assert.ok(shown.head === first.deck.frame && shown.en !== first.en, 'the sentence shown is not the one asked next');
+  assert.deepEqual(scaffold(first, { id: first.id, phase: 'free' }).hints.map(([label]) => label), ['型', '頭文字']);
 });
