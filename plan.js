@@ -26,6 +26,7 @@ const CHECK = { grammar: 3, pattern: 2, reply: 1 }; // weekly first-sight check
 const WEEK = 7;
 const HINT_BOX = 2; // answers with a hint alone get a card this far (7 days)
 const LATER = new Set(['b-be', 'b-neg', 'b-prog']); // the present-tense basics, drilled to death on the first days: their cards go last
+const PATIENCE = 7; // ...but a LATER review waiting this many days past its due date rejoins the others, or it would wait for ever
 const KNOWN = 3; // grammar answers, all said, after which a topic counts as known and its new cards wait
 const ROTATION = 3; // grammar topics taking new cards at a time
 
@@ -155,19 +156,21 @@ export function mockSession(items, hist, rand = Math.random) {
 }
 
 // Today's session. Per kind: reviews that are due (weakest first), then unseen cards from the weakest topic that has any,
-// then new cards, then — when nothing is left — the cards practiced longest ago. Half of each kind is kept for new
-// cards however deep the review pile is, so every day brings new sentences — but never at the cost of a card missed
-// last time: those always come back (as many as fit). Reviews and new cards are asked in turn, not one block after the other.
+// then new cards, then — when nothing is left — the cards practiced longest ago. While the review pile is shallower
+// than a session half of each kind is kept for new cards, a quarter while it is under two sessions deep, none beyond:
+// new cards bring reviews (about five each, over two months), so without that the pile grows faster than it can be
+// worked off — in a simulation, cards overdue by weeks after two months. A card missed last time never waits for
+// this: those always come back (as many as fit). Reviews and new cards are asked in turn, not one block after the other.
 // Every kind gets at least one card, so research English is touched no matter how grammar is going.
 // Order: cards failed last time → grammar → sentence frames → Q&A replies → (weekly) first-sight check.
-// In grammar, the LATER topics come after the rest, as reviews and as new cards.
+// In grammar, the LATER topics come after the rest, as reviews (until PATIENCE days overdue) and as new cards.
 export function planSession({ items, hist, days, day, minutes, rand = Math.random }) {
   const rec = (c) => hist[c.id];
   const due = (c) => rec(c)?.due <= day;
   const sore = (c) => rec(c)?.box === 0;
   const idle = (c) => rec(c) && !due(c) && rec(c).last < day;
   const stage = stageOf(items, hist), weak = weakTopics(items, hist).filter((t) => !LATER.has(t)), wait = new Set([...knownTopics(items, hist), ...LATER]);
-  const later = (c) => LATER.has(c.topic);
+  const later = (c) => LATER.has(c.topic) && !(rec(c)?.due <= addDays(day, -PATIENCE));
   const share = mix(days, items, day), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
   const rest = minutes - Object.entries(fixed).reduce((s, [k, n]) => s + (n * SECONDS[k]) / 60, 0); // the split covers what they leave
 
@@ -175,7 +178,9 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     const pool = items.filter((c) => c.kind === kind), n = fixed[kind] ?? Math.max(1, Math.round((rest * 60 * share[kind]) / SECONDS[kind]));
     const fresh = pool.filter((c) => !rec(c) && !c.held);
     const pile = pool.filter(due).sort((a, b) => sore(b) - sore(a) || later(a) - later(b) || rec(a).box - rec(b).box || rec(a).due.localeCompare(rec(b).due));
-    const quota = Math.ceil(n / 2);
+    // The LATER reviews are put off on purpose, so they don't count as pile: only what is being worked on does.
+    const depth = pile.filter((c) => !later(c)).length, quarter = Math.min(n, Math.max(kind === 'pattern' ? 2 : 1, Math.ceil(n / 4)));
+    const quota = depth < n ? Math.ceil(n / 2) : depth < 2 * n ? quarter : 0;
     const reviews = pile.slice(0, Math.max(n - quota, Math.min(n, pile.filter(sore).length)));
     const rested = pool.filter(idle).sort((a, b) => rec(a).last.localeCompare(rec(b).last));
     // Extra practice for the weakest topic means its unseen sentences: one said well yesterday wouldn't move today.
@@ -197,7 +202,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   };
 
   const chosen = Object.fromEntries(KINDS.map((k) => [k, pick(k)]));
-  const old = (k) => shuffle(chosen[k].filter((c) => rec(c) && !sore(c)), rand), added = (k) => chosen[k].filter((c) => !rec(c));
+  const old = (k) => shuffle(chosen[k].filter((c) => rec(c) && !sore(c)), rand).sort((a, b) => later(a) - later(b)), added = (k) => chosen[k].filter((c) => !rec(c)).sort((a, b) => later(a) - later(b));
   const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : undefined);
   const step = (phase) => (c) => ({ id: c.id, phase, level: level(c) });
 

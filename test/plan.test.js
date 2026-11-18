@@ -203,16 +203,23 @@ test('new grammar comes from three topics at a time: a known topic hands over to
   assert.deepEqual(topics(said(lv1.slice(18))), ['b-past', 'b-future', 'b-modal'], 'three Lv1 topics still being learned (b-be, b-neg and b-prog wait): no Lv2 yet');
 });
 
-// A learner who answered everything well for four days: lots of reviews coming due, plenty still unseen.
-test('new cards come every day however many reviews are due, taken in turn with the reviews', () => {
-  const { hist, days, next } = practice(4, () => OK), queue = plan(hist, days, next);
-  const grammar = queue.filter((s) => s.phase === 'grammar'), fresh = (s) => !hist[s.id];
-  const due = items.filter((c) => c.kind === 'grammar' && hist[c.id]?.due <= next).length;
-  assert.ok(due >= grammar.length, `a deep pile: ${due} due`);
-  assert.ok(grammar.filter(fresh).length >= grammar.length / 2 - 1, 'half of the grammar is new, whatever the pile');
-  const head = grammar.filter((s) => !LATER(s)).slice(0, 6).map(fresh);
+// The state the learner was in on 2026-11-18: dozens of present-tense cards due, a few others.
+const dueLong = (ids, day = addDays(T, -5)) => Object.fromEntries(ids.map((id) => [id, review(undefined, OK, day)]));
+const ofTopics = (...t) => items.filter((c) => t.includes(c.topic) && !c.held).map((c) => c.id);
+const grammarOf = (hist) => plan(hist, {}, T).filter((s) => s.phase === 'grammar'), fresh = (hist) => (s) => !hist[s.id];
+
+test('reviews put off on purpose (b-be, b-neg, b-prog) are not a pile: new grammar still comes, in turn with the other reviews', () => {
+  const hist = { ...dueLong(ofTopics('b-be', 'b-neg', 'b-prog')), ...dueLong(ofTopics('b-past').slice(0, 4)) };
+  const grammar = grammarOf(hist), head = grammar.filter((s) => !LATER(s)).slice(0, 6).map(fresh(hist));
+  assert.ok(Object.keys(hist).length >= 50 && grammar.filter(fresh(hist)).length >= grammar.length / 2 - 1, 'half is new');
   assert.deepEqual(head, [false, true, false, true, false, true], 'old, new, old, new …');
-  assert.ok(queue.filter((s) => s.phase === 'pattern' && !s.intro && !s.check).some(fresh), 'new frame sentences too');
+  assert.ok(plan(hist, {}, T).filter((s) => s.phase === 'pattern' && !s.intro).every((s) => !hist[s.id]), 'the other kinds are untouched');
+});
+
+test('a really deep pile of reviews takes the whole grammar slot: new cards would only deepen it', () => {
+  const hist = dueLong(ofTopics('b-past', 'b-future', 'b-modal', 'b-inf'));
+  const grammar = grammarOf(hist);
+  assert.ok(grammar.length >= 10 && grammar.every((s) => hist[s.id]), 'only cards that are due');
 });
 
 test('the present-tense basics (b-be, b-neg, b-prog) come after the other grammar — as reviews and as new cards', () => {
