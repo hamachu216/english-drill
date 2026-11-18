@@ -25,6 +25,7 @@ const MOCK = 5; // questions in a mock Q&A, each with a follow-up
 const CHECK = { grammar: 3, pattern: 2, reply: 1 }; // weekly first-sight check
 const WEEK = 7;
 const HINT_BOX = 2; // answers with a hint alone get a card this far (7 days)
+const LATER = new Set(['b-be', 'b-neg']); // the present-tense basics, drilled to death on the first days: their cards go last
 const KNOWN = 3; // grammar answers, all said, after which a topic counts as known and its new cards wait
 const ROTATION = 3; // grammar topics taking new cards at a time
 
@@ -98,13 +99,16 @@ export function knownTopics(items, hist) {
   for (const c of items) if (c.kind === 'grammar' && hist[c.id]) (said[c.topic] ??= []).push(hist[c.id]);
   return new Set(Object.keys(said).filter((t) => said[t].length >= KNOWN && said[t].every((r) => r.grade === OK && r.box >= 1)));
 }
-const newFirst = (known) => (a, b) => known.has(a.topic) - known.has(b.topic) || easyFirst(a, b);
+const newFirst = (wait) => (a, b) => wait.has(a.topic) - wait.has(b.topic) || easyFirst(a, b);
 
 // Several kinds in one set (the Phrase Drill): taken in turn, each in its own order.
 const alternate = (xs) => {
   const lanes = [...new Set(xs.map((c) => c.kind))].map((k) => xs.filter((c) => c.kind === k));
   return Array.from({ length: Math.max(0, ...lanes.map((l) => l.length)) }, (_, i) => lanes.map((l) => l[i])).flat().filter(Boolean);
 };
+
+// Two lists taken in turn, each in its own order; whichever is longer ends the list.
+const weave = (a, b) => Array.from({ length: Math.max(a.length, b.length) }, (_, i) => [a[i], b[i]]).flat().filter(Boolean);
 
 // Free practice and the Phrase Drill: a set of cards in the order that helps most — wrong last time, due
 // (longest overdue first), new (as in the daily session), then the rest, longest ago first. Cards kept for the
@@ -151,25 +155,27 @@ export function mockSession(items, hist, rand = Math.random) {
 }
 
 // Today's session. Per kind: reviews that are due (weakest first), then unseen cards from the weakest topic that has any,
-// then new cards, then — when nothing is left — the cards practiced longest ago. Unless the review pile is
-// more than two sessions deep, a quarter of each kind is kept for new cards, so there is progress every day —
-// but never at the cost of a card missed last time: those always come back (as many as fit).
+// then new cards, then — when nothing is left — the cards practiced longest ago. Half of each kind is kept for new
+// cards however deep the review pile is, so every day brings new sentences — but never at the cost of a card missed
+// last time: those always come back (as many as fit). Reviews and new cards are asked in turn, not one block after the other.
 // Every kind gets at least one card, so research English is touched no matter how grammar is going.
 // Order: cards failed last time → grammar → sentence frames → Q&A replies → (weekly) first-sight check.
+// In grammar, the LATER topics come after the rest, as reviews and as new cards.
 export function planSession({ items, hist, days, day, minutes, rand = Math.random }) {
   const rec = (c) => hist[c.id];
   const due = (c) => rec(c)?.due <= day;
   const sore = (c) => rec(c)?.box === 0;
   const idle = (c) => rec(c) && !due(c) && rec(c).last < day;
-  const stage = stageOf(items, hist), weak = weakTopics(items, hist), known = knownTopics(items, hist);
+  const stage = stageOf(items, hist), weak = weakTopics(items, hist).filter((t) => !LATER.has(t)), wait = new Set([...knownTopics(items, hist), ...LATER]);
+  const later = (c) => LATER.has(c.topic);
   const share = mix(days, items, day), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
   const rest = minutes - Object.entries(fixed).reduce((s, [k, n]) => s + (n * SECONDS[k]) / 60, 0); // the split covers what they leave
 
   const pick = (kind) => {
     const pool = items.filter((c) => c.kind === kind), n = fixed[kind] ?? Math.max(1, Math.round((rest * 60 * share[kind]) / SECONDS[kind]));
     const fresh = pool.filter((c) => !rec(c) && !c.held);
-    const pile = pool.filter(due).sort((a, b) => rec(a).box - rec(b).box || rec(a).due.localeCompare(rec(b).due));
-    const quota = pile.length < 2 * n ? Math.min(n, Math.max(kind === 'pattern' ? 2 : 1, Math.ceil(n / 4))) : 0;
+    const pile = pool.filter(due).sort((a, b) => sore(b) - sore(a) || later(a) - later(b) || rec(a).box - rec(b).box || rec(a).due.localeCompare(rec(b).due));
+    const quota = Math.ceil(n / 2);
     const reviews = pile.slice(0, Math.max(n - quota, Math.min(n, pile.filter(sore).length)));
     const rested = pool.filter(idle).sort((a, b) => rec(a).last.localeCompare(rec(b).last));
     // Extra practice for the weakest topic means its unseen sentences: one said well yesterday wouldn't move today.
@@ -178,12 +184,12 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     // New frames: more sentences for frames already started, then (once every started frame has been said
     // at least once) one or two new frames, one sentence to repeat and BLOCK to say.
     // New grammar: ROTATION topics at a time, in file order (so Lv2 waits for Lv1), each until it is known.
-    const learning = [...new Set(fresh.map((c) => c.topic))].filter((t) => !known.has(t)).slice(0, ROTATION);
+    const learning = [...new Set(fresh.map((c) => c.topic))].filter((t) => !wait.has(t)).slice(0, ROTATION);
     const open = fresh.filter((c) => c.topic in stage);
     const ready = pool.every((c) => !(c.topic in stage) || stage[c.topic] >= 1) && n - reviews.length - focus.length - open.length >= 2;
     const untouched = [...new Set(fresh.filter((c) => !(c.topic in stage)).map((c) => c.topic))].slice(0, n > 6 ? 2 : 1);
     const added = {
-      grammar: [...fresh.filter((c) => learning.includes(c.topic)).sort(easyFirst), ...[...fresh].sort(newFirst(known))],
+      grammar: [...fresh.filter((c) => learning.includes(c.topic)).sort(easyFirst), ...[...fresh].sort(newFirst(wait))],
       pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, 1 + BLOCK)) : [])],
       reply: [...fresh].sort(easyFirst),
     }[kind];
@@ -203,11 +209,10 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
 
   return [
     ...KINDS.flatMap((k) => chosen[k].filter(sore)).map(step('review')),
-    ...[...old('grammar'), ...added('grammar')].map(step('grammar')),
-    ...old('pattern').map(step('pattern')),
+    ...weave(old('grammar'), added('grammar')).sort((a, b) => later(a) - later(b)).map(step('grammar')),
     // A new frame opens with its first sentence to listen to and repeat; that sentence is recalled on a later day.
-    ...added('pattern').map((c, i, a) => (c.topic in stage || a[i - 1]?.topic === c.topic ? step('pattern')(c) : { id: c.id, phase: 'pattern', intro: true })),
-    ...[...old('reply'), ...added('reply')].map(step('reply')),
+    ...weave(old('pattern').map(step('pattern')), added('pattern').map((c, i, a) => (c.topic in stage || a[i - 1]?.topic === c.topic ? step('pattern')(c) : { id: c.id, phase: 'pattern', intro: true }))),
+    ...weave(old('reply'), added('reply')).map(step('reply')),
     ...check.map((c) => ({ id: c.id, phase: 'check', level: 2, check: true })),
   ];
 }
