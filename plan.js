@@ -25,7 +25,7 @@ const MOCK = 5; // questions in a mock Q&A, each with a follow-up
 const CHECK = { grammar: 3, pattern: 2, reply: 1 }; // weekly first-sight check
 const WEEK = 7;
 const HINT_BOX = 2; // answers with a hint alone get a card this far (7 days)
-const LATER = new Set(['b-be', 'b-neg']); // the present-tense basics, drilled to death on the first days: their cards go last
+const LATER = new Set(['b-be', 'b-neg', 'b-prog']); // the present-tense basics, drilled to death on the first days: their cards go last
 const KNOWN = 3; // grammar answers, all said, after which a topic counts as known and its new cards wait
 const ROTATION = 3; // grammar topics taking new cards at a time
 

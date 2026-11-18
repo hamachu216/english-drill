@@ -8,7 +8,7 @@ const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(n
 const byId = new Map(items.map((c) => [c.id, c]));
 const T = '2026-11-16'; // a Monday
 const plan = (hist = {}, days = {}, day = T, minutes = 30) => planSession({ items, hist, days, day, minutes, rand: seeded(day) });
-const LATER = (s) => ['b-be', 'b-neg'].includes(byId.get(s.id).topic);
+const LATER = (s) => ['b-be', 'b-neg', 'b-prog'].includes(byId.get(s.id).topic);
 const kinds = (queue) => queue.filter((s) => !s.intro && s.follow == null).reduce((n, s) => ({ ...n, [byId.get(s.id).kind]: (n[byId.get(s.id).kind] ?? 0) + 1 }), {});
 
 // A learner who answers every step of every day's session with grade(card); returns the state after `n` days.
@@ -64,7 +64,7 @@ test('first use: about 30 minutes with grammar, new sentence frames and Q&A repl
   assert.ok(n.grammar > n.pattern);
   assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'pattern', 'reply'], 'no review or check on day one');
   const grammar = queue.filter((s) => byId.get(s.id).kind === 'grammar').map((s) => byId.get(s.id));
-  assert.deepEqual([...new Set(grammar.map((c) => c.topic))], ['b-prog', 'b-past', 'b-future'], 'new grammar: three topics at a time, the present-tense basics (b-be, b-neg) left for last');
+  assert.deepEqual([...new Set(grammar.map((c) => c.topic))], ['b-past', 'b-future', 'b-modal'], 'new grammar: three topics at a time, the present-tense basics (b-be, b-neg, b-prog) left for last');
   assert.deepEqual(grammar.slice(0, 3).map((c) => c.nth), [0, 0, 0], 'taken in turn, not one topic at a time');
   const frames = queue.filter((s) => s.phase === 'pattern');
   assert.ok(frames[0].intro, 'a frame is explained, with its first sentence to repeat, before it is used');
@@ -101,12 +101,12 @@ test('a learner who struggles with grammar gets more grammar; one who improves g
 });
 
 test('cards that were missed stay in review on the following days, and open the session', () => {
-  const missed = (id) => id === 'b-prog-001' || id === 'b-past-001';
+  const missed = (id) => id === 'b-future-001' || id === 'b-past-001';
   const { hist, days, next } = practice(1, (c) => (missed(c.id) ? MISS : OK));
   const queue = plan(hist, days, next);
-  assert.deepEqual(queue.slice(0, 2).map((s) => [s.id, s.phase]).sort(), [['b-past-001', 'review'], ['b-prog-001', 'review']]);
+  assert.deepEqual(queue.slice(0, 2).map((s) => [s.id, s.phase]).sort(), [['b-future-001', 'review'], ['b-past-001', 'review']]);
   const later = plan(hist, days, addDays(next, 5));
-  assert.ok(later.some((s) => s.id === 'b-prog-001' && s.phase === 'review'), 'still due if a day is skipped');
+  assert.ok(later.some((s) => s.id === 'b-future-001' && s.phase === 'review'), 'still due if a day is skipped');
 });
 
 test('no card twice in a session, and cards answered well do not come back the next day', () => {
@@ -197,10 +197,10 @@ test('a missed card comes back the next day even when its kind has room for only
 test('new grammar comes from three topics at a time: a known topic hands over to the next, and Lv2 waits until Lv1 is nearly known', () => {
   const said = (ids) => Object.fromEntries(ids.map((id) => [id, review(undefined, OK, T)]));
   const topics = (hist) => [...new Set(plan(hist, {}, addDays(T, 1)).filter((s) => s.phase === 'grammar' && !hist[s.id]).map((s) => byId.get(s.id).topic))];
-  assert.deepEqual(topics(said(['b-prog-001', 'b-prog-002', 'b-prog-003'])), ['b-past', 'b-future', 'b-modal'], 'b-prog is known: b-modal takes its place');
+  assert.deepEqual(topics(said(['b-past-001', 'b-past-002', 'b-past-003'])), ['b-future', 'b-modal', 'b-inf'], 'b-past is known: b-inf takes its place');
   const lv1 = items.filter((c) => c.kind === 'grammar' && c.level === 1 && c.nth < 3).map((c) => c.id);
   assert.ok(topics(said(lv1)).every((t) => t.startsWith('a-')), 'every Lv1 topic known: Lv2 begins');
-  assert.deepEqual(topics(said(lv1.slice(15))), ['b-prog', 'b-past', 'b-future'], 'three Lv1 topics still being learned (b-be and b-neg wait): no Lv2 yet');
+  assert.deepEqual(topics(said(lv1.slice(18))), ['b-past', 'b-future', 'b-modal'], 'three Lv1 topics still being learned (b-be, b-neg and b-prog wait): no Lv2 yet');
 });
 
 // A learner who answered everything well for four days: lots of reviews coming due, plenty still unseen.
@@ -215,7 +215,7 @@ test('new cards come every day however many reviews are due, taken in turn with 
   assert.ok(queue.filter((s) => s.phase === 'pattern' && !s.intro && !s.check).some(fresh), 'new frame sentences too');
 });
 
-test('the present-tense basics (b-be, b-neg) come after the other grammar — as reviews and as new cards', () => {
+test('the present-tense basics (b-be, b-neg, b-prog) come after the other grammar — as reviews and as new cards', () => {
   const { hist, days, next } = practice(4, () => OK), grammar = plan(hist, days, next).filter((s) => s.phase === 'grammar');
   const last = grammar.findLastIndex((s) => !LATER(s)), first = grammar.findIndex(LATER);
   assert.ok(first < 0 || first > last, 'none of them before another topic');
