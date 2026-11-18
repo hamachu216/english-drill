@@ -103,6 +103,11 @@ test('Q&A defence phrases are daily replies; PREP and data-flow frames are the A
   for (const p of ['Just to make sure I understand your point, are you asking about', 'Just to make sure I understand your point, are you asking whether', 'Are you asking how', 'Sorry, I missed the second half.', 'Could you speak a little slower?', 'Yes, exactly.', 'Not quite.', 'In this context,']) assert.ok(asked.some((t) => t.includes(p)), p);
 });
 
+// The mock Q&A's first hint is the order of a PREP answer. Only the first topic is written that way so far.
+test('the first Q&A topic names what to include in the order of a PREP answer: point, reason, example', () => {
+  for (const c of qa.decks[0].cards) assert.match(c.points, /^結論：.+ → 理由：.+ → 具体例：.+$/, c.id);
+});
+
 test('listening: a talk of four to six sentences, a task, and the one sentence of the talk that answers it', () => {
   assert.equal(talks.kind, 'listening');
   const cards = talks.decks.flatMap((d) => d.cards);
