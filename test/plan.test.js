@@ -216,10 +216,12 @@ test('reviews put off on purpose (b-be, b-neg, b-prog) are not a pile: new gramm
   assert.ok(plan(hist, {}, T).filter((s) => s.phase === 'pattern' && !s.intro).every((s) => !hist[s.id]), 'the other kinds are untouched');
 });
 
-test('a really deep pile of reviews takes the whole grammar slot: new cards would only deepen it', () => {
+test('a really deep pile of reviews takes the grammar slot, all but one new card: no day is without one', () => {
   const hist = dueLong(ofTopics('b-past', 'b-future', 'b-modal', 'b-inf'));
   const grammar = grammarOf(hist);
-  assert.ok(grammar.length >= 10 && grammar.every((s) => hist[s.id]), 'only cards that are due');
+  assert.ok(grammar.length >= 10 && grammar.filter(fresh(hist)).length === 1, 'one new card, the rest due');
+  const deepPatterns = dueLong(ofTopics('p-goal', 'p-focus', 'p-problem', 'p-important', 'p-because'));
+  assert.ok(plan(deepPatterns, {}, T).filter((s) => s.phase === 'pattern').every((s) => deepPatterns[s.id]), 'frames and replies keep to reviews');
 });
 
 test('the present-tense basics (b-be, b-neg, b-prog) come after the other grammar — as reviews and as new cards', () => {

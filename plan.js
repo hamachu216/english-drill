@@ -157,7 +157,7 @@ export function mockSession(items, hist, rand = Math.random) {
 
 // Today's session. Per kind: reviews that are due (weakest first), then unseen cards from the weakest topic that has any,
 // then new cards, then — when nothing is left — the cards practiced longest ago. While the review pile is shallower
-// than a session half of each kind is kept for new cards, a quarter while it is under two sessions deep, none beyond:
+// than a session half of each kind is kept for new cards, a quarter while it is under two sessions deep, none beyond (but grammar always keeps one):
 // new cards bring reviews (about five each, over two months), so without that the pile grows faster than it can be
 // worked off — in a simulation, cards overdue by weeks after two months. A card missed last time never waits for
 // this: those always come back (as many as fit). Reviews and new cards are asked in turn, not one block after the other.
@@ -180,7 +180,10 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     const pile = pool.filter(due).sort((a, b) => sore(b) - sore(a) || later(a) - later(b) || rec(a).box - rec(b).box || rec(a).due.localeCompare(rec(b).due));
     // The LATER reviews are put off on purpose, so they don't count as pile: only what is being worked on does.
     const depth = pile.filter((c) => !later(c)).length, quarter = Math.min(n, Math.max(kind === 'pattern' ? 2 : 1, Math.ceil(n / 4)));
-    const quota = depth < n ? Math.ceil(n / 2) : depth < 2 * n ? quarter : 0;
+    // Grammar never goes without a new card, even under a deep pile: a day with nothing new is hard on the learner, and one
+// card a day (about five reviews over two months) is a load the slot can carry. In a simulation the pile then stays level
+// (it grew without limit with two new cards, or with new frames and replies too, which each need more than one slot).
+    const quota = depth < n ? Math.ceil(n / 2) : depth < 2 * n ? quarter : +(kind === 'grammar');
     const reviews = pile.slice(0, Math.max(n - quota, Math.min(n, pile.filter(sore).length)));
     const rested = pool.filter(idle).sort((a, b) => rec(a).last.localeCompare(rec(b).last));
     // Extra practice for the weakest topic means its unseen sentences: one said well yesterday wouldn't move today.
