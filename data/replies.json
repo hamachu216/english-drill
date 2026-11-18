@@ -23,6 +23,8 @@
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
         {"id":"r-hear-001","scene":"質問が速くて、よく聞き取れなかった","ja":"すみません、全部は聞き取れませんでした。質問をもう一度言っていただけますか。","frame":"I'm sorry, I didn't ... Could you please ...?","en":"I'm sorry, I didn't catch all of that. Could you please repeat your question?"},
+        {"id":"r-hear-011","scene":"質問の後半を聞き逃した。どの部分かを指して聞き直す","ja":"すみません、後半を聞き逃しました。損失関数に関する部分をもう一度言っていただけますか。","frame":"Sorry, I missed ... Could you repeat the part about ...?","en":"Sorry, I missed the second half. Could you repeat the part about the loss function?"},
+        {"id":"r-hear-012","scene":"速くて理解しきれない。ゆっくり言ってもらい、正確に聞き取りたい","ja":"もう少しゆっくり話していただけますか。質問を正確に理解したいので。","frame":"Could you speak a little ...? I want to make sure I ...","en":"Could you speak a little slower? I want to make sure I get your question correctly."},
         {"id":"r-hear-002","scene":"聞き取れたが、何を聞かれているのか分からない","ja":"すみませんが、よく分かりません。質問を言い換えていただけますか。","frame":"I'm afraid I don't ... Could you please ...?","en":"I'm afraid I don't understand. Could you please rephrase the question?"},
         {"id":"r-hear-003","scene":"どの研究のことを聞かれているのか、はっきりしない","ja":"よく分からないのですが、歩数計測についての以前の研究のことをお聞きですか。","frame":"I don't quite ... Are you asking about ...?","en":"I don't quite understand. Are you asking about the earlier study on step counting?"},
         {"id":"r-hear-004","scene":"どの数値のことか、はっきりしない","ja":"図3の精度のことをおっしゃっていますか。","frame":"Are you referring to ...?","en":"Are you referring to the accuracy in Figure 3?"},
@@ -40,6 +42,9 @@
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
         {"id":"r-check-001","scene":"すぐには答えが出ない。質問の一部を繰り返して、考える時間をもらう","ja":"同じコホートで、ですか？ この質問について少し考える時間をください。","frame":"...? Please give me a moment to ...","en":"In the same cohort? Please give me a moment to think about this question."},
+        {"id":"r-check-012","scene":"質問の意図を確かめる。何についての質問か","ja":"質問の意図を確認させてください。訓練データについてお聞きですか。","frame":"Just to make sure I understand your point, are you asking about ...?","en":"Just to make sure I understand your point, are you asking about the training data?"},
+        {"id":"r-check-013","scene":"質問の意図を確かめる。〜かどうかを聞かれているのか","ja":"質問の意図を確認させてください。リアルタイムで動くかどうかをお聞きですか。","frame":"Just to make sure I understand your point, are you asking whether ...?","en":"Just to make sure I understand your point, are you asking whether it works in real time?"},
+        {"id":"r-check-014","scene":"2つの解釈のどちらなのか確かめる","ja":"学習データをどう集めるかというご質問ですか。それとも、テスト時にモデルがどう予測するかというご質問ですか。","frame":"Are you asking how ..., or how ...?","en":"Are you asking how we collect the training data, or how the model makes predictions at test time?"},
         {"id":"r-check-009","scene":"質問が2つあった。順番に答えると伝えて、考える時間を作る","ja":"ご質問は2つあったと思います。まず1つ目からお答えします。","frame":"I think there were ... Let me start with ...","en":"I think there were two questions. Let me start with the first one."},
         {"id":"r-check-010","scene":"鋭い指摘を受けた。どの点から答えるかを先に言って、答えを整理する","ja":"とても鋭いご指摘です。まずデータの点からお答えします。","frame":"That's a very ... point. Let me address ... first.","en":"That's a very insightful point. Let me address the data issue first."},
         {"id":"r-check-011","scene":"答えが長くなりそう。2つに分けて答えると先に伝える","ja":"2つに分けてお答えします。まず手法、次に結果です。","frame":"Let me answer in two parts: first ..., then ...","en":"Let me answer in two parts: first the method, then the results."},
@@ -50,6 +55,20 @@
         {"id":"r-check-006","scene":"質問の一部を繰り返して、どのデータのことか確かめる","ja":"2019年から2021年に集めたデータですか？ 具体的にどのデータのことでしょうか。","frame":"...? Which data are you ... exactly?","en":"The data collected between 2019 and 2021? Which data are you referring to exactly?"},
         {"id":"r-check-007","scene":"質問を自分の言葉で言い直して確かめる","ja":"つまり、2つの活動を同時に検出できるかというご質問ですね？","frame":"So your question is ... Is that right?","en":"So your question is whether it can detect two activities at the same time. Is that right?"},
         {"id":"r-check-008","scene":"少し考える時間がほしい","ja":"少し考えさせてください。","frame":"Let me think about that for ...","en":"Let me think about that for a moment."}
+      ]
+    },
+    {
+      "id": "r-point",
+      "title": "結論から答える（Point）",
+      "cards": [
+        {"id":"r-point-001","scene":"結論が合っていると答える","ja":"はい、その通りです。それが私たちのやったことです。","frame":"Yes, exactly. That is ...","en":"Yes, exactly. That is what we did."},
+        {"id":"r-point-002","scene":"質問の理解が少しずれている","ja":"いいえ、少し違います。違いを説明します。","frame":"Not quite. Let me ...","en":"Not quite. Let me explain the difference."},
+        {"id":"r-point-003","scene":"用語の意味を聞かれた。1文目で定義する","ja":"この文脈では、クライアントは1台の端末のことです。","frame":"In this context, ... means ...","en":"In this context, a client means one user's device."},
+        {"id":"r-point-004","scene":"2つの手法を同じ条件で比べたか聞かれ、その通りだった","ja":"はい、その通りです。どちらの手法も同じ設定で試しました。","frame":"Yes, exactly. We tested ...","en":"Yes, exactly. We tested both methods in the same setting."},
+        {"id":"r-point-005","scene":"結果が条件によって変わるので、そのまま「はい」とは言えない","ja":"いいえ、少し違います。結果はデータセットによります。","frame":"Not quite. The result depends on ...","en":"Not quite. The result depends on the dataset."},
+        {"id":"r-point-006","scene":"評価指標の意味を聞かれた。1文目で定義する","ja":"この文脈では、精度は正しく答えられた割合のことです。","frame":"In this context, accuracy means ...","en":"In this context, accuracy means the share of correct answers."},
+        {"id":"r-point-007","scene":"リアルタイムで動くか聞かれ、その通りだった","ja":"はい、その通りです。遅延はほとんどありません。","frame":"Yes, exactly. There is ...","en":"Yes, exactly. There is almost no delay."},
+        {"id":"r-point-008","scene":"センサは1種類だけかと聞かれたが、違った","ja":"いいえ、少し違います。2種類のセンサを使っています。","frame":"Not quite. We use ...","en":"Not quite. We use two types of sensors."}
       ]
     },
     {

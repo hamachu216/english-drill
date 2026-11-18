@@ -92,6 +92,15 @@ test('Q&A hedges, restatements and answer closings: their frames and stock phras
   for (const p of ['Does that answer your question?', 'Does that make sense?', 'Please let me know if anything is unclear.']) assert.ok(asked.includes(p), p);
 });
 
+// Defence phrases (confirming the question, asking to repeat), the PREP answer (point → reason → example) and the
+// data-flow sentences (active, passive, purpose). Examples use generic systems, never the user's own research.
+test('Q&A defence phrases, PREP answer and data-flow sentences are practiced', () => {
+  const frames = new Map(patterns.decks.map((d) => [d.frame, d]));
+  for (const f of ['This is because ...', 'In this context, ... means ...', 'For instance, as shown in ..., ...', 'The ... collects ... at ...', 'The ... extracts ... from ...', 'The ... are transmitted to ... via ...', 'The ... are updated using ...', 'We employ ... in order to ...', 'This enables the system to ...']) assert.ok(frames.get(f)?.cards.length >= 8, f);
+  const asked = replies.decks.flatMap((d) => d.cards.slice(0, -2)).map((c) => c.en);
+  for (const p of ['Just to make sure I understand your point, are you asking about', 'Just to make sure I understand your point, are you asking whether', 'Are you asking how', 'Sorry, I missed the second half.', 'Could you speak a little slower?', 'Yes, exactly.', 'Not quite.', 'In this context,']) assert.ok(asked.some((t) => t.includes(p)), p);
+});
+
 test('listening: a talk of four to six sentences, a task, and the one sentence of the talk that answers it', () => {
   assert.equal(talks.kind, 'listening');
   const cards = talks.decks.flatMap((d) => d.cards);
