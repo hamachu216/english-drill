@@ -328,12 +328,12 @@ function showMine() {
 $('keep').onclick = () => { save({ answers: { ...state.answers, [now.cur.id]: now.said } }); showMine(); };
 
 function grade(key) {
-  const d = today(), { cur, step } = now, g = GRADE[key], before = state.hist[cur.id];
+  const d = today(), { cur, step } = now, g = GRADE[key], recorded = step.as ?? cur.id, before = state.hist[recorded];
   const after = review(before, g, d);
   save({
     log: { ...state.log, [d]: (state.log[d] || 0) + 1 },
     // A follow-up question is practice only; a retry updates the card (it can't raise it) but isn't counted again.
-    hist: step.follow == null ? { ...state.hist, [cur.id]: after } : state.hist,
+    hist: step.follow == null ? { ...state.hist, [recorded]: after } : state.hist,
     days: step.retry ? state.days : { ...state.days, [d]: tally(state.days[d], cur, { grade: g, why: key, check: step.check }) },
   });
   answered++;

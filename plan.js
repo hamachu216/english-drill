@@ -4,7 +4,7 @@
 //   hist[cardId] = { box, n, last, due, grade }   one record per card ever answered
 //   days[date]   = { [topicId]: [answers, said],  counters per day (first attempts only), plus
 //                    '#check': [n, said], '#why': [content, english] }
-//   queue        = [{ id, phase, level?, intro?, follow?, check?, retry? }]   one step per screen
+//   queue        = [{ id, phase, level?, as?, intro?, follow?, check?, retry? }]   one step per screen (`as`: the card the answer is recorded on)
 //
 // The daily session is grammar, sentence frames and Q&A replies. Research questions are asked in the mock Q&A only.
 import { addDays, shuffle, skeleton, opening, mask, reactions } from './core.js';
@@ -208,6 +208,16 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const old = (k) => shuffle(chosen[k].filter((c) => rec(c) && !sore(c)), rand).sort((a, b) => later(a) - later(b)), added = (k) => chosen[k].filter((c) => !rec(c)).sort((a, b) => later(a) - later(b));
   const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : undefined);
   const step = (phase) => (c) => ({ id: c.id, phase, level: level(c) });
+  // A grammar card coming back is asked in another sentence of its topic, one never answered (`as` names the card the
+  // answer is recorded on): what has to stay is the grammar, not the sentence, and every day brings sentences not seen.
+  // The sentence comes from the far end of the topic, where new cards arrive last, and differs at each review (n).
+  const taken = new Set(KINDS.flatMap((k) => chosen[k]).map((c) => c.id));
+  const again = (phase) => (c) => {
+    const spare = c.kind === 'grammar' && rec(c) ? items.filter((x) => x.topic === c.topic && !x.held && !rec(x) && !taken.has(x.id)).sort((a, b) => b.nth - a.nth) : [];
+    const other = spare[rec(c)?.n % spare.length];
+    if (other) taken.add(other.id);
+    return other ? { id: other.id, phase, as: c.id } : step(phase)(c);
+  };
 
   const firstDay = Object.keys(days).sort()[0], lastCheck = Object.keys(days).filter((d) => days[d]['#check']).sort().at(-1);
   const check = firstDay && day >= addDays(lastCheck ?? firstDay, WEEK) ? Object.keys(CHECK).flatMap((k) => {
@@ -216,8 +226,8 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   }) : [];
 
   return [
-    ...KINDS.flatMap((k) => chosen[k].filter(sore)).map(step('review')),
-    ...weave(old('grammar'), added('grammar')).sort((a, b) => later(a) - later(b)).map(step('grammar')),
+    ...KINDS.flatMap((k) => chosen[k].filter(sore)).map(again('review')),
+    ...weave(old('grammar'), added('grammar')).sort((a, b) => later(a) - later(b)).map(again('grammar')),
     // A new frame opens with its first sentence to listen to and repeat; that sentence is recalled on a later day.
     ...weave(old('pattern').map(step('pattern')), added('pattern').map((c, i, a) => (c.topic in stage || a[i - 1]?.topic === c.topic ? step('pattern')(c) : { id: c.id, phase: 'pattern', intro: true }))),
     ...weave(old('reply'), added('reply')).map(step('reply')),

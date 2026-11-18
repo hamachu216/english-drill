@@ -21,7 +21,7 @@ function practice(n, grade, from = T) {
     for (const s of queue) {
       if (s.intro) continue;
       const c = byId.get(s.id), g = grade(c, s);
-      if (s.follow == null) hist = { ...hist, [c.id]: review(hist[c.id], g, day) };
+      if (s.follow == null) hist = { ...hist, [s.as ?? c.id]: review(hist[s.as ?? c.id], g, day) };
       days = { ...days, [day]: tally(days[day], c, { grade: g, check: s.check }) };
     }
   }
@@ -104,9 +104,9 @@ test('cards that were missed stay in review on the following days, and open the 
   const missed = (id) => id === 'b-future-001' || id === 'b-past-001';
   const { hist, days, next } = practice(1, (c) => (missed(c.id) ? MISS : OK));
   const queue = plan(hist, days, next);
-  assert.deepEqual(queue.slice(0, 2).map((s) => [s.id, s.phase]).sort(), [['b-future-001', 'review'], ['b-past-001', 'review']]);
+  assert.deepEqual(queue.slice(0, 2).map((s) => [s.as, s.phase]).sort(), [['b-future-001', 'review'], ['b-past-001', 'review']], 'recorded on the missed cards, asked in other sentences of their topics');
   const later = plan(hist, days, addDays(next, 5));
-  assert.ok(later.some((s) => s.id === 'b-future-001' && s.phase === 'review'), 'still due if a day is skipped');
+  assert.ok(later.some((s) => s.as === 'b-future-001' && s.phase === 'review'), 'still due if a day is skipped');
 });
 
 test('no card twice in a session, and cards answered well do not come back the next day', () => {
@@ -206,7 +206,7 @@ test('new grammar comes from three topics at a time: a known topic hands over to
 // The state the learner was in on 2026-11-18: dozens of present-tense cards due, a few others.
 const dueLong = (ids, day = addDays(T, -5)) => Object.fromEntries(ids.map((id) => [id, review(undefined, OK, day)]));
 const ofTopics = (...t) => items.filter((c) => t.includes(c.topic) && !c.held).map((c) => c.id);
-const grammarOf = (hist) => plan(hist, {}, T).filter((s) => s.phase === 'grammar'), fresh = (hist) => (s) => !hist[s.id];
+const grammarOf = (hist) => plan(hist, {}, T).filter((s) => s.phase === 'grammar'), fresh = (hist) => (s) => !hist[s.as ?? s.id]; // a card never answered, whatever sentence it is asked in
 
 test('reviews put off on purpose (b-be, b-neg, b-prog) are not a pile: new grammar still comes, in turn with the other reviews', () => {
   const hist = { ...dueLong(ofTopics('b-be', 'b-neg', 'b-prog')), ...dueLong(ofTopics('b-past').slice(0, 4)) };
@@ -214,6 +214,7 @@ test('reviews put off on purpose (b-be, b-neg, b-prog) are not a pile: new gramm
   assert.ok(Object.keys(hist).length >= 50 && grammar.filter(fresh(hist)).length >= grammar.length / 2 - 1, 'half is new');
   assert.deepEqual(head, [false, true, false, true, false, true], 'old, new, old, new …');
   assert.ok(plan(hist, {}, T).filter((s) => s.phase === 'pattern' && !s.intro).every((s) => !hist[s.id]), 'the other kinds are untouched');
+  assert.ok(grammar.filter((s) => s.as).every((s) => byId.get(s.id).topic === byId.get(s.as).topic && !hist[s.id]), 'a review is another sentence of its topic, one never answered');
 });
 
 test('a really deep pile of reviews takes the grammar slot, all but one new card: no day is without one', () => {
@@ -230,6 +231,24 @@ test('the present-tense basics (b-be, b-neg, b-prog) come after the other gramma
   assert.ok(first < 0 || first > last, 'none of them before another topic');
   const day1 = plan().filter((s) => s.phase === 'grammar');
   assert.ok(!day1.some(LATER), 'a new learner meets them after the other topics have had their turn');
+});
+
+test('a grammar review is asked in a sentence never answered, differently each time, and recorded on the card that was due', () => {
+  const day = addDays(T, -5), hist = dueLong(ofTopics('b-past').slice(0, 3), day);
+  const asks = (h) => plan(h, {}, T).filter((s) => s.as);
+  const first = asks(hist);
+  assert.equal(first.length, 3);
+  assert.deepEqual(first.map((s) => s.as).sort(), Object.keys(hist).sort());
+  assert.ok(first.every((s) => !hist[s.id] && !byId.get(s.id).held && byId.get(s.id).topic === 'b-past'));
+  const all = plan(hist, {}, T).map((s) => s.id);
+  assert.equal(new Set(all).size, all.length, 'no sentence twice in a session, new cards included');
+  // Answering records the due card, not the sentence asked; the next review is yet another sentence.
+  const done = { ...hist, 'b-past-001': review(hist['b-past-001'], OK, T) };
+  const again = plan(done, {}, addDays(T, 10)).find((s) => s.as === 'b-past-001');
+  assert.ok(again && again.id !== first.find((s) => s.as === 'b-past-001').id, 'not the same sentence twice');
+  // A topic with every other sentence answered has nothing else to ask: the card itself comes back.
+  const used = Object.fromEntries(ofTopics('b-past').map((id) => [id, review(undefined, OK, day)]));
+  assert.ok(plan(used, {}, T).filter((s) => byId.get(s.id).topic === 'b-past').every((s) => !s.as));
 });
 
 test('a grammar card retried in the session shows its grammar and its opening up front', () => {
