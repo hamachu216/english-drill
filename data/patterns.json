@@ -106,6 +106,91 @@
       ]
     },
     {
+      "id": "p-inother",
+      "title": "言い換える・補う",
+      "frame": "In other words, ...",
+      "ja": "言い換えると、〜。",
+      "note": "難しい説明のあとで、同じことをやさしく言い直す型。In other words の後にコンマ、続きは主語＋動詞の文。That is, / Put simply, でも同じ使い方。",
+      "cards": [
+        {"id":"p-inother-001","ja":"言い換えると、私たちの手法は1つのセンサだけで動きます。","en":"In other words, our method works with only one sensor."},
+        {"id":"p-inother-002","ja":"言い換えると、ユーザーは何も設定する必要がありません。","en":"In other words, users do not need to set up anything."},
+        {"id":"p-inother-003","ja":"言い換えると、スマートフォンだけで測定できます。","en":"In other words, you can measure it with just a smartphone."},
+        {"id":"p-inother-004","ja":"言い換えると、誤りの多くは似た動作の間で起きています。","en":"In other words, most errors happen between similar activities."},
+        {"id":"p-inother-005","ja":"言い換えると、学習データが少なくても精度はあまり落ちません。","en":"In other words, accuracy does not drop much even with less training data."},
+        {"id":"p-inother-006","ja":"言い換えると、この結果は被験者が変わっても成り立ちます。","en":"In other words, these results hold for different participants."},
+        {"id":"p-inother-007","ja":"言い換えると、結果はリアルタイムで得られます。","en":"In other words, the results are available in real time."},
+        {"id":"p-inother-008","ja":"言い換えると、私たちは精度より電池の持ちを優先しました。","en":"In other words, we put battery life before accuracy."}
+      ]
+    },
+    {
+      "id": "p-precise",
+      "title": "正確に言い直す",
+      "frame": "To be more precise, ...",
+      "ja": "より正確に言うと、〜。",
+      "note": "先に言ったことを、数字や条件を足して正確に言い直す型。To be more precise の後にコンマ。More precisely, も同じ意味で、少し短い。",
+      "cards": [
+        {"id":"p-precise-001","ja":"より正確に言うと、精度は92%でした。","en":"To be more precise, the accuracy was 92 percent."},
+        {"id":"p-precise-002","ja":"より正確に言うと、20人の参加者からデータを集めました。","en":"To be more precise, we collected the data from 20 participants."},
+        {"id":"p-precise-003","ja":"より正確に言うと、手首に着けたセンサを使いました。","en":"To be more precise, we used a sensor worn on the wrist."},
+        {"id":"p-precise-004","ja":"より正確に言うと、実験は2週間続きました。","en":"To be more precise, the experiment lasted two weeks."},
+        {"id":"p-precise-005","ja":"より正確に言うと、この結果は屋内の環境に限られます。","en":"To be more precise, this result is limited to indoor environments."},
+        {"id":"p-precise-006","ja":"より正確に言うと、誤りが多かったのは階段の上り下りです。","en":"To be more precise, most of the errors were in climbing stairs."},
+        {"id":"p-precise-007","ja":"より正確に言うと、データは1秒ごとに記録しました。","en":"To be more precise, we recorded the data every second."},
+        {"id":"p-precise-008","ja":"より正確に言うと、差が出たのは歩く速さが遅いときだけでした。","en":"To be more precise, the difference appeared only when the walking speed was slow."}
+      ]
+    },
+    {
+      "id": "p-knowledge",
+      "title": "知っている範囲で言う",
+      "frame": "As far as I know, ...",
+      "ja": "私の知る限り、〜。",
+      "note": "言い切らずに、自分の知っている範囲に限って言う型。確かでないときの安全な言い方で、後ろは普通の文。論文や発表では As far as we know を使うことも多い。",
+      "cards": [
+        {"id":"p-knowledge-001","ja":"私の知る限り、この条件で試した研究はまだありません。","en":"As far as I know, no one has tried this under these conditions."},
+        {"id":"p-knowledge-002","ja":"私の知る限り、そのデータセットは公開されています。","en":"As far as I know, that dataset is publicly available."},
+        {"id":"p-knowledge-003","ja":"私の知る限り、この問題に決まった解決策はありません。","en":"As far as I know, there is no standard solution to this problem."},
+        {"id":"p-knowledge-004","ja":"私の知る限り、同じ手法を使った論文は2本だけです。","en":"As far as I know, only two papers have used the same method."},
+        {"id":"p-knowledge-005","ja":"私の知る限り、そのコードはまだ公開されていません。","en":"As far as I know, the code has not been released yet."},
+        {"id":"p-knowledge-006","ja":"私の知る限り、この種のセンサは今では安く手に入ります。","en":"As far as I know, this kind of sensor is cheap to buy now."},
+        {"id":"p-knowledge-007","ja":"私の知る限り、この結果は他のグループでも確認されています。","en":"As far as I know, this result has been confirmed by other groups."},
+        {"id":"p-knowledge-008","ja":"私の知る限り、そのモデルはまだ屋外では評価されていません。","en":"As far as I know, that model has not been evaluated outdoors yet."}
+      ]
+    },
+    {
+      "id": "p-bestknowledge",
+      "title": "新しさを控えめに言う",
+      "frame": "To the best of our knowledge, ...",
+      "ja": "私たちの知る限り、〜。",
+      "note": "「初めて」「例がない」といった主張を、言い過ぎないように述べる型。As far as I know より硬く、論文や発表向き。後ろは普通の文で、主語は our に合わせて we / this study にする。",
+      "cards": [
+        {"id":"p-bestknowledge-001","ja":"私たちの知る限り、この問題を実環境で調べたのは本研究が初めてです。","en":"To the best of our knowledge, this is the first study to examine this problem in the real world."},
+        {"id":"p-bestknowledge-002","ja":"私たちの知る限り、同じ設定の公開データはありません。","en":"To the best of our knowledge, there is no public data with the same setting."},
+        {"id":"p-bestknowledge-003","ja":"私たちの知る限り、この手法は医療の分野ではまだ使われていません。","en":"To the best of our knowledge, this method has not been used in medicine yet."},
+        {"id":"p-bestknowledge-004","ja":"私たちの知る限り、1つのセンサで12種類の動作を区別した先行研究はありません。","en":"To the best of our knowledge, no previous work has distinguished twelve activities with a single sensor."},
+        {"id":"p-bestknowledge-005","ja":"私たちの知る限り、これほど長い期間をカバーするデータは他にありません。","en":"To the best of our knowledge, no other dataset covers such a long period."},
+        {"id":"p-bestknowledge-006","ja":"私たちの知る限り、この誤りの原因はこれまで報告されていません。","en":"To the best of our knowledge, the cause of this error has not been reported before."},
+        {"id":"p-bestknowledge-007","ja":"私たちの知る限り、この結果は先行研究と矛盾しません。","en":"To the best of our knowledge, this result does not contradict previous work."},
+        {"id":"p-bestknowledge-008","ja":"私たちの知る限り、実際の利用者で長期間試した研究はほとんどありません。","en":"To the best of our knowledge, few studies have tested it with real users over a long period."}
+      ]
+    },
+    {
+      "id": "p-opinion",
+      "title": "自分の意見を言う",
+      "frame": "In my opinion, ...",
+      "ja": "私の考えでは、〜。",
+      "note": "自分の意見だとはっきり述べる型。やや硬く強い言い方で、口頭の質疑では I think ... / I'd say ... のほうが自然なことも多い。意見と事実を分けたいときに使う。",
+      "cards": [
+        {"id":"p-opinion-001","ja":"私の考えでは、最大の課題はデータの量です。","en":"In my opinion, the biggest challenge is the amount of data."},
+        {"id":"p-opinion-002","ja":"私の考えでは、この手法は医療の現場でも役に立ちます。","en":"In my opinion, this method can also be useful in medical settings."},
+        {"id":"p-opinion-003","ja":"私の考えでは、精度よりも使いやすさのほうが大切です。","en":"In my opinion, ease of use matters more than accuracy."},
+        {"id":"p-opinion-004","ja":"私の考えでは、その差は実用上は小さいです。","en":"In my opinion, that difference is small in practice."},
+        {"id":"p-opinion-005","ja":"私の考えでは、次はもっと長い期間で試すべきです。","en":"In my opinion, the next step is to test it over a longer period."},
+        {"id":"p-opinion-006","ja":"私の考えでは、この問題は1つのセンサでは解きにくいです。","en":"In my opinion, this problem is hard to solve with a single sensor."},
+        {"id":"p-opinion-007","ja":"私の考えでは、結果の解釈には注意が必要です。","en":"In my opinion, the results need to be interpreted with care."},
+        {"id":"p-opinion-008","ja":"私の考えでは、その懸念はもっともですが、大きな問題ではありません。","en":"In my opinion, that concern is reasonable, but it is not a major problem."}
+      ]
+    },
+    {
       "id": "p-because",
       "title": "手法を選んだ理由",
       "frame": "We chose this method because ...",

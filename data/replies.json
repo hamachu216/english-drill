@@ -120,6 +120,20 @@
         {"id":"r-slides-007","scene":"聞かれたことを説明するスライドがある","ja":"それについてのスライドがあります。お見せします。","frame":"I have a slide on that. Let me ...","en":"I have a slide on that. Let me show you."},
         {"id":"r-slides-008","scene":"予備のスライドを使って答える","ja":"はい、詳細は予備のスライドにあります。","frame":"Yes, I have ... in the backup slides.","en":"Yes, I have the details in the backup slides."}
       ]
+    },
+{
+      "id": "r-close",
+      "title": "答えを締める・確かめる",
+      "cards": [
+        {"id":"r-close-001","scene":"答え終わって、伝わったか確かめる","ja":"ご質問の答えになっていますでしょうか。","frame":"Does that ... your question?","en":"Does that answer your question?"},
+        {"id":"r-close-002","scene":"説明のあと、理解されたか確かめる","ja":"ここまで、おわかりいただけたでしょうか。","frame":"Does that ...?","en":"Does that make sense?"},
+        {"id":"r-close-003","scene":"質問の意図に合う答えだったか確かめる","ja":"ご質問の趣旨は、そういうことでしょうか。","frame":"Is that what you ...?","en":"Is that what you were asking about?"},
+        {"id":"r-close-004","scene":"分かりにくかったかもしれないとき","ja":"分かりにくい点があれば、お知らせください。","frame":"Please let me know if ...","en":"Please let me know if anything is unclear."},
+        {"id":"r-close-005","scene":"もっと詳しく話せると伝える","ja":"もっと詳しい説明が必要でしたら、お知らせください。","frame":"Let me know if you'd like ...","en":"Let me know if you'd like more detail."},
+        {"id":"r-close-006","scene":"時間がないので、あとで詳しく話すと申し出る","ja":"詳しいことは、セッションの後でも喜んでお話しします。","frame":"I'd be happy to ... after the session.","en":"I'd be happy to go into more detail after the session."},
+        {"id":"r-close-007","scene":"答えを締めくくる","ja":"それがお答えになっていれば幸いです。","frame":"I hope that ...","en":"I hope that answers your question."},
+        {"id":"r-close-008","scene":"追加の質問を促す","ja":"追加のご質問があれば、遠慮なくどうぞ。","frame":"Please feel free to ...","en":"Please feel free to ask if you have any follow-up questions."}
+      ]
     }
   ]
 }

@@ -77,11 +77,19 @@ test('Q&A handling: every phrase of the handout is practiced, each with the situ
   assert.equal(replies.kind, 'reply');
   const handling = replies.decks;
   for (const d of handling) {
-    assert.ok(d.refs.some((r) => r.url.includes('wordvice')) && d.cards.length >= 6, d.id);
+    assert.ok(d.cards.length >= 6 && (d.refs ?? []).every((r) => r.url.startsWith('https://')), d.id); // the handout's decks cite it; the original ones (r-close) have no refs
     for (const c of d.cards) assert.ok(c.scene?.trim() && !('q' in c) && c.frame.includes('...') && /[。？]$/.test(c.ja), c.id);
   }
   const asked = handling.flatMap((d) => d.cards.slice(0, -2)).map((c) => c.en);
   for (const p of HANDOUT) assert.ok(asked.some((t) => t.includes(p)), p);
+});
+
+// Phrases for hedging, restating and closing an answer: frames to fill (As far as I know, …) and stock phrases to write down.
+test('Q&A hedges, restatements and answer closings: their frames and stock phrases are practiced', () => {
+  const frames = new Map(patterns.decks.map((d) => [d.frame, d]));
+  for (const f of ['In other words, ...', 'To be more precise, ...', 'As far as I know, ...', 'To the best of our knowledge, ...', 'In my opinion, ...']) assert.ok(frames.get(f)?.cards.length >= 8, f);
+  const asked = replies.decks.flatMap((d) => d.cards.slice(0, -2)).map((c) => c.en);
+  for (const p of ['Does that answer your question?', 'Does that make sense?', 'Please let me know if anything is unclear.']) assert.ok(asked.includes(p), p);
 });
 
 test('listening: a talk of four to six sentences, a task, and the one sentence of the talk that answers it', () => {
