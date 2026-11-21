@@ -23,6 +23,11 @@ test('every card has ja and en; refs are https links', () => {
   }
 });
 
+// Research phrases are said from memory, so each is one idea of at most twelve words (the user's choice).
+test('research phrases (Lv3–5) are short: at most twelve words', () => {
+  for (const c of levels.slice(2).flatMap((f) => f.decks.flatMap((d) => d.cards))) assert.ok(c.en.split(' ').length <= 12, `${c.id}: ${c.en}`);
+});
+
 test('the daily grammar decks (Lv1–2) each explain their grammar in one line', () => {
   for (const d of levels.slice(0, 2).flatMap((f) => f.decks)) assert.ok(d.note?.trim(), d.id);
 });
