@@ -3,7 +3,7 @@
 // Data it works on:
 //   hist[cardId] = { box, n, last, due, grade }   one record per card ever answered
 //   days[date]   = { [topicId]: [answers, said],  counters per day (first attempts only), plus
-//                    '#check': [n, said], '#why': [content, english] }
+//                    '#check': [n, said], '#why': [content, english], '#plan:10': [daily sessions of 10 minutes started] }
 //   queue        = [{ id, phase, level?, as?, intro?, follow?, check?, retry? }]   one step per screen (`as`: the card the answer is recorded on)
 //
 // The daily session is grammar, sentence frames and Q&A replies. Research questions are asked in the mock Q&A only.

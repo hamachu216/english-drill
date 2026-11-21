@@ -365,10 +365,16 @@ function finish() {
   $('flash').textContent = answered ? `お疲れさまでした！ ${answered}問 回答・${streak(state.log, today())}日連続` : '';
 }
 
+// A new session, counted on its day by length ('#plan:10': [sessions of ten minutes started]), then begun.
+const startSession = (minutes, salt) => {
+  const s = fresh(minutes, salt), d = today(), day = state.days[d] ?? {}, key = `#plan:${minutes}`;
+  save({ days: { ...state.days, [d]: { ...day, [key]: [(day[key]?.[0] ?? 0) + 1] } } });
+  begin(s);
+};
 // The one button: start today's session, resume it, or — once it is done — add about five more minutes.
-const more = () => begin(fresh(5, `+${state.log[today()] || 0}`));
-$('start').onclick = () => { const s = session(); if (!s) begin(fresh(state.settings.minutes)); else if (left(s)) begin(s); else more(); };
-$('short').onclick = () => begin(fresh(10));
+const more = () => startSession(5, `+${state.log[today()] || 0}`);
+$('start').onclick = () => { const s = session(); if (!s) startSession(state.settings.minutes); else if (left(s)) begin(s); else more(); };
+$('short').onclick = () => startSession(10);
 $('free').onclick = () => startFree(levelCards)();
 const mock = () => begin({ mock: true, queue: mockSession(cards, state.hist), idx: 0, grades: [] });
 $('next-round').onclick = () => (run.free ? playFree(run.missed, run.queue) : run.mock ? mock() : more());

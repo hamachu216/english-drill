@@ -109,7 +109,7 @@ queue [{id, phase, level?, as?, intro?, follow?, check?, retry?}]  1ステップ
 localStorage の `eng:v1` 1つ。形は `restore` が決め、外から来たデータ（バックアップの読み込み）の唯一の関門として、型の合わない項目と無くなった設定を捨て、古い形式を変換する。
 
 - `log: {日付: 回答数}`、`hist: {cardId: {box, n, last, due, grade}}`（grade 0 言えなかった・1 ヒント・2 言えた）
-- `days: {日付: {topicId: [回答数, ヒントなしで言えた], "#check": [...], "#why": [内容, 英文]}}` — 値がすべて数値配列なので合算は足し算だけ
+- `days: {日付: {topicId: [回答数, ヒントなしで言えた], "#check": [...], "#why": [内容, 英文], "#plan:10": [その日に始めた10分版の回数]}}` — 値がすべて数値配列なので合算は足し算だけ。`#plan:分` は今日の練習を始めた長さ（設定の分数・10分版・続きの5分）で、10分版をどれくらい使うかを後で見るため（利用者の指定）
 - `session: {day, queue, idx, grades}` — 1問ごとに保存し、同じ日なら続きから再開
 - `answers: {cardId: 自分の回答例}` — 実際の研究内容が入るので端末とバックアップの外に出さない
 - `settings: {theme, level, voice, minutes, listen}`

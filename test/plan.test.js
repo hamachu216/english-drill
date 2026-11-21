@@ -387,6 +387,7 @@ test('restore: records saved while answers were timed — grades 2 and 3 become 
   const now = { d: { 'b-be': [5, 3], '#check': [2, 1], '#why': [1, 0] } };
   assert.deepEqual(restore({ days: old }).days, now);
   assert.deepEqual(restore({ days: now }).days, now, 'idempotent');
+  assert.deepEqual(restore({ days: { d: { '#plan:10': [1], '#plan:30': [2] } } }).days.d, { '#plan:10': [1], '#plan:30': [2] }, 'the length of the sessions started is kept');
   const card = { box: 1, n: 1, last: T, due: T };
   assert.deepEqual([3, 2, 1].map((grade) => restore({ hist: { x: { ...card, grade } } }).hist.x.grade), [2, 2, 1], 'said quickly or slowly: said');
 });
