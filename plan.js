@@ -71,8 +71,9 @@ export function shares(recent) {
   const grammar = clamp(0.5 + (NEUTRAL - fluency(recent.grammar)) * 0.6, 0.3, 0.65);
   return { grammar, pattern: 1 - grammar };
 }
-// Today's split, from the last two weeks of answers.
-export const mix = (days, items, day) => shares(byKind(span(days, addDays(day, -2 * WEEK + 1), day), items));
+// The last two weeks of answers per kind, and today's split from them.
+const recent = (days, items, day) => byKind(span(days, addDays(day, -2 * WEEK + 1), day), items);
+export const mix = (days, items, day) => shares(recent(days, items, day));
 
 // Topics with at least two cards missed last time (back tomorrow), worst first.
 export function weakTopics(items, hist) {
@@ -179,7 +180,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const idle = (c) => rec(c) && !due(c) && rec(c).last < day;
   const stage = stageOf(items, hist), weak = weakTopics(items, hist).filter((t) => !LATER.has(t)), wait = new Set([...knownTopics(items, hist), ...LATER]);
   const later = (c) => LATER.has(c.topic) && !(rec(c)?.due <= addDays(day, -PATIENCE));
-  const share = mix(days, items, day), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
+  const counts = recent(days, items, day), share = shares(counts), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
   const rest = minutes - Object.entries(fixed).reduce((s, [k, n]) => s + (n * SECONDS[k]) / 60, 0); // the split covers what they leave
 
   const pick = (kind) => {
@@ -202,14 +203,18 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     // New grammar: ROTATION topics at a time, in file order (so Lv2 waits for Lv1), each until it is known.
     const learning = [...new Set(fresh.map((c) => c.topic))].filter((t) => !wait.has(t)).slice(0, ROTATION);
     const open = fresh.filter((c) => c.topic in stage);
-    const ready = pool.every((c) => !(c.topic in stage) || stage[c.topic] >= 1) && n - reviews.length - focus.length - open.length >= 2;
+    // A card not said unaided comes back in the session (`requeue`), so n cards' time holds n / (1 + share not said)
+    // cards and their retries. What doesn't fit comes out of the new cards, never out of the reviews (nor grammar's one
+    // new card a day).
+    const room = Math.max(Math.round(n / (2 - fluency(counts[kind]))), reviews.length + +(kind === 'grammar'));
+    const ready = pool.every((c) => !(c.topic in stage) || stage[c.topic] >= 1) && room - reviews.length - focus.length - open.length >= 2;
     const untouched = [...new Set(fresh.filter((c) => !(c.topic in stage)).map((c) => c.topic))].slice(0, n > 6 ? 2 : 1);
     const added = {
       grammar: [...fresh.filter((c) => learning.includes(c.topic)).sort(easyFirst), ...[...fresh].sort(newFirst(wait))],
       pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, 1 + BLOCK)) : [])],
       reply: [...fresh].sort(easyFirst),
     }[kind];
-    return [...new Set([...reviews, ...focus, ...added, ...pile, ...rested])].slice(0, n);
+    return [...new Set([...reviews, ...focus, ...added, ...pile, ...rested])].slice(0, room);
   };
 
   const chosen = Object.fromEntries(KINDS.map((k) => [k, pick(k)]));

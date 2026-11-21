@@ -1,4 +1,4 @@
-import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, timeLimit, wordDiff, englishVoices, hasEnglish, slots, literal, reactions } from './core.js';
+import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, wordDiff, englishVoices, hasEnglish, slots, literal, reactions } from './core.js';
 import { MISS, HINT, OK, GRADE, review, byNeed, progress, mockSession, tally, requeue, scaffold, choices, planSession, mix, overview, weekly, drillSteps, lesson, openFrames } from './plan.js';
 import { hints as pairHints, siblings } from './colloc.js';
 
@@ -138,13 +138,11 @@ function renderHome() {
   }));
   $('minutes').value = minutes;
   $('listen-on').checked = state.settings.listen;
-  $('limit').value = state.settings.limit;
 }
 
 $('levels').onchange = (e) => { pool = []; setSettings({ level: +e.target.value }); };
 $('minutes').onchange = () => setSettings({ minutes: +$('minutes').value });
 $('listen-on').onchange = () => setSettings({ listen: $('listen-on').checked });
-$('limit').onchange = () => setSettings({ limit: $('limit').value === 'auto' ? 'auto' : +$('limit').value });
 
 const refLink = ({ name, url }) => el('a', { href: url, textContent: name, target: '_blank', rel: 'noreferrer' });
 // One entry per site: "EAP Foundation: Clarifying" → "EAP Foundation".
@@ -156,7 +154,7 @@ $('refs').replaceChildren(...[...sites].map(([name, url]) => el('li', {}, refLin
 // A daily run is {day, queue, idx, grades} and is saved after every answer, so it survives quitting and reloading.
 // A free run (one level, rounds of ROUND, misses repeated until none remain) adds {free, retry} and is never saved;
 // neither is a mock Q&A {mock}. Only a daily run has a day, and only it retries misses.
-let run = null, now = null, pool = [], answered = 0, timer = 0;
+let run = null, now = null, pool = [], answered = 0;
 const VIEWS = ['home', 'study', 'result'];
 const show = (view) => { for (const v of VIEWS) $(v).hidden = v !== view; scrollTo(0, 0); };
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -201,8 +199,6 @@ function showStep() {
   const shows = step.intro ? lesson(cur, rec) : null; // a step to listen to and repeat, not answered
   now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: shows?.en ?? (dictate ? cur.text ?? cur.en : ask.q) }; // audio: what the speaker button reads
   const talk = isTalk();
-  // Free practice keeps its timer setting (not the drills: composing or writing down a sentence takes its time).
-  const sec = run.free && !inFull(cur) ? timeLimit(cur.en, state.settings.limit) : 0;
   $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q || dictate ? 4 : drill(cur) ? 5 : 3)})`);
   $('track').textContent = [
     step.retry && 'もう一度',
@@ -210,7 +206,7 @@ function showStep() {
     !drill(cur) && cur.deck.title, // a pair's deck is its preposition, a backchannel's its function: the answer
     step.follow != null ? '追加質問' : step.intro && (drill(cur) ? '聞いてまねする' : '新しい型'),
   ].filter(Boolean).join(' · ');
-  $('count').textContent = `${run.idx + 1} / ${run.queue.length}${sec ? ` · ${sec}秒` : ''}`;
+  $('count').textContent = `${run.idx + 1} / ${run.queue.length}`;
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
@@ -238,20 +234,7 @@ function showStep() {
   $('reveal').textContent = step.intro ? 'まねして言えた、次へ →' : '回答した';
   $('answer').hidden = true;
   $('reveal').hidden = false;
-  startTimer(sec, run.free && !inFull(cur));
   if (now.audio && (dictate || state.settings.listen)) speak(now.audio);
-}
-
-// The bar drains via a CSS animation (turning red near the end); in free practice one timeout reveals the answer.
-function startTimer(sec, forced) {
-  clearTimeout(timer);
-  const bar = $('timer');
-  $('timer-track').hidden = !sec;
-  if (!sec) return;
-  bar.style.animation = 'none';
-  bar.getBoundingClientRect(); // restart the animation
-  bar.style.animation = `drain ${sec}s linear forwards`;
-  if (forced) timer = setTimeout(() => reveal(true), sec * 1000);
 }
 
 const LABEL = {
@@ -271,15 +254,12 @@ const mark = (en, parts) => parts.reduce((nodes, p) => nodes.flatMap((n) => {
 const phrases = (c) => (c.kind === 'colloc' ? [c.collocation] : c.kind === 'pattern' || c.kind === 'answer' ? slots(c.deck.frame, c.en)
   : c.kind === 'backchannel' ? reactions(c.deck) : []);
 
-function reveal(timedOut = false) {
-  clearTimeout(timer);
+function reveal() {
   stopMic();
-  $('timer').style.animationPlayState = 'paused'; // freeze: shows time left
   const { cur, ask, step } = now, talk = isTalk(), typed = $('input').value.trim();
   now.said = typed || now.said;
   const { ex } = now;
   now.model = ex ? ex.en : talk && ask.more ? `${ask.en} ${ask.more}` : ask.en;
-  $('timeout').hidden = !timedOut;
   $('model-label').textContent = talk ? '参考（架空の研究の一例）' : '回答例';
   // Accuracy practice compares your words with the model; fluency practice (Q&A) never marks your English.
   const compare = typed && !talk;
@@ -378,7 +358,6 @@ function showResult() {
 }
 
 function finish() {
-  clearTimeout(timer);
   stopMic();
   if (canSpeak) speechSynthesis.cancel();
   show('home');

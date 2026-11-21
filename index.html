@@ -72,10 +72,6 @@
         <option value="15">15分</option><option value="20">20分</option><option value="30">30分</option><option value="45">45分</option><option value="60">60分</option>
       </select></div>
       <div class="row"><span>Q&amp;Aの質問を読み上げる</span><input id="listen-on" type="checkbox"></div>
-      <div class="row"><span>自由練習の制限時間</span><select id="limit">
-        <option value="0">なし</option><option value="5">5秒</option><option value="10">10秒</option><option value="15">15秒</option>
-        <option value="20">20秒</option><option value="30">30秒</option><option value="auto">文の長さに応じて</option>
-      </select></div>
       <div class="row" id="voice-row"><span>読み上げの声</span><select id="voice"></select></div>
     </details>
     <details class="card panel backup">
@@ -103,7 +99,6 @@
       <span class="pill" id="count"></span>
     </div>
     <div class="dots" id="dots"></div>
-    <div class="timer" id="timer-track"><i id="timer"></i></div>
     <div class="card" id="qcard">
       <div class="row ask"><p class="prompt" id="prompt"></p><button id="listen" class="icon-btn" aria-label="質問を読み上げ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/></svg></button></div>
       <p class="sub" id="sub"></p>
@@ -116,7 +111,6 @@
         <button id="reveal" class="primary"></button>
       </div>
       <div class="answer" id="answer" hidden>
-        <p class="timeout" id="timeout" hidden>時間切れ</p>
         <p class="mine" id="mine"></p>
         <button id="keep" class="wide" hidden></button>
         <p class="muted" id="model-label"></p>

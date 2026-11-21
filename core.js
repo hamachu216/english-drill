@@ -24,7 +24,7 @@ export const catalog = (files) =>
 // Saved state → current shape. This is also the migration: v1 stored only {log, settings}, so whatever is
 // missing gets its default and settings that no longer exist are dropped. It is also the one gate for a backup
 // file from outside: entries of the wrong type are dropped, so nothing downstream has to defend itself. Idempotent.
-export const DEFAULT = { theme: 'system', level: 1, limit: 10, voice: '', minutes: 30, listen: true };
+export const DEFAULT = { theme: 'system', level: 1, voice: '', minutes: 30, listen: true };
 const plain = (x) => x != null && typeof x === 'object' && !Array.isArray(x);
 const only = (o, ok) => Object.fromEntries(Object.entries(plain(o) ? o : {}).filter(([, v]) => ok(v)));
 const counters = (v) => Array.isArray(v) && v.every(Number.isFinite);
@@ -96,9 +96,6 @@ export function nextRound(misses, pool, all, rand, size = ROUND) {
 
 // An answer counts as attempted only once it has English letters: no peeking at the answer without trying.
 export const hasEnglish = (text) => /[a-z]/i.test(text);
-
-// Seconds allowed per card: a fixed number (0 = no limit), or 'auto' = 2s + 0.5s per word of the model answer.
-export const timeLimit = (en, limit) => (limit === 'auto' ? Math.round(2 + 0.5 * en.split(/\s+/).length) : limit);
 
 // Consecutive practiced days ending today (or yesterday if today isn't done yet).
 export function streak(log, today) {

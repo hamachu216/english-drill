@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, ROUND, shuffle, nextRound, streak, calendar, timeLimit, wordDiff, catalog, restore, isBackup, DEFAULT, seeded, skeleton, opening, mask, englishVoices, hasEnglish } from '../core.js';
+import { addDays, ROUND, shuffle, nextRound, streak, calendar, wordDiff, catalog, restore, isBackup, DEFAULT, seeded, skeleton, opening, mask, englishVoices, hasEnglish } from '../core.js';
 
 const T = '2026-10-19';
 
@@ -22,7 +22,7 @@ test('restore migrates v1 data: the log and known settings survive, new fields g
   const v1 = { log: { '2026-10-18': 12 }, settings: { theme: 'dark', goal: 30, level: 2, limit: 'auto', voice: 'Ava' } };
   const s = restore(v1);
   assert.deepEqual(s.log, v1.log);
-  assert.deepEqual(s.settings, { ...DEFAULT, theme: 'dark', level: 2, limit: 'auto', voice: 'Ava' });
+  assert.deepEqual(s.settings, { ...DEFAULT, theme: 'dark', level: 2, voice: 'Ava' }, 'settings no longer offered (goal, limit) are dropped');
   assert.deepEqual([s.hist, s.days, s.answers, s.session], [{}, {}, {}, null]);
   assert.deepEqual(restore(JSON.parse(JSON.stringify(s))), s);
   assert.deepEqual(restore(null).settings, DEFAULT);
@@ -115,9 +115,3 @@ test('hasEnglish: only English letters count as a try', () => {
   for (const s of ['I', 'えーと I think', ' maybe ']) assert.equal(hasEnglish(s), true, s);
 });
 
-test('timeLimit: fixed seconds, 0 disables, auto grows with answer length', () => {
-  assert.equal(timeLimit('I am a graduate student.', 10), 10);
-  assert.equal(timeLimit('anything', 0), 0);
-  assert.equal(timeLimit('I am a graduate student.', 'auto'), 5);
-  assert.ok(timeLimit('word '.repeat(20).trim(), 'auto') > timeLimit('short one', 'auto'));
-});

@@ -167,9 +167,6 @@ details.panel > p:first-of-type { margin-top: 0; }
 .dots i.now { background: var(--text); height: 7px; }
 .dots i.seen { background: var(--text); height: 3px; }
 .dots.many { gap: 2px; }
-.timer { height: 3px; background: var(--cell); overflow: hidden; margin-bottom: 14px; }
-.timer i { display: block; height: 100%; width: 100%; background: var(--text); }
-@keyframes drain { from { width: 100%; background: var(--text); } 70% { background: var(--text); } to { width: 0%; background: var(--bad); } }
 #study { --lv: var(--accent); }
 #qcard { padding: 24px 20px; }
 .prompt { font: 700 1.4rem/1.5 var(--serif); margin: 0; flex: 1; text-wrap: pretty; }
@@ -205,7 +202,6 @@ textarea::placeholder { color: var(--muted); opacity: .8; font-family: var(--san
 .note::before { content: "解説"; position: absolute; top: -.8em; left: 10px; padding: 0 8px; background: var(--surface);
   font: 700 .72rem/1.6 var(--sans); letter-spacing: .12em; }
 .refs { margin: 10px 0 0; }
-.timeout { display: inline-block; color: var(--bad); font-weight: 700; letter-spacing: .06em; margin: 0 0 8px; }
 .tip { margin: 14px 0 0; padding-left: 14px; border-left: 1px solid var(--text); font-size: .92rem; line-height: 1.8; }
 #caveat { margin: 12px 0 0; }
 #model-label { margin: 0 0 6px; font-size: .72rem; font-weight: 700; letter-spacing: .12em; color: var(--text); }

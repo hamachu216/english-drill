@@ -8,6 +8,9 @@ const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(n
 const byId = new Map(items.map((c) => [c.id, c]));
 const T = '2026-11-16'; // a Monday
 const plan = (hist = {}, days = {}, day = T, minutes = 30) => planSession({ items, hist, days, day, minutes, rand: seeded(day) });
+// A learner who said everything unaided lately: no retries to make room for.
+const FLUENT = { [addDays(T, -1)]: { 'b-past': [20, 20], 'p-goal': [20, 20], 'r-start': [20, 20] } };
+const minutesOf = (queue, retried) => queue.reduce((t, s) => t + { grammar: 60, pattern: 75, reply: 60 }[byId.get(s.id).kind] * (1 + retried), 0) / 60;
 const LATER = (s) => ['b-be', 'b-neg', 'b-prog'].includes(byId.get(s.id).topic);
 const kinds = (queue) => queue.filter((s) => !s.intro && s.follow == null).reduce((n, s) => ({ ...n, [byId.get(s.id).kind]: (n[byId.get(s.id).kind] ?? 0) + 1 }), {});
 
@@ -59,8 +62,9 @@ test('review: answering again the same day never moves the due date forward or r
 
 test('first use: about 30 minutes with grammar, new sentence frames and Q&A replies, in that order — no research questions', () => {
   const queue = plan(), n = kinds(queue);
-  assert.ok(n.grammar >= 12 && n.pattern >= 5 && n.reply === 5 && !n.qa && !n.colloc && !n.listening, JSON.stringify(n));
-  assert.ok(queue.length <= 30, `about one card a minute: ${queue.length}`);
+  assert.ok(n.grammar >= 7 && n.pattern >= 4 && n.reply >= 3 && !n.qa && !n.colloc && !n.listening, JSON.stringify(n));
+  const minutes = minutesOf(queue.filter((s) => !s.intro), 0.35);
+  assert.ok(minutes > 25 && minutes <= 32, `about 30 minutes with the retries a typical learner makes: ${minutes}`);
   assert.ok(n.grammar > n.pattern);
   assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'pattern', 'reply'], 'no review or check on day one');
   const grammar = queue.filter((s) => byId.get(s.id).kind === 'grammar').map((s) => byId.get(s.id));
@@ -78,7 +82,18 @@ test('first use: about 30 minutes with grammar, new sentence frames and Q&A repl
 
 test('the 10-minute session is shorter and still has both grammar and research English', () => {
   const short = kinds(plan({}, {}, T, 10)), full = kinds(plan());
-  assert.ok(short.grammar < full.grammar && short.grammar >= 4 && short.pattern >= 1 && short.reply >= 1, JSON.stringify(short));
+  assert.ok(short.grammar < full.grammar && short.grammar >= 2 && short.pattern >= 1 && short.reply >= 1, JSON.stringify(short));
+});
+
+test('the retries a learner makes come out of the new cards: reviews stay, and grammar keeps one new card a day', () => {
+  const hist = dueLong(ofTopics('b-past').slice(0, 3)), struggling = { [addDays(T, -1)]: { 'b-past': [20, 4], 'p-goal': [20, 4], 'r-start': [20, 4] } };
+  const fluent = plan(hist, FLUENT, T), weak = plan(hist, struggling, T), old = (q) => q.filter((s) => hist[s.as ?? s.id]).length;
+  const added = (q, kind) => q.filter((s) => !s.intro && byId.get(s.id).kind === kind && !hist[s.as ?? s.id]).length;
+  assert.equal(old(weak), old(fluent), 'every review stays');
+  for (const kind of ['pattern', 'reply']) assert.ok(added(weak, kind) < added(fluent, kind), kind);
+  assert.ok(added(weak, 'grammar') >= 1, 'grammar still gets a new card');
+  const minutes = minutesOf(weak.filter((s) => !s.intro), 0.8);
+  assert.ok(minutes <= 34, `still about 30 minutes, retries included: ${minutes}`);
 });
 
 test('shares: half and half by default; weak grammar gets more time, solid grammar gives it to the sentence frames', () => {
@@ -96,7 +111,7 @@ test('a learner who struggles with grammar gets more grammar; one who improves g
   const weak = practice(3, grammarOnly(MISS)), solid = practice(3, grammarOnly(OK));
   const first = kinds(plan()), w = kinds(plan(weak.hist, weak.days, weak.next)), s = kinds(plan(solid.hist, solid.days, solid.next));
   assert.ok(w.grammar > first.grammar, `${w.grammar} > ${first.grammar}`);
-  assert.ok(s.grammar < first.grammar && s.pattern > first.pattern, JSON.stringify([first, s]));
+  assert.ok(s.pattern > first.pattern && s.pattern / s.grammar > first.pattern / first.grammar, JSON.stringify([first, s]));
   assert.ok(w.pattern >= 1, 'even then, research English is touched every day');
 });
 
@@ -133,7 +148,7 @@ test('a weak topic with no unseen sentences left gets only its misses back; the 
   const hist = Object.fromEntries(be.map((c, i) => [c.id, review(undefined, i % 2 ? OK : MISS, day)]));
   const queue = plan(hist, {}, next), bes = queue.filter((s) => byId.get(s.id).topic === 'b-be');
   assert.deepEqual(bes.map((s) => s.id).sort(), be.filter((_, i) => !(i % 2)).map((c) => c.id).sort(), 'only the misses');
-  assert.ok(new Set(queue.filter((s) => s.phase === 'grammar').map((s) => byId.get(s.id).topic)).size >= 3, 'the room left goes to new cards of other topics');
+  assert.ok(queue.some((s) => s.phase === 'grammar' && byId.get(s.id).topic !== 'b-be'), 'the room left goes to new cards of other topics');
 });
 
 test('a grammar topic said without a hint three times is known: its new cards wait, and one miss brings it back', () => {
@@ -212,7 +227,7 @@ const grammarOf = (hist) => plan(hist, {}, T).filter((s) => s.phase === 'grammar
 
 test('reviews put off on purpose (b-be, b-neg, b-prog) are not a pile: new grammar still comes, in turn with the other reviews', () => {
   const hist = { ...dueLong(ofTopics('b-be', 'b-neg', 'b-prog')), ...dueLong(ofTopics('b-past').slice(0, 4)) };
-  const grammar = grammarOf(hist), head = grammar.filter((s) => !LATER(s)).slice(0, 6).map(fresh(hist));
+  const grammar = plan(hist, FLUENT, T).filter((s) => s.phase === 'grammar'), head = grammar.filter((s) => !LATER(s)).slice(0, 6).map(fresh(hist));
   assert.ok(Object.keys(hist).length >= 50 && grammar.filter(fresh(hist)).length >= grammar.length / 2 - 1, 'half is new');
   assert.deepEqual(head, [false, true, false, true, false, true], 'old, new, old, new …');
   assert.ok(plan(hist, {}, T).filter((s) => s.phase === 'pattern' && !s.intro).every((s) => !hist[s.id]), 'the other kinds are untouched');
@@ -264,7 +279,7 @@ test('a grammar card retried in the session shows its grammar and its opening up
 });
 
 test('Q&A reply: dictation — nothing shown up front, the first letters and word lengths as the hint', () => {
-  const r = items.find((c) => c.id === 'r-hear-001'), queue = plan();
+  const r = items.find((c) => c.id === 'r-hear-001'), queue = plan({}, FLUENT);
   assert.deepEqual(scaffold(r, {}).shown, []);
   assert.deepEqual(scaffold(r, {}).hints, [['頭文字', skeleton(r.en)]]);
   assert.deepEqual(scaffold(r, { retry: true }).shown.map(([label]) => label), ['頭文字'], 'a retry shows them up front');
@@ -351,7 +366,7 @@ test('state survives a reload: history and an unfinished session round-trip thro
 
 test('when everything has been seen and nothing is due, the cards practiced longest ago come back', () => {
   const hist = Object.fromEntries(items.map((c, i) => [c.id, { box: 3, n: 3, last: addDays(T, -1 - (i % 5)), due: addDays(T, 20) }]));
-  const queue = plan(hist, {});
+  const queue = plan(hist, FLUENT);
   assert.ok(queue.length > 20);
   assert.ok(queue.every((s) => hist[s.id].last === addDays(T, -5)));
 });
