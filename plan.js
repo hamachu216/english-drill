@@ -4,7 +4,7 @@
 //   hist[cardId] = { box, n, last, due, grade }   one record per card ever answered
 //   days[date]   = { [topicId]: [answers, said],  counters per day (first attempts only), plus
 //                    '#check': [n, said], '#why': [content, english], '#plan:10': [daily sessions of 10 minutes started] }
-//   queue        = [{ id, phase, level?, as?, intro?, follow?, check?, retry? }]   one step per screen (`as`: the card the answer is recorded on)
+//   queue        = [{ id, phase, level?, as?, follow?, check?, retry? }]   one step per screen (`as`: the card the answer is recorded on)
 //
 // The daily session is grammar, sentence frames, research phrases (Lv3–5) and Q&A replies. Research questions are
 // asked in the mock Q&A only.
@@ -25,7 +25,7 @@ const SECONDS = { grammar: 60, pattern: 75, phrase: 75, reply: 60 };
 const EVERY = { reply: 10, phrase: 6 };
 const SPLIT = 5 / 6, GRAMMAR_MIN = 0.2;
 const NEUTRAL = 0.65; // fluency at which the split is the default: half grammar, half frames
-const BLOCK = 4; // sentences drilled on the day a frame is introduced, after the one to listen to and repeat
+const BLOCK = 4; // sentences said on the day a frame is introduced, with the frame shown
 const MOCK = 5; // questions in a mock Q&A, each with a follow-up
 const CHECK = { grammar: 3, pattern: 2, phrase: 1, reply: 1 }; // weekly first-sight check
 const WEEK = 7;
@@ -135,8 +135,6 @@ export function byNeed(pool, hist, day) {
 // what wasn't said in full asks the same sentence again.
 export const drillSteps = (cards, hist) => cards.map((c) => ({ id: c.id, phase: 'free', ...(c.examples && { nth: c.examples.indexOf(example(c, hist[c.id])) }) }));
 
-// What a new frame's step to listen to and repeat shows: the frame, its meaning and note, and its first sentence.
-export const lesson = (c) => ({ head: c.deck.frame, ja: c.deck.ja, note: c.deck.note, en: c.en, meaning: c.ja });
 
 // How far a set has come: [not started, practising, settled (next review a week or more away)].
 export const progress = (items, hist) => items.reduce((n, c) => (n[!hist[c.id] ? 0 : hist[c.id].box >= 2 ? 2 : 1]++, n), [0, 0, 0]);
@@ -188,13 +186,13 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     const worst = weak.find((t) => fresh.some((c) => c.topic === t));
     const focus = fresh.filter((c) => c.topic === worst).slice(0, Math.ceil(n / 5));
     // New frames: more sentences for frames already started, then (once every started frame has been said
-    // at least once) one or two new frames, one sentence to repeat and BLOCK to say.
+    // at least once) one or two new frames, BLOCK sentences each.
     // New grammar: ROTATION topics at a time, in file order (so Lv2 waits for Lv1), each until it is known.
     const learning = [...new Set(fresh.map((c) => c.topic))].filter((t) => !wait.has(t)).slice(0, ROTATION);
     const open = fresh.filter((c) => c.topic in stage);
     const ready = pool.every((c) => !(c.topic in stage) || stage[c.topic] >= 1) && n - reviews.length - focus.length - open.length >= 2;
     const untouched = [...new Set(fresh.filter((c) => !(c.topic in stage)).map((c) => c.topic))].slice(0, n > 6 ? 2 : 1);
-    const frames = kind === 'pattern' && ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, 1 + BLOCK)) : [];
+    const frames = kind === 'pattern' && ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, BLOCK)) : [];
     // A card not said unaided comes back in the session (`requeue`), so n cards' time holds n / (1 + share not said)
     // cards and their retries. What doesn't fit comes out of the new cards, never out of the reviews, grammar's one new
     // card a day, or a new frame (`less`: what a new frame took from the pattern time, taken from the other kinds).
@@ -238,8 +236,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   return [
     ...KINDS.flatMap((k) => chosen[k].filter(sore)).map(again('review')),
     ...weave(old('grammar'), added('grammar')).sort((a, b) => later(a) - later(b)).map(again('grammar')),
-    // A new frame opens with its first sentence to listen to and repeat; that sentence is recalled on a later day.
-    ...weave(old('pattern').map(step('pattern')), added('pattern').map((c, i, a) => (c.topic in stage || a[i - 1]?.topic === c.topic ? step('pattern')(c) : { id: c.id, phase: 'pattern', intro: true }))),
+    ...weave(old('pattern'), added('pattern')).map(step('pattern')),
     ...weave(old('phrase'), added('phrase')).map(step('phrase')),
     ...weave(old('reply'), added('reply')).map(step('reply')),
     ...check.map((c) => ({ id: c.id, phase: 'check', level: 2, check: true })),

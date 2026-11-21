@@ -1,5 +1,5 @@
 import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, wordDiff, englishVoices, hasEnglish, slots, literal, reactions } from './core.js';
-import { MISS, HINT, OK, GRADE, review, byNeed, progress, mockSession, tally, requeue, bare, scaffold, choices, planSession, mix, overview, weekly, drillSteps, lesson } from './plan.js';
+import { MISS, HINT, OK, GRADE, review, byNeed, progress, mockSession, tally, requeue, bare, scaffold, choices, planSession, mix, overview, weekly, drillSteps } from './plan.js';
 import { siblings } from './colloc.js';
 
 const KEY = 'eng:v1';
@@ -47,9 +47,9 @@ const plan = (minutes, salt = '') => planSession({ items: cards, hist: state.his
 const fresh = (minutes, salt) => ({ day: today(), queue: plan(minutes, salt), idx: 0, grades: [] });
 
 const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, name]) => {
-  const steps = queue.filter((s) => s.phase === phase), asked = steps.filter((s) => !s.intro && s.follow == null);
+  const asked = queue.filter((s) => s.phase === phase && s.follow == null), started = new Set(Object.keys(state.hist).map((id) => byId.get(id)?.topic));
   const count = asked.reduce((n, s) => n.set(byId.get(s.id).deck.title, (n.get(byId.get(s.id).deck.title) ?? 0) + 1), new Map());
-  const frames = steps.filter((s) => s.intro).map((s) => byId.get(s.id).deck.frame);
+  const frames = phase === 'pattern' ? [...new Set(asked.map((s) => byId.get(s.id)).filter((c) => !started.has(c.topic)).map((c) => c.deck.frame))] : [];
   const detail = frames.length ? `新しい型: ${frames.join(' / ')}`
     : phase === 'grammar' || phase === 'pattern' || phase === 'phrase' ? [...count].sort((a, b) => b[1] - a[1]).slice(0, 2).map(([t]) => t).join('・') : '';
   return asked.length ? [el('li', {},
@@ -180,9 +180,8 @@ let freeList = levelCards;
 function playFree(missed = [], asked = []) {
   const size = freeList === talkCards ? TALKS : ROUND, r = nextRound(missed, pool, byNeed(freeList(), state.hist, today()), undefined, size);
   pool = r.pool;
-  // A retry round has just seen its answers; otherwise the Phrase Drill shows what hasn't been said yet before asking.
-  // The same steps again (for a pair: the same sentence), until each is said in full.
-  const queue = freeList === phraseCards && !r.retry ? drillSteps(r.cards, state.hist) : r.cards.map((c) => asked.find((s) => s.id === c.id && !s.intro) ?? { id: c.id, phase: 'free' });
+  // A retry round asks the same steps again (for a pair: the same sentence), until each is said in full.
+  const queue = freeList === phraseCards && !r.retry ? drillSteps(r.cards, state.hist) : r.cards.map((c) => asked.find((s) => s.id === c.id) ?? { id: c.id, phase: 'free' });
   begin({ free: true, retry: r.retry, size, queue, idx: 0, grades: [] });
 }
 
@@ -190,27 +189,26 @@ function showStep() {
   const step = run.queue[run.idx], cur = byId.get(step.id);
   // An adjective + preposition pair is said in the example sentence its step names (`ex` is set for pairs only).
   const ex = cur.examples?.[step.nth] ?? null;
-  // Asked bare only in the daily session: the drills, free practice and the mock Q&A always have their hints.
-  const { shown, hints } = scaffold(cur, { ...step, bare: !!run.day && bare(step, state.hist) }, ex?.en);
+  // Asked bare only in the daily session, and not the Q&A replies: the drills, free practice and the mock Q&A always
+  // have their hints.
+  const { shown, hints } = scaffold(cur, { ...step, bare: !!run.day && cur.kind !== 'reply' && bare(step, state.hist) }, ex?.en);
   // A backchannel answers what someone just said (`cur.said`, shown, not read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = listening(cur), back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
-  const shows = step.intro ? lesson(cur) : null; // a new frame's step to listen to and repeat, not answered
-  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: shows?.en ?? (dictate ? cur.text ?? cur.en : ask.q) }; // audio: what the speaker button reads
+  now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: dictate ? cur.text ?? cur.en : ask.q }; // audio: what the speaker button reads
   const talk = isTalk();
   $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q || dictate ? 4 : drill(cur) ? 5 : 3)})`);
   $('track').textContent = [
     step.retry && 'もう一度',
     run.free ? `${run.retry ? '復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : listening(cur) ? 'Listening Drill' : `Lv${cur.level}`}` : PHASE[step.phase],
     !drill(cur) && cur.deck.title, // a pair's deck is its preposition, a backchannel's its function: the answer
-    step.follow != null ? '追加質問' : step.intro && '新しい型',
+    step.follow != null && '追加質問',
   ].filter(Boolean).join(' · ');
   $('count').textContent = `${run.idx + 1} / ${run.queue.length}`;
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
-  $('prompt').textContent = shows ? shows.head : talk ? now.ask.q : cur.task ?? (ex ?? cur).ja;
-  $('sub').textContent = shows ? `${shows.ja}　例文を聞いて、まねして声に出そう`
-    : ex ? `${cur.adj} ＋ 前置詞を使って、英文全体を声に出そう`
+  $('prompt').textContent = talk ? now.ask.q : cur.task ?? (ex ?? cur).ja;
+  $('sub').textContent = ex ? `${cur.adj} ＋ 前置詞を使って、英文全体を声に出そう`
     : cur.text ? `場面：${cur.scene}　全体を聞いて、答えになる1文を書き取ろう（何度聞いてもよい）`
     : cur.scene ? `場面：${cur.scene}`
     : back ? `相手：${cur.said}　→ 相槌＋ひと言で返そう`
@@ -218,18 +216,13 @@ function showStep() {
     : !talk ? ''
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'
     : '本番のつもりで、自分の研究で答えよう。まず1文、言えたら2〜3文';
-  $('hints').replaceChildren(...(shows
-    ? [...pair('ポイント', shows.note), el('dt', { textContent: '例文' }), el('dd', { className: 'en' }, ...mark(shows.en, phrases(cur))), ...pair('意味', shows.meaning)]
-    : shown.flatMap(hintRow)));
+  $('hints').replaceChildren(...shown.flatMap(hintRow));
   $('listen').hidden = !canSpeak || !now.audio;
-  $('input').hidden = $('hint').hidden = !!step.intro;
-  $('mic').hidden = !!step.intro || dictate || !canHear;
+  $('mic').hidden = dictate || !canHear;
   $('input').placeholder = dictate ? '聞こえた英文を入力しよう' : SAY;
-  $('unknown').hidden = !!step.intro;
   $('input').value = '';
   $('hint').disabled = !hints.length;
   $('playback').hidden = true;
-  $('reveal').textContent = step.intro ? 'まねして言えた、次へ →' : '回答した';
   $('answer').hidden = true;
   $('reveal').hidden = false;
   if (now.audio && (dictate || state.settings.listen)) speak(now.audio);
@@ -391,7 +384,7 @@ $('hint').onclick = () => {
   $('hint').disabled = !now.pending.length;
 };
 $('unknown').onclick = () => { now.gaveUp = true; reveal(); };
-$('reveal').onclick = () => (now.step.intro ? advance() : reveal());
+$('reveal').onclick = () => reveal();
 // Say it once more after seeing the example. The self-evaluation still describes the first attempt.
 $('again').onclick = () => {
   $('answer').hidden = true;

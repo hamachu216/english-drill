@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded, wordBank } from '../core.js';
-import { MISS, OK, review, planSession, byNeed, progress, scaffold, drillSteps, lesson } from '../plan.js';
+import { MISS, OK, review, planSession, byNeed, progress, scaffold, drillSteps } from '../plan.js';
 import { example, siblings } from '../colloc.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
@@ -73,6 +73,4 @@ test('the Phrase Drill asks straight away, a pair in the next sentence each time
   const [a] = pairs, [x] = backs, hist = { [a.id]: review(undefined, OK, T) };
   assert.deepEqual(drillSteps([a, x], {}), [{ id: a.id, phase: 'free', nth: 0 }, { id: x.id, phase: 'free' }], 'no step to listen to and repeat');
   assert.equal(drillSteps([a], hist)[0].nth, 1);
-  const p = items.find((c) => c.kind === 'pattern');
-  assert.deepEqual(lesson(p), { head: p.deck.frame, ja: p.deck.ja, note: p.deck.note, en: p.en, meaning: p.ja }, 'only a new frame opens with its own first sentence');
 });

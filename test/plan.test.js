@@ -13,7 +13,7 @@ const plan = (hist = {}, days = {}, day = T, minutes = 60) => planSession({ item
 const FLUENT = { [addDays(T, -1)]: { 'b-past': [20, 20], 'p-goal': [20, 20], 'r-start': [20, 20] } };
 const minutesOf = (queue, retried) => queue.reduce((t, s) => t + { grammar: 60, pattern: 75, phrase: 75, reply: 60 }[byId.get(s.id).kind] * (1 + retried), 0) / 60;
 const LATER = (s) => ['b-be', 'b-neg', 'b-prog'].includes(byId.get(s.id).topic);
-const kinds = (queue) => queue.filter((s) => !s.intro && s.follow == null).reduce((n, s) => ({ ...n, [byId.get(s.id).kind]: (n[byId.get(s.id).kind] ?? 0) + 1 }), {});
+const kinds = (queue) => queue.filter((s) => s.follow == null).reduce((n, s) => ({ ...n, [byId.get(s.id).kind]: (n[byId.get(s.id).kind] ?? 0) + 1 }), {});
 
 // A learner who answers every step of every day's session with grade(card); returns the state after `n` days.
 function practice(n, grade, from = T, minutes = 60) {
@@ -23,7 +23,6 @@ function practice(n, grade, from = T, minutes = 60) {
     const day = addDays(from, i), queue = plan(hist, days, day, minutes);
     sessions.push(queue);
     for (const s of queue) {
-      if (s.intro) continue;
       const c = byId.get(s.id), g = grade(c, s);
       if (s.follow == null) hist = { ...hist, [s.as ?? c.id]: review(hist[s.as ?? c.id], g, day) };
       days = { ...days, [day]: tally(days[day], c, { grade: g, check: s.check }) };
@@ -66,7 +65,7 @@ test('review: answering again the same day never moves the due date forward or r
 test('first use: about 30 minutes with grammar, new sentence frames and Q&A replies, in that order — no research questions', () => {
   const queue = plan({}, {}, T, 30), n = kinds(queue);
   assert.ok(n.grammar >= 1 && n.pattern === 8 && n.phrase >= 3 && n.reply >= 2 && !n.qa && !n.colloc && !n.listening, JSON.stringify(n));
-  const minutes = minutesOf(queue.filter((s) => !s.intro), 0.35);
+  const minutes = minutesOf(queue, 0.35);
   assert.ok(minutes > 25 && minutes <= 32, `about 30 minutes with the retries a typical learner makes: ${minutes}`);
   assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'pattern', 'phrase', 'reply'], 'no review or check on day one');
   const phrases = queue.filter((s) => s.phase === 'phrase').map((s) => byId.get(s.id));
@@ -75,11 +74,9 @@ test('first use: about 30 minutes with grammar, new sentence frames and Q&A repl
   assert.deepEqual([...new Set(grammar.map((c) => c.topic))], ['b-past', 'b-future', 'b-modal'], 'new grammar: three topics at a time, the present-tense basics (b-be, b-neg, b-prog) left for last');
   assert.deepEqual(grammar.slice(0, 3).map((c) => c.nth), [0, 0, 0], 'taken in turn, not one topic at a time');
   const frames = queue.filter((s) => s.phase === 'pattern');
-  assert.ok(frames[0].intro, 'a frame is explained, with its first sentence to repeat, before it is used');
   const first = frames.filter((s) => byId.get(s.id).topic === byId.get(frames[0].id).topic);
-  assert.equal(first.filter((s) => !s.intro).length, 4, 'then reused in several other sentences');
-  assert.ok(!first.some((s) => !s.intro && s.id === frames[0].id), 'the repeated sentence is not recalled the same day');
-  assert.ok(frames.filter((s) => !s.intro).every((s) => s.level === 0));
+  assert.equal(first.length, 4, 'a new frame is said in four sentences, asked straight away');
+  assert.ok(frames.every((s) => s.level === 0), 'with the frame shown');
   assert.ok(queue.every((s) => !byId.get(s.id).held), 'cards held for the weekly check are not used up');
   assert.deepEqual(plan({}, {}, T, 30), queue, 'the same day plans the same session');
 });
@@ -92,13 +89,13 @@ test('the 10-minute session is shorter and still has both grammar and research E
 test('the retries a learner makes come out of the new cards: reviews stay, and grammar keeps one new card a day', () => {
   const hist = dueLong(ofTopics('b-past').slice(0, 2)), struggling = { [addDays(T, -1)]: { 'b-past': [20, 4], 'p-goal': [20, 4], 'r-start': [20, 4] } };
   const fluent = plan(hist, FLUENT, T, 30), weak = plan(hist, struggling, T, 30), old = (q) => q.filter((s) => hist[s.as ?? s.id]).length;
-  const added = (q, kind) => q.filter((s) => !s.intro && byId.get(s.id).kind === kind && !hist[s.as ?? s.id]).length;
+  const added = (q, kind) => q.filter((s) => byId.get(s.id).kind === kind && !hist[s.as ?? s.id]).length;
   assert.equal(old(weak), old(fluent), 'every review stays');
   assert.ok(added(weak, 'reply') < added(fluent, 'reply'), 'fewer new replies');
   assert.equal(added(weak, 'pattern'), added(fluent, 'pattern'), 'a new frame is never cut: its time comes out of new grammar and replies');
-  assert.equal(weak.filter((s) => s.phase === 'pattern' && !s.intro).length, 8, 'two new frames, each said in four sentences');
+  assert.equal(weak.filter((s) => s.phase === 'pattern').length, 8, 'two new frames, each said in four sentences');
   assert.ok(added(weak, 'grammar') >= 1, 'grammar still gets a new card');
-  const minutes = minutesOf(weak.filter((s) => !s.intro), 0.8);
+  const minutes = minutesOf(weak, 0.8);
   assert.ok(minutes <= 36, `about 30 minutes, retries included (a day two frames open runs a little over): ${minutes}`);
 });
 
@@ -133,10 +130,10 @@ test('cards that were missed stay in review on the following days, and open the 
 test('no card twice in a session, and cards answered well do not come back the next day', () => {
   const { hist, days, sessions, next } = practice(4, () => OK, T, 30);
   for (const q of [...sessions, plan(hist, days, next, 30)]) {
-    const ids = q.filter((s) => !s.intro && s.follow == null).map((s) => s.id);
+    const ids = q.filter((s) => s.follow == null).map((s) => s.id);
     assert.equal(new Set(ids).size, ids.length);
   }
-  const seen = (q) => new Set(q.filter((s) => !s.intro).map((s) => s.id)); // a sentence only repeated is said on a later day
+  const seen = (q) => new Set(q.map((s) => s.id));
   assert.equal([...seen(sessions[1])].filter((id) => seen(sessions[0]).has(id)).length, 0);
 });
 
@@ -195,18 +192,17 @@ test('sentence frames fade their support: frame shown → half hidden → none',
   }
   // The level follows the learner: said with the frame today → half hidden next time → no frame after that.
   const { hist, days, sessions, next } = practice(8, () => OK);
-  const topic = byId.get(sessions[0].find((s) => s.intro).id).topic;
-  const levels = sessions.flatMap((q) => q.filter((s) => !s.intro && byId.get(s.id).topic === topic && !s.check).map((s) => s.level));
+  const topic = byId.get(sessions[0].find((s) => s.phase === 'pattern').id).topic;
+  const levels = sessions.flatMap((q) => q.filter((s) => byId.get(s.id).topic === topic && !s.check).map((s) => s.level));
   assert.deepEqual([...new Set(levels)], [0, 1, 2]);
   assert.ok(overview(items, hist, next).frames[2] >= 1);
   assert.ok(plan(hist, days, next).length > 0);
 });
 
 test('a new frame waits until every started frame has been said at least once', () => {
-  const stuck = practice(3, (c) => (c.kind === 'pattern' ? MISS : OK));
-  assert.equal(new Set(stuck.sessions.flat().filter((s) => s.intro).map((s) => byId.get(s.id).topic)).size, 2, 'only the first day introduces frames');
-  const moving = practice(3, () => OK);
-  assert.ok(new Set(moving.sessions.flat().filter((s) => s.intro).map((s) => byId.get(s.id).topic)).size > 2);
+  const frames = (sessions) => new Set(sessions.flat().filter((s) => s.phase === 'pattern').map((s) => byId.get(s.id).topic)).size;
+  assert.equal(frames(practice(3, (c) => (c.kind === 'pattern' ? MISS : OK)).sessions), 2, 'only the first day introduces frames');
+  assert.ok(frames(practice(3, () => OK).sessions) > 2);
 });
 
 test('a missed card comes back the next day even when its kind has room for only a couple of cards', () => {
@@ -235,7 +231,7 @@ test('reviews put off on purpose (b-be, b-neg, b-prog) are not a pile: new gramm
   const grammar = plan(hist, FLUENT, T).filter((s) => s.phase === 'grammar'), head = grammar.filter((s) => !LATER(s)).slice(0, 6).map(fresh(hist));
   assert.ok(Object.keys(hist).length >= 50 && grammar.filter(fresh(hist)).length >= grammar.length / 2 - 1, 'half is new');
   assert.deepEqual(head, [false, true, false, true, false, true], 'old, new, old, new …');
-  assert.ok(plan(hist, {}, T).filter((s) => s.phase === 'pattern' && !s.intro).every((s) => !hist[s.id]), 'the other kinds are untouched');
+  assert.ok(plan(hist, {}, T).filter((s) => s.phase === 'pattern').every((s) => !hist[s.id]), 'the other kinds are untouched');
   assert.ok(grammar.filter((s) => s.as).every((s) => byId.get(s.id).topic === byId.get(s.as).topic && !hist[s.id]), 'a review is another sentence of its topic, one never answered');
 });
 
