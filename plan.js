@@ -183,7 +183,8 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const counts = recent(days, items, day), share = shares(counts), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
   const rest = minutes - Object.entries(fixed).reduce((s, [k, n]) => s + (n * SECONDS[k]) / 60, 0); // the split covers what they leave
 
-  const pick = (kind) => {
+  // → [cards, fit − room]: how many cards past the room the retries leave (negative: over it, for a new frame)
+  const pick = (kind, less = 0) => {
     const pool = items.filter((c) => c.kind === kind), n = fixed[kind] ?? Math.max(1, Math.round((rest * 60 * share[kind]) / SECONDS[kind]));
     const fresh = pool.filter((c) => !rec(c) && !c.held);
     const pile = pool.filter(due).sort((a, b) => sore(b) - sore(a) || later(a) - later(b) || rec(a).box - rec(b).box || rec(a).due.localeCompare(rec(b).due));
@@ -203,21 +204,27 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     // New grammar: ROTATION topics at a time, in file order (so Lv2 waits for Lv1), each until it is known.
     const learning = [...new Set(fresh.map((c) => c.topic))].filter((t) => !wait.has(t)).slice(0, ROTATION);
     const open = fresh.filter((c) => c.topic in stage);
-    // A card not said unaided comes back in the session (`requeue`), so n cards' time holds n / (1 + share not said)
-    // cards and their retries. What doesn't fit comes out of the new cards, never out of the reviews (nor grammar's one
-    // new card a day).
-    const room = Math.max(Math.round(n / (2 - fluency(counts[kind]))), reviews.length + +(kind === 'grammar'));
-    const ready = pool.every((c) => !(c.topic in stage) || stage[c.topic] >= 1) && room - reviews.length - focus.length - open.length >= 2;
+    const ready = pool.every((c) => !(c.topic in stage) || stage[c.topic] >= 1) && n - reviews.length - focus.length - open.length >= 2;
     const untouched = [...new Set(fresh.filter((c) => !(c.topic in stage)).map((c) => c.topic))].slice(0, n > 6 ? 2 : 1);
+    const frames = kind === 'pattern' && ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, 1 + BLOCK)) : [];
+    // A card not said unaided comes back in the session (`requeue`), so n cards' time holds n / (1 + share not said)
+    // cards and their retries. What doesn't fit comes out of the new cards, never out of the reviews, grammar's one new
+    // card a day, or a new frame (`less`: what a new frame took from the pattern time, taken from the other kinds).
+    const fit = Math.round(n / (2 - fluency(counts[kind])));
+    const room = Math.max(fit - less, reviews.length + +(kind === 'grammar') + frames.length, 1);
     const added = {
       grammar: [...fresh.filter((c) => learning.includes(c.topic)).sort(easyFirst), ...[...fresh].sort(newFirst(wait))],
-      pattern: [...open, ...(ready ? untouched.flatMap((t) => fresh.filter((c) => c.topic === t).slice(0, 1 + BLOCK)) : [])],
+      pattern: open,
       reply: [...fresh].sort(easyFirst),
     }[kind];
-    return [...new Set([...reviews, ...focus, ...added, ...pile, ...rested])].slice(0, room);
+    return [[...new Set([...reviews, ...frames, ...focus, ...added, ...pile, ...rested])].slice(0, room), fit - room];
   };
 
-  const chosen = Object.fromEntries(KINDS.map((k) => [k, pick(k)]));
+  // The frames go first: the time a new frame takes past their room comes out of new grammar, then new replies.
+  const [pattern, frameLeft] = pick('pattern'), owed = Math.max(0, -frameLeft) * SECONDS.pattern;
+  const [grammar, gave] = pick('grammar', Math.ceil(owed / SECONDS.grammar));
+  const [reply] = pick('reply', Math.max(0, Math.ceil((owed - Math.max(0, gave) * SECONDS.grammar) / SECONDS.reply)));
+  const chosen = { grammar, pattern, reply };
   const old = (k) => shuffle(chosen[k].filter((c) => rec(c) && !sore(c)), rand).sort((a, b) => later(a) - later(b)), added = (k) => chosen[k].filter((c) => !rec(c)).sort((a, b) => later(a) - later(b));
   const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : undefined);
   const step = (phase) => (c) => ({ id: c.id, phase, level: level(c) });

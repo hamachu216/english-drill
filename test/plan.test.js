@@ -62,10 +62,9 @@ test('review: answering again the same day never moves the due date forward or r
 
 test('first use: about 30 minutes with grammar, new sentence frames and Q&A replies, in that order — no research questions', () => {
   const queue = plan(), n = kinds(queue);
-  assert.ok(n.grammar >= 7 && n.pattern >= 4 && n.reply >= 3 && !n.qa && !n.colloc && !n.listening, JSON.stringify(n));
+  assert.ok(n.grammar >= 5 && n.pattern === 8 && n.reply >= 3 && !n.qa && !n.colloc && !n.listening, JSON.stringify(n));
   const minutes = minutesOf(queue.filter((s) => !s.intro), 0.35);
   assert.ok(minutes > 25 && minutes <= 32, `about 30 minutes with the retries a typical learner makes: ${minutes}`);
-  assert.ok(n.grammar > n.pattern);
   assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'pattern', 'reply'], 'no review or check on day one');
   const grammar = queue.filter((s) => byId.get(s.id).kind === 'grammar').map((s) => byId.get(s.id));
   assert.deepEqual([...new Set(grammar.map((c) => c.topic))], ['b-past', 'b-future', 'b-modal'], 'new grammar: three topics at a time, the present-tense basics (b-be, b-neg, b-prog) left for last');
@@ -82,7 +81,7 @@ test('first use: about 30 minutes with grammar, new sentence frames and Q&A repl
 
 test('the 10-minute session is shorter and still has both grammar and research English', () => {
   const short = kinds(plan({}, {}, T, 10)), full = kinds(plan());
-  assert.ok(short.grammar < full.grammar && short.grammar >= 2 && short.pattern >= 1 && short.reply >= 1, JSON.stringify(short));
+  assert.ok(short.grammar < full.grammar && short.grammar >= 1 && short.pattern >= 1 && short.reply >= 1, JSON.stringify(short));
 });
 
 test('the retries a learner makes come out of the new cards: reviews stay, and grammar keeps one new card a day', () => {
@@ -90,7 +89,9 @@ test('the retries a learner makes come out of the new cards: reviews stay, and g
   const fluent = plan(hist, FLUENT, T), weak = plan(hist, struggling, T), old = (q) => q.filter((s) => hist[s.as ?? s.id]).length;
   const added = (q, kind) => q.filter((s) => !s.intro && byId.get(s.id).kind === kind && !hist[s.as ?? s.id]).length;
   assert.equal(old(weak), old(fluent), 'every review stays');
-  for (const kind of ['pattern', 'reply']) assert.ok(added(weak, kind) < added(fluent, kind), kind);
+  assert.ok(added(weak, 'reply') < added(fluent, 'reply'), 'fewer new replies');
+  assert.equal(added(weak, 'pattern'), added(fluent, 'pattern'), 'a new frame is never cut: its time comes out of new grammar and replies');
+  assert.equal(weak.filter((s) => s.phase === 'pattern' && !s.intro).length, 8, 'two new frames, each said in four sentences');
   assert.ok(added(weak, 'grammar') >= 1, 'grammar still gets a new card');
   const minutes = minutesOf(weak.filter((s) => !s.intro), 0.8);
   assert.ok(minutes <= 34, `still about 30 minutes, retries included: ${minutes}`);
