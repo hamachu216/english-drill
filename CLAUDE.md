@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 概要
 
-英語スピーキング練習用の静的PWA（Research English Drill）。日本の博士課程学生向けで、目標は「国際学会で自分の研究を英語で説明し、質問に簡単な英語で1〜3文で答えられる」こと。
+英語スピーキング練習用の静的PWA（Research English Drill）。日本の大学院生向けで、目標は「国際学会で自分の研究を英語で説明し、質問に簡単な英語で1〜3文で答えられる」こと。
 
 - **今日の練習**: ホームのボタン1つで、学習履歴から組んだ1日分が始まる。順番は 基礎文法 → 研究英語の構文 → 質疑応答の切り返し。30分でおよそ25問（1問約1分）。自分の研究について答える Q&A は入らない（模擬質疑応答だけ）。
 - **Phrase Drill**: 形容詞＋前置詞（interested in など）の英作文と、相槌（Exactly. That's a good point, but… など）を混ぜて10問ずつ練習する。まだ言えていないものは、先に見せてから別の文で出す。今日の練習には入らない。
