@@ -1,20 +1,20 @@
 {
   "kind": "reply",
   "title": "質疑応答の切り返し",
-  "note": "聞き返す・お礼を言う・答えられないときにかわす・図に戻るなど、質問を受けたときの最初のひと言。定型句は Wordvice「研究発表の質疑応答対処法」の英文を収録し、場面・訳は架空の研究にもとづくオリジナル。",
+  "note": "聞き返す・お礼を言う・答えられないときにかわす・図に戻るなど、質問を受けたときの最初のひと言。1文に1つの役割で8語以内（緊張していても口から出る長さ）。場面は Wordvice「研究発表の質疑応答対処法」を参考にし、文・訳は架空の研究にもとづくオリジナル。",
   "decks": [
     {
       "id": "r-start",
       "title": "質問を受ける・お礼を言う",
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
-        {"id":"r-start-001","scene":"発表が終わり、これから質疑応答に入る","ja":"ご質問があればお受けします。ゆっくり話していただけますか。","frame":"I'd be happy to take any questions ... Could you please ...?","en":"I'd be happy to take any questions now. Could you please speak slowly?"},
-        {"id":"r-start-002","scene":"良い質問をもらった。まずお礼を言う","ja":"素晴らしい質問です。ご質問ありがとうございます。","frame":"That's a great ... Thank you for ...","en":"That's a great question. Thank you for asking."},
-        {"id":"r-start-003","scene":"答えにくい質問を、丁寧に受け止めてから答える","ja":"ご質問に感謝します。喜んでお答えします。","frame":"I appreciate your question and am ...","en":"I appreciate your question and am happy to answer it."},
-        {"id":"r-start-004","scene":"よく考えられた質問をもらった","ja":"よく考えられた質問ですね。聞いていただけてうれしいです。","frame":"What a thoughtful ...! I'm glad ...","en":"What a thoughtful question! I'm glad you asked."},
-        {"id":"r-start-005","scene":"想定していなかった面白い質問をもらった","ja":"面白い質問ですね。できるだけお答えします。","frame":"What an interesting ...! I'll do my best ...","en":"What an interesting question! I'll do my best to answer."},
+        {"id":"r-start-001","scene":"発表が終わり、これから質疑応答に入る","ja":"では、ご質問をお受けします。","frame":"I'm happy to take ...","en":"I'm happy to take your questions now."},
+        {"id":"r-start-002","scene":"良い質問をもらった。まずお礼を言う","ja":"良い質問ですね。ありがとうございます。","frame":"Great ... Thank you for ...","en":"Great question. Thank you for asking."},
+        {"id":"r-start-003","scene":"答えにくい質問を、丁寧に受け止めてから答える","ja":"ありがとうございます。喜んでお答えします。","frame":"Thank you. I'm happy to ...","en":"Thank you. I'm happy to answer that."},
+        {"id":"r-start-004","scene":"よく考えられた質問をもらった","ja":"良い質問ですね。聞いていただけてうれしいです。","frame":"Good ...! I'm glad ...","en":"Good question! I'm glad you asked."},
+        {"id":"r-start-005","scene":"想定していなかった面白い質問をもらった","ja":"面白い質問ですね。できるだけお答えします。","frame":"Interesting ...! I'll do ...","en":"Interesting question! I'll do my best."},
         {"id":"r-start-006","scene":"大事な指摘をもらった","ja":"ありがとうございます。それは大事な点です。","frame":"Thank you. That's ...","en":"Thank you. That's an important point."},
-        {"id":"r-start-007","scene":"質問というより意見（コメント）をもらった","ja":"コメントありがとうございます。良いアイデアですね。","frame":"Thank you for the ... That's a ...","en":"Thank you for the comment. That's a good idea."}
+        {"id":"r-start-007","scene":"質問というより意見（コメント）をもらった","ja":"コメントありがとうございます。良いアイデアですね。","frame":"Thanks for the ... Good ...","en":"Thanks for the comment. Good idea."}
       ]
     },
     {
@@ -22,18 +22,18 @@
       "title": "聞き取れない・分からないとき",
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
-        {"id":"r-hear-001","scene":"質問が速くて、よく聞き取れなかった","ja":"すみません、全部は聞き取れませんでした。質問をもう一度言っていただけますか。","frame":"I'm sorry, I didn't ... Could you please ...?","en":"I'm sorry, I didn't catch all of that. Could you please repeat your question?"},
-        {"id":"r-hear-011","scene":"質問の後半を聞き逃した。どの部分かを指して聞き直す","ja":"すみません、後半を聞き逃しました。損失関数に関する部分をもう一度言っていただけますか。","frame":"Sorry, I missed ... Could you repeat the part about ...?","en":"Sorry, I missed the second half. Could you repeat the part about the loss function?"},
-        {"id":"r-hear-012","scene":"速くて理解しきれない。ゆっくり言ってもらい、正確に聞き取りたい","ja":"もう少しゆっくり話していただけますか。質問を正確に理解したいので。","frame":"Could you speak a little ...? I want to make sure I ...","en":"Could you speak a little slower? I want to make sure I get your question correctly."},
-        {"id":"r-hear-002","scene":"聞き取れたが、何を聞かれているのか分からない","ja":"すみませんが、よく分かりません。質問を言い換えていただけますか。","frame":"I'm afraid I don't ... Could you please ...?","en":"I'm afraid I don't understand. Could you please rephrase the question?"},
-        {"id":"r-hear-003","scene":"どの研究のことを聞かれているのか、はっきりしない","ja":"よく分からないのですが、歩数計測についての以前の研究のことをお聞きですか。","frame":"I don't quite ... Are you asking about ...?","en":"I don't quite understand. Are you asking about the earlier study on step counting?"},
-        {"id":"r-hear-004","scene":"どの数値のことか、はっきりしない","ja":"図3の精度のことをおっしゃっていますか。","frame":"Are you referring to ...?","en":"Are you referring to the accuracy in Figure 3?"},
-        {"id":"r-hear-005","scene":"どの参加者のことか、はっきりしない","ja":"対照群の参加者のことですか。","frame":"Do you mean ...?","en":"Do you mean the participants in the control group?"},
-        {"id":"r-hear-006","scene":"質問が漠然としていて、何から答えればいいか分からない","ja":"もう少し具体的に言っていただけますか。","frame":"Could you be a little more ..., please?","en":"Could you be a little more specific, please?"},
-        {"id":"r-hear-007","scene":"言い換えてもらっても、まだ分からない","ja":"すみません、まだ質問が分かりません。後でお答えしてもいいですか。","frame":"I'm sorry. I still don't ... Could I ...?","en":"I'm sorry. I still don't understand your question. Could I come back to you later?"},
-        {"id":"r-hear-008","scene":"やはり分からないので、セッションの後で話したい","ja":"すみません、まだよく分かりません。セッションの後でお話しいただけますか。","frame":"I'm sorry, I still don't ... Could you please talk to me ...?","en":"I'm sorry, I still don't follow. Could you please talk to me after the session?"},
-        {"id":"r-hear-009","scene":"最後の部分だけ聞き取れなかった","ja":"すみません、最後の部分を聞き逃しました。もう一度言っていただけますか。","frame":"I'm sorry, I missed ... Could you please say ...?","en":"I'm sorry, I missed the last part. Could you please say that again?"},
-        {"id":"r-hear-010","scene":"もう少しゆっくり言ってほしい","ja":"もう一度、もう少しゆっくり言っていただけますか。","frame":"Could you please say that ..., a little more ...?","en":"Could you please say that once more, a little more slowly?"}
+        {"id":"r-hear-001","scene":"質問が速くて、よく聞き取れなかった","ja":"すみません、質問をもう一度言っていただけますか。","frame":"Sorry, could you ... the question?","en":"Sorry, could you repeat the question?"},
+        {"id":"r-hear-011","scene":"質問の後半を聞き逃した。どの部分かを指して聞き直す","ja":"損失関数のところをもう一度言っていただけますか。","frame":"Could you repeat the ... part?","en":"Could you repeat the loss function part?"},
+        {"id":"r-hear-012","scene":"速くて理解しきれない。ゆっくり言ってもらう","ja":"もう少しゆっくり話していただけますか。","frame":"Could you speak a little ...?","en":"Could you speak a little slower?"},
+        {"id":"r-hear-002","scene":"聞き取れたが、何を聞かれているのか分からない","ja":"すみません、別の言い方で言っていただけますか。","frame":"Sorry, could you ... that?","en":"Sorry, could you rephrase that?"},
+        {"id":"r-hear-003","scene":"どの研究のことを聞かれているのか、はっきりしない","ja":"すみません、どの研究のことですか。","frame":"Sorry, which ...?","en":"Sorry, which study?"},
+        {"id":"r-hear-004","scene":"どの図のことか、はっきりしない","ja":"図3のことですか。","frame":"Are you referring to ...?","en":"Are you referring to Figure 3?"},
+        {"id":"r-hear-005","scene":"どのグループのことか、はっきりしない","ja":"対照群のことですか。","frame":"Do you mean the ...?","en":"Do you mean the control group?"},
+        {"id":"r-hear-006","scene":"質問が漠然としていて、何から答えればいいか分からない","ja":"もう少し具体的に言っていただけますか。","frame":"Could you be more ...?","en":"Could you be more specific?"},
+        {"id":"r-hear-007","scene":"言い換えてもらっても、まだ分からない","ja":"すみません、後でお答えしてもいいですか。","frame":"Sorry, could I ... later?","en":"Sorry, could I come back to you later?"},
+        {"id":"r-hear-008","scene":"やはり分からないので、セッションの後で話したい","ja":"すみません、セッションの後でお話ししましょう。","frame":"Sorry, let's talk ...","en":"Sorry, let's talk after the session."},
+        {"id":"r-hear-009","scene":"最後の部分だけ聞き取れなかった","ja":"すみません、最後の部分をもう一度言っていただけますか。","frame":"Sorry, could you say the ... again?","en":"Sorry, could you say the last part again?"},
+        {"id":"r-hear-010","scene":"もう少しゆっくり言ってほしい","ja":"もう一度、もう少しゆっくりお願いします。","frame":"Once more, a little ..., please.","en":"Once more, a little slower, please."}
       ]
     },
     {
@@ -41,32 +41,32 @@
       "title": "時間をもらう・中身を確かめる",
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
-        {"id":"r-check-001","scene":"すぐには答えが出ない。質問の一部を繰り返して、考える時間をもらう","ja":"同じコホートで、ですか？ この質問について少し考える時間をください。","frame":"...? Please give me a moment to ...","en":"In the same cohort? Please give me a moment to think about this question."},
-        {"id":"r-check-012","scene":"質問の意図を確かめる。何についての質問か","ja":"質問の意図を確認させてください。訓練データについてお聞きですか。","frame":"Just to make sure I understand your point, are you asking about ...?","en":"Just to make sure I understand your point, are you asking about the training data?"},
-        {"id":"r-check-013","scene":"質問の意図を確かめる。〜かどうかを聞かれているのか","ja":"質問の意図を確認させてください。リアルタイムで動くかどうかをお聞きですか。","frame":"Just to make sure I understand your point, are you asking whether ...?","en":"Just to make sure I understand your point, are you asking whether it works in real time?"},
-        {"id":"r-check-014","scene":"2つの解釈のどちらなのか確かめる","ja":"学習データをどう集めるかというご質問ですか。それとも、テスト時にモデルがどう予測するかというご質問ですか。","frame":"Are you asking how ..., or how ...?","en":"Are you asking how we collect the training data, or how the model makes predictions at test time?"},
-        {"id":"r-check-009","scene":"質問が2つあった。順番に答えると伝えて、考える時間を作る","ja":"ご質問は2つあったと思います。まず1つ目からお答えします。","frame":"I think there were ... Let me start with ...","en":"I think there were two questions. Let me start with the first one."},
-        {"id":"r-check-010","scene":"鋭い指摘を受けた。どの点から答えるかを先に言って、答えを整理する","ja":"とても鋭いご指摘です。まずデータの点からお答えします。","frame":"That's a very ... point. Let me address ... first.","en":"That's a very insightful point. Let me address the data issue first."},
-        {"id":"r-check-011","scene":"答えが長くなりそう。2つに分けて答えると先に伝える","ja":"2つに分けてお答えします。まず手法、次に結果です。","frame":"Let me answer in two parts: first ..., then ...","en":"Let me answer in two parts: first the method, then the results."},
-        {"id":"r-check-002","scene":"答える前に少し考えたい","ja":"少しお待ちください。答えを考えさせてください。","frame":"Just one moment—I need to ...","en":"Just one moment—I need to consider my answer."},
-        {"id":"r-check-003","scene":"分析のことか実験のことか、確かめてから答える","ja":"確認ですが、分析の方法のことですか、それとも実験のことですか。","frame":"Just so I understand, are you referring to ... or to ...?","en":"Just so I understand, are you referring to the methods of analysis or to the experiment?"},
-        {"id":"r-check-004","scene":"どの研究と比べているのか確かめる","ja":"2025年のフィールド調査のことですか。","frame":"Do you mean ...?","en":"Do you mean the field study from 2025?"},
-        {"id":"r-check-005","scene":"何の情報のことか分からない","ja":"具体的にどの情報のことをおっしゃっていますか。","frame":"What information are you ... exactly?","en":"What information are you referring to exactly?"},
-        {"id":"r-check-006","scene":"質問の一部を繰り返して、どのデータのことか確かめる","ja":"2019年から2021年に集めたデータですか？ 具体的にどのデータのことでしょうか。","frame":"...? Which data are you ... exactly?","en":"The data collected between 2019 and 2021? Which data are you referring to exactly?"},
-        {"id":"r-check-007","scene":"質問を自分の言葉で言い直して確かめる","ja":"つまり、2つの活動を同時に検出できるかというご質問ですね？","frame":"So your question is ... Is that right?","en":"So your question is whether it can detect two activities at the same time. Is that right?"},
-        {"id":"r-check-008","scene":"少し考える時間がほしい","ja":"少し考えさせてください。","frame":"Let me think about that for ...","en":"Let me think about that for a moment."}
+        {"id":"r-check-001","scene":"すぐには答えが出ない。質問の一部を繰り返して、考える時間をもらう","ja":"同じコホートで、ですか？ ええと、そうですね。","frame":"...? Hmm, let me ...","en":"In the same cohort? Hmm, let me see."},
+        {"id":"r-check-012","scene":"質問の意図を確かめる。何についての質問か","ja":"訓練データについてのご質問ですか。","frame":"Are you asking about ...?","en":"Are you asking about the training data?"},
+        {"id":"r-check-013","scene":"質問の意図を確かめる。〜かどうかを聞かれているのか","ja":"リアルタイムで動くかどうかのご質問ですか。","frame":"Are you asking if ...?","en":"Are you asking if it's real-time?"},
+        {"id":"r-check-014","scene":"2つの解釈のどちらなのか確かめる","ja":"データの集め方と予測の仕方、どちらのことですか。","frame":"Do you mean ... or ...?","en":"Do you mean data collection or prediction?"},
+        {"id":"r-check-009","scene":"質問が2つあった。順番に答えると伝えて、考える時間を作る","ja":"ご質問は2つですね。まず1つ目からお答えします。","frame":"Two ... Let me start with ...","en":"Two questions. Let me start with the first."},
+        {"id":"r-check-010","scene":"鋭い指摘を受けた。どの点から答えるかを先に言って、答えを整理する","ja":"鋭いご指摘です。まずデータの点からです。","frame":"Good point. First, ...","en":"Good point. First, the data issue."},
+        {"id":"r-check-011","scene":"答えが長くなりそう。2つに分けて答えると先に伝える","ja":"2つに分けてお答えします。","frame":"Let me answer in ...","en":"Let me answer in two parts."},
+        {"id":"r-check-002","scene":"答える前に少し考えたい","ja":"少しお待ちください。","frame":"Just a ..., please.","en":"Just a moment, please."},
+        {"id":"r-check-003","scene":"分析のことか実験のことか、確かめてから答える","ja":"分析のことですか、それとも実験のことですか。","frame":"The ..., or the ...?","en":"The analysis, or the experiment?"},
+        {"id":"r-check-004","scene":"どの研究と比べているのか確かめる","ja":"2025年のフィールド調査のことですか。","frame":"You mean the ...?","en":"You mean the 2025 field study?"},
+        {"id":"r-check-005","scene":"何の情報のことか分からない","ja":"どの情報のことですか。","frame":"Which ... do you mean?","en":"Which information do you mean?"},
+        {"id":"r-check-006","scene":"質問の一部を繰り返して、どのデータのことか確かめる","ja":"2019年から2021年ですか？ 具体的にどのデータですか。","frame":"...? Which ... exactly?","en":"From 2019 to 2021? Which data exactly?"},
+        {"id":"r-check-007","scene":"質問を自分の言葉で言い直して確かめる","ja":"つまり、2つの活動を同時に検出できるか、ですね？","frame":"So, can it ...?","en":"So, can it detect two activities at once?"},
+        {"id":"r-check-008","scene":"少し考える時間がほしい","ja":"少し考えさせてください。","frame":"Let me think ...","en":"Let me think for a moment."}
       ]
     },
     {
       "id": "r-point",
       "title": "結論から答える（Point）",
       "cards": [
-        {"id":"r-point-001","scene":"結論が合っていると答える","ja":"はい、その通りです。それが私たちのやったことです。","frame":"Yes, exactly. That is ...","en":"Yes, exactly. That is what we did."},
+        {"id":"r-point-001","scene":"結論が合っていると答える","ja":"はい、その通りです。それが私たちのやったことです。","frame":"Yes, exactly. That's ...","en":"Yes, exactly. That's what we did."},
         {"id":"r-point-002","scene":"質問の理解が少しずれている","ja":"いいえ、少し違います。違いを説明します。","frame":"Not quite. Let me ...","en":"Not quite. Let me explain the difference."},
-        {"id":"r-point-003","scene":"用語の意味を聞かれた。1文目で定義する","ja":"この文脈では、クライアントは1台の端末のことです。","frame":"In this context, ... means ...","en":"In this context, a client means one user's device."},
-        {"id":"r-point-004","scene":"2つの手法を同じ条件で比べたか聞かれ、その通りだった","ja":"はい、その通りです。どちらの手法も同じ設定で試しました。","frame":"Yes, exactly. We tested ...","en":"Yes, exactly. We tested both methods in the same setting."},
+        {"id":"r-point-003","scene":"用語の意味を聞かれた。1文目で定義する","ja":"この文脈では、クライアントは1台の端末のことです。","frame":"In this context, ... is ...","en":"In this context, a client is one device."},
+        {"id":"r-point-004","scene":"2つの手法を同じ条件で比べたか聞かれ、その通りだった","ja":"はい、その通りです。どちらの手法も同じ条件で試しました。","frame":"Yes, exactly. We tested ...","en":"Yes, exactly. We tested both the same way."},
         {"id":"r-point-005","scene":"結果が条件によって変わるので、そのまま「はい」とは言えない","ja":"いいえ、少し違います。結果はデータセットによります。","frame":"Not quite. The result depends on ...","en":"Not quite. The result depends on the dataset."},
-        {"id":"r-point-006","scene":"評価指標の意味を聞かれた。1文目で定義する","ja":"この文脈では、精度は正しく答えられた割合のことです。","frame":"In this context, accuracy means ...","en":"In this context, accuracy means the share of correct answers."},
+        {"id":"r-point-006","scene":"評価指標の意味を聞かれた。1文目で定義する","ja":"ここでの精度は、正解した割合のことです。","frame":"... here means ...","en":"Accuracy here means the percentage correct."},
         {"id":"r-point-007","scene":"リアルタイムで動くか聞かれ、その通りだった","ja":"はい、その通りです。遅延はほとんどありません。","frame":"Yes, exactly. There is ...","en":"Yes, exactly. There is almost no delay."},
         {"id":"r-point-008","scene":"センサは1種類だけかと聞かれたが、違った","ja":"いいえ、少し違います。2種類のセンサを使っています。","frame":"Not quite. We use ...","en":"Not quite. We use two types of sensors."}
       ]
@@ -76,20 +76,20 @@
       "title": "答えられないとき",
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
-        {"id":"r-unsure-001","scene":"答えが分からない","ja":"すみません。残念ながら、その質問の答えは分かりません。","frame":"I'm sorry. I'm afraid I don't ...","en":"I'm sorry. I'm afraid I don't know the answer to that question."},
-        {"id":"r-unsure-012","scene":"その条件のデータはない。近い条件で言えることを続ける","ja":"その条件ではまだ評価していませんが、似た環境ではうまく動きました。","frame":"We haven't evaluated ... yet, but ...","en":"We haven't evaluated that specific condition yet, but it worked well in a similar setting."},
-        {"id":"r-unsure-013","scene":"まだ試していないことを聞かれた。今後やるつもりだと続ける","ja":"それはまだ試していませんが、今後の研究で取り組む予定です。","frame":"We haven't tried ... yet, but we plan to ...","en":"We haven't tried that yet, but we plan to do it in future work."},
-        {"id":"r-unsure-014","scene":"手元にデータはない。予想だと断って答える","ja":"それについてのデータはありませんが、結果は同じようになると予想しています。","frame":"We don't have data on ..., but we expect ...","en":"We don't have data on that, but we expect the results to be similar."},
-        {"id":"r-unsure-002","scene":"今は分からないが、調べて後で連絡する","ja":"それについて調べて、後でご連絡します。","frame":"I will look into ... and follow up ...","en":"I will look into that and follow up with you."},
-        {"id":"r-unsure-003","scene":"今は答えられないが、調べてみる","ja":"今はお答えできませんが、これについてもっと調べてみます。","frame":"I can't answer now, but I will ...","en":"I can't answer now, but I will try to find out more about this."},
-        {"id":"r-unsure-004","scene":"この場では答えたくない（セッションの後で話したい）","ja":"すみません、この件はセッションの後で話し合えますか。","frame":"I'm sorry—could we discuss ... after ...?","en":"I'm sorry—could we discuss this issue after the session?"},
-        {"id":"r-unsure-005","scene":"この場では答えたくない（個別に話したい）","ja":"差し支えなければ、この件は個別にお話しできますか。","frame":"If you don't mind, could we discuss ... privately?","en":"If you don't mind, could we discuss this issue privately?"},
-        {"id":"r-unsure-006","scene":"答えるための情報が手元にない","ja":"現時点では、詳しいことは把握していません。","frame":"We aren't aware of ... at this time.","en":"We aren't aware of any details at this time."},
-        {"id":"r-unsure-007","scene":"答えるための情報がまだない","ja":"これについてはまだ情報がありません。さらなる研究を待っているところです。","frame":"We don't have ... yet. We are awaiting ...","en":"We don't have information about this yet. We are awaiting further research on this."},
-        {"id":"r-unsure-008","scene":"答えるには、自分たちの追加の研究が必要","ja":"これに答えるには、もっと研究が必要です。","frame":"We need to do ... to answer this.","en":"We need to do more studies to answer this."},
-        {"id":"r-unsure-009","scene":"答えるには、他の研究の結果を待つ必要がある","ja":"この問題については、さらなる研究を待っているところです。","frame":"We are awaiting ... on this issue.","en":"We are awaiting further research on this issue."},
-        {"id":"r-unsure-010","scene":"自分の専門の外の質問","ja":"あいにくそれは私の専門外なので、よく分かりません。","frame":"I'm afraid that's outside ..., so I ...","en":"I'm afraid that's outside my area, so I'm not sure."},
-        {"id":"r-unsure-011","scene":"確かではないので、推測だと断って答える","ja":"確かではありませんが、少し精度は下がるものの使えると思います。","frame":"I'm not sure, but I think ...","en":"I'm not sure, but I think it would work with slightly lower accuracy."}
+        {"id":"r-unsure-001","scene":"答えが分からない","ja":"残念ながら、分かりません。","frame":"I'm afraid I don't ...","en":"I'm afraid I don't know."},
+        {"id":"r-unsure-012","scene":"その条件のデータはない。近い条件で言えることを続ける","ja":"その条件はまだ試していませんが、似た条件ではうまくいきました。","frame":"We haven't tested ..., but ...","en":"We haven't tested that, but similar ones worked."},
+        {"id":"r-unsure-013","scene":"まだ試していないことを聞かれた。今後やるつもりだと続ける","ja":"まだです。今後試す予定です。","frame":"Not yet. We plan to ...","en":"Not yet. We plan to try it."},
+        {"id":"r-unsure-014","scene":"手元にデータはない。予想だと断って答える","ja":"データはまだありませんが、同じような結果になると思います。","frame":"No data yet, but I expect ...","en":"No data yet, but I expect similar results."},
+        {"id":"r-unsure-002","scene":"今は分からないが、調べて後で連絡する","ja":"確認して、後でご連絡します。","frame":"Let me ... and get back to you.","en":"Let me check and get back to you."},
+        {"id":"r-unsure-003","scene":"今は答えられないが、調べてみる","ja":"今はお答えできませんが、調べてみます。","frame":"I can't answer now, but I'll ...","en":"I can't answer now, but I'll find out."},
+        {"id":"r-unsure-004","scene":"この場では答えたくない（セッションの後で話したい）","ja":"この件は後でお話しできますか。","frame":"Could we discuss this ...?","en":"Could we discuss this afterward?"},
+        {"id":"r-unsure-005","scene":"この場では答えたくない（個別に話したい）","ja":"この件は個別にお話しできますか。","frame":"Could we discuss this ...?","en":"Could we discuss this privately?"},
+        {"id":"r-unsure-006","scene":"答えるための情報が手元にない","ja":"詳しいことはまだ分かっていません。","frame":"We don't know ... yet.","en":"We don't know the details yet."},
+        {"id":"r-unsure-007","scene":"答えるための情報がまだない","ja":"その情報はまだありません。","frame":"We don't have ... yet.","en":"We don't have that information yet."},
+        {"id":"r-unsure-008","scene":"答えるには、自分たちの追加の研究が必要","ja":"答えるには、もっと研究が必要です。","frame":"We need more ... to answer this.","en":"We need more studies to answer this."},
+        {"id":"r-unsure-009","scene":"答えるには、他の研究の結果を待つ必要がある","ja":"これについては、さらなる研究を待っています。","frame":"We're waiting for ...","en":"We're waiting for more research on this."},
+        {"id":"r-unsure-010","scene":"自分の専門の外の質問","ja":"あいにく、それは専門外です。","frame":"That's outside ..., I'm afraid.","en":"That's outside my area, I'm afraid."},
+        {"id":"r-unsure-011","scene":"確かではないので、推測だと断って答える","ja":"確かではありませんが、使えるはずです。","frame":"I'm not sure, but ...","en":"I'm not sure, but it should still work."}
       ]
     },
     {
@@ -97,15 +97,15 @@
       "title": "手法への質問に答える",
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
-        {"id":"r-method-001","scene":"提案された手法は使っていない。提案にお礼を言う","ja":"いいえ、でもご意見ありがとうございます。検討してみます。","frame":"No, but thank you for ... We will ...","en":"No, but thank you for your input. We will look into this."},
-        {"id":"r-method-002","scene":"検討したが、問題があって使わなかった","ja":"そのアプローチは検討しました。ただ、いくつか問題がありました。","frame":"We considered this approach. But there were ...","en":"We considered this approach. But there were some problems."},
-        {"id":"r-method-003","scene":"選んだ理由を順に述べる","ja":"これにはいくつか理由があります。まず、少ないデータでもうまく動きます。","frame":"There were several reasons for this. First, ...","en":"There were several reasons for this. First, it works well with small data."},
-        {"id":"r-method-004","scene":"他の手法には問題があった","ja":"他のいくつかの手法には問題があることが分かりました。","frame":"We found several other methods to be ...","en":"We found several other methods to be problematic."},
-        {"id":"r-method-005","scene":"理由は論文に詳しく書いてある（要点だけ言う）","ja":"根拠は論文で詳しく説明しています。","frame":"We have explained our ... fully in the paper.","en":"We have explained our rationale fully in the paper."},
-        {"id":"r-method-006","scene":"限界を挙げる","ja":"限界はいくつか確認しています。たとえば、参加者が少ないことです。","frame":"We did identify a couple of limitations. These include ...","en":"We did identify a couple of limitations. These include the small number of participants."},
-        {"id":"r-method-007","scene":"検証した範囲では、特に限界は見つかっていない","ja":"特に限界は見つかりませんでした。","frame":"We didn't identify any specific ...","en":"We didn't identify any specific limitations."},
-        {"id":"r-method-008","scene":"設定値（パラメータ）を選んだ理由","ja":"いくつかの長さを試して、5秒がいちばん良い結果でした。","frame":"We tried ..., and ... worked best.","en":"We tried several lengths, and five seconds worked best."},
-        {"id":"r-method-009","scene":"ベースラインとの比較を聞かれた","ja":"はい、単純なしきい値の手法と比較しました。","frame":"Yes, we compared it with ...","en":"Yes, we compared it with a simple threshold method."}
+        {"id":"r-method-001","scene":"提案された手法は使っていない。提案にお礼を言う","ja":"いいえ。でも、ありがとうございます。検討してみます。","frame":"No, but ... We'll ...","en":"No, but thanks. We'll look into it."},
+        {"id":"r-method-002","scene":"検討したが、問題があって使わなかった","ja":"それは検討しましたが、問題がありました。","frame":"We considered ..., but ...","en":"We considered that, but it had problems."},
+        {"id":"r-method-003","scene":"選んだ理由を順に述べる","ja":"理由は2つです。まず、少ないデータでも動きます。","frame":"... reasons. First, ...","en":"Two reasons. First, it works with small data."},
+        {"id":"r-method-004","scene":"他の手法には問題があった","ja":"他の手法には問題がありました。","frame":"Other methods ...","en":"Other methods had problems."},
+        {"id":"r-method-005","scene":"理由は論文に詳しく書いてある（要点だけ言う）","ja":"理由は論文で詳しく説明しています。","frame":"The paper explains ...","en":"The paper explains our reasons in detail."},
+        {"id":"r-method-006","scene":"限界を挙げる","ja":"限界の1つは、参加者が少ないことです。","frame":"One limitation is ...","en":"One limitation is the small number of participants."},
+        {"id":"r-method-007","scene":"検証した範囲では、特に限界は見つかっていない","ja":"特に限界は見つかりませんでした。","frame":"We found no ...","en":"We found no specific limitations."},
+        {"id":"r-method-008","scene":"設定値（パラメータ）を選んだ理由","ja":"試した中では、5秒がいちばん良い結果でした。","frame":"... worked best in our tests.","en":"Five seconds worked best in our tests."},
+        {"id":"r-method-009","scene":"ベースラインとの比較を聞かれた","ja":"はい、しきい値の手法と比較しました。","frame":"Yes, we compared it with ...","en":"Yes, we compared it with a threshold method."}
       ]
     },
     {
@@ -113,16 +113,16 @@
       "title": "結果・応用への質問に答える",
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
-        {"id":"r-findings-001","scene":"どの結果について聞きたいのか確かめる","ja":"はい。どの結果について知りたいですか。","frame":"Yes. What results would you ...?","en":"Yes. What results would you like to know about?"},
-        {"id":"r-findings-002","scene":"未発表なので、結果について今はこれ以上話せない","ja":"すみませんが、結果について今はこれ以上お話しできません。","frame":"I'm afraid I can't say more about ... now.","en":"I'm afraid I can't say more about the findings now."},
-        {"id":"r-findings-003","scene":"いちばん大事な意味を述べる","ja":"最も重要なのは、この結果から、センサー1つで十分でありうると言えることです。","frame":"Most importantly, these findings imply that ...","en":"Most importantly, these findings imply that one sensor can be enough."},
-        {"id":"r-findings-004","scene":"意味がいくつかあるので、順に述べる","ja":"ここにはいくつかの意味があります。まず、アプリはセンサーを減らして電池を節約できます。","frame":"There are several implications here. First, ...","en":"There are several implications here. First, apps can save battery by using fewer sensors."},
-        {"id":"r-findings-005","scene":"意味（影響）について、今はこれ以上話せない","ja":"すみませんが、その意味（影響）について今はこれ以上お話しできません。","frame":"I'm afraid I can't say more about ... now.","en":"I'm afraid I can't say more about the implications now."},
-        {"id":"r-findings-006","scene":"他の分野への影響を述べる","ja":"この結果は、医療や高齢者介護の分野に影響を与えるかもしれません。","frame":"These results might impact areas of ...","en":"These results might impact areas of healthcare and elderly care."},
-        {"id":"r-findings-007","scene":"判断するには情報が足りない","ja":"この質問に答えるには、もっと情報が必要です。","frame":"We need more information to ...","en":"We need more information to answer this question."},
-        {"id":"r-findings-008","scene":"結論が言えるのはこの分野の範囲だけ","ja":"私たちの結論は、この研究分野の範囲に限られます。","frame":"Our conclusions are limited to ...","en":"Our conclusions are limited to this area of research."},
-        {"id":"r-findings-009","scene":"結果から言えることを控えめに述べる","ja":"正確にはそうではありません。この設定では私たちの手法の方がうまくいく、ということを示しています。","frame":"Not exactly. It suggests that ...","en":"Not exactly. It suggests that our method works better in this setting."},
-        {"id":"r-findings-010","scene":"意外だった結果について聞かれた","ja":"はい。睡眠の検出がこれほどうまくいったことに驚きました。","frame":"Yes. We were surprised that ...","en":"Yes. We were surprised that sleep detection worked so well."}
+        {"id":"r-findings-001","scene":"どの結果について聞きたいのか確かめる","ja":"はい。どの結果のことですか。","frame":"Yes. Which ... do you mean?","en":"Yes. Which results do you mean?"},
+        {"id":"r-findings-002","scene":"未発表なので、結果について今はこれ以上話せない","ja":"すみません、結果はまだお話しできません。","frame":"Sorry, I can't share ... yet.","en":"Sorry, I can't share the results yet."},
+        {"id":"r-findings-003","scene":"いちばん大事な意味を述べる","ja":"いちばん大事なのは、センサー1つで十分かもしれないことです。","frame":"Most importantly, ...","en":"Most importantly, one sensor may be enough."},
+        {"id":"r-findings-004","scene":"意味がいくつかあるので、1つ目から述べる","ja":"まず、センサーを減らせばアプリは電池を節約できます。","frame":"First, ...","en":"First, apps can save battery with fewer sensors."},
+        {"id":"r-findings-005","scene":"意味（影響）について、今はこれ以上話せない","ja":"それについては、まだこれ以上お話しできません。","frame":"I can't say more about ... yet.","en":"I can't say more about that yet."},
+        {"id":"r-findings-006","scene":"他の分野への影響を述べる","ja":"この結果は、医療や高齢者介護に役立つかもしれません。","frame":"This could help ...","en":"This could help healthcare and elderly care."},
+        {"id":"r-findings-007","scene":"判断するには情報が足りない","ja":"データがもっとないと、何とも言えません。","frame":"That's hard to say without ...","en":"That's hard to say without more data."},
+        {"id":"r-findings-008","scene":"結論が言えるのはこの分野の範囲だけ","ja":"私たちの結論は、この分野にしか当てはまりません。","frame":"Our conclusions only apply to ...","en":"Our conclusions only apply to this field."},
+        {"id":"r-findings-009","scene":"結果から言えることを控えめに述べる","ja":"正確には違います。この設定でうまくいく、ということです。","frame":"Not exactly. It ...","en":"Not exactly. It works better in this setting."},
+        {"id":"r-findings-010","scene":"意外だった結果について聞かれた","ja":"はい。睡眠の検出が驚くほどうまくいきました。","frame":"Yes. ... worked surprisingly well.","en":"Yes. Sleep detection worked surprisingly well."}
       ]
     },
     {
@@ -130,14 +130,14 @@
       "title": "スライド・図に戻って答える",
       "refs": [{"name":"Wordvice: 研究発表の質疑応答対処法","url":"https://wordvice.jp/academy-academic/"}],
       "cards": [
-        {"id":"r-slides-001","scene":"発表の中ですでに話した内容","ja":"先ほど述べたように、ランダムフォレストを使いました。","frame":"As I mentioned earlier, ...","en":"As I mentioned earlier, we used a random forest."},
+        {"id":"r-slides-001","scene":"発表の中ですでに話した内容","ja":"先ほど述べたように、ランダムフォレストを使いました。","frame":"As I mentioned, ...","en":"As I mentioned, we used a random forest."},
         {"id":"r-slides-002","scene":"スライドを戻して説明し直す","ja":"このスライドをもう一度見てみましょう。","frame":"Let's look at this ... again.","en":"Let's look at this slide again."},
-        {"id":"r-slides-003","scene":"スライドの番号を示して答える","ja":"はい。スライド5の通り、加速度センサーだけを使いました。","frame":"Yes. Looking at slide ..., ...","en":"Yes. Looking at slide 5, we used only the accelerometer."},
-        {"id":"r-slides-004","scene":"図に戻って確かめながら答える","ja":"この図をもう一度見てみましょう。","frame":"Let's take a look at this ... again.","en":"Let's take a look at this figure again."},
-        {"id":"r-slides-005","scene":"図表を指しながら説明する","ja":"この表にあるように、活動ごとに精度を測りました。","frame":"As you can see in this ..., ...","en":"As you can see in this table, we measured accuracy for each activity."},
+        {"id":"r-slides-003","scene":"スライドの番号を示して答える","ja":"はい。スライド5に載っています。","frame":"Yes. Slide ... shows that.","en":"Yes. Slide 5 shows that."},
+        {"id":"r-slides-004","scene":"図に戻って確かめながら答える","ja":"この図に戻りましょう。","frame":"Let's go back to ...","en":"Let's go back to this figure."},
+        {"id":"r-slides-005","scene":"図表を指しながら説明する","ja":"この表の通り、活動ごとに測りました。","frame":"As this ... shows, ...","en":"As this table shows, we measured each activity."},
         {"id":"r-slides-006","scene":"グラフをもう一度説明し直す","ja":"この図をもう一度説明させてください。","frame":"Let me explain this ... again.","en":"Let me explain this figure again."},
-        {"id":"r-slides-007","scene":"聞かれたことを説明するスライドがある","ja":"それについてのスライドがあります。お見せします。","frame":"I have a slide on that. Let me ...","en":"I have a slide on that. Let me show you."},
-        {"id":"r-slides-008","scene":"予備のスライドを使って答える","ja":"はい、詳細は予備のスライドにあります。","frame":"Yes, I have ... in the backup slides.","en":"Yes, I have the details in the backup slides."}
+        {"id":"r-slides-007","scene":"聞かれたことを説明するスライドがある","ja":"それについてのスライドがあります。","frame":"I have a slide on ...","en":"I have a slide on that."},
+        {"id":"r-slides-008","scene":"予備のスライドを使って答える","ja":"詳細は予備のスライドにあります。","frame":"The details are in ...","en":"The details are in the backup slides."}
       ]
     },
 {
@@ -149,9 +149,9 @@
         {"id":"r-close-003","scene":"質問の意図に合う答えだったか確かめる","ja":"ご質問の趣旨は、そういうことでしょうか。","frame":"Is that what you ...?","en":"Is that what you were asking about?"},
         {"id":"r-close-004","scene":"分かりにくかったかもしれないとき","ja":"分かりにくい点があれば、お知らせください。","frame":"Please let me know if ...","en":"Please let me know if anything is unclear."},
         {"id":"r-close-005","scene":"もっと詳しく話せると伝える","ja":"もっと詳しい説明が必要でしたら、お知らせください。","frame":"Let me know if you'd like ...","en":"Let me know if you'd like more detail."},
-        {"id":"r-close-006","scene":"時間がないので、あとで詳しく話すと申し出る","ja":"詳しいことは、セッションの後でも喜んでお話しします。","frame":"I'd be happy to ... after the session.","en":"I'd be happy to go into more detail after the session."},
+        {"id":"r-close-006","scene":"時間がないので、あとで詳しく話すと申し出る","ja":"詳しくはセッションの後でお話しできます。","frame":"I can explain more ...","en":"I can explain more after the session."},
         {"id":"r-close-007","scene":"答えを締めくくる","ja":"それがお答えになっていれば幸いです。","frame":"I hope that ...","en":"I hope that answers your question."},
-        {"id":"r-close-008","scene":"追加の質問を促す","ja":"追加のご質問があれば、遠慮なくどうぞ。","frame":"Please feel free to ...","en":"Please feel free to ask if you have any follow-up questions."}
+        {"id":"r-close-008","scene":"追加の質問を促す","ja":"追加のご質問があれば、どうぞ。","frame":"Feel free to ...","en":"Feel free to ask follow-up questions."}
       ]
     }
   ]

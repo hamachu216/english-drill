@@ -69,7 +69,7 @@ queue [{id, phase, level?, as?, follow?, check?, retry?}]  1ステップ＝1画�
 
 - **ID** は `<deckId>-NNN` で全ファイルを通じて一意。学習履歴のキーなので**既存カードの ID は変えない**。
 - **取り置き**: 各デッキの最後の2枚は週1回の初見チェック用（`held`。colloc は対象外）。カードは途中に足す。
-- **定型句**: `replies` の Wordvice「研究発表の質疑応答対処法」の定型句は必須（利用者の指定。`test/data.test.js` の `HANDOUT` が検証）。それ以外の文・場面・訳はすべてオリジナル。
+- **切り返しは短く**: `replies` の `en` は1文に1つの役割で8語以内（テストで検証）。前置き（Just to make sure I understand your point など）は付けない。緊張していても口から出る長さにするため（利用者の指定。以前の Wordvice の定型句を一字一句使う決まりは廃止し、場面だけを参考にしている）。
 - **問題文は必ずオリジナル**。`refs` の参考サイト（EnglishClub・British Council など）は構成の参考で、文を写さない。**リポジトリは public** なので、利用者の実名・所属・実際の研究内容や時期を、カードにも CLAUDE.md にも書かない（例文は架空の研究）。
 
 ## 今日の練習（`planSession`）

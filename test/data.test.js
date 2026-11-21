@@ -45,43 +45,14 @@ test('questions: an English question with its meaning, what to include, an answe
   }
 });
 
-// The stock phrases of the Wordvice handout on research Q&A (typos fixed: rationale, identify; where the handout is
-// blunt — "Please speak slowly and clearly.", "I'd rather discuss …" — the cards use politer wording). Each is the answer
-// of a card that is not held back, so every one of them comes up in the daily practice.
-const HANDOUT = [
-  "I didn't catch all of that.", 'repeat your question', "I'm afraid I don't understand.",
-  'Could you please rephrase the question?', "I don't quite understand.", 'Are you asking about', 'Are you referring to', 'Do you mean',
-  'more specific', "I'm sorry. I still don't understand your question.", 'Could I come back to you later?',
-  'Could you please talk to me after the session?', "That's a great question. Thank you for asking.",
-  'I appreciate your question and am happy to answer it.', "What a thoughtful question! I'm glad you asked.",
-  "What an interesting question! I'll do my best to answer.", "I'm sorry. I'm afraid I don't know the answer to that question.",
-  'I will look into that and follow up with you.', "I can't answer now, but I will try to find out more about this.",
-  "I'm sorry—could we discuss this issue after the session?", 'discuss this issue privately',
-  "We aren't aware of any details at this time.", "We don't have information about this yet.", 'We are awaiting further research on this.',
-  'We are awaiting further research on this issue.', 'We need to do more studies to answer this.',
-  'Please give me a moment to think about this question.', 'Just one moment—I need to consider my answer.', 'Just so I understand',
-  'are you referring to the methods of analysis or to the experiment?', 'What information are you referring to exactly?',
-  'Which data are you referring to exactly?', 'No, but thank you for your input. We will look into this.',
-  'We considered this approach. But there were some problems.', 'There were several reasons for this. First,',
-  'We found several other methods to be problematic.', 'We have explained our rationale fully in the paper.',
-  "We didn't identify any specific limitations.", 'We did identify a couple of limitations. These include',
-  'Yes. What results would you like to know about?', "I'm afraid I can't say more about the findings now.",
-  'Most importantly, these findings imply that', 'There are several implications here. First,',
-  "I'm afraid I can't say more about the implications now.", 'These results might impact areas of',
-  'We need more information to answer this question.', 'Our conclusions are limited to this area of research.',
-  'As I mentioned earlier,', "Let's look at this slide again.", 'Yes. Looking at slide', "Let's take a look at this figure again.",
-  'As you can see in this', 'Let me explain this figure again.',
-];
-
-test('Q&A handling: every phrase of the handout is practiced, each with the situation it answers', () => {
+// A reply is the first thing said under pressure, so it is short: one job, at most eight words (the user's choice).
+test('Q&A handling: every reply is short, each with the situation it answers', () => {
   assert.equal(replies.kind, 'reply');
   const handling = replies.decks;
   for (const d of handling) {
     assert.ok(d.cards.length >= 6 && (d.refs ?? []).every((r) => r.url.startsWith('https://')), d.id); // the handout's decks cite it; the original ones (r-close) have no refs
-    for (const c of d.cards) assert.ok(c.scene?.trim() && !('q' in c) && c.frame.includes('...') && /[。？]$/.test(c.ja), c.id);
+    for (const c of d.cards) assert.ok(c.scene?.trim() && !('q' in c) && c.frame.includes('...') && /[。？]$/.test(c.ja) && c.en.split(' ').length <= 8, c.id);
   }
-  const asked = handling.flatMap((d) => d.cards.slice(0, -2)).map((c) => c.en);
-  for (const p of HANDOUT) assert.ok(asked.some((t) => t.includes(p)), p);
 });
 
 // Phrases for hedging, restating and closing an answer: frames to fill (As far as I know, …) and stock phrases to write down.
@@ -95,7 +66,7 @@ test('Q&A hedges, restatements and answer closings: their frames and stock phras
 // Defence phrases (confirming the question, asking to repeat, the point first) are daily replies.
 test('Q&A defence phrases are daily replies', () => {
   const asked = replies.decks.flatMap((d) => d.cards.slice(0, -2)).map((c) => c.en);
-  for (const p of ['Just to make sure I understand your point, are you asking about', 'Just to make sure I understand your point, are you asking whether', 'Are you asking how', 'Sorry, I missed the second half.', 'Could you speak a little slower?', 'Yes, exactly.', 'Not quite.', 'In this context,']) assert.ok(asked.some((t) => t.includes(p)), p);
+  for (const p of ['Are you asking about', 'Are you asking if', 'Do you mean', 'Sorry, could you repeat the question?', 'Could you speak a little slower?', 'Yes, exactly.', 'Not quite.', 'In this context,']) assert.ok(asked.some((t) => t.includes(p)), p);
 });
 
 // The mock Q&A's first hint is the order of a PREP answer. Only the first topic is written that way so far.
