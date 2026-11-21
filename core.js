@@ -60,10 +60,7 @@ export function seeded(text) {
 }
 
 // Hints that cue a sentence without giving it away.
-// skeleton: first letters only ("I am a student." → "I a_ a s______."); opening: the first two words;
 // mask: every second word of a frame blanked ("We chose this method because ..." → "We _____ this ______ because ...").
-export const skeleton = (en) => en.replace(/[A-Za-z][A-Za-z']*/g, (w) => w[0] + '_'.repeat(w.length - 1));
-export const opening = (en) => en.split(/\s+/).slice(0, 2).join(' ') + ' …';
 // wordBank: the words in alphabetical order, without punctuation ("can / detection / early / lives / save"): the words
 // are given, putting them in order is left to do.
 export const wordBank = (text) => text.split(/\s+/).map((w) => w.replace(/^[^\w']+|[^\w']+$/g, '')).filter(Boolean).sort((a, b) => a.localeCompare(b)).join(' / ');

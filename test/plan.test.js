@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { FILES, DRILLS, catalog, addDays, seeded, restore, skeleton, slots } from '../core.js';
+import { FILES, DRILLS, catalog, addDays, seeded, restore, slots, wordBank } from '../core.js';
 import { MISS, HINT, OK, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, overview, mockSession, weekly, knownTopics, byNeed } from '../plan.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
@@ -56,7 +56,9 @@ test('review: answering again the same day never moves the due date forward or r
   for (let i = 0; i < 5; i++) again = review(again, OK, T);
   assert.deepEqual([again.box, again.due, again.n], [first.box, first.due, 6]);
   const missed = review(undefined, MISS, T), retried = review(missed, OK, T);
-  assert.deepEqual([retried.box, retried.due], [0, addDays(T, 1)], 'a miss still comes back tomorrow after a successful retry');
+  assert.deepEqual([retried.box, retried.due, retried.grade], [0, addDays(T, 1), MISS], 'a miss still comes back tomorrow after a successful retry, as a miss');
+  assert.equal(review(review(undefined, HINT, T), OK, T).grade, HINT, 'the grade is the worst of the day');
+  assert.equal(review(retried, OK, addDays(T, 1)).grade, OK, 'and a new day starts afresh');
   assert.equal(review(first, MISS, T).due, addDays(T, 1), 'but a same-day miss does pull it back');
 });
 
@@ -181,10 +183,9 @@ test('sentence frames fade their support: frame shown → half hidden → none',
   assert.ok(half.shown[0][1].includes('_') && half.shown[0][1] !== text);
   assert.equal(half.hints[0][1], text, 'the full frame is one hint away');
   assert.deepEqual(scaffold(frame, { level: 2 }).shown, []);
-  assert.deepEqual(scaffold(frame, { level: 0 }).hints.map(([label]) => label), ['使う語', '頭文字'], 'the words that fill the frame, then the first letters');
+  assert.deepEqual(scaffold(frame, { level: 0 }).hints.map(([label]) => label), ['使う語'], 'the words that fill the frame');
   assert.deepEqual(scaffold(frame, { level: 0 }).hints[0][1].split(' / ').sort(), slots(text, frame.en).join(' ').split(' ').sort(), 'the words of the phrases only');
-  assert.deepEqual(scaffold(frame, { level: 2, retry: true }).shown, [['型', text]], 'a retry shows the frame');
-  for (const c of items.filter((x) => x.kind === 'pattern')) for (const step of [{ level: 0 }, { level: 1 }, { level: 2 }, { retry: true }]) {
+  for (const c of items.filter((x) => x.kind === 'pattern')) for (const step of [{ level: 0 }, { level: 1 }, { level: 2 }]) {
     const { shown, hints } = scaffold(c, step);
     // The words to use are given on purpose (out of order): a phrase of one word is then given away, as a hint.
     assert.ok(![...shown, ...hints].some(([k, v]) => k !== '使う語' && v.includes(c.en.slice(c.deck.frame.indexOf('...')).replace(/[.?!]$/, ''))), `${c.id}: nothing spells out the answer`);
@@ -269,21 +270,19 @@ test('a grammar review is asked in a sentence never answered, differently each t
   assert.ok(plan(used, {}, T).filter((s) => byId.get(s.id).topic === 'b-past').every((s) => !s.as));
 });
 
-test('a grammar card retried in the session shows its grammar and its opening up front', () => {
-  const c = byId.get('b-subjunctive-001');
-  assert.deepEqual(scaffold(c, { retry: true }).shown.map(([label]) => label), ['文法', '出だし']);
-  assert.deepEqual(scaffold(c, { retry: true }).hints.map(([label]) => label), ['使う語', '頭文字']);
+test('a card last answered without being said (missed, with a hint, given up) is asked bare: no support, no hint', () => {
+  const c = byId.get('b-subjunctive-001'), frame = byId.get('p-because-001'), q = byId.get('q-method-001');
+  for (const x of [c, frame, q]) assert.deepEqual(scaffold(x, { level: 0, bare: true }), { shown: [], hints: [] }, x.id);
   assert.deepEqual(scaffold(c, {}).shown, []);
+  assert.deepEqual(scaffold(c, {}).hints.map(([label]) => label), ['使う語'], 'otherwise one hint: the words');
   const [[, bank]] = scaffold(c, {}).hints;
   assert.deepEqual(bank.split(' / ').sort(), c.en.replace(/[.,?!]/g, '').split(' ').sort(), 'every word of the sentence, without punctuation');
   assert.notEqual(bank, c.en.replace(/[.,?!]/g, '').split(' ').join(' / '), 'out of order (alphabetical)');
 });
 
-test('Q&A reply: dictation — nothing shown up front, the first letters and word lengths as the hint', () => {
+test('Q&A reply: dictation — nothing shown up front, the words of the reply as the hint', () => {
   const r = items.find((c) => c.id === 'r-hear-001'), queue = plan({}, FLUENT);
-  assert.deepEqual(scaffold(r, {}).shown, []);
-  assert.deepEqual(scaffold(r, {}).hints, [['頭文字', skeleton(r.en)]]);
-  assert.deepEqual(scaffold(r, { retry: true }).shown.map(([label]) => label), ['頭文字'], 'a retry shows them up front');
+  assert.deepEqual(scaffold(r, {}), { shown: [], hints: [['使う語', wordBank(r.en)]] });
   assert.ok(queue.filter((s) => s.phase === 'reply').every((s) => s.level === undefined), 'no Beginner / Advanced ladder');
   const i = queue.findIndex((s) => s.phase === 'reply');
   assert.equal(requeue(queue, i, MISS, 'reply').findIndex((s, j) => j > i && s.retry), i + 4, 'a missed phrase comes back a few cards later, not straight away');

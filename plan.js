@@ -7,7 +7,7 @@
 //   queue        = [{ id, phase, level?, as?, intro?, follow?, check?, retry? }]   one step per screen (`as`: the card the answer is recorded on)
 //
 // The daily session is grammar, sentence frames and Q&A replies. Research questions are asked in the mock Q&A only.
-import { addDays, shuffle, skeleton, opening, mask, reactions, wordBank, slots } from './core.js';
+import { addDays, shuffle, mask, wordBank, slots } from './core.js';
 import { example, previous } from './colloc.js';
 
 export const MISS = 0, HINT = 1, OK = 2;
@@ -33,12 +33,13 @@ const ROTATION = 3; // grammar topics taking new cards at a time
 // One answer → the card's new record. A box is only climbed on a day the card was due (or new):
 // answering again the same day, or early, can lower the box but never raise it or push the due date.
 // miss → tomorrow; said → one box up (3, 7, 14, 30, 60 days); said with a hint → the same, but never past 7 days.
+// The grade is the day's worst: a card missed and then said on its retry is still one that wasn't said.
 const TOP = [0, HINT_BOX, INTERVAL.length - 1];
 export function review(rec, grade, day) {
-  const { box = 0, n = 0, due } = rec ?? {};
+  const { box = 0, n = 0, due, last, grade: before = grade } = rec ?? {};
   const onTime = !due || day >= due, said = grade > MISS;
   const next = !said ? 0 : !onTime ? box : Math.max(box, Math.min(box + 1, TOP[grade]));
-  return { box: next, n: n + 1, last: day, due: said && !onTime ? due : addDays(day, INTERVAL[next]), grade };
+  return { box: next, n: n + 1, last: day, due: said && !onTime ? due : addDays(day, INTERVAL[next]), grade: last === day ? Math.min(before, grade) : grade };
 }
 
 // Counters are maps of number arrays, so adding two days (or one answer to a day) is the same operation.
@@ -133,14 +134,15 @@ export function openFrames(cards, hist, fresh = 2) {
   return cards.filter((c) => started(c.topic) || next.includes(c.topic));
 }
 
-// The Phrase Drill shows before it asks: a pair not said yet (new, or missed last time), and the first backchannel of
-// a function none of whose cards has been said, get a step to listen to and repeat first. A pair's step names the
-// sentence it is asked in (`nth`), so that a round repeating what wasn't said in full asks the same sentence again.
+// The drills show before they ask, the first time only: a new pair, and the first card of a function or frame none of
+// whose cards has been answered, get a step to listen to and repeat first (one answered and missed is asked bare, as in
+// `scaffold`). A pair's step names the sentence it is asked in (`nth`), so that a round repeating what wasn't said in
+// full asks the same sentence again.
 export function drillSteps(cards, hist) {
-  const said = (id) => hist[id]?.box > 0, functions = new Set(Object.keys(hist).filter(said).map((id) => id.replace(/-\d+$/, '')));
-  const unsaid = (c, i) => (c.kind === 'colloc' ? !said(c.id) : !functions.has(c.topic) && cards.findIndex((x) => x.topic === c.topic) === i);
+  const started = new Set(Object.keys(hist).map((id) => id.replace(/-\d+$/, '')));
+  const unseen = (c, i) => (c.kind === 'colloc' ? !hist[c.id] : !started.has(c.topic) && cards.findIndex((x) => x.topic === c.topic) === i);
   const ask = (c) => ({ id: c.id, phase: 'free', ...(c.examples && { nth: c.examples.indexOf(example(c, hist[c.id])) }) });
-  return cards.flatMap((c, i) => [...(unsaid(c, i) ? [{ ...ask(c), intro: true }] : []), ask(c)]);
+  return cards.flatMap((c, i) => [...(unseen(c, i) ? [{ ...ask(c), intro: true }] : []), ask(c)]);
 }
 
 // What a step to listen to and repeat shows: the thing to learn, its meaning and note, and one sentence that uses it.
@@ -255,8 +257,8 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   ];
 }
 
-// A card not said unaided (missed, or said with a hint) comes back once in the same session with full support, a few
-// cards later: what was just seen is said again from memory, before days pass.
+// A card not said unaided (missed, or said with a hint) comes back once in the same session a few cards later, with no
+// support and no hint (`scaffold`): what was just seen is said again from memory, before days pass.
 export function requeue(queue, i, grade) {
   const s = queue[i];
   if (grade === OK || s.retry || s.check) return queue;
@@ -264,25 +266,20 @@ export function requeue(queue, i, grade) {
   return [...queue.slice(0, at), { ...s, retry: true }, ...queue.slice(at)];
 }
 
-// What a step shows up front and what the hint button reveals, in order. Support fades with the level:
-//   frame card   0: frame shown · 1: frame half hidden · 2: nothing; the hints give the words that fill it out of
-//                order, then first letters, never the phrases themselves (frame + phrases is the whole answer)
-//   sentence     nothing; the hints give its words out of order, then first letters: the order and the grammar stay to be done
-//   question     nothing: the question alone, the hints one at a time
-// A retry shows everything (for a grammar card: its grammar in one line and the opening); the weekly check shows
-// nothing and has no hints.
-const afterReaction = (c) => `＿＿＿ ${c.en.slice(reactions(c.deck).filter((p) => c.en.startsWith(p)).reduce((n, p) => Math.max(n, p.length), 0)).trim()}`;
-export function scaffold(c, { level = 2, retry, check, follow }) {
-  const f = c.deck.follow?.[follow];
-  const [ladder, shown] =
-    f ? [[['入れる要素', f.points], ['答え方の型', f.frame], ['質問の意味', f.ja]], 0]
-    : c.kind === 'reply' ? [[['頭文字', skeleton(c.en)]], retry ? 1 : 0] // dictation: the reply is heard, its meaning is the prompt
-    : c.kind === 'listening' ? [[['書き取る文の意味', c.ja], ['頭文字', skeleton(c.en)]], 0] // a short talk is heard; one sentence of it is written down
-    : c.kind === 'backchannel' ? [[['相手の言葉の意味', c.saidJa], ['残りの英文', afterReaction(c)], ['使う相槌', c.deck.basic.join(' / ')], ['頭文字', skeleton(c.en)]], 0]
-    : c.q ? [[['入れる要素', c.points], ['答え方の型', c.frame], ['質問の意味', c.ja]], 0]
-    : c.kind === 'pattern' || c.kind === 'answer' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['使う語', wordBank(slots(c.deck.frame, c.en).join(' '))], ['頭文字', skeleton(c.en)]], retry || level < 2 ? 1 : 0]
-    : [[...(retry ? [['文法', c.deck.note], ['出だし', opening(c.en)]] : []), ['使う語', wordBank(c.en)], ['頭文字', skeleton(c.en)]], retry ? 2 : 0];
-  return check ? { shown: [], hints: [] } : { shown: ladder.slice(0, shown), hints: ladder.slice(shown) };
+// What a step shows up front and what the hint button reveals. The hint is the words of the answer in alphabetical
+// order (`wordBank`): the words are given, putting them in order and the grammar are left to do.
+//   frame card   0: frame shown · 1: frame half hidden · 2: nothing; the hint is the frame and the words that fill it
+//   sentence     nothing; the hint is its words (`en`: the sentence asked, for a pair the example of the day)
+//   question     nothing; the hints, one at a time: what to include, a frame to answer in, the question in Japanese
+// A card whose last answer was not said unaided (`bare`: missed, said with a hint, or given up) and the weekly check
+// show nothing and have no hints: what was seen is said from memory.
+export function scaffold(c, { level = 2, bare, check, follow }, en = c.en) {
+  if (bare || check) return { shown: [], hints: [] };
+  const q = c.deck.follow?.[follow] ?? (c.q && c);
+  if (q) return { shown: [], hints: [['入れる要素', q.points], ['答え方の型', q.frame], ['質問の意味', q.ja]] };
+  if (c.kind !== 'pattern' && c.kind !== 'answer') return { shown: [], hints: [['使う語', wordBank(en)]] };
+  const frame = ['型', c.deck.frame], words = ['使う語', wordBank(slots(c.deck.frame, en).join(' '))];
+  return level === 0 ? { shown: [frame], hints: [words] } : { shown: level === 1 ? [['型（一部）', mask(c.deck.frame)]] : [], hints: [frame, words] };
 }
 
 // The self-evaluation buttons on offer: couldn't say it, said it with a hint, or said it.

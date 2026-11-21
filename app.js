@@ -1,6 +1,6 @@
 import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, wordDiff, englishVoices, hasEnglish, slots, literal, reactions } from './core.js';
 import { MISS, HINT, OK, GRADE, review, byNeed, progress, mockSession, tally, requeue, scaffold, choices, planSession, mix, overview, weekly, drillSteps, lesson, openFrames } from './plan.js';
-import { hints as pairHints, siblings } from './colloc.js';
+import { siblings } from './colloc.js';
 
 const KEY = 'eng:v1';
 const $ = (id) => document.getElementById(id);
@@ -192,7 +192,8 @@ function showStep() {
   const step = run.queue[run.idx], cur = byId.get(step.id), rec = state.hist[cur.id];
   // An adjective + preposition pair is said in the example sentence its step names (`ex` is set for pairs only).
   const ex = cur.examples?.[step.nth] ?? null;
-  const { shown, hints } = ex ? { shown: [], hints: pairHints(cur, ex) } : scaffold(cur, step);
+  const bare = step.follow == null && state.hist[step.as ?? cur.id]?.grade < OK; // last answered without saying it: no help
+  const { shown, hints } = scaffold(cur, { ...step, bare }, ex?.en);
   // A Q&A reply is dictation: the stock phrase is read aloud and written down, with its meaning as the prompt.
   // A backchannel answers what someone just said (`cur.said`, shown, not read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = cur.kind === 'reply' || listening(cur), back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
@@ -385,9 +386,8 @@ $('ld-start').onclick = startFree(talkCards);
 $('ad-start').onclick = startFree(answerDrill);
 $('quit').onclick = $('home-btn').onclick = finish;
 // The hint button stays enabled while hints are left; it does nothing once the answer is out.
-// One press goes as far as the next stop, with any hint before it: the words to use (in any order), then the first
-// letters (in the Phrase Drill, the rest of the sentence, then the first letters); a ladder without them goes one at a time.
-const STOPS = ['使う語', '残りの英文', '頭文字'];
+// One press shows the words to use (with a frame's frame); a question's hints, which have no words, come one at a time.
+const STOPS = ['使う語'];
 $('hint').onclick = () => {
   if (!$('answer').hidden) return;
   now.hinted = true;

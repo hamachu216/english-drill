@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, ROUND, shuffle, nextRound, streak, calendar, wordDiff, catalog, restore, isBackup, DEFAULT, seeded, skeleton, opening, mask, englishVoices, hasEnglish } from '../core.js';
+import { addDays, ROUND, shuffle, nextRound, streak, calendar, wordDiff, catalog, restore, isBackup, DEFAULT, seeded, wordBank, mask, englishVoices, hasEnglish } from '../core.js';
 
 const T = '2026-10-19';
 
@@ -43,8 +43,7 @@ test('seeded: the same text gives the same sequence in [0, 1)', () => {
 });
 
 test('hints cue a sentence without giving it away', () => {
-  assert.equal(skeleton("I don't have a pen."), "I d____ h___ a p__.");
-  assert.equal(opening('I am a graduate student.'), 'I am …');
+  assert.equal(wordBank("Early detection can save lives, I don't doubt it."), "can / detection / don't / doubt / Early / I / it / lives / save");
   assert.equal(mask('We chose this method because ...'), 'We _____ this ______ because ...');
 });
 
