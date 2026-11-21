@@ -35,7 +35,7 @@ $('theme').onclick = () => {
 // DOM is only ever built from nodes (never HTML strings), so data can't inject markup.
 const el = (tag, props, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids); return n; };
 const PHASE = {
-  review: '前回の苦手を復習', grammar: '基礎文法', pattern: '研究英語の構文',
+  review: '前回の苦手を復習', grammar: '基礎文法', pattern: '研究英語の構文', phrase: '研究の場面の表現（Lv3〜5）',
   reply: '質疑応答の切り返し', mock: '模擬質疑応答', check: '週1回の初見チェック',
 };
 
@@ -51,7 +51,7 @@ const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, name]) => {
   const count = asked.reduce((n, s) => n.set(byId.get(s.id).deck.title, (n.get(byId.get(s.id).deck.title) ?? 0) + 1), new Map());
   const frames = steps.filter((s) => s.intro).map((s) => byId.get(s.id).deck.frame);
   const detail = frames.length ? `新しい型: ${frames.join(' / ')}`
-    : phase === 'grammar' || phase === 'pattern' ? [...count].sort((a, b) => b[1] - a[1]).slice(0, 2).map(([t]) => t).join('・') : '';
+    : phase === 'grammar' || phase === 'pattern' || phase === 'phrase' ? [...count].sort((a, b) => b[1] - a[1]).slice(0, 2).map(([t]) => t).join('・') : '';
   return asked.length ? [el('li', {},
     el('span', {}, el('b', { textContent: name }), el('span', { className: 'sub', textContent: detail })),
     el('span', { className: 'count', textContent: `${asked.length}問` }))] : [];
@@ -60,7 +60,7 @@ const menuRows = (queue) => Object.entries(PHASE).flatMap(([phase, name]) => {
 // The Phrase Drill: adjective + preposition pairs and backchannels, mixed, outside the daily session.
 // The Answer Drill: sentence frames for building an answer and for explaining a system, likewise.
 const drill = (c) => c.kind === 'colloc' || c.kind === 'backchannel' || c.kind === 'answer';
-const drillCards = cards.filter((c) => c.kind !== 'answer' && drill(c)), answerCards = cards.filter((c) => c.kind === 'answer'), replyCount = cards.filter((c) => c.kind === 'reply').length, qaCount = cards.filter((c) => c.kind === 'qa').length;
+const drillCards = cards.filter((c) => c.kind !== 'answer' && drill(c)), answerCards = cards.filter((c) => c.kind === 'answer'), replyCount = cards.filter((c) => c.kind === 'reply').length, phraseCount = cards.filter((c) => c.kind === 'phrase').length, qaCount = cards.filter((c) => c.kind === 'qa').length;
 // The Listening Drill: a short talk is heard, the one sentence that answers the card's task is written down.
 const listening = (c) => c.kind === 'listening', heardCards = cards.filter(listening), TALKS = 3;
 // Both drills go on until each card is said or written in full, and have a middle grade for "only part of it".
@@ -96,6 +96,7 @@ function renderHome() {
     ...pair('得意な文法', o.known.length ? o.known.map((t) => topicTitle[t]).join('・') : 'なし'),
     ...pair('構文', `言える ${o.frames[2]} ・ 練習中 ${o.frames[0] + o.frames[1]} ／ ${o.framesTotal}`),
     ...pair('切り返し', `書き取れる ${o.reply[2]} ・ 練習中 ${o.reply[0] + o.reply[1]} ／ ${replyCount}`),
+    ...pair('Lv3〜5', `言える ${o.phrase[2]} ・ 練習中 ${o.phrase[0] + o.phrase[1]} ／ ${phraseCount}`),
     ...pair('Q&A', `答えられる ${o.qa[1] + o.qa[2]} ・ 練習中 ${o.qa[0]} ／ ${qaCount}`),
     ...pair('フレーズ', `${stepLine(pr)} ／ ${drillCards.length}`));
   const wrong = drillCards.filter((c) => state.hist[c.id]?.box === 0).length;

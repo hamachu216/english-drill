@@ -6,7 +6,8 @@
 //                    '#check': [n, said], '#why': [content, english], '#plan:10': [daily sessions of 10 minutes started] }
 //   queue        = [{ id, phase, level?, as?, intro?, follow?, check?, retry? }]   one step per screen (`as`: the card the answer is recorded on)
 //
-// The daily session is grammar, sentence frames and Q&A replies. Research questions are asked in the mock Q&A only.
+// The daily session is grammar, sentence frames, research phrases (Lv3–5) and Q&A replies. Research questions are
+// asked in the mock Q&A only.
 import { addDays, shuffle, mask, wordBank, slots } from './core.js';
 import { example, previous } from './colloc.js';
 
@@ -14,15 +15,18 @@ export const MISS = 0, HINT = 1, OK = 2;
 export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, ok: OK };
 
 const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
-const KINDS = ['grammar', 'pattern', 'reply']; // the daily session's; every other kind has a drill of its own
+const KINDS = ['grammar', 'pattern', 'phrase', 'reply']; // the daily session's; every other kind has a drill of its own
 // Rough time one card takes — saying it, reading the example and its note, judging it: turns minutes into card counts.
-const SECONDS = { grammar: 60, pattern: 75, reply: 60 };
-// Short kinds outside the split, one card per this many minutes: 5 Q&A replies in 30 minutes.
-const EVERY = { reply: 6 };
+const SECONDS = { grammar: 60, pattern: 75, phrase: 75, reply: 60 };
+// Kinds outside the split, one card per this many minutes: 5 Q&A replies and 5 research phrases in 30 minutes.
+// The phrases' time comes out of grammar's share (the user's choice: the frames keep theirs), but grammar keeps at
+// least GRAMMAR_MIN of the split, or its reviews would stop coming.
+const EVERY = { reply: 6, phrase: 6 };
+const GRAMMAR_MIN = 0.2;
 const NEUTRAL = 0.65; // fluency at which the split is the default: half grammar, half frames
 const BLOCK = 4; // sentences drilled on the day a frame is introduced, after the one to listen to and repeat
 const MOCK = 5; // questions in a mock Q&A, each with a follow-up
-const CHECK = { grammar: 3, pattern: 2, reply: 1 }; // weekly first-sight check
+const CHECK = { grammar: 3, pattern: 2, phrase: 1, reply: 1 }; // weekly first-sight check
 const WEEK = 7;
 const HINT_BOX = 2; // answers with a hint alone get a card this far (7 days)
 const LATER = new Set(['b-be', 'b-neg', 'b-prog']); // the present-tense basics, drilled to death on the first days: their cards go last
@@ -183,11 +187,15 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const stage = stageOf(items, hist), weak = weakTopics(items, hist).filter((t) => !LATER.has(t)), wait = new Set([...knownTopics(items, hist), ...LATER]);
   const later = (c) => LATER.has(c.topic) && !(rec(c)?.due <= addDays(day, -PATIENCE));
   const counts = recent(days, items, day), share = shares(counts), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
-  const rest = minutes - Object.entries(fixed).reduce((s, [k, n]) => s + (n * SECONDS[k]) / 60, 0); // the split covers what they leave
+  // The split covers what the replies leave; the phrases' seconds come out of grammar's part.
+  const rest = minutes * 60 - fixed.reply * SECONDS.reply;
+  const split = { grammar: Math.max(rest * share.grammar - fixed.phrase * SECONDS.phrase, rest * GRAMMAR_MIN), pattern: rest * share.pattern };
+  const rank = {}, topics = {}; // a phrase topic's place among its level's topics
+  for (const c of items) if (c.kind === 'phrase' && !(c.topic in rank)) rank[c.topic] = topics[c.level] = (topics[c.level] ?? -1) + 1;
 
   // → [cards, fit − room]: how many cards past the room the retries leave (negative: over it, for a new frame)
   const pick = (kind, less = 0) => {
-    const pool = items.filter((c) => c.kind === kind), n = fixed[kind] ?? Math.max(1, Math.round((rest * 60 * share[kind]) / SECONDS[kind]));
+    const pool = items.filter((c) => c.kind === kind), n = fixed[kind] ?? Math.max(1, Math.round(split[kind] / SECONDS[kind]));
     const fresh = pool.filter((c) => !rec(c) && !c.held);
     const pile = pool.filter(due).sort((a, b) => sore(b) - sore(a) || later(a) - later(b) || rec(a).box - rec(b).box || rec(a).due.localeCompare(rec(b).due));
     // The LATER reviews are put off on purpose, so they don't count as pile: only what is being worked on does.
@@ -196,7 +204,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
 // card a day (about five reviews over two months) is a load the slot can carry. In a simulation the pile then stays level
 // (it grew without limit with two new cards, or with new frames and replies too, which each need more than one slot).
     const quota = depth < n ? Math.ceil(n / 2) : depth < 2 * n ? quarter : +(kind === 'grammar');
-    const reviews = pile.slice(0, Math.max(n - quota, Math.min(n, pile.filter(sore).length)));
+    const reviews = pile.slice(0, Math.max(n - quota, pile.filter(sore).length));
     const rested = pool.filter(idle).sort((a, b) => rec(a).last.localeCompare(rec(b).last));
     // Extra practice for the weakest topic means its unseen sentences: one said well yesterday wouldn't move today.
     const worst = weak.find((t) => fresh.some((c) => c.topic === t));
@@ -217,6 +225,8 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     const added = {
       grammar: [...fresh.filter((c) => learning.includes(c.topic)).sort(easyFirst), ...[...fresh].sort(newFirst(wait))],
       pattern: open,
+      // Lv3, Lv4 and Lv5 mixed: the first card of each level's first topic, then of its second topics …, then the second cards.
+      phrase: [...fresh].sort((a, b) => a.nth - b.nth || rank[a.topic] - rank[b.topic] || a.level - b.level),
       reply: [...fresh].sort(easyFirst),
     }[kind];
     return [[...new Set([...reviews, ...frames, ...focus, ...added, ...pile, ...rested])].slice(0, room), fit - room];
@@ -226,7 +236,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const [pattern, frameLeft] = pick('pattern'), owed = Math.max(0, -frameLeft) * SECONDS.pattern;
   const [grammar, gave] = pick('grammar', Math.ceil(owed / SECONDS.grammar));
   const [reply] = pick('reply', Math.max(0, Math.ceil((owed - Math.max(0, gave) * SECONDS.grammar) / SECONDS.reply)));
-  const chosen = { grammar, pattern, reply };
+  const chosen = { grammar, pattern, phrase: pick('phrase')[0], reply };
   const old = (k) => shuffle(chosen[k].filter((c) => rec(c) && !sore(c)), rand).sort((a, b) => later(a) - later(b)), added = (k) => chosen[k].filter((c) => !rec(c)).sort((a, b) => later(a) - later(b));
   const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : undefined);
   const step = (phase) => (c) => ({ id: c.id, phase, level: level(c) });
@@ -252,6 +262,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
     ...weave(old('grammar'), added('grammar')).sort((a, b) => later(a) - later(b)).map(again('grammar')),
     // A new frame opens with its first sentence to listen to and repeat; that sentence is recalled on a later day.
     ...weave(old('pattern').map(step('pattern')), added('pattern').map((c, i, a) => (c.topic in stage || a[i - 1]?.topic === c.topic ? step('pattern')(c) : { id: c.id, phase: 'pattern', intro: true }))),
+    ...weave(old('phrase'), added('phrase')).map(step('phrase')),
     ...weave(old('reply'), added('reply')).map(step('reply')),
     ...check.map((c) => ({ id: c.id, phase: 'check', level: 2, check: true })),
   ];
@@ -297,7 +308,7 @@ export function overview(items, hist, day) {
     known: [...knownTopics(items, hist)],
     frames: [0, 1, 2].map((s) => frames.filter((t) => stage[t] === s).length),
     framesTotal: frames.length,
-    ...Object.fromEntries(['qa', 'reply'].map((k) => [k, [0, 1, 2].map((l) => of(k).filter((c) => hist[c.id] && Math.min(2, hist[c.id].box) === l).length)])),
+    ...Object.fromEntries(['qa', 'reply', 'phrase'].map((k) => [k, [0, 1, 2].map((l) => of(k).filter((c) => hist[c.id] && Math.min(2, hist[c.id].box) === l).length)])),
   };
 }
 
