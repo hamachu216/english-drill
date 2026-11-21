@@ -177,5 +177,5 @@ test('the Answer Drill is outside the daily session: no answer card is planned, 
   assert.equal(new Set(openFrames(cards, started).map((c) => c.topic)).size, 4, 'two more frames open once the first two are started');
   const [first] = round, shown = lesson(first, undefined);
   assert.ok(shown.head === first.deck.frame && shown.en !== first.en, 'the sentence shown is not the one asked next');
-  assert.deepEqual(scaffold(first, { id: first.id, phase: 'free' }).hints.map(([label]) => label), ['型', '頭文字']);
+  assert.deepEqual(scaffold(first, { id: first.id, phase: 'free' }).hints.map(([label]) => label), ['型', '使う語', '頭文字']);
 });

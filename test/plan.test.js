@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { FILES, DRILLS, catalog, addDays, seeded, restore, skeleton } from '../core.js';
+import { FILES, DRILLS, catalog, addDays, seeded, restore, skeleton, slots } from '../core.js';
 import { MISS, HINT, OK, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, overview, mockSession, weekly, knownTopics, byNeed } from '../plan.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
@@ -165,11 +165,13 @@ test('sentence frames fade their support: frame shown → half hidden → none',
   assert.ok(half.shown[0][1].includes('_') && half.shown[0][1] !== text);
   assert.equal(half.hints[0][1], text, 'the full frame is one hint away');
   assert.deepEqual(scaffold(frame, { level: 2 }).shown, []);
-  assert.deepEqual(scaffold(frame, { level: 0 }).hints.map(([label]) => label), ['頭文字'], 'the one hint is the first letters');
+  assert.deepEqual(scaffold(frame, { level: 0 }).hints.map(([label]) => label), ['使う語', '頭文字'], 'the words that fill the frame, then the first letters');
+  assert.deepEqual(scaffold(frame, { level: 0 }).hints[0][1].split(' / ').sort(), slots(text, frame.en).join(' ').split(' ').sort(), 'the words of the phrases only');
   assert.deepEqual(scaffold(frame, { level: 2, retry: true }).shown, [['型', text]], 'a retry shows the frame');
   for (const c of items.filter((x) => x.kind === 'pattern')) for (const step of [{ level: 0 }, { level: 1 }, { level: 2 }, { retry: true }]) {
     const { shown, hints } = scaffold(c, step);
-    assert.ok(![...shown, ...hints].some(([, v]) => v.includes(c.en.slice(c.deck.frame.indexOf('...')).replace(/[.?!]$/, ''))), `${c.id}: nothing spells out the answer`);
+    // The words to use are given on purpose (out of order): a phrase of one word is then given away, as a hint.
+    assert.ok(![...shown, ...hints].some(([k, v]) => k !== '使う語' && v.includes(c.en.slice(c.deck.frame.indexOf('...')).replace(/[.?!]$/, ''))), `${c.id}: nothing spells out the answer`);
   }
   // The level follows the learner: said with the frame today → half hidden next time → no frame after that.
   const { hist, days, sessions, next } = practice(8, () => OK);
@@ -254,8 +256,11 @@ test('a grammar review is asked in a sentence never answered, differently each t
 test('a grammar card retried in the session shows its grammar and its opening up front', () => {
   const c = byId.get('b-subjunctive-001');
   assert.deepEqual(scaffold(c, { retry: true }).shown.map(([label]) => label), ['文法', '出だし']);
-  assert.deepEqual(scaffold(c, { retry: true }).hints.map(([label]) => label), ['頭文字']);
+  assert.deepEqual(scaffold(c, { retry: true }).hints.map(([label]) => label), ['使う語', '頭文字']);
   assert.deepEqual(scaffold(c, {}).shown, []);
+  const [[, bank]] = scaffold(c, {}).hints;
+  assert.deepEqual(bank.split(' / ').sort(), c.en.replace(/[.,?!]/g, '').split(' ').sort(), 'every word of the sentence, without punctuation');
+  assert.notEqual(bank, c.en.replace(/[.,?!]/g, '').split(' ').join(' / '), 'out of order (alphabetical)');
 });
 
 test('Q&A reply: dictation — nothing shown up front, the first letters and word lengths as the hint', () => {
@@ -280,7 +285,7 @@ test('Q&A: the question alone, a hint always available; a missed card of the dai
   const again = requeue(grammar, 0, MISS);
   assert.deepEqual(again[4], { id: 'g0', phase: 'grammar', retry: true }, 'a few cards later');
   assert.equal(requeue(again, 4, MISS), again, 'only one retry');
-  assert.equal(requeue(grammar, 0, HINT), grammar, 'said with a hint: not repeated');
+  assert.deepEqual(requeue(grammar, 0, HINT)[4], { id: 'g0', phase: 'grammar', retry: true }, 'said with a hint: said again from memory');
   assert.equal(requeue(grammar, 0, OK), grammar);
   assert.equal(requeue(grammar, 6, MISS).at(-1).retry, true);
 });

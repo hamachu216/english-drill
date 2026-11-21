@@ -400,9 +400,9 @@ $('ld-start').onclick = startFree(talkCards);
 $('ad-start').onclick = startFree(answerDrill);
 $('quit').onclick = $('home-btn').onclick = finish;
 // The hint button stays enabled while hints are left; it does nothing once the answer is out.
-// One press goes straight to the first letters, with any hint before them (in the Phrase Drill it stops once on the
-// way, at the rest of the sentence); a ladder without them goes one at a time.
-const STOPS = ['残りの英文', '頭文字'];
+// One press goes as far as the next stop, with any hint before it: the words to use (in any order), then the first
+// letters (in the Phrase Drill, the rest of the sentence, then the first letters); a ladder without them goes one at a time.
+const STOPS = ['使う語', '残りの英文', '頭文字'];
 $('hint').onclick = () => {
   if (!$('answer').hidden) return;
   now.hinted = true;

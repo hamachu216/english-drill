@@ -7,7 +7,7 @@
 //   queue        = [{ id, phase, level?, as?, intro?, follow?, check?, retry? }]   one step per screen (`as`: the card the answer is recorded on)
 //
 // The daily session is grammar, sentence frames and Q&A replies. Research questions are asked in the mock Q&A only.
-import { addDays, shuffle, skeleton, opening, mask, reactions } from './core.js';
+import { addDays, shuffle, skeleton, opening, mask, reactions, wordBank, slots } from './core.js';
 import { example, previous } from './colloc.js';
 
 export const MISS = 0, HINT = 1, OK = 2;
@@ -243,16 +243,19 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   ];
 }
 
-// A missed card comes back once in the same session with full support, a few cards later.
+// A card not said unaided (missed, or said with a hint) comes back once in the same session with full support, a few
+// cards later: what was just seen is said again from memory, before days pass.
 export function requeue(queue, i, grade) {
   const s = queue[i];
-  if (grade > MISS || s.retry || s.check) return queue;
+  if (grade === OK || s.retry || s.check) return queue;
   const at = Math.min(queue.length, i + 4);
   return [...queue.slice(0, at), { ...s, retry: true }, ...queue.slice(at)];
 }
 
 // What a step shows up front and what the hint button reveals, in order. Support fades with the level:
-//   frame card   0: frame shown · 1: frame half hidden · 2: nothing; the hints give first letters, never the phrases that fill it (frame + phrases is the whole answer)
+//   frame card   0: frame shown · 1: frame half hidden · 2: nothing; the hints give the words that fill it out of
+//                order, then first letters, never the phrases themselves (frame + phrases is the whole answer)
+//   sentence     nothing; the hints give its words out of order, then first letters: the order and the grammar stay to be done
 //   question     nothing: the question alone, the hints one at a time
 // A retry shows everything (for a grammar card: its grammar in one line and the opening); the weekly check shows
 // nothing and has no hints.
@@ -265,8 +268,8 @@ export function scaffold(c, { level = 2, retry, check, follow }) {
     : c.kind === 'listening' ? [[['書き取る文の意味', c.ja], ['頭文字', skeleton(c.en)]], 0] // a short talk is heard; one sentence of it is written down
     : c.kind === 'backchannel' ? [[['相手の言葉の意味', c.saidJa], ['残りの英文', afterReaction(c)], ['使う相槌', c.deck.basic.join(' / ')], ['頭文字', skeleton(c.en)]], 0]
     : c.q ? [[['入れる要素', c.points], ['答え方の型', c.frame], ['質問の意味', c.ja]], 0]
-    : c.kind === 'pattern' || c.kind === 'answer' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['頭文字', skeleton(c.en)]], retry || level < 2 ? 1 : 0]
-    : [[...(retry ? [['文法', c.deck.note]] : []), ['出だし', opening(c.en)], ['頭文字', skeleton(c.en)]], retry ? 2 : 0];
+    : c.kind === 'pattern' || c.kind === 'answer' ? [[...(level === 1 && !retry ? [['型（一部）', mask(c.deck.frame)]] : []), ['型', c.deck.frame], ['使う語', wordBank(slots(c.deck.frame, c.en).join(' '))], ['頭文字', skeleton(c.en)]], retry || level < 2 ? 1 : 0]
+    : [[...(retry ? [['文法', c.deck.note], ['出だし', opening(c.en)]] : []), ['使う語', wordBank(c.en)], ['頭文字', skeleton(c.en)]], retry ? 2 : 0];
   return check ? { shown: [], hints: [] } : { shown: ladder.slice(0, shown), hints: ladder.slice(shown) };
 }
 
