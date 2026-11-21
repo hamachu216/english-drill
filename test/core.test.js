@@ -100,6 +100,7 @@ test('wordDiff marks model words found in order, ignoring case/punctuation', () 
   assert.deepEqual(r.map((x) => x.ok), [true, true, false, true, true]);
   assert.equal(r.at(-1).w, 'student.');
   assert.ok(wordDiff('', 'Hello').every((x) => !x.ok));
+  assert.ok(wordDiff('We don’t know', "We don't know.").every((x) => x.ok), 'a curly apostrophe (phone keyboards) matches');
 });
 
 test('englishVoices keeps known-good voices, natural US first; falls back to any English', () => {

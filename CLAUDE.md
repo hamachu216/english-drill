@@ -63,7 +63,7 @@ queue [{id, phase, level?, as?, follow?, check?, retry?}]  1ステップ＝1画�
 | `patterns` | `pattern` | デッキ＝1つの型（`frame`・`ja`・`note`）。`en` は型の書き出しで始まり、`slots` で `...` の語句を取り出せること。**デッキの並び順＝新しい型が開く順**（質疑応答の答えの書き出しになる `p-limit`・`p-nottested`・`p-because`・`p-diff`・`p-reason`・`p-depends`・`p-plan`・`p-apply` を `p-wonder` の次に置いている。利用者の指定） | 今日の練習 |
 | `replies` | `reply` | `{id, scene, ja, frame, en}`。`ja`（と場面 `scene`）を見て `en` を言う。`frame` は答えの後に出す | 今日の練習 |
 | `qa` | `qa` | `{id, q, ja, points, frame, en, more}`、デッキに追加質問 `follow`。`points` はどの研究にも当てはまる言い方。`q-intro` だけ PREP 順（結論 → 理由 → 具体例。テストで検証） | 模擬質疑応答 |
-| `listening` | `listening` | `{id, scene, task, text, en, ja, textJa}`。`en` は `text` にそのまま含まれる（テストで検証） | Listening Drill |
+| `listening` | `listening` | `{id, scene, task, text, en, ja, textJa}`。`en` は `text` にそのまま含まれる（テストで検証）。話し言葉どおり短縮形（don't・I'm・I'll）で書く（聞き取りにくい音なので。テストで検証）。前置きの長さは本題を拾う練習なので削らない | Listening Drill |
 | `collocations` | `colloc` | `{id, adj, prep, collocation, ja, difficulty, note, examples:[{id, scene, en, ja, also?}]}`。`en` に「形容詞 前置詞」がそのまま隣り合って入る（テストで検証） | Phrase Drill |
 | `backchannels` | `backchannel` | `{id, said, saidJa, ja, en}`。デッキ＝相槌の機能で `basic`・`more`・`note` を持つ。`en` はどれかの `basic`/`more` で始まる（テストで検証）。`ja` の書き出しを機能ごとにそろえる | Phrase Drill |
 

@@ -125,7 +125,7 @@ export function englishVoices(voices) {
 }
 
 // Mark which words of the model answer appear (in order) in the user's answer, via word-level LCS.
-const norm = (w) => w.toLowerCase().replace(/[^a-z0-9']/g, '');
+const norm = (w) => w.toLowerCase().replace(/’/g, "'").replace(/[^a-z0-9']/g, ''); // ’: a phone keyboard's apostrophe
 export function wordDiff(input, model) {
   const a = input.split(/\s+/).map(norm).filter(Boolean);
   const m = model.split(/\s+/).filter(Boolean), b = m.map(norm);

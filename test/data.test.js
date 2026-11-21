@@ -81,6 +81,7 @@ test('listening: a talk of four to six sentences, a task, and the one sentence o
     const sentences = c.text.split(/(?<=[.?!])\s+/);
     assert.ok(sentences.length >= 4 && sentences.length <= 6, `${c.id}: ${sentences.length} sentences`);
     assert.ok(sentences.includes(c.en), `${c.id}: the sentence to write is one of the talk's, as written`);
+    assert.doesNotMatch(c.text, /\b(do not|does not|could not|cannot|I am|I will|I would)\b/, `${c.id}: spoken English contracts (don't, I'm, I'll), and those are the sounds that are hard to catch`);
     assert.ok(c.scene?.trim() && /[。？]$/.test(c.task) && /[。？]$/.test(c.ja) && c.textJa.includes(c.ja), c.id);
   }
   assert.equal(new Set(cards.map((c) => c.text)).size, cards.length, 'no talk twice');
