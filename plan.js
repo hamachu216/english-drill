@@ -131,15 +131,14 @@ export function byNeed(pool, hist, day) {
   ])]);
 }
 
-// The drills show before they ask, the first time only: a new pair, and the first card of a function or frame none of
-// whose cards has been answered, get a step to listen to and repeat first (one answered and missed is asked bare, as in
-// `scaffold`). A pair's step names the sentence it is asked in (`nth`), so that a round repeating what wasn't said in
-// full asks the same sentence again.
+// The Phrase Drill shows before it asks: a pair not said yet (new, or missed last time), and the first backchannel of
+// a function none of whose cards has been said, get a step to listen to and repeat first. A pair's step names the
+// sentence it is asked in (`nth`), so that a round repeating what wasn't said in full asks the same sentence again.
 export function drillSteps(cards, hist) {
-  const started = new Set(Object.keys(hist).map((id) => id.replace(/-\d+$/, '')));
-  const unseen = (c, i) => (c.kind === 'colloc' ? !hist[c.id] : !started.has(c.topic) && cards.findIndex((x) => x.topic === c.topic) === i);
+  const said = (id) => hist[id]?.box > 0, functions = new Set(Object.keys(hist).filter(said).map((id) => id.replace(/-\d+$/, '')));
+  const unsaid = (c, i) => (c.kind === 'colloc' ? !said(c.id) : !functions.has(c.topic) && cards.findIndex((x) => x.topic === c.topic) === i);
   const ask = (c) => ({ id: c.id, phase: 'free', ...(c.examples && { nth: c.examples.indexOf(example(c, hist[c.id])) }) });
-  return cards.flatMap((c, i) => [...(unseen(c, i) ? [{ ...ask(c), intro: true }] : []), ask(c)]);
+  return cards.flatMap((c, i) => [...(unsaid(c, i) ? [{ ...ask(c), intro: true }] : []), ask(c)]);
 }
 
 // What a step to listen to and repeat shows: the thing to learn, its meaning and note, and one sentence that uses it.

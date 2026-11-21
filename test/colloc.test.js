@@ -69,14 +69,14 @@ test('backchannels: the hint is the words of the answer, in alphabetical order',
   for (const b of backs) assert.deepEqual(scaffold(b, {}), { shown: [], hints: [['使う語', wordBank(b.en)]] }, b.id);
 });
 
-test('the Phrase Drill shows before it asks, the first time only: new pairs, and the first card of a function never answered', () => {
+test('the Phrase Drill shows before it asks: pairs not said yet, and the first card of a function not said yet', () => {
   const [a, b] = pairs, [x, y] = backs.filter((c) => c.topic === backs[0].topic), z = backs.find((c) => c.topic !== x.topic);
   const hist = { [a.id]: review(undefined, OK, T), [b.id]: review(undefined, MISS, T), [z.id]: review(undefined, OK, T) };
   const shown = (cards, h) => drillSteps(cards, h).filter((s) => s.intro).map((s) => s.id);
   assert.deepEqual(drillSteps([a, x], {}), [{ id: a.id, phase: 'free', nth: 0, intro: true }, { id: a.id, phase: 'free', nth: 0 }, { id: x.id, phase: 'free', intro: true }, { id: x.id, phase: 'free' }], 'shown, then asked');
   assert.equal(drillSteps([a], hist).at(-1).nth, 1, 'a pair is asked in the next sentence each time');
-  assert.deepEqual(shown([a, b, x, y, z], hist), [x.id], 'a pair answered is not shown again, said or missed; a function once');
-  assert.deepEqual(shown([y], { [x.id]: review(undefined, MISS, T) }), [], 'a function with a card missed is asked bare');
+  assert.deepEqual(shown([a, b, x, y, z], hist), [b.id, x.id], 'a pair said is not shown again, a missed one is; a function once, until one of its cards is said');
+  assert.deepEqual(shown([y], { [x.id]: review(undefined, MISS, T) }), [y.id]);
   assert.deepEqual(shown([backs.find((c) => c.topic === z.topic && c !== z)], hist), []);
 });
 

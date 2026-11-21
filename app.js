@@ -190,7 +190,8 @@ function showStep() {
   const step = run.queue[run.idx], cur = byId.get(step.id), rec = state.hist[cur.id];
   // An adjective + preposition pair is said in the example sentence its step names (`ex` is set for pairs only).
   const ex = cur.examples?.[step.nth] ?? null;
-  const { shown, hints } = scaffold(cur, { ...step, bare: bare(step, state.hist) }, ex?.en);
+  // Asked bare only in the daily session: the drills, free practice and the mock Q&A always have their hints.
+  const { shown, hints } = scaffold(cur, { ...step, bare: !!run.day && bare(step, state.hist) }, ex?.en);
   // A backchannel answers what someone just said (`cur.said`, shown, not read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = listening(cur), back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
   const shows = step.intro ? lesson(cur, rec) : null; // a step to listen to and repeat, not answered
