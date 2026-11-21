@@ -65,7 +65,7 @@ test('review: answering again the same day never moves the due date forward or r
 
 test('first use: about 30 minutes with grammar, new sentence frames and Q&A replies, in that order — no research questions', () => {
   const queue = plan({}, {}, T, 30), n = kinds(queue);
-  assert.ok(n.grammar >= 1 && n.pattern === 8 && n.phrase >= 3 && n.reply >= 3 && !n.qa && !n.colloc && !n.listening, JSON.stringify(n));
+  assert.ok(n.grammar >= 1 && n.pattern === 8 && n.phrase >= 3 && n.reply >= 2 && !n.qa && !n.colloc && !n.listening, JSON.stringify(n));
   const minutes = minutesOf(queue.filter((s) => !s.intro), 0.35);
   assert.ok(minutes > 25 && minutes <= 32, `about 30 minutes with the retries a typical learner makes: ${minutes}`);
   assert.deepEqual([...new Set(queue.map((s) => s.phase))], ['grammar', 'pattern', 'phrase', 'reply'], 'no review or check on day one');

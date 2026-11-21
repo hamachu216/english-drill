@@ -18,11 +18,12 @@ const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
 const KINDS = ['grammar', 'pattern', 'phrase', 'reply']; // the daily session's; every other kind has a drill of its own
 // Rough time one card takes — saying it, reading the example and its note, judging it: turns minutes into card counts.
 const SECONDS = { grammar: 60, pattern: 75, phrase: 75, reply: 60 };
-// Kinds outside the split, one card per this many minutes: 5 Q&A replies and 5 research phrases in 30 minutes.
-// The phrases' time comes out of grammar's share (the user's choice: the frames keep theirs), but grammar keeps at
-// least GRAMMAR_MIN of the split, or its reviews would stop coming.
-const EVERY = { reply: 6, phrase: 6 };
-const GRAMMAR_MIN = 0.2;
+// Kinds outside the split, one card per this many minutes: 3 Q&A replies and 5 research phrases in 30 minutes.
+// The frames get their share of SPLIT of the session; grammar gets all the rest after the replies and the phrases
+// (the user's choice: the phrases' time and the time the replies gave up go to or come from grammar, never the
+// frames), but never less than GRAMMAR_MIN of the split, or its reviews would stop coming.
+const EVERY = { reply: 10, phrase: 6 };
+const SPLIT = 5 / 6, GRAMMAR_MIN = 0.2;
 const NEUTRAL = 0.65; // fluency at which the split is the default: half grammar, half frames
 const BLOCK = 4; // sentences drilled on the day a frame is introduced, after the one to listen to and repeat
 const MOCK = 5; // questions in a mock Q&A, each with a follow-up
@@ -179,9 +180,8 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const stage = stageOf(items, hist), weak = weakTopics(items, hist).filter((t) => !LATER.has(t)), wait = new Set([...knownTopics(items, hist), ...LATER]);
   const later = (c) => LATER.has(c.topic) && !(rec(c)?.due <= addDays(day, -PATIENCE));
   const counts = recent(days, items, day), share = shares(counts), fixed = Object.fromEntries(Object.entries(EVERY).map(([k, m]) => [k, Math.max(1, Math.round(minutes / m))]));
-  // The split covers what the replies leave; the phrases' seconds come out of grammar's part.
-  const rest = minutes * 60 - fixed.reply * SECONDS.reply;
-  const split = { grammar: Math.max(rest * share.grammar - fixed.phrase * SECONDS.phrase, rest * GRAMMAR_MIN), pattern: rest * share.pattern };
+  const part = minutes * 60 * SPLIT, frames = part * share.pattern;
+  const split = { pattern: frames, grammar: Math.max(minutes * 60 - frames - fixed.reply * SECONDS.reply - fixed.phrase * SECONDS.phrase, part * GRAMMAR_MIN) };
   const rank = {}, topics = {}; // a phrase topic's place among its level's topics
   for (const c of items) if (c.kind === 'phrase' && !(c.topic in rank)) rank[c.topic] = topics[c.level] = (topics[c.level] ?? -1) + 1;
 
