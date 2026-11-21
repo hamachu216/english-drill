@@ -187,14 +187,14 @@ function playFree(missed = [], asked = []) {
 }
 
 function showStep() {
-  const step = run.queue[run.idx], cur = byId.get(step.id), rec = state.hist[cur.id];
+  const step = run.queue[run.idx], cur = byId.get(step.id);
   // An adjective + preposition pair is said in the example sentence its step names (`ex` is set for pairs only).
   const ex = cur.examples?.[step.nth] ?? null;
   // Asked bare only in the daily session: the drills, free practice and the mock Q&A always have their hints.
   const { shown, hints } = scaffold(cur, { ...step, bare: !!run.day && bare(step, state.hist) }, ex?.en);
   // A backchannel answers what someone just said (`cur.said`, shown, not read aloud) with a reaction and one more sentence, said from Japanese.
   const dictate = listening(cur), back = cur.kind === 'backchannel', ask = cur.deck.follow?.[step.follow] ?? cur;
-  const shows = step.intro ? lesson(cur, rec) : null; // a step to listen to and repeat, not answered
+  const shows = step.intro ? lesson(cur) : null; // a new frame's step to listen to and repeat, not answered
   now = { step, cur, ask, pending: [...hints], hinted: false, model: '', said: '', ex, dictate, audio: shows?.en ?? (dictate ? cur.text ?? cur.en : ask.q) }; // audio: what the speaker button reads
   const talk = isTalk();
   $('study').style.setProperty('--lv', `var(--lv${cur.level ?? (cur.q || dictate ? 4 : drill(cur) ? 5 : 3)})`);
@@ -202,14 +202,14 @@ function showStep() {
     step.retry && 'もう一度',
     run.free ? `${run.retry ? '復習 · ' : ''}${drill(cur) ? 'Phrase Drill' : listening(cur) ? 'Listening Drill' : `Lv${cur.level}`}` : PHASE[step.phase],
     !drill(cur) && cur.deck.title, // a pair's deck is its preposition, a backchannel's its function: the answer
-    step.follow != null ? '追加質問' : step.intro && (drill(cur) ? '聞いてまねする' : '新しい型'),
+    step.follow != null ? '追加質問' : step.intro && '新しい型',
   ].filter(Boolean).join(' · ');
   $('count').textContent = `${run.idx + 1} / ${run.queue.length}`;
   $('dots').className = run.queue.length > 20 ? 'dots many' : 'dots';
   $('dots').replaceChildren(...run.queue.map((_, i) => el('i', { className: i === run.idx ? 'now' : run.grades[i] >= OK ? 'ok' : run.grades[i] != null ? 'ng' : i < run.idx ? 'seen' : '' })));
   pop($('qcard'));
   $('prompt').textContent = shows ? shows.head : talk ? now.ask.q : cur.task ?? (ex ?? cur).ja;
-  $('sub').textContent = shows ? `${shows.ja}　例文を聞いて、まねして声に出そう${drill(cur) ? '（次に、別の文で言います）' : ''}`
+  $('sub').textContent = shows ? `${shows.ja}　例文を聞いて、まねして声に出そう`
     : ex ? `${cur.adj} ＋ 前置詞を使って、英文全体を声に出そう`
     : cur.text ? `場面：${cur.scene}　全体を聞いて、答えになる1文を書き取ろう（何度聞いてもよい）`
     : cur.scene ? `場面：${cur.scene}`
@@ -219,7 +219,7 @@ function showStep() {
     : step.follow != null ? '追加の質問です。1文でいいので、続けて答えよう'
     : '本番のつもりで、自分の研究で答えよう。まず1文、言えたら2〜3文';
   $('hints').replaceChildren(...(shows
-    ? [...pair('ポイント', shows.note), ...(shows.said ? pair('相手', shows.said) : []), el('dt', { textContent: '例文' }), el('dd', { className: 'en' }, ...mark(shows.en, phrases(cur))), ...pair('意味', shows.meaning)]
+    ? [...pair('ポイント', shows.note), el('dt', { textContent: '例文' }), el('dd', { className: 'en' }, ...mark(shows.en, phrases(cur))), ...pair('意味', shows.meaning)]
     : shown.flatMap(hintRow)));
   $('listen').hidden = !canSpeak || !now.audio;
   $('input').hidden = $('hint').hidden = !!step.intro;

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded, wordBank } from '../core.js';
 import { MISS, OK, review, planSession, byNeed, progress, scaffold, drillSteps, lesson } from '../plan.js';
-import { example, previous, siblings } from '../colloc.js';
+import { example, siblings } from '../colloc.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const pairs = items.filter((c) => c.kind === 'colloc');
@@ -69,28 +69,10 @@ test('backchannels: the hint is the words of the answer, in alphabetical order',
   for (const b of backs) assert.deepEqual(scaffold(b, {}), { shown: [], hints: [['使う語', wordBank(b.en)]] }, b.id);
 });
 
-test('the Phrase Drill shows before it asks: pairs not said yet, and the first card of a function not said yet', () => {
-  const [a, b] = pairs, [x, y] = backs.filter((c) => c.topic === backs[0].topic), z = backs.find((c) => c.topic !== x.topic);
-  const hist = { [a.id]: review(undefined, OK, T), [b.id]: review(undefined, MISS, T), [z.id]: review(undefined, OK, T) };
-  const shown = (cards, h) => drillSteps(cards, h).filter((s) => s.intro).map((s) => s.id);
-  assert.deepEqual(drillSteps([a, x], {}), [{ id: a.id, phase: 'free', nth: 0, intro: true }, { id: a.id, phase: 'free', nth: 0 }, { id: x.id, phase: 'free', intro: true }, { id: x.id, phase: 'free' }], 'shown, then asked');
-  assert.equal(drillSteps([a], hist).at(-1).nth, 1, 'a pair is asked in the next sentence each time');
-  assert.deepEqual(shown([a, b, x, y, z], hist), [b.id, x.id], 'a pair said is not shown again, a missed one is; a function once, until one of its cards is said');
-  assert.deepEqual(shown([y], { [x.id]: review(undefined, MISS, T) }), [y.id]);
-  assert.deepEqual(shown([backs.find((c) => c.topic === z.topic && c !== z)], hist), []);
-});
-
-test('what is shown is never the sentence asked next', () => {
-  const c = pair('famous for');
-  for (const n of [0, 1, 2, 3]) assert.notEqual(previous(c, { n }).id, example(c, { n }).id);
-  assert.equal(previous(c, { n: 1 }).id, example(c, undefined).id, 'after a miss: the sentence that was missed');
-  assert.deepEqual(lesson(c, undefined), { head: 'famous for', ja: c.ja, note: c.note, en: c.examples.at(-1).en, meaning: c.examples.at(-1).ja });
-  for (const b of backs) {
-    const l = lesson(b);
-    assert.notEqual(l.en, b.en);
-    assert.ok(b.deck.cards.some((o) => o.en === l.en && o.said === l.said) && l.head === b.deck.basic.join(' / '));
-    assert.ok(b.deck.basic.some((p) => l.en.startsWith(p.replace('...', '').trim())), 'it uses a reaction to say yourself');
-  }
-  const p = items.find((x) => x.kind === 'pattern');
-  assert.deepEqual(lesson(p), { head: p.deck.frame, ja: p.deck.ja, note: p.deck.note, en: p.en, meaning: p.ja }, 'a frame opens with its own first sentence');
+test('the Phrase Drill asks straight away, a pair in the next sentence each time', () => {
+  const [a] = pairs, [x] = backs, hist = { [a.id]: review(undefined, OK, T) };
+  assert.deepEqual(drillSteps([a, x], {}), [{ id: a.id, phase: 'free', nth: 0 }, { id: x.id, phase: 'free' }], 'no step to listen to and repeat');
+  assert.equal(drillSteps([a], hist)[0].nth, 1);
+  const p = items.find((c) => c.kind === 'pattern');
+  assert.deepEqual(lesson(p), { head: p.deck.frame, ja: p.deck.ja, note: p.deck.note, en: p.en, meaning: p.ja }, 'only a new frame opens with its own first sentence');
 });

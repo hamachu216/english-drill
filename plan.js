@@ -9,7 +9,7 @@
 // The daily session is grammar, sentence frames, research phrases (Lv3–5) and Q&A replies. Research questions are
 // asked in the mock Q&A only.
 import { addDays, shuffle, mask, wordBank, slots } from './core.js';
-import { example, previous } from './colloc.js';
+import { example } from './colloc.js';
 
 export const MISS = 0, HINT = 1, OK = 2;
 export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, ok: OK };
@@ -131,25 +131,12 @@ export function byNeed(pool, hist, day) {
   ])]);
 }
 
-// The Phrase Drill shows before it asks: a pair not said yet (new, or missed last time), and the first backchannel of
-// a function none of whose cards has been said, get a step to listen to and repeat first. A pair's step names the
-// sentence it is asked in (`nth`), so that a round repeating what wasn't said in full asks the same sentence again.
-export function drillSteps(cards, hist) {
-  const said = (id) => hist[id]?.box > 0, functions = new Set(Object.keys(hist).filter(said).map((id) => id.replace(/-\d+$/, '')));
-  const unsaid = (c, i) => (c.kind === 'colloc' ? !said(c.id) : !functions.has(c.topic) && cards.findIndex((x) => x.topic === c.topic) === i);
-  const ask = (c) => ({ id: c.id, phase: 'free', ...(c.examples && { nth: c.examples.indexOf(example(c, hist[c.id])) }) });
-  return cards.flatMap((c, i) => [...(unsaid(c, i) ? [{ ...ask(c), intro: true }] : []), ask(c)]);
-}
+// The Phrase Drill's steps: a pair's names the sentence it is asked in that day (`nth`), so that a round repeating
+// what wasn't said in full asks the same sentence again.
+export const drillSteps = (cards, hist) => cards.map((c) => ({ id: c.id, phase: 'free', ...(c.examples && { nth: c.examples.indexOf(example(c, hist[c.id])) }) }));
 
-// What a step to listen to and repeat shows: the thing to learn, its meaning and note, and one sentence that uses it.
-// For the drills that is never the sentence asked next (a frame's is another card of its deck): it is then used, not copied.
-export function lesson(c, rec) {
-  if (c.kind === 'colloc') { const e = previous(c, rec); return { head: c.collocation, ja: c.ja, note: c.note, en: e.en, meaning: e.ja }; }
-  if (c.kind !== 'backchannel') return { head: c.deck.frame, ja: c.deck.ja, note: c.deck.note, en: c.en, meaning: c.ja };
-  // Another card of the function, one that opens with a reaction to say yourself (`basic`), not one only to recognise.
-  const other = c.deck.cards.findLast((x) => x.id !== c.id && c.deck.basic.some((p) => x.en.startsWith(p.replace('...', '').trim())));
-  return { head: c.deck.basic.join(' / '), ja: c.deck.title, note: c.deck.note, said: other.said, en: other.en, meaning: other.ja };
-}
+// What a new frame's step to listen to and repeat shows: the frame, its meaning and note, and its first sentence.
+export const lesson = (c) => ({ head: c.deck.frame, ja: c.deck.ja, note: c.deck.note, en: c.en, meaning: c.ja });
 
 // How far a set has come: [not started, practising, settled (next review a week or more away)].
 export const progress = (items, hist) => items.reduce((n, c) => (n[!hist[c.id] ? 0 : hist[c.id].box >= 2 ? 2 : 1]++, n), [0, 0, 0]);

@@ -47,7 +47,7 @@ queue [{id, phase, level?, as?, intro?, follow?, check?, retry?}]  1ステップ
 | `theme.js` | `<head>` で同期読み込みし、描画前にテーマを当てる |
 | `core.js` | 汎用: `catalog`、`restore`/`isBackup`、`seeded`、`shuffle`、`nextRound`、ヒント文字列（`mask`/`slots`/`wordBank`）、`streak`/`calendar`、`englishVoices`、`wordDiff` |
 | `plan.js` | 学習アルゴリズム: `review`、`tally`、`shares`/`mix`、`planSession`、`mockSession`、`requeue`、`scaffold`、`choices`、`knownTopics`、`byNeed`、`drillSteps`/`lesson`、`overview`/`weekly`。定数はファイル先頭 |
-| `colloc.js` | 形容詞＋前置詞: `example`、`previous`、`siblings` |
+| `colloc.js` | 形容詞＋前置詞: `example`、`siblings` |
 | `app.js` | DOM と状態。トップレベル `await` で全データを fetch。DOM は `el(tag, props, ...kids)` で組み、HTML 文字列は使わない |
 | `sw.js` | Service Worker（ネットワーク優先） |
 | `test/*.test.js` | `core`・`plan`・`colloc` の単体テスト、データ検査（`data`）、CSP 検査（`security`） |
@@ -98,7 +98,7 @@ queue [{id, phase, level?, as?, intro?, follow?, check?, retry?}]  1ステップ
 - **ヒントなしの復習**（`bare`）: 前回（その日のいちばん悪い回答）がヒントなしで言えなかったカード — 言えなかった・ヒントで言えた・わからない — は、支援もヒントも出さない。ただし基礎文法の復習を初めて見る別の文（`as`）で出すときは、見たことのない文なのでヒントあり（その文のやり直しはヒントなし）。今日の練習の中だけのルールで、やり直し・翌日以降の復習の両方で、ヒントなしで一度言えるまで続く（利用者の指定）。初見チェックも同じ。ドリル・自由練習・模擬質疑応答では、復習でもいつもヒントを出す（利用者の指定）。
 - **模擬質疑応答**（`mockSession`）: 話題をまたいで5問、英語のみ、追加質問を1つずつ。ヒントは 入れる要素 → 答え方の型 → 質問の意味。Q&A の「言えなかった」は「内容が浮かばなかった／英文にできなかった」に分かれ、回答例との差分は出さない。
 - **自由練習・ドリル**（`byNeed`）: 前回間違えた → 期限の来た復習 → 新規 → 古い順の `pool` から10問（Listening は3本）ずつ出し、言えなかった問題だけを繰り返す（`nextRound`）。ラウンドの進行は保存しない。
-- **Phrase Drill・Listening Drill**（`inFull`）: 中間は「△ 一部だけ言えた」（ヒントなしでも選べる）で、△ も ✕ も同じラウンドで○になるまで繰り返す。○は全文を自分で言えたとき（回答例と違う言い方でもよい）。まだ言えていないもの（新しい組み合わせと前回言えなかった組み合わせ、どのカードもまだ言えていない機能）は、出題の直前に**直後とは別の文**で聞いてまねする画面を見せる（`drillSteps`・`lesson`）。
+- **Phrase Drill・Listening Drill**（`inFull`）: 中間は「△ 一部だけ言えた」（ヒントなしでも選べる）で、△ も ✕ も同じラウンドで○になるまで繰り返す。○は全文を自分で言えたとき（回答例と違う言い方でもよい）。聞いてまねする画面はなく、すぐに出題する（利用者の指定。聞いてまねする画面は今日の練習の新しい型だけ）。
   - 形容詞＋前置詞: 覚える単位は組み合わせで、出るたびに別の例文。形容詞は問題文の下に出す。使う語はその日の例文の語。
   - 相槌: 返す内容（`ja`）が問題文で、相手のひと言（`said`）は表示のみ。機能名は出さない。同じ機能の言い方ならどれでも正解。
   - Listening: 話を1文ずつ読み上げ、文字は見せない。答えの後に差分・全文・訳。

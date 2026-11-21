@@ -6,8 +6,5 @@
 // A different sentence each time the pair comes up (the answer count rotates through them).
 export const example = (c, rec) => c.examples[(rec?.n ?? 0) % c.examples.length];
 
-// The sentence before that one: what is shown to listen to and repeat before the pair is asked.
-export const previous = (c, rec) => c.examples.at(((rec?.n ?? 0) - 1) % c.examples.length);
-
 // Other pairs with the same adjective: "happy about（…）/ happy with（…）", for telling them apart.
 export const siblings = (c, items) => items.filter((x) => x.kind === 'colloc' && x.adj === c.adj && x !== c);
