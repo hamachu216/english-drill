@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FILES, DRILLS, catalog, addDays, seeded, restore, slots, wordBank } from '../core.js';
-import { MISS, HINT, OK, review, tally, shares, weakTopics, planSession, requeue, scaffold, choices, overview, mockSession, weekly, knownTopics, byNeed } from '../plan.js';
+import { MISS, HINT, OK, review, bare, tally, shares, weakTopics, planSession, requeue, scaffold, choices, overview, mockSession, weekly, knownTopics, byNeed } from '../plan.js';
 
 const items = catalog([...FILES, ...DRILLS].map((f) => JSON.parse(readFileSync(new URL('../' + f, import.meta.url)))));
 const byId = new Map(items.map((c) => [c.id, c]));
@@ -271,6 +271,16 @@ test('a grammar review is asked in a sentence never answered, differently each t
   // A topic with every other sentence answered has nothing else to ask: the card itself comes back.
   const used = Object.fromEntries(ofTopics('b-past').map((id) => [id, review(undefined, OK, day)]));
   assert.ok(plan(used, {}, T).filter((s) => byId.get(s.id).topic === 'b-past').every((s) => !s.as));
+});
+
+test('bare: a card last not said unaided, in a sentence already seen — a grammar review in a new sentence keeps its hint until retried', () => {
+  const hist = { 'b-past-002': review(undefined, MISS, T), 'p-goal-001': review(undefined, HINT, T), 'p-goal-002': review(undefined, OK, T) };
+  assert.equal(bare({ id: 'p-goal-001' }, hist), true);
+  assert.equal(bare({ id: 'p-goal-002' }, hist), false, 'said unaided last time');
+  assert.equal(bare({ id: 'p-goal-003' }, hist), false, 'never answered');
+  assert.equal(bare({ id: 'b-past-017', as: 'b-past-002' }, hist), false, 'a sentence never seen');
+  assert.equal(bare({ id: 'b-past-017', as: 'b-past-002', retry: true }, hist), true, 'that sentence again, just seen');
+  assert.equal(bare({ id: 'p-goal-001', follow: 0 }, hist), false, 'a follow-up question is not recorded');
 });
 
 test('a card last answered without being said (missed, with a hint, given up) is asked bare: no support, no hint', () => {

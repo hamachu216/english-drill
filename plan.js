@@ -284,6 +284,9 @@ export function requeue(queue, i, grade) {
 //   question     nothing; the hints, one at a time: what to include, a frame to answer in, the question in Japanese
 // A card whose last answer was not said unaided (`bare`: missed, said with a hint, or given up) and the weekly check
 // show nothing and have no hints: what was seen is said from memory.
+// Whether a step is asked bare: its card's last answer was not said unaided, and the sentence is one already seen —
+// not a grammar review asked in a sentence never answered (`as`), unless that sentence is being retried.
+export const bare = (step, hist) => step.follow == null && hist[step.as ?? step.id]?.grade < OK && (!step.as || !!step.retry);
 export function scaffold(c, { level = 2, bare, check, follow }, en = c.en) {
   if (bare || check) return { shown: [], hints: [] };
   const q = c.deck.follow?.[follow] ?? (c.q && c);
