@@ -293,7 +293,7 @@ test('a card last answered without being said (missed, with a hint, given up) is
   assert.notEqual(bank, c.en.replace(/[.,?!]/g, '').split(' ').join(' / '), 'out of order (alphabetical)');
 });
 
-test('Q&A reply: dictation — nothing shown up front, the words of the reply as the hint', () => {
+test('Q&A reply: said from its meaning, nothing shown up front, the words of the reply as the hint', () => {
   const r = items.find((c) => c.id === 'r-hear-001'), queue = plan({}, FLUENT);
   assert.deepEqual(scaffold(r, {}), { shown: [], hints: [['使う語', wordBank(r.en)]] });
   assert.ok(queue.filter((s) => s.phase === 'reply').every((s) => s.level === undefined), 'no Beginner / Advanced ladder');

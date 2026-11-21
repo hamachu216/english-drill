@@ -130,14 +130,6 @@ export function byNeed(pool, hist, day) {
   ])]);
 }
 
-// The Answer Drill takes up two new frames at a time (all nine at once would be nine steps to listen to before any
-// answer): the frames already started, and the next two in file order.
-export function openFrames(cards, hist, fresh = 2) {
-  const started = (t) => cards.some((c) => c.topic === t && hist[c.id]);
-  const next = [...new Set(cards.map((c) => c.topic))].filter((t) => !started(t)).slice(0, fresh);
-  return cards.filter((c) => started(c.topic) || next.includes(c.topic));
-}
-
 // The drills show before they ask, the first time only: a new pair, and the first card of a function or frame none of
 // whose cards has been answered, get a step to listen to and repeat first (one answered and missed is asked bare, as in
 // `scaffold`). A pair's step names the sentence it is asked in (`nth`), so that a round repeating what wasn't said in
@@ -153,7 +145,7 @@ export function drillSteps(cards, hist) {
 // For the drills that is never the sentence asked next (a frame's is another card of its deck): it is then used, not copied.
 export function lesson(c, rec) {
   if (c.kind === 'colloc') { const e = previous(c, rec); return { head: c.collocation, ja: c.ja, note: c.note, en: e.en, meaning: e.ja }; }
-  if (c.kind !== 'backchannel') { const e = c.kind === 'answer' ? c.deck.cards.findLast((x) => x.id !== c.id) : c; return { head: c.deck.frame, ja: c.deck.ja, note: c.deck.note, en: e.en, meaning: e.ja }; }
+  if (c.kind !== 'backchannel') return { head: c.deck.frame, ja: c.deck.ja, note: c.deck.note, en: c.en, meaning: c.ja };
   // Another card of the function, one that opens with a reaction to say yourself (`basic`), not one only to recognise.
   const other = c.deck.cards.findLast((x) => x.id !== c.id && c.deck.basic.some((p) => x.en.startsWith(p.replace('...', '').trim())));
   return { head: c.deck.basic.join(' / '), ja: c.deck.title, note: c.deck.note, said: other.said, en: other.en, meaning: other.ja };
@@ -291,7 +283,7 @@ export function scaffold(c, { level = 2, bare, check, follow }, en = c.en) {
   if (bare || check) return { shown: [], hints: [] };
   const q = c.deck.follow?.[follow] ?? (c.q && c);
   if (q) return { shown: [], hints: [['入れる要素', q.points], ['答え方の型', q.frame], ['質問の意味', q.ja]] };
-  if (c.kind !== 'pattern' && c.kind !== 'answer') return { shown: [], hints: [['使う語', wordBank(en)]] };
+  if (c.kind !== 'pattern') return { shown: [], hints: [['使う語', wordBank(en)]] };
   const frame = ['型', c.deck.frame], words = ['使う語', wordBank(slots(c.deck.frame, en).join(' '))];
   return level === 0 ? { shown: [frame], hints: [words] } : { shown: level === 1 ? [['型（一部）', mask(c.deck.frame)]] : [], hints: [frame, words] };
 }

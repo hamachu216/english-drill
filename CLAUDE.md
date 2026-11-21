@@ -10,7 +10,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 |---|---|---|
 | 今日の練習 | 履歴から組んだ1日分。基礎文法 → 研究英語の構文 → 研究の場面の表現（Lv3〜5）→ 質疑応答の切り返し。30分 | — |
 | Phrase Drill | 形容詞＋前置詞と相槌を交互に10問ずつ | 入らない |
-| Answer Drill | 答えを組み立てる型（理由・定義・具体例）とシステムの動作を説明する型を10問ずつ | 入らない |
 | Listening Drill | 4〜6文の話を聞き、問いの答えになる1文を書き取る。3本ずつ | 入らない |
 | 模擬質疑応答 | 研究についての質問5問＋追加質問。支援なし | 入らない |
 | 自由に練習 | 基礎文法（Lv1〜2）・Lv3〜5 から選んで10問ずつ | — |
@@ -47,7 +46,7 @@ queue [{id, phase, level?, as?, intro?, follow?, check?, retry?}]  1ステップ
 | `style.css` | 見た目のすべて。色は `:root` のトークン |
 | `theme.js` | `<head>` で同期読み込みし、描画前にテーマを当てる |
 | `core.js` | 汎用: `catalog`、`restore`/`isBackup`、`seeded`、`shuffle`、`nextRound`、ヒント文字列（`mask`/`slots`/`wordBank`）、`streak`/`calendar`、`englishVoices`、`wordDiff` |
-| `plan.js` | 学習アルゴリズム: `review`、`tally`、`shares`/`mix`、`planSession`、`mockSession`、`requeue`、`scaffold`、`choices`、`knownTopics`、`byNeed`、`openFrames`、`drillSteps`/`lesson`、`overview`/`weekly`。定数はファイル先頭 |
+| `plan.js` | 学習アルゴリズム: `review`、`tally`、`shares`/`mix`、`planSession`、`mockSession`、`requeue`、`scaffold`、`choices`、`knownTopics`、`byNeed`、`drillSteps`/`lesson`、`overview`/`weekly`。定数はファイル先頭 |
 | `colloc.js` | 形容詞＋前置詞: `example`、`previous`、`siblings` |
 | `app.js` | DOM と状態。トップレベル `await` で全データを fetch。DOM は `el(tag, props, ...kids)` で組み、HTML 文字列は使わない |
 | `sw.js` | Service Worker（ネットワーク優先） |
@@ -62,10 +61,9 @@ queue [{id, phase, level?, as?, intro?, follow?, check?, retry?}]  1ステップ
 | `1-basic`・`2-advanced` | `grammar` | `{id, ja, en, note?}`。デッキに1行解説 `note`（必須）。研究の場で使わない形（if only・倒置など）は入れない | 今日の練習・自由練習 |
 | `3-discussion`〜`5-defense` | `phrase` | 同上 | 今日の練習・自由練習 |
 | `patterns` | `pattern` | デッキ＝1つの型（`frame`・`ja`・`note`）。`en` は型の書き出しで始まり、`slots` で `...` の語句を取り出せること。**デッキの並び順＝新しい型が開く順**（質疑応答の答えの書き出しになる `p-limit`・`p-nottested`・`p-because`・`p-diff`・`p-reason`・`p-depends`・`p-plan`・`p-apply` を `p-wonder` の次に置いている。利用者の指定） | 今日の練習 |
-| `replies` | `reply` | `{id, scene, ja, frame, en}`。`en` を読み上げて書き取る。`frame` は答えの後に出す | 今日の練習 |
+| `replies` | `reply` | `{id, scene, ja, frame, en}`。`ja`（と場面 `scene`）を見て `en` を言う。`frame` は答えの後に出す | 今日の練習 |
 | `qa` | `qa` | `{id, q, ja, points, frame, en, more}`、デッキに追加質問 `follow`。`points` はどの研究にも当てはまる言い方。`q-intro` だけ PREP 順（結論 → 理由 → 具体例。テストで検証） | 模擬質疑応答 |
 | `listening` | `listening` | `{id, scene, task, text, en, ja, textJa}`。`en` は `text` にそのまま含まれる（テストで検証） | Listening Drill |
-| `answers` | `answer` | `patterns` と同じ構造。例文は汎用の装置・データの言い方 | Answer Drill |
 | `collocations` | `colloc` | `{id, adj, prep, collocation, ja, difficulty, note, examples:[{id, scene, en, ja, also?}]}`。`en` に「形容詞 前置詞」がそのまま隣り合って入る（テストで検証） | Phrase Drill |
 | `backchannels` | `backchannel` | `{id, said, saidJa, ja, en}`。デッキ＝相槌の機能で `basic`・`more`・`note` を持つ。`en` はどれかの `basic`/`more` で始まる（テストで検証）。`ja` の書き出しを機能ごとにそろえる | Phrase Drill |
 
@@ -81,7 +79,7 @@ queue [{id, phase, level?, as?, intro?, follow?, check?, retry?}]  1ステップ
 | `grammar` | 60秒 | 得意でないトピックをファイル順に3つずつ（`ROTATION`）。b-be・b-neg・b-prog（`LATER`）は最後 | ヒント: 使う語 |
 | `pattern` | 75秒 | 始めた型の続き → 始めた型をどれも一度言えたら新しい型を1〜2個（1文目は聞いてまねする `intro`、当日は別の4文） | 型の表示 → 半分隠す → なし。ヒント: 型＋使う語 |
 | `phrase` | 75秒 | Lv3・Lv4・Lv5 のトピックを交互に、各トピックの1枚目 → 2枚目 … | 6分に1問。ヒント: 使う語 |
-| `reply` | 60秒 | 各場面の1枚目 → 2枚目 … | 6分に1問。意味と場面を表示し、返事を読み上げる。ヒント: 使う語 |
+| `reply` | 60秒 | 各場面の1枚目 → 2枚目 … | 6分に1問。意味と場面を見て言う（書き取りではない。予備審査で要るのは自分で言うことなので、利用者の指定で書き取りをやめた）。ヒント: 使う語 |
 
 - **順番**: 前回言えなかったカード → 基礎文法 → 構文 → Lv3〜5 → 切り返し → 週1回の初見チェック（初回から7日ごと、取り置きの未出題を 基礎3・構文2・Lv3〜5 1・切り返し1、支援なし）。
 - **配分**: 切り返しを除いた時間を 基礎:構文 ＝ 1:1 に分け（直近2週間の基礎の出来で 30〜65% に動く）、上の秒数で枚数 n に換算する。Lv3〜5 の時間は基礎文法の分から引く（利用者の指定。ただし基礎文法は分けた時間の20%（`GRAMMAR_MIN`）を下回らない。下回ると基礎文法の復習が出なくなるため）。
@@ -100,10 +98,9 @@ queue [{id, phase, level?, as?, intro?, follow?, check?, retry?}]  1ステップ
 - **ヒントなしの復習**（`bare`）: 前回（その日のいちばん悪い回答）がヒントなしで言えなかったカード — 言えなかった・ヒントで言えた・わからない — は、支援もヒントも出さない。ただし基礎文法の復習を初めて見る別の文（`as`）で出すときは、見たことのない文なのでヒントあり（その文のやり直しはヒントなし）。やり直し・翌日以降の復習・ドリルの繰り返しすべてで、ヒントなしで一度言えるまで続く（利用者の指定）。初見チェックも同じ。
 - **模擬質疑応答**（`mockSession`）: 話題をまたいで5問、英語のみ、追加質問を1つずつ。ヒントは 入れる要素 → 答え方の型 → 質問の意味。Q&A の「言えなかった」は「内容が浮かばなかった／英文にできなかった」に分かれ、回答例との差分は出さない。
 - **自由練習・ドリル**（`byNeed`）: 前回間違えた → 期限の来た復習 → 新規 → 古い順の `pool` から10問（Listening は3本）ずつ出し、言えなかった問題だけを繰り返す（`nextRound`）。ラウンドの進行は保存しない。
-- **Phrase Drill・Answer Drill・Listening Drill**（`inFull`）: 中間は「△ 一部だけ言えた」（ヒントなしでも選べる）で、△ も ✕ も同じラウンドで○になるまで繰り返す。○は全文を自分で言えたとき（回答例と違う言い方でもよい）。初めて出るもの（新しい組み合わせ、どのカードもまだ答えていない機能・型）だけ、出題の直前に**直後とは別の文**で聞いてまねする画面を見せる（`drillSteps`・`lesson`。答えたことがあるものは `bare` と同じく見せない）。
+- **Phrase Drill・Listening Drill**（`inFull`）: 中間は「△ 一部だけ言えた」（ヒントなしでも選べる）で、△ も ✕ も同じラウンドで○になるまで繰り返す。○は全文を自分で言えたとき（回答例と違う言い方でもよい）。初めて出るもの（新しい組み合わせ、どのカードもまだ答えていない機能）だけ、出題の直前に**直後とは別の文**で聞いてまねする画面を見せる（`drillSteps`・`lesson`。答えたことがあるものは `bare` と同じく見せない）。
   - 形容詞＋前置詞: 覚える単位は組み合わせで、出るたびに別の例文。形容詞は問題文の下に出す。使う語はその日の例文の語。
   - 相槌: 返す内容（`ja`）が問題文で、相手のひと言（`said`）は表示のみ。機能名は出さない。同じ機能の言い方ならどれでも正解。
-  - Answer Drill: `openFrames` が「始めた型と次の2つ」だけを開く。
   - Listening: 話を1文ずつ読み上げ、文字は見せない。答えの後に差分・全文・訳。
 
 ## 保存
