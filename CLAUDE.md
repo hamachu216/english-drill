@@ -59,7 +59,7 @@ queue [{id, phase, level?, as?, follow?, check?, retry?}]  1ステップ＝1画�
 | ファイル | kind | カードの形と決まり | 使われ方 |
 |---|---|---|---|
 | `1-basic`・`2-advanced` | `grammar` | `{id, ja, en, note?}`。デッキに1行解説 `note`（必須）。研究の場で使わない形（if only・倒置など）は入れない | 今日の練習・自由練習 |
-| `3-discussion`〜`5-defense` | `phrase` | 同上。`en` は1つの内容で12語以内（前置き・付け足しの理由は削る。利用者の指定。テストで検証）。`note` が説明する言い回しは `en` に残す | 今日の練習・自由練習 |
+| `3-discussion`〜`5-defense` | `phrase` | 同上。`en` は1つの内容で12語以内（前置き・付け足しの理由は削る。利用者の指定。テストで検証）。`note` が説明する言い回しと、デッキの技能を担う後半（反対のあとの代案、遅れのあとの挽回策、聞き取れなかったあとの依頼など）は削らない | 今日の練習・自由練習 |
 | `patterns` | `pattern` | デッキ＝1つの型（`frame`・`ja`・`note`）。`en` は型の書き出しで始まり、`slots` で `...` の語句を取り出せること。**デッキの並び順＝新しい型が開く順**（質疑応答の答えの書き出しになる `p-limit`・`p-nottested`・`p-because`・`p-diff`・`p-reason`・`p-depends`・`p-plan`・`p-apply` を `p-wonder` の次に置いている。利用者の指定） | 今日の練習 |
 | `replies` | `reply` | `{id, scene, ja, frame, en}`。`ja`（と場面 `scene`）を見て `en` を言う。`frame` は答えの後に出す | 今日の練習 |
 | `qa` | `qa` | `{id, q, ja, points, frame, en, more}`、デッキに追加質問 `follow`。`points` はどの研究にも当てはまる言い方。`q-intro` だけ PREP 順（結論 → 理由 → 具体例。テストで検証） | 模擬質疑応答 |

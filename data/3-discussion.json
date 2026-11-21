@@ -11,11 +11,11 @@
       ],
       "cards": [
         { "id": "disc-progress-001", "ja": "【進捗報告】先週から、追加実験を3つ回しました。", "en": "Since last week, I've run three more experiments.", "note": "Since last week で現在完了" },
-        { "id": "disc-progress-002", "ja": "【1on1冒頭】相談したいことが2点あります。", "en": "There are two things I'd like your input on.", "note": "your input on ～ は「意見をもらう」の自然な言い方" },
+        { "id": "disc-progress-002", "ja": "【1on1冒頭】まず簡単に進捗を共有して、そのあと相談したいことが2点あります。", "en": "A quick update first, then two things I'd like your input on.", "note": "your input on ～ は「意見をもらう」の自然な言い方" },
         { "id": "disc-progress-003", "ja": "【進捗報告】前処理はほぼ終わり、今はベースラインを再現しています。", "en": "Preprocessing is mostly done. Now I'm reproducing the baseline." },
-        { "id": "disc-progress-004", "ja": "【進捗報告】正直に言うと、今週はあまり進んでいません。", "en": "To be honest, I didn't make much progress this week.", "note": "To be honest で率直さを前置き。言い訳より事実を先に" },
+        { "id": "disc-progress-004", "ja": "【進捗報告】正直に言うと、あまり進みませんでした。環境構築に予想以上に時間がかかりました。", "en": "To be honest, I made little progress. Setup took longer than expected.", "note": "To be honest で率直さを前置き。言い訳より事実を先に" },
         { "id": "disc-progress-005", "ja": "【進捗報告】前回ご指摘いただいた点は修正済みで、評価もやり直しました。", "en": "I've addressed the points you raised last time and rerun the evaluation.", "note": "address the points は「指摘に対応する」の定番" },
-        { "id": "disc-progress-006", "ja": "【進捗報告】予定より1週間ほど遅れています。", "en": "I'm about a week behind schedule.", "note": "behind schedule / on track / ahead of schedule をセットで" },
+        { "id": "disc-progress-006", "ja": "【進捗報告】予定より1週間ほど遅れていますが、今月中に追いつきます。", "en": "I'm about a week behind schedule, but I'll catch up this month.", "note": "behind schedule / on track / ahead of schedule をセットで" },
         { "id": "disc-progress-007", "ja": "【進捗報告】実装は終わりましたが、まだ結果が安定していません。", "en": "The implementation is done, but the results aren't stable yet." },
         { "id": "disc-progress-008", "ja": "【ラボミーティング】今日は全体の方向性について話したいと思います。", "en": "Today I'd like to focus on the overall direction." },
         { "id": "disc-progress-009", "ja": "【進捗報告】一番の問題は計算資源で、フルの実験に2週間かかります。", "en": "The main bottleneck is compute: a full run takes two weeks.", "note": "bottleneck は進捗報告で非常によく使う" },
@@ -33,11 +33,11 @@
       ],
       "cards": [
         { "id": "disc-results-001", "ja": "【結果説明】ご覧のとおり、精度が頭打ちになり始めています。", "en": "As you can see, the accuracy starts to plateau.", "note": "plateau は「頭打ちになる」。動詞として使える" },
-        { "id": "disc-results-002", "ja": "【結果説明】5ポイント良いですが、有意かどうかはまだ検定していません。", "en": "It's five points better, but I haven't tested significance." },
+        { "id": "disc-results-002", "ja": "【結果説明】ベースラインより5ポイント上ですが、有意かどうかはまだ検定していません。", "en": "It's five points above the baseline, but I haven't tested significance yet." },
         { "id": "disc-results-003", "ja": "【解釈】私の解釈では、改善の大部分は正規化によるものです。", "en": "My interpretation is that normalization made most of the difference.", "note": "My interpretation is that ～ で意見と事実を区別する" },
         { "id": "disc-results-004", "ja": "【解釈】この結果は意外でした。逆の傾向を予想していたので。", "en": "This result was surprising to me, because I expected the opposite trend." },
-        { "id": "disc-results-005", "ja": "【解釈】一つの可能性は、訓練データとテストデータの重なりです。", "en": "One possible explanation is overlap between training and test data.", "note": "One possible explanation is ～ は断定を避ける定番" },
-        { "id": "disc-results-006", "ja": "【解釈】サンプルが少ないので、強い結論は出せません。", "en": "The sample is small, so we can't draw strong conclusions.", "note": "draw conclusions from ～ はセットで覚える" },
+        { "id": "disc-results-005", "ja": "【解釈】一つの可能性は、テストデータと訓練データが似すぎていることです。", "en": "One possible explanation is that test and training data are too similar.", "note": "One possible explanation is ～ は断定を避ける定番" },
+        { "id": "disc-results-006", "ja": "【解釈】サンプルが少ないので、ここから強い結論は出せません。", "en": "The sample is small, so we can't draw strong conclusions from this.", "note": "draw conclusions from ～ はセットで覚える" },
         { "id": "disc-results-007", "ja": "【結果説明】縦軸が処理時間、横軸が入力の長さです。", "en": "The y-axis is processing time; the x-axis is input length." },
         { "id": "disc-results-008", "ja": "【結果説明】この外れ値を見てください。挙動がまったく違います。", "en": "Please look at this outlier. It behaves completely differently." },
         { "id": "disc-results-009", "ja": "【解釈】相関はありますが、因果関係があるとまでは言えません。", "en": "There's a correlation, but we can't say there's a causal relationship." },
@@ -65,7 +65,7 @@
         { "id": "disc-advice-009", "ja": "【ラボミーティング】他の皆さんはどう思いますか？似たような問題に遭遇した人はいますか？", "en": "What do others think? Has anyone run into a similar problem?", "note": "run into a problem で「問題にぶつかる」" },
         { "id": "disc-advice-010", "ja": "【相談】この評価指標で妥当だと思いますか？", "en": "Do you think this metric makes sense here?" },
         { "id": "disc-advice-011", "ja": "【相談】このデータセットに詳しい方を誰かご存じないですか？", "en": "Do you happen to know anyone who's familiar with this dataset?", "note": "Do you happen to ～ で尋ね方が柔らかくなる" },
-        { "id": "disc-advice-012", "ja": "【相談】基本的な質問かもしれませんが、この仮定は一般的ですか？", "en": "Maybe a basic question, but is this assumption common?" }
+        { "id": "disc-advice-012", "ja": "【相談】基本的な質問かもしれませんが、ここでこの仮定は一般的ですか？", "en": "This might be a basic question, but is this assumption common here?" }
       ]
     },
     {
@@ -84,7 +84,7 @@
         { "id": "disc-disagree-006", "ja": "【反論】その手法に反対ではありませんが、コストが心配です。", "en": "I'm not against that method, but I'm worried about the cost." },
         { "id": "disc-disagree-007", "ja": "【反論】あえて反対の立場から言うと、これはデータリークではありませんか？", "en": "Just to play devil's advocate, couldn't this be data leakage?", "note": "play devil's advocate は「あえて反対意見を言う」" },
         { "id": "disc-disagree-008", "ja": "【反論】それも一つの見方ですが、別の見方もあります。", "en": "That's one way to look at it, but there's another." },
-        { "id": "disc-disagree-009", "ja": "【代案】両方のいいとこ取りができるかもしれません。", "en": "Maybe we could get the best of both worlds.", "note": "the best of both worlds で「いいとこ取り」" },
+        { "id": "disc-disagree-009", "ja": "【代案】前半はA、後半はBにすれば、両方のいいとこ取りができそうです。", "en": "We could get the best of both worlds: A first, then B.", "note": "the best of both worlds で「いいとこ取り」" },
         { "id": "disc-disagree-010", "ja": "【反論】まだ納得できていません。もう少し根拠を見せていただけますか？", "en": "I'm still not convinced. Could you show more evidence?" },
         { "id": "disc-disagree-011", "ja": "【代案】代わりに、比較対象として追加するのはどうですか？", "en": "How about adding it as another baseline instead?" },
         { "id": "disc-disagree-012", "ja": "【反論】意見の違いは、評価の前提の違いに行き着くと思います。", "en": "I think our disagreement comes down to the evaluation assumptions.", "note": "comes down to ～ で「結局は～に行き着く」" }
@@ -98,10 +98,10 @@
         { "name": "Queen Mary Academic English Online: Contributing in Seminars", "url": "https://aeo.sllf.qmul.ac.uk/speaking/contributing-in-seminars/" }
       ],
       "cards": [
-        { "id": "disc-clarify-001", "ja": "【聞き返し】すみません、最後の部分を聞き取れませんでした。", "en": "Sorry, I didn't catch the last part.", "note": "didn't catch は「聞き取れなかった」の自然な言い方" },
+        { "id": "disc-clarify-001", "ja": "【聞き返し】すみません、最後の部分を聞き取れませんでした。もう一度お願いできますか？", "en": "Sorry, I didn't catch the last part. Could you say that again?", "note": "didn't catch は「聞き取れなかった」の自然な言い方" },
         { "id": "disc-clarify-002", "ja": "【確認】つまり、このサブセットを外すべきということですか？", "en": "So are you saying we should drop this subset?", "note": "So are you saying ～? で要約して確認" },
         { "id": "disc-clarify-003", "ja": "【確認】念のため確認させてください。締切は来週の金曜日で合っていますか？", "en": "Just to make sure, the deadline is next Friday, right?" },
-        { "id": "disc-clarify-004", "ja": "【聞き返し】「頑健性」というのは、ノイズに対してのことですか？", "en": "When you say \"robustness,\" do you mean to noise?", "note": "When you say X, do you mean Y? は用語確認の型" },
+        { "id": "disc-clarify-004", "ja": "【聞き返し】「頑健性」というのは、ノイズに対する頑健性のことですか？", "en": "When you say \"robustness,\" do you mean robustness to noise?", "note": "When you say X, do you mean Y? は用語確認の型" },
         { "id": "disc-clarify-005", "ja": "【聞き返し】もう少し具体的にお願いできますか？例があると助かります。", "en": "Could you be more specific? An example would help." },
         { "id": "disc-clarify-006", "ja": "【確認】つまり、モデルを固定して分類器だけを学習する、ということですね？", "en": "So we freeze the model and train only the classifier, right?" },
         { "id": "disc-clarify-007", "ja": "【Zoom】すみません、音声が途切れました。もう一度お願いできますか？", "en": "Sorry, you cut out. Could you repeat that?", "note": "cut out は通話で音声が途切れること" },
@@ -123,13 +123,13 @@
         { "id": "disc-nextsteps-001", "ja": "【次のステップ】次に、別のデータセットでも傾向が成り立つか確認します。", "en": "Next, I'll check whether the trend holds on another dataset.", "note": "hold で「(傾向・結果が)成り立つ」" },
         { "id": "disc-nextsteps-002", "ja": "【締切交渉】締切を来週の火曜日に延ばしていただけますか？", "en": "Could we push the deadline to next Tuesday?", "note": "push A to B で「締切をBに延ばす」" },
         { "id": "disc-nextsteps-003", "ja": "【締切交渉】全部は終わりません。優先順位を相談できますか？", "en": "I can't finish everything. Could we discuss priorities?" },
-        { "id": "disc-nextsteps-004", "ja": "【締切交渉】金曜までに草稿は出せますが、図はまだです。", "en": "I can send a draft by Friday, but not the figures." },
+        { "id": "disc-nextsteps-004", "ja": "【締切交渉】金曜までに草稿は送れますが、図の仕上げにはもう1週間かかります。", "en": "I can send a draft by Friday; polished figures need another week." },
         { "id": "disc-nextsteps-005", "ja": "【次のステップ】この実験が終わり次第、結果をお送りします。", "en": "I'll send you the results as soon as this experiment finishes." },
-        { "id": "disc-nextsteps-006", "ja": "【次のステップ】締切から逆算すると、主要な実験は今月中に終える必要があります。", "en": "Working backward from the deadline, the main experiments must end this month.", "note": "work backward from ～ で「～から逆算する」" },
+        { "id": "disc-nextsteps-006", "ja": "【次のステップ】締切から逆算すると、今月中に実験を終える必要があります。", "en": "Working backward from the deadline, we must finish experiments this month.", "note": "work backward from ～ で「～から逆算する」" },
         { "id": "disc-nextsteps-007", "ja": "【締切交渉】今回の会議は見送って、次を目指すべきでしょうか？", "en": "Should we skip this conference and aim for the next one?" },
         { "id": "disc-nextsteps-008", "ja": "【次のステップ】現実的には、実装2週間、実験1週間、残りで執筆です。", "en": "Realistically: two weeks to build, one to test, then writing." },
         { "id": "disc-nextsteps-009", "ja": "【次のステップ】時間があれば、ユーザースタディもやりたいです。", "en": "If we have time, I'd also like to run a user study." },
-        { "id": "disc-nextsteps-010", "ja": "【締切交渉】良いアイデアですが、今回の締切には厳しいです。", "en": "Great idea, but it's tight for this deadline.", "note": "tight で「(時間的に)厳しい」" },
+        { "id": "disc-nextsteps-010", "ja": "【締切交渉】良いアイデアですが、時間的に厳しいです。カメラレディ版で追加できますか？", "en": "Great idea, but it's tight. Could we add it in the camera-ready?", "note": "tight で「(時間的に)厳しい」" },
         { "id": "disc-nextsteps-011", "ja": "【次のステップ】次回のミーティングまでに、比較実験の結果をまとめておきます。", "en": "I'll have the comparison results ready by our next meeting." },
         { "id": "disc-nextsteps-012", "ja": "【締切交渉】来週水曜日に中間チェックを入れるのはどうでしょう？", "en": "How about a checkpoint next Wednesday?", "note": "checkpoint / milestone で中間目標" }
       ]
@@ -174,7 +174,7 @@
         { "id": "disc-collab-008", "ja": "【共同研究】進捗はSlackで共有し合いましょう。", "en": "Let's keep each other updated on Slack.", "note": "keep each other updated で「互いに状況を共有する」" },
         { "id": "disc-collab-009", "ja": "【役割分担】今週は手一杯です。来週からでもいいですか？", "en": "I have a lot on my plate. Could I start next week?", "note": "have a lot on my plate で「手一杯」" },
         { "id": "disc-collab-010", "ja": "【共同研究】このデータに、そちらの機関の倫理審査は必要ですか？", "en": "Does your institution require an ethics review for this data?" },
-        { "id": "disc-collab-011", "ja": "【共同研究】定例は、私の夕方、そちらの朝にするのはどうでしょう？", "en": "How about meeting in my evening, your morning?", "note": "my time / your time で時差を表す" },
+        { "id": "disc-collab-011", "ja": "【共同研究】定例は、こちらの時間で夕方、そちらの時間で朝にするのはどうでしょう？", "en": "How about regular meetings in the evening my time, morning your time?", "note": "my time / your time で時差を表す" },
         { "id": "disc-collab-012", "ja": "【共同研究】お互いの強みを活かしましょう。", "en": "Let's play to both of our strengths.", "note": "play to one's strengths で「強みを活かす」" }
       ]
     },
@@ -193,7 +193,7 @@
         { "id": "disc-facilitate-005", "ja": "【司会】まだ発言していない方の意見も聞きたいです。", "en": "I'd like to hear from those who haven't spoken yet." },
         { "id": "disc-facilitate-006", "ja": "【まとめ】まとめると、手法はそのままで、評価を拡充します。", "en": "To sum up, we keep the method and expand the evaluation.", "note": "To sum up / To recap でまとめに入る" },
         { "id": "disc-facilitate-007", "ja": "【司会】話がそれてきました。本題に戻りましょう。", "en": "We're getting off track. Let's get back to the main topic.", "note": "off track で「話がそれた」" },
-        { "id": "disc-facilitate-008", "ja": "【まとめ】アクションアイテムを確認しましょう。", "en": "Let's go over the action items.", "note": "go over で「確認する・ざっと見直す」" },
+        { "id": "disc-facilitate-008", "ja": "【まとめ】アクションアイテムを確認しましょう。データはケン、図は私です。", "en": "Let's go over the action items: Ken does data, I do figures.", "note": "go over で「確認する・ざっと見直す」" },
         { "id": "disc-facilitate-009", "ja": "【司会】まだ結論が出ていないので、来週改めて議論しましょう。", "en": "We haven't reached a conclusion, so let's revisit it next week.", "note": "revisit で「改めて取り上げる」" },
         { "id": "disc-facilitate-010", "ja": "【司会】すみません、少し割り込んでもいいですか？", "en": "Sorry, can I jump in for a second?", "note": "jump in で「話に割り込む」" },
         { "id": "disc-facilitate-011", "ja": "【まとめ】皆さんの認識が一致したので、この方針で進めましょう。", "en": "We're all on the same page, so let's go with this.", "note": "on the same page で「認識が一致している」" },
@@ -217,7 +217,7 @@
         { "id": "disc-followup-008", "ja": "【チャット】ちょっと確認ですが、明日のミーティングは予定どおりですか？", "en": "Quick check: are we still on for tomorrow's meeting?", "note": "are we still on for ～? で「予定どおりか」" },
         { "id": "disc-followup-009", "ja": "【チャット】すみません、少し遅れます。", "en": "Sorry, I'm running a few minutes late.", "note": "running late で「遅れている」" },
         { "id": "disc-followup-010", "ja": "【メール】返信が遅くなりすみません。立て込んでいました。", "en": "Sorry for the slow reply. Things have been hectic.", "note": "Sorry for the delayed response も可。hectic は「慌ただしい」" },
-        { "id": "disc-followup-011", "ja": "【メール】候補日時をいくつか挙げていただければ、合わせます。", "en": "If you suggest a few times, I'll work around your schedule.", "note": "work around your schedule で「あなたの予定に合わせる」" },
+        { "id": "disc-followup-011", "ja": "【メール】来週30分ほどお時間ありますか？ご予定に合わせます。", "en": "Do you have 30 minutes next week? I'll work around your schedule.", "note": "work around your schedule で「あなたの予定に合わせる」" },
         { "id": "disc-followup-012", "ja": "【チャット】結果が出ました。予想どおりの傾向です。", "en": "The results are in, and they look as expected.", "note": "The results are in で「結果が出た」" }
       ]
     }
