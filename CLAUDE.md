@@ -45,7 +45,7 @@ queue [{id, phase, level?, as?, follow?, check?, retry?}]  1ステップ＝1画�
 | `index.html` | マークアップと CSP の `<meta>` |
 | `style.css` | 見た目のすべて。色は `:root` のトークン |
 | `theme.js` | `<head>` で同期読み込みし、描画前にテーマを当てる |
-| `core.js` | 汎用: `catalog`、`restore`/`isBackup`、`seeded`、`shuffle`、`nextRound`、ヒント文字列（`mask`/`slots`/`wordBank`）、`streak`/`calendar`、`englishVoices`、`wordDiff` |
+| `core.js` | 汎用: `catalog`、`restore`/`isBackup`、`seeded`、`shuffle`、`nextRound`、ヒント文字列（`mask`/`slots`/`wordBank`）、`streak`/`calendar`、`englishVoices`/`voiceFor`、`wordDiff` |
 | `plan.js` | 学習アルゴリズム: `review`、`tally`、`shares`/`mix`、`planSession`、`mockSession`、`requeue`、`scaffold`、`choices`、`knownTopics`、`byNeed`、`drillSteps`、`overview`/`weekly`。定数はファイル先頭 |
 | `colloc.js` | 形容詞＋前置詞: `example`、`siblings` |
 | `app.js` | DOM と状態。トップレベル `await` で全データを fetch。DOM は `el(tag, props, ...kids)` で組み、HTML 文字列は使わない |
@@ -123,8 +123,8 @@ localStorage の `eng:v1` 1つ。形は `restore` が決め、外から来たデ
 
 - **Service Worker**: ネットワーク優先・`cache: 'no-cache'`・`skipWaiting`・`clients.claim`、`app.js` は `controllerchange` で1回だけ再読み込み。Pages の `max-age=600` に対してこれでデプロイが次の再読み込みで反映される。キャッシュ優先や stale-while-revalidate に戻さない（利用者が古いコードから抜けられなくなった）。タイムアウトでキャッシュに切り替えることもしない（遅い回線で新旧のファイルが混ざる）。
 - **オフライン**: install で `sw.js` の `FILES` を `cache: 'reload'` でまとめて保存するので、1回オンラインで開けば以後オフラインで動く（利用者の指定）。オフラインのときはクエリを無視して照合し、範囲内の他の URL にはアプリ本体を返す。ファイルを足したら `FILES` にも足す（`test/sw.test.js` が index.html・import・`FILES`/`DRILLS`・マニフェストのアイコンと突き合わせる。欠けたファイルが1つでもあると install ごと失敗する）。全体のダウンロードが走るのは初回と `sw.js` を変えたときだけ。範囲は `/english-drill/` なので、末尾のスラッシュがない URL はオフラインでは開けない。
-- **読み上げの声**: 指定しないと macOS の Chrome はジョーク用音声を使い、その名前はローカライズされる。`englishVoices` は許可リスト方式で、未知の環境では任意の英語音声に戻る。
-- **話すのが先**: 入力は任意。🎤は SpeechRecognition、なければ MediaRecorder で録音（CSP の `media-src blob:`）、どちらも無ければボタンが出ないだけ。
+- **読み上げの声**: 指定しないと macOS の Chrome はジョーク用音声を使い、その名前はローカライズされる。`englishVoices` は許可リスト方式で、未知の環境では任意の英語音声に戻る。オフラインのときは、サーバで作る声（Chrome の Google の声、Edge の Online の声。`localService: false`）が鳴らないので、`voiceFor` が端末内の声に替える。
+- **話すのが先**: 入力は任意。🎤は SpeechRecognition、なければ MediaRecorder で録音（CSP の `media-src blob:`）、どちらも無ければボタンが出ないだけ。Chrome の認識はサーバで動くので、オフラインで `network` エラーになったら録音に切り替える。
 - **テーマ**: 硬派な教科書（ライトは紙とインク、ダークは黒板とチョーク）。罫線で組み、影・濃い面・絵文字は使わない。角丸はボタンと入力欄のみ。色は意味のあるところ（蛍光ペン `--hl`・○△✕・レベル `--lv1`〜`--lv5`・記録の濃淡）だけ。読むものは `--serif`、押すものとラベルは `--sans`。ダークモードは `@media (prefers-color-scheme: dark) :root:not([data-theme="light"])` と `:root[data-theme="dark"]` の**2か所を必ず揃える**。
 - **CSP**: `default-src 'none'` で自サイトと Trusted Types だけを許可。外部の CDN・フォント・インラインコード・`innerHTML` は動かない（`test/security.test.js`）。Service Worker の登録は `sw` ポリシーを通す。フォントは端末のもの。
 - **GitHub**: `main` はルールセット `protect-main` で force push と削除を禁止。コミットのメールは GitHub の noreply アドレス。

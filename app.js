@@ -1,4 +1,4 @@
-import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, wordDiff, englishVoices, hasEnglish, slots, literal, reactions } from './core.js';
+import { FILES, DRILLS, ROUND, catalog, restore, isBackup, seeded, nextRound, streak, calendar, wordDiff, englishVoices, voiceFor, hasEnglish, slots, literal, reactions } from './core.js';
 import { MISS, HINT, OK, GRADE, review, byNeed, progress, mockSession, tally, requeue, bare, scaffold, choices, planSession, mix, overview, weekly, drillSteps } from './plan.js';
 import { siblings } from './colloc.js';
 
@@ -398,7 +398,7 @@ const canSpeak = 'speechSynthesis' in window;
 let voices = [];
 function speak(text) {
   if (!canSpeak) return;
-  const v = voices.find((x) => x.name === state.settings.voice) || voices[0];
+  const v = voiceFor(voices, state.settings.voice, navigator.onLine);
   speechSynthesis.cancel();
   // One utterance per sentence: some browsers cut a long utterance off part-way.
   for (const s of text.replaceAll('...', ',').split(/(?<=[.?!])\s+/))
@@ -428,8 +428,11 @@ let stopMic = () => {};
 const micOff = () => { $('mic').classList.remove('on'); stopMic = () => {}; };
 function transcribe() {
   const r = Object.assign(new Recognition(), { lang: 'en-US', interimResults: true, continuous: true });
+  let offline = false;
   r.onresult = (e) => { $('input').value = [...e.results].map((x) => x[0].transcript).join(''); };
-  r.onend = micOff;
+  // Chrome transcribes on a server: offline it fails with 'network', and the mic records instead (to play back).
+  r.onerror = (e) => { offline = e.error === 'network'; };
+  r.onend = () => (offline ? record().catch(micOff) : micOff());
   stopMic = () => r.stop();
   r.start();
 }

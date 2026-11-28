@@ -123,6 +123,12 @@ export function englishVoices(voices) {
   const score = (v) => rank(v) * 2 + !/^en[-_]US/i.test(v.lang);
   return (known.length ? known : en).sort((a, b) => score(a) - score(b));
 }
+// The voice to read with: the chosen one, else the best. Offline, a voice made on a server (Chrome's Google voices,
+// Edge's Online voices: localService false) stays silent, so the best voice on the device stands in for it.
+export function voiceFor(voices, name, online) {
+  const v = voices.find((x) => x.name === name) ?? voices[0];
+  return online || v?.localService !== false ? v : voices.find((x) => x.localService) ?? v;
+}
 
 // Mark which words of the model answer appear (in order) in the user's answer, via word-level LCS.
 const norm = (w) => w.toLowerCase().replace(/’/g, "'").replace(/[^a-z0-9']/g, ''); // ’: a phone keyboard's apostrophe
