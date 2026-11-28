@@ -32,11 +32,13 @@ test('the daily grammar decks (Lv1–2) each explain their grammar in one line',
   for (const d of levels.slice(0, 2).flatMap((f) => f.decks)) assert.ok(d.note?.trim(), d.id);
 });
 
+const QA_OPENERS = ['p-limit', 'p-nottested', 'p-because', 'p-diff', 'p-reason', 'p-depends', 'p-plan', 'p-apply'];
 test('sentence frames: every card reuses its frame with different content', () => {
   assert.equal(patterns.kind, 'pattern');
   for (const d of patterns.decks) {
     assert.ok(d.frame.includes('...') && d.ja && d.note, d.id);
-    assert.ok(d.cards.length >= 6, `${d.id}: enough sentences to practice and to hold two back for the weekly check`);
+    // A review is asked in a sentence of its frame never answered: 16 sentences, 20 for the frames that open a Q&A answer.
+    assert.ok(d.cards.length >= (QA_OPENERS.includes(d.id) ? 20 : 16), `${d.id}: a fresh sentence for each review`);
     for (const c of d.cards) assert.ok(c.en.startsWith(d.frame.split('...')[0].trim()) && slots(d.frame, c.en).every(Boolean) && slots(d.frame, c.en).length, `${c.id}: fits its frame, so its phrases can be shown`);
     assert.equal(new Set(d.cards.map((c) => c.en)).size, d.cards.length, d.id);
   }

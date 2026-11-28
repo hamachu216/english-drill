@@ -16,6 +16,7 @@ export const GRADE = { miss: MISS, content: MISS, english: MISS, hint: HINT, ok:
 
 const INTERVAL = [1, 3, 7, 14, 30, 60]; // days until the next review, by box
 const KINDS = ['grammar', 'pattern', 'phrase', 'reply']; // the daily session's; every other kind has a drill of its own
+const SKILLS = new Set(['grammar', 'pattern']); // kinds whose topic is one skill (a grammar point, a frame): any of its sentences tests it
 // Rough time one card takes — saying it, reading the example and its note, judging it: turns minutes into card counts.
 const SECONDS = { grammar: 60, pattern: 75, phrase: 75, reply: 60 };
 // Kinds outside the split, one card per this many minutes: 3 Q&A replies and 5 research phrases in 30 minutes.
@@ -216,15 +217,16 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   const old = (k) => shuffle(chosen[k].filter((c) => rec(c) && !sore(c)), rand).sort((a, b) => later(a) - later(b)), added = (k) => chosen[k].filter((c) => !rec(c)).sort((a, b) => later(a) - later(b));
   const level = (c) => (c.kind === 'pattern' ? stage[c.topic] ?? 0 : undefined);
   const step = (phase) => (c) => ({ id: c.id, phase, level: level(c) });
-  // A grammar card coming back is asked in another sentence of its topic, one never answered (`as` names the card the
-  // answer is recorded on): what has to stay is the grammar, not the sentence, and every day brings sentences not seen.
+  // A grammar or frame card coming back is asked in another sentence of its topic, one never answered (`as` names the card
+  // the answer is recorded on): what has to stay is the grammar or the frame, not the sentence, and every day brings
+  // sentences not seen — refitting a frame to new content is what a question at a conference asks for.
   // The sentence comes from the far end of the topic, where new cards arrive last, and differs at each review (n).
   const taken = new Set(KINDS.flatMap((k) => chosen[k]).map((c) => c.id));
   const again = (phase) => (c) => {
-    const spare = c.kind === 'grammar' && rec(c) ? items.filter((x) => x.topic === c.topic && !x.held && !rec(x) && !taken.has(x.id)).sort((a, b) => b.nth - a.nth) : [];
+    const spare = SKILLS.has(c.kind) && rec(c) ? items.filter((x) => x.topic === c.topic && !x.held && !rec(x) && !taken.has(x.id)).sort((a, b) => b.nth - a.nth) : [];
     const other = spare[rec(c)?.n % spare.length];
     if (other) taken.add(other.id);
-    return other ? { id: other.id, phase, as: c.id } : step(phase)(c);
+    return other ? { ...step(phase)(c), id: other.id, as: c.id } : step(phase)(c);
   };
 
   const firstDay = Object.keys(days).sort()[0], lastCheck = Object.keys(days).filter((d) => days[d]['#check']).sort().at(-1);
@@ -236,7 +238,7 @@ export function planSession({ items, hist, days, day, minutes, rand = Math.rando
   return [
     ...KINDS.flatMap((k) => chosen[k].filter(sore)).map(again('review')),
     ...weave(old('grammar'), added('grammar')).sort((a, b) => later(a) - later(b)).map(again('grammar')),
-    ...weave(old('pattern'), added('pattern')).map(step('pattern')),
+    ...weave(old('pattern'), added('pattern')).map(again('pattern')),
     ...weave(old('phrase'), added('phrase')).map(step('phrase')),
     ...weave(old('reply'), added('reply')).map(step('reply')),
     ...check.map((c) => ({ id: c.id, phase: 'check', level: 2, check: true })),

@@ -240,7 +240,7 @@ test('a really deep pile of reviews takes the grammar slot, all but one new card
   const grammar = grammarOf(hist);
   assert.ok(grammar.length >= 10 && grammar.filter(fresh(hist)).length === 1, 'one new card, the rest due');
   const deepPatterns = dueLong(ofTopics('p-goal', 'p-focus', 'p-problem', 'p-important', 'p-because'));
-  assert.ok(plan(deepPatterns, {}, T, 30).filter((s) => s.phase === 'pattern').every((s) => deepPatterns[s.id]), 'frames and replies keep to reviews');
+  assert.ok(plan(deepPatterns, {}, T, 30).filter((s) => s.phase === 'pattern').every((s) => deepPatterns[s.as ?? s.id]), 'frames and replies keep to reviews');
 });
 
 test('the present-tense basics (b-be, b-neg, b-prog) come after the other grammar — as reviews and as new cards', () => {
@@ -267,6 +267,13 @@ test('a grammar review is asked in a sentence never answered, differently each t
   // A topic with every other sentence answered has nothing else to ask: the card itself comes back.
   const used = Object.fromEntries(ofTopics('b-past').map((id) => [id, review(undefined, OK, day)]));
   assert.ok(plan(used, {}, T).filter((s) => byId.get(s.id).topic === 'b-past').every((s) => !s.as));
+});
+
+test('a frame review is asked in another sentence of its frame, one never answered, with the support the frame has reached', () => {
+  const hist = dueLong(ofTopics('p-goal').slice(0, 2));
+  const asks = plan(hist, {}, T, 30).filter((s) => s.as);
+  assert.deepEqual(asks.map((s) => s.as).sort(), Object.keys(hist).sort());
+  assert.ok(asks.every((s) => s.phase === 'pattern' && s.level === 1 && !hist[s.id] && !byId.get(s.id).held && byId.get(s.id).topic === 'p-goal'), JSON.stringify(asks));
 });
 
 test('bare: a card last not said unaided, in a sentence already seen — a grammar review in a new sentence keeps its hint until retried', () => {
